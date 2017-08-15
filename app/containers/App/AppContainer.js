@@ -1,18 +1,29 @@
 import React, {Component, PropTypes } from 'react';
-import {StyleSheet, View } from 'react-native';
+import {Button, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux'
-// import PreSplash from './app/components/PreSplash/PreSplash'
-// import Splash from './app/components/Splash/Splash'
+import { TabNavigator } from 'react-navigation';
+
+
+import PreSplash from '../../components/PreSplash/PreSplash'
+import Splash from '../../components/Splash/Splash'
 import SplashContainer from '../../containers/Splash/SplashContainer'
-import GamingSessionList from '../../components/GamingSessionsList/GamingSessionsList'
+import GamingSessionsList from '../../components/GamingSessionsList/GamingSessionsList'
 import { colors } from '../../styles'
 
-class AppContainer extends React.Component {
+
+class HomeScreen extends React.Component {
+  static navigationOptions = {
+    title: 'Welcome',
+  };
+
+
+
   constructor(props) {
     super(props);
     this.state = {
       isLoading: true,
-      refreshing: false
+      refreshing: false,
+      isAuthenticating: true
     }
   }
 
@@ -23,32 +34,32 @@ class AppContainer extends React.Component {
   }
 
   render() {
+      // const { navigate } = this.props.navigation;
+
       return (
         <View style={styles.container}>
-          {this.props.isAuthenticating === false
+          {/* <Button
+    onPress={() => navigate('Games')}
+    title="Press Me"
+  /> */}
+           {this.state.isAuthenticating === true
             ? <SplashContainer />
-            : <GamingSessionList />}
+            : <GamingSessionsList />}
         </View>
       );
 
 
 
-    //   if (this.state.isLoading) {
-    //     return (
-    //     <View style={styles.container}>
-    //       <SplashContainer />
-    //     </View>
-    //   );
-    // }
-    //
-    // return (
-    //   <View style={styles.container}>
-    //     <GamingSessionList />
-    //   </View>
-    // );
 
   }
 }
+
+
+export default AppContainer = TabNavigator({
+  Home: { screen: HomeScreen },
+  Games: {screen: GamingSessionsList},
+  SplashContainer: {screen: SplashContainer}
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -61,14 +72,14 @@ const styles = StyleSheet.create({
 },
 })
 
-function mapStateToProps ({authentication}) {
-  return {
-    isAuthenticating: authentication.isAuthenticating,
-  }
-}
-
-
-export default connect(
-  mapStateToProps
-
-)(AppContainer)
+// function mapStateToProps ({authentication}) {
+//   return {
+//     isAuthenticating: authentication.isAuthenticating,
+//   }
+// }
+//
+//
+// export default connect(
+//   mapStateToProps
+//
+// )(AppContainer)

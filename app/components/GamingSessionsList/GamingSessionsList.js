@@ -1,5 +1,6 @@
 import React, {Component, PropTypes } from 'react';
-import {ActivityIndicator, Alert, Button, FlatList, Image, ListView, RefreshControl, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import {ActivityIndicator, Button, FlatList, Image, ListView, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
+
 import PreSplash from '../../components/PreSplash/PreSplash'
 import { colors } from '../../styles'
 import Moment from '../../../node_modules/react-moment';
@@ -13,6 +14,11 @@ Moment.globalLocale = 'en';
 
 
 export default class GamingSessionsList extends React.Component {
+  static navigationOptions = {
+      title: 'Gaming Sessions',
+    };
+
+
   constructor(props) {
     super(props);
     this.state = {
@@ -34,17 +40,17 @@ export default class GamingSessionsList extends React.Component {
 
 
 
-
   }
 
   fetchData() {
+    console.log("FETCHING DATA");
   return fetch('http://pwn-staging.herokuapp.com/api/v1/gaming_sessions.json')
     .then((response) => response.json())
     .then((responseJson) => {
       let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
       this.setState({
-        isLoading: false,
         dataSource: ds.cloneWithRows(responseJson),
+        isLoading: false,
       }, function() {
         // do something with new state
       });
@@ -55,6 +61,7 @@ export default class GamingSessionsList extends React.Component {
   }
 
   render() {
+
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
@@ -65,10 +72,8 @@ export default class GamingSessionsList extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Button
-  onPress={() => { Alert.alert('You tapped the button!')}}
-  title="Press Me"
-/>
+        <Text>TESTING</Text>
+
 
         <ListView refreshControl={
           <RefreshControl

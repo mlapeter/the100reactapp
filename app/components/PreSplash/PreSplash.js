@@ -4,6 +4,11 @@ import { colors } from '../../styles'
 
 
 export default class PreSplash extends React.Component {
+  static navigationOptions = {
+      title: 'Chat with Lucy',
+    };
+
+
   static propTypes = {}
   state = {
     rotation: new Animated.Value(0)

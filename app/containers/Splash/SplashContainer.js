@@ -1,8 +1,12 @@
 import React, { PropTypes } from 'react';
-import {Alert, View, Text } from 'react-native';
+import {Alert, Button, View, Text } from 'react-native';
+
 import Splash from '../../components/Splash/Splash'
 
 export default class SplashContainer extends React.Component {
+  static navigationOptions = {
+    title: 'Splash Container',
+  };
 
   handeLoginFinished = () => {
     Alert.alert('Your now pretend logged in!')
@@ -10,7 +14,15 @@ export default class SplashContainer extends React.Component {
 
   render () {
     return (
-      <Splash onLoginFinished={this.handeLoginFinished} />
+        <Splash onLoginFinished={this.handeLoginFinished} />
+
     )
   }
 }
+
+
+
+{/* <Button
+  onPress={() => navigate('Games')}
+  title="Press Me"
+/> */}
