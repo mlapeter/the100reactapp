@@ -12,6 +12,11 @@ import { colors } from '../../styles'
 
 
 class HomeScreen extends React.Component {
+  static propTypes = {
+    // isAuthenticating: PropTypes.bool.isRequired
+  }
+
+
   static navigationOptions = {
     title: 'Welcome',
   };
@@ -23,7 +28,6 @@ class HomeScreen extends React.Component {
     this.state = {
       isLoading: true,
       refreshing: false,
-      isAuthenticating: true
     }
   }
 
@@ -34,15 +38,10 @@ class HomeScreen extends React.Component {
   }
 
   render() {
-      // const { navigate } = this.props.navigation;
-
       return (
         <View style={styles.container}>
-          {/* <Button
-    onPress={() => navigate('Games')}
-    title="Press Me"
-  /> */}
-           {this.state.isAuthenticating === true
+
+           {this.props.isAuthenticating === false
             ? <SplashContainer />
             : <GamingSessionsList />}
         </View>
@@ -54,11 +53,15 @@ class HomeScreen extends React.Component {
   }
 }
 
+// export default AppContainer = TabNavigator
 
-export default AppContainer = TabNavigator({
+const AppContainer = TabNavigator({
   Home: { screen: HomeScreen },
-  Games: {screen: GamingSessionsList},
+  GamingSessionsList: {screen: GamingSessionsList},
   SplashContainer: {screen: SplashContainer}
+}, {
+  lazy: false,
+  animationEnabled: true,
 });
 
 const styles = StyleSheet.create({
@@ -72,14 +75,12 @@ const styles = StyleSheet.create({
 },
 })
 
-// function mapStateToProps ({authentication}) {
-//   return {
-//     isAuthenticating: authentication.isAuthenticating,
-//   }
-// }
-//
-//
-// export default connect(
-//   mapStateToProps
-//
-// )(AppContainer)
+function mapStateToProps ({authentication}) {
+  return {
+    isAuthenticating: authentication.isAuthenticating,
+  }
+}
+
+export default connect(
+  mapStateToProps
+)(AppContainer)

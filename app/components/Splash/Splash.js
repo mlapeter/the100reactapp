@@ -14,7 +14,6 @@ export default function Splash (props) {
     <View style={styles.container}>
       <View>
         <Image style={styles.image} source={require('../../images/logo.png')} />
-        <Text style={styles.slogan}>The100</Text>
       </View>
       <View style={styles.loginContainer}>
         <Button

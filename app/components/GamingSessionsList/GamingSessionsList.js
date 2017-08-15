@@ -72,9 +72,6 @@ export default class GamingSessionsList extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>TESTING</Text>
-
-
         <ListView refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
