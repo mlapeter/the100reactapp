@@ -1,6 +1,6 @@
 const initialState = {
   isAuthed: false,
-  isAuthenticating: false,
+  isAuthenticating: true,
   authedId: '',
 }
 

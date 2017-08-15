@@ -1,12 +1,13 @@
 import React, {Component, PropTypes } from 'react';
 import {StyleSheet, View } from 'react-native';
+import { connect } from 'react-redux'
 // import PreSplash from './app/components/PreSplash/PreSplash'
 // import Splash from './app/components/Splash/Splash'
 import SplashContainer from '../../containers/Splash/SplashContainer'
 import GamingSessionList from '../../components/GamingSessionsList/GamingSessionsList'
 import { colors } from '../../styles'
 
-export default class App extends React.Component {
+class AppContainer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,19 +23,30 @@ export default class App extends React.Component {
   }
 
   render() {
-    if (this.state.isLoading) {
       return (
         <View style={styles.container}>
-          <SplashContainer />
+          {this.props.isAuthenticating === false
+            ? <SplashContainer />
+            : <GamingSessionList />}
         </View>
       );
-    }
 
-    return (
-      <View style={styles.container}>
-        <GamingSessionList />
-      </View>
-    );
+
+
+    //   if (this.state.isLoading) {
+    //     return (
+    //     <View style={styles.container}>
+    //       <SplashContainer />
+    //     </View>
+    //   );
+    // }
+    //
+    // return (
+    //   <View style={styles.container}>
+    //     <GamingSessionList />
+    //   </View>
+    // );
+
   }
 }
 
@@ -48,3 +60,15 @@ const styles = StyleSheet.create({
   backgroundColor: colors.white,
 },
 })
+
+function mapStateToProps ({authentication}) {
+  return {
+    isAuthenticating: authentication.isAuthenticating,
+  }
+}
+
+
+export default connect(
+  mapStateToProps
+
+)(AppContainer)

@@ -11,8 +11,10 @@ const store = createStore(
   applyMiddleware(thunk)
 )
 
-export default function The100 (props) {
+export default function App (props) {
   return (
-    <AppContainer />
+    <Provider store={store}>
+      <AppContainer />
+    </Provider>
   )
 }
