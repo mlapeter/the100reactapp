@@ -1,60 +1,18 @@
 import React, {Component, PropTypes } from 'react';
-import {Image, StyleSheet, Text, View } from 'react-native';
-import PreSplash from './app/components/PreSplash/PreSplash'
-import Splash from './app/components/Splash/Splash'
-import SplashContainer from './app/containers/Splash/SplashContainer'
+import AppContainer from './app/containers/App/AppContainer'
 
-import GamingSessionList from './app/components/GamingSessionsList/GamingSessionsList'
-import { colors } from './app/styles'
+import {createStore, applyMiddleware, combineReducers} from 'redux'
+import { Provider } from 'react-redux'
+import thunk from 'redux-thunk'
+import * as reducers from './app/redux'
 
+const store = createStore(
+  combineReducers(reducers),
+  applyMiddleware(thunk)
+)
 
-
-
-
-export default class The100 extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isLoading: true,
-      refreshing: false
-    }
-  }
-
-
-
-  componentDidMount() {
-
-    this.setState({
-      isLoading: true,
-    })
-  }
-
-
-
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.container}>
-          <SplashContainer />
-        </View>
-      );
-    }
-
-    return (
-      <View style={styles.container}>
-        <GamingSessionList />
-      </View>
-    );
-  }
+export default function The100 (props) {
+  return (
+    <AppContainer />
+  )
 }
-
-const styles = StyleSheet.create({
-  container: {
-  marginTop: 20,
-  flex: 1,
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'stretch',
-  backgroundColor: colors.white,
-},
-})
