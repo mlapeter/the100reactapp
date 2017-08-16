@@ -28,6 +28,7 @@ class HomeScreen extends React.Component {
     this.state = {
       isLoading: true,
       refreshing: false,
+      isAuthenticating: true,
     }
   }
 
@@ -40,8 +41,7 @@ class HomeScreen extends React.Component {
   render() {
       return (
         <View style={styles.container}>
-
-           {this.props.isAuthenticating === false
+           {this.state.isAuthenticating === true
             ? <SplashContainer />
             : <GamingSessionsList />}
         </View>
@@ -54,11 +54,11 @@ class HomeScreen extends React.Component {
 }
 
 // export default AppContainer = TabNavigator
-
-const AppContainer = TabNavigator({
+// const AppContainer =
+export default AppContainer = TabNavigator({
   Home: { screen: HomeScreen },
   GamingSessionsList: {screen: GamingSessionsList},
-  SplashContainer: {screen: SplashContainer}
+  SplashContainer: {screen: PreSplash}
 }, {
   lazy: false,
   animationEnabled: true,
@@ -81,6 +81,6 @@ function mapStateToProps ({authentication}) {
   }
 }
 
-export default connect(
+connect(
   mapStateToProps
-)(AppContainer)
+)(HomeScreen)

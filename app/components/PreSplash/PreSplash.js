@@ -5,7 +5,7 @@ import { colors } from '../../styles'
 
 export default class PreSplash extends React.Component {
   static navigationOptions = {
-      title: 'Chat with Lucy',
+      title: 'PreSplash',
     };
 
 

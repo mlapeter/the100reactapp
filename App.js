@@ -1,13 +1,18 @@
 import React, {Component, PropTypes } from 'react';
 import AppContainer from './app/containers/App/AppContainer'
 
-import {createStore, applyMiddleware, combineReducers} from 'redux'
+import {createStore, applyMiddleware, combineReducers, compose} from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import * as reducers from './app/redux'
+import devTools from 'remote-redux-devtools'
 
 const store = createStore(
   combineReducers(reducers),
+  compose(
+    applyMiddleware(thunk),
+    devTools()
+  ),
   applyMiddleware(thunk)
 )
 
