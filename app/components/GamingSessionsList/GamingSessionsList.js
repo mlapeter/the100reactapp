@@ -1,5 +1,7 @@
 import React, {Component, PropTypes } from 'react';
-import {ActivityIndicator, Button, FlatList, Image, ListView, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
+import {ActivityIndicator, Button, FlatList, Image, ListView, TouchableHighlight, RefreshControl, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+
 
 import PreSplash from '../../components/PreSplash/PreSplash'
 import { colors } from '../../styles'
@@ -42,6 +44,8 @@ export default class GamingSessionsList extends React.Component {
 
   }
 
+
+
   fetchData() {
     console.log("FETCHING DATA");
   return fetch('http://pwn-staging.herokuapp.com/api/v1/gaming_sessions.json')
@@ -61,6 +65,7 @@ export default class GamingSessionsList extends React.Component {
   }
 
   render() {
+    const { navigate } = this.props.navigation;
 
     if (this.state.isLoading) {
       return (
@@ -81,6 +86,8 @@ export default class GamingSessionsList extends React.Component {
 
           dataSource={this.state.dataSource}
             renderRow={(rowData) =>
+              <TouchableHighlight onPress={() => this.props.navigation.navigate('GamingSession', {gamingSessionId: rowData.id})} underlayColor="white">
+
               <View style={styles.box}>
                 <View style={styles.leftBox}>
                   <Image
@@ -101,10 +108,13 @@ export default class GamingSessionsList extends React.Component {
                   <Text><FontAwesome name="plus" size={12} color={colors.grey} />{rowData.light_level === null ? " any" : rowData.light_level}</Text>
                 </View>
               </View>
+            </TouchableHighlight>
+
               }
         />
       </View>
     );
+
   }
 }
 

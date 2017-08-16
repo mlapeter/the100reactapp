@@ -2,12 +2,15 @@ import React, {Component, PropTypes } from 'react';
 import {Button, StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux'
 import { TabNavigator } from 'react-navigation';
+import { StackNavigator } from 'react-navigation';
 
 
 import PreSplash from '../../components/PreSplash/PreSplash'
 import Splash from '../../components/Splash/Splash'
 import SplashContainer from '../../containers/Splash/SplashContainer'
 import GamingSessionsList from '../../components/GamingSessionsList/GamingSessionsList'
+import GamingSession from '../../components/GamingSession/GamingSession'
+
 import { colors } from '../../styles'
 
 
@@ -54,15 +57,20 @@ class HomeScreen extends React.Component {
 }
 
 // export default AppContainer = TabNavigator
-// const AppContainer =
-export default AppContainer = TabNavigator({
+const MainScreenNavigator = TabNavigator({
   Home: { screen: HomeScreen },
   GamingSessionsList: {screen: GamingSessionsList},
-  SplashContainer: {screen: PreSplash}
+  SplashContainer: {screen: PreSplash},
 }, {
   lazy: false,
   animationEnabled: true,
 });
+
+export default AppContainer = StackNavigator({
+  Home: { screen: MainScreenNavigator },
+  GamingSession: { screen: GamingSession },
+});
+
 
 const styles = StyleSheet.create({
   container: {
