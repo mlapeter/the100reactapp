@@ -48,7 +48,7 @@ export default class GamingSessionsList extends React.Component {
 
   fetchData() {
     console.log("FETCHING DATA");
-  return fetch('http://pwn-staging.herokuapp.com/api/v1/gaming_sessions.json')
+  return fetch('https://pwn-staging.herokuapp.com/api/v1/gaming_sessions.json')
     .then((response) => response.json())
     .then((responseJson) => {
       let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
