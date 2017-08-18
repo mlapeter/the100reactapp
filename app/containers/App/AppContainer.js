@@ -56,7 +56,6 @@ class HomeScreen extends React.Component {
   }
 }
 
-// export default AppContainer = TabNavigator
 const MainScreenNavigator = TabNavigator({
   Home: { screen: HomeScreen },
   GamingSessionsList: {screen: GamingSessionsList},
@@ -66,6 +65,7 @@ const MainScreenNavigator = TabNavigator({
   animationEnabled: true,
 });
 
+// AppContainer = StackNavigator({
 export default AppContainer = StackNavigator({
   Home: { screen: MainScreenNavigator },
   GamingSession: { screen: GamingSession },
@@ -89,6 +89,7 @@ function mapStateToProps ({authentication}) {
   }
 }
 
+// export default connect(
 connect(
   mapStateToProps
 )(HomeScreen)
