@@ -10,9 +10,9 @@ import {
   TextInput,
   View
 } from "react-native";
-
 import PreSplash from "../../components/PreSplash/PreSplash";
-import { colors } from "../../styles";
+import PlayerList from "./PlayerList";
+import { colors, fontSizes } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -38,25 +38,31 @@ export default class GamingSession extends React.Component {
   }
 
   fetchData() {
-    return fetch(
-      "http://pwn-staging.herokuapp.com/api/v1/gaming_sessions/" +
-        this.props.navigation.state.params.gamingSessionId +
-        ".json"
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState({
-          isLoading: false,
-          dataSource: responseJson
-        });
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    return (
+      fetch(
+        "http://pwn-staging.herokuapp.com/api/v1/gaming_sessions/" +
+          this.props.gamingSessionId +
+          ".json"
+      )
+        // this.props.navigation.state.params.gamingSessionId +
+
+        .then(response => response.json())
+        .then(responseJson => {
+          this.setState({
+            isLoading: false,
+            dataSource: responseJson
+          });
+
+          return responseJson;
+        })
+        .catch(error => {
+          console.error(error);
+        })
+    );
   }
 
   render() {
-    const { params } = this.props.navigation.state;
+    // const { params } = this.props.navigation.state;
 
     if (this.state.isLoading) {
       return (
@@ -68,13 +74,18 @@ export default class GamingSession extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text>Test</Text>
-        <Text>
-          {params.gamingSessionId}
+        <Text style={styles.title}>
+          <Moment element={Text}>
+            {this.state.dataSource.start_time.toString()}
+          </Moment>{" "}
+          {this.state.dataSource.category.toString()}
         </Text>
-        <Text>
-          Gaming Session: {this.state.dataSource[0]}
+        <Text style={styles.description} numberOfLines={2}>
+          {this.state.dataSource.name.toString()}
         </Text>
+        <PlayerList
+          confirmedSessions={this.state.dataSource.confirmed_sessions}
+        />
       </View>
     );
   }
@@ -85,11 +96,11 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
+    padding: 5,
     marginTop: 20,
     flex: 1,
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "stretch",
+    justifyContent: "flex-start",
     backgroundColor: colors.white
   },
   loading: {
@@ -97,7 +108,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 10
   },
-  box: {
+  playersBox: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "stretch",
@@ -128,8 +139,13 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 20
   },
-  gamingSessionTitle: {
+  title: {
     color: colors.grey,
-    fontFamily: "Futura"
+    fontFamily: "Futura",
+    fontSize: fontSizes.primary
+  },
+  description: {
+    color: colors.lightGrey,
+    fontSize: fontSizes.secondary
   }
 });

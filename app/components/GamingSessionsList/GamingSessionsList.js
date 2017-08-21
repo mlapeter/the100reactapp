@@ -18,6 +18,7 @@ import PreSplash from "../../components/PreSplash/PreSplash";
 import { colors } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 Moment.globalFormat = "h:mma";
 Moment.globalLocale = "en";
@@ -115,15 +116,19 @@ export default class GamingSessionsList extends React.Component {
                 </View>
                 <View style={styles.rightBox}>
                   <Text>
-                    <FontAwesome
-                      name="users"
-                      size={12}
+                    <MaterialCommunityIcons
+                      name="account"
+                      size={14}
                       color={colors.grey}
                     />{" "}
                     {rowData.primary_users_count}/{rowData.team_size}
                   </Text>
                   <Text>
-                    <FontAwesome name="plus" size={12} color={colors.grey} />
+                    <MaterialCommunityIcons
+                      name="gauge"
+                      size={14}
+                      color={colors.grey}
+                    />
                     {rowData.light_level === null
                       ? " any"
                       : rowData.light_level}

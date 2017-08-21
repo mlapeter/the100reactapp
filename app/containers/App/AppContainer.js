@@ -11,6 +11,9 @@ import Group from "../../components/Group/Group";
 import Notifications from "../../components/Notifications/Notifications";
 import Friends from "../../components/Friends/Friends";
 import GamingSession from "../../components/GamingSession/GamingSession";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 import { colors } from "../../styles";
 
 class HomeScreen extends React.Component {
@@ -37,7 +40,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         {this.state.isAuthenticating === true
-          ? <SplashContainer />
+          ? <GamingSession gamingSessionId="8791" />
           : <GamingSessionsList />}
       </View>
     );
@@ -63,6 +66,56 @@ export default (AppContainer = StackNavigator({
   Home: { screen: MainScreenNavigator },
   GamingSession: { screen: GamingSession }
 }));
+
+HomeScreen.navigationOptions = {
+  tabBarLabel: "Home",
+  tabBarIcon: ({ tintColor, focused }) =>
+    <MaterialCommunityIcons
+      name={focused ? "home" : "home"}
+      size={26}
+      style={{ color: tintColor }}
+    />
+};
+
+GamingSessionsList.navigationOptions = {
+  tabBarLabel: "Games",
+  tabBarIcon: ({ tintColor, focused }) =>
+    <MaterialCommunityIcons
+      name={focused ? "gamepad-variant" : "gamepad-variant"}
+      size={26}
+      style={{ color: tintColor }}
+    />
+};
+
+Group.navigationOptions = {
+  tabBarLabel: "Group",
+  tabBarIcon: ({ tintColor, focused }) =>
+    <MaterialCommunityIcons
+      name={focused ? "account-multiple" : "account-multiple"}
+      size={26}
+      style={{ color: tintColor }}
+    />
+};
+
+Notifications.navigationOptions = {
+  tabBarLabel: "Notifications",
+  tabBarIcon: ({ tintColor, focused }) =>
+    <MaterialCommunityIcons
+      name={focused ? "notification-clear-all" : "notification-clear-all"}
+      size={26}
+      style={{ color: tintColor }}
+    />
+};
+
+Friends.navigationOptions = {
+  tabBarLabel: "Friends",
+  tabBarIcon: ({ tintColor, focused }) =>
+    <MaterialCommunityIcons
+      name={focused ? "account-star" : "account-star"}
+      size={26}
+      style={{ color: tintColor }}
+    />
+};
 
 const styles = StyleSheet.create({
   container: {
