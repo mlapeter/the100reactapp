@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
-// import { connect } from 'react-redux'
+import { connect } from "react-redux";
 import { TabNavigator } from "react-navigation";
 import { StackNavigator } from "react-navigation";
 import PreSplash from "../../components/PreSplash/PreSplash";
@@ -10,6 +10,8 @@ import GamingSessionsList from "../../components/GamingSessionsList/GamingSessio
 import Group from "../../components/Group/Group";
 import Notifications from "../../components/Notifications/Notifications";
 import Friends from "../../components/Friends/Friends";
+import Chat from "../../components/Chat/Chat";
+
 import GamingSession from "../../components/GamingSession/GamingSession";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -18,7 +20,8 @@ import { colors } from "../../styles";
 
 class HomeScreen extends React.Component {
   static propTypes = {
-    // isAuthenticating: PropTypes.bool.isRequired
+    // isAuthenticating: PropTypes.bool.isRequired,
+    navigation: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -53,7 +56,7 @@ const MainScreenNavigator = TabNavigator(
     Games: { screen: GamingSessionsList },
     Group: { screen: Group },
     Notifications: { screen: Notifications },
-    Friends: { screen: Friends }
+    Chat: { screen: Chat }
   },
   {
     lazy: false,
@@ -61,11 +64,11 @@ const MainScreenNavigator = TabNavigator(
   }
 );
 
-// AppContainer = StackNavigator({
-export default (AppContainer = StackNavigator({
+AppContainer = StackNavigator({
+  // export default (AppContainer = StackNavigator({
   Home: { screen: MainScreenNavigator },
   GamingSession: { screen: GamingSession }
-}));
+});
 
 HomeScreen.navigationOptions = {
   tabBarLabel: "Home",
@@ -107,8 +110,8 @@ Notifications.navigationOptions = {
     />
 };
 
-Friends.navigationOptions = {
-  tabBarLabel: "Friends",
+Chat.navigationOptions = {
+  tabBarLabel: "Chat",
   tabBarIcon: ({ tintColor, focused }) =>
     <MaterialCommunityIcons
       name={focused ? "account-star" : "account-star"}
@@ -128,13 +131,11 @@ const styles = StyleSheet.create({
   }
 });
 
-// function mapStateToProps ({authentication}) {
-//   return {
-//     isAuthenticating: authentication.isAuthenticating,
-//   }
-// }
-//
-// // export default connect(
-// connect(
-//   mapStateToProps
-// )(HomeScreen)
+function mapStateToProps({ authentication }) {
+  return {
+    isAuthenticating: authentication.isAuthenticating
+  };
+}
+
+export default connect(mapStateToProps)(AppContainer);
+// connect(mapStateToProps)(HomeScreen);

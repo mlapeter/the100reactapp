@@ -191,8 +191,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   rightBox: {
-    flex: 1,
-    padding: 2
+    flex: 1.1
   },
   avatarMini: {
     height: 40,
