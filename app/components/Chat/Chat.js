@@ -3,6 +3,7 @@ import {
   ActivityIndicator,
   Alert,
   Button,
+  FlatList,
   Image,
   ListView,
   StyleSheet,
@@ -33,9 +34,8 @@ export default class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataSource: new ListView.DataSource({
-        rowHasChanged: (row1, row2) => row1 !== row2
-      })
+      fbData: [],
+      loading: false
     };
     this.itemsRef = this.getRef().child("/chat/help_chatroom/");
   }
@@ -45,18 +45,20 @@ export default class Chat extends Component {
   }
 
   listenForItems(itemsRef) {
+    this.setState({ loading: true });
+
     itemsRef.on("value", snap => {
       // get children as an array
       var items = [];
       snap.forEach(child => {
         items.push({
           text: child.val().text,
-          _key: child.key
+          key: child.key
         });
       });
-
       this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(items)
+        fbData: items,
+        loading: false
       });
     });
   }
@@ -68,17 +70,12 @@ export default class Chat extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ListView
-          dataSource={this.state.dataSource}
-          renderRow={this._renderItem.bind(this)}
-          enableEmptySections={true}
-          style={styles.listview}
+        <FlatList
+          data={this.state.fbData}
+          renderItem={({ item }) => <ListItem item={item} />}
         />
       </View>
     );
-  }
-  _renderItem(item) {
-    return <ListItem item={item} />;
   }
 }
 
@@ -87,7 +84,7 @@ class ListItem extends Component {
     return (
       <View style={styles.li}>
         <Text style={styles.liText}>
-          {this.props.item.text}
+          {this.props.item.text} {this.props.item.key}
         </Text>
       </View>
     );
