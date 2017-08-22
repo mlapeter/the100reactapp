@@ -15,12 +15,12 @@ import {
 import { StackNavigator } from "react-navigation";
 
 import PreSplash from "../../components/PreSplash/PreSplash";
-import { colors } from "../../styles";
+import { colors, fontSizes } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-Moment.globalFormat = "h:mma";
+Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
 export default class GamingSessionsList extends React.Component {
@@ -45,7 +45,7 @@ export default class GamingSessionsList extends React.Component {
 
   fetchData() {
     console.log("FETCHING DATA");
-    return fetch("http://pwn-staging.herokuapp.com/api/v1/gaming_sessions.json")
+    return fetch("https://www.the100.io/api/v1/gaming_sessions")
       .then(response => response.json())
       .then(responseJson => {
         let ds = new ListView.DataSource({
@@ -67,8 +67,6 @@ export default class GamingSessionsList extends React.Component {
   }
 
   render() {
-    const { navigate } = this.props.navigation;
-
     if (this.state.isLoading) {
       return (
         <View style={styles.container}>
@@ -100,34 +98,45 @@ export default class GamingSessionsList extends React.Component {
                   <Image
                     style={styles.avatarMini}
                     source={{
-                      uri:
-                        "https://pwntastic-avatar-staging.s3.amazonaws.com/uploads/user/avatar/11869/main_mikelapeter.jpg"
+                      uri: rowData.game_avatar_url
                     }}
                   />
                 </View>
                 <View style={styles.middleBox}>
                   <Text style={styles.gamingSessionTitle}>
-                    <Moment element={Text}>{rowData.start_time}</Moment>{" "}
                     {rowData.category}
                   </Text>
-                  <Text numberOfLines={1}>
+                  <Text
+                    style={styles.gamingSessionDescription}
+                    numberOfLines={2}
+                  >
                     {rowData.name}
                   </Text>
                 </View>
                 <View style={styles.rightBox}>
-                  <Text>
+                  <Text style={styles.iconText}>
+                    <MaterialCommunityIcons
+                      name="calendar"
+                      size={12}
+                      color={colors.mediumGrey}
+                    />
+                    <Moment element={Text}>
+                      {rowData.start_time}
+                    </Moment>
+                  </Text>
+                  <Text style={styles.iconText}>
                     <MaterialCommunityIcons
                       name="account"
                       size={14}
-                      color={colors.grey}
+                      color={colors.mediumGrey}
                     />{" "}
                     {rowData.primary_users_count}/{rowData.team_size}
                   </Text>
-                  <Text>
+                  <Text style={styles.iconText}>
                     <MaterialCommunityIcons
                       name="gauge"
                       size={14}
-                      color={colors.grey}
+                      color={colors.mediumGrey}
                     />
                     {rowData.light_level === null
                       ? " any"
@@ -193,5 +202,12 @@ const styles = StyleSheet.create({
   gamingSessionTitle: {
     color: colors.grey,
     fontFamily: "Futura"
+  },
+  gamingSessionDescription: {
+    color: colors.lightGrey
+  },
+  iconText: {
+    fontSize: fontSizes.small,
+    color: colors.mediumGrey
   }
 });

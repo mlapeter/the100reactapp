@@ -10,7 +10,7 @@ export default function PlayerList(props) {
   return (
     <View style={styles.container}>
       {props.confirmedSessions.map(confirmedSession =>
-        <Player user={confirmedSession.user} />
+        <Player user={confirmedSession.user} key={confirmedSession.id} />
       )}
     </View>
   );
@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     padding: 5,
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start"
+    alignItems: "flex-start",
+    flexWrap: "wrap"
   }
 });

@@ -20,15 +20,19 @@ export default function Player(props) {
           <Text style={styles.gamertag}>
             {props.user.gamertag}
           </Text>
-          <Text>
+          <Text style={styles.iconText}>
             <MaterialCommunityIcons
               name="gauge"
               size={14}
-              color={colors.grey}
+              color={colors.mediumGrey}
             />
             {props.user.light_level}
 
-            <MaterialCommunityIcons name="star" size={14} color={colors.grey} />
+            <MaterialCommunityIcons
+              name="star"
+              size={14}
+              color={colors.mediumGrey}
+            />
             {props.user.karmas_count}
           </Text>
         </View>
@@ -40,8 +44,7 @@ export default function Player(props) {
 const styles = StyleSheet.create({
   container: {
     padding: 5,
-    flexDirection: "row",
-    alignItems: "flex-start"
+    margin: 1
   },
   profileAvatar: {
     height: 40,
@@ -50,14 +53,19 @@ const styles = StyleSheet.create({
   },
   profileBox: {
     padding: 1,
-    flexDirection: "row",
-    alignItems: "center"
+    flexDirection: "row"
   },
   profileText: {
-    flexDirection: "column"
+    flexDirection: "column",
+    paddingLeft: 5
   },
   gamertag: {
-    padding: 5,
+    fontFamily: "Futura",
+    paddingLeft: 5,
     fontSize: fontSizes.secondary
+  },
+  iconText: {
+    fontSize: fontSizes.small,
+    color: colors.mediumGrey
   }
 });

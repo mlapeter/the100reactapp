@@ -7,10 +7,12 @@ export const colors = {
   tabPrimary: "#F7F9F9",
   white: "#fff",
   grey: "#2f3136",
+  mediumGrey: "rgba(79,84,92,.9)",
   lightGrey: "#737f8d"
 };
 
 export const fontSizes = {
   primary: 20,
-  secondary: 16
+  secondary: 15,
+  small: 13
 };
