@@ -14,7 +14,7 @@ import {
 import PreSplash from "../../components/PreSplash/PreSplash";
 import { colors, fontSizes } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
-import TimeAgo from "../../../node_modules/react-timeago";
+import TimeAgo from "../../../node_modules/react-native-timeago";
 
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -44,27 +44,23 @@ export default class Chat extends Component {
     return firebaseApp.database().ref();
   }
 
-  listenForItems(itemsRef) {
-    this.setState({ loading: true });
-
-    itemsRef.on("value", snap => {
-      // get children as an array
-      var items = [];
-      snap.forEach(child => {
-        items.push({
-          text: child.val().text,
-          key: child.key
-        });
-      });
-      this.setState({
-        fbData: items,
-        loading: false
-      });
-    });
-  }
-
   componentDidMount() {
-    this.listenForItems(this.itemsRef);
+    // this.listenForItems(this.itemsRef);
+    this.itemsRef.limitToLast(25).on(
+      "value",
+      function(dataSnapshot) {
+        var items = [];
+        dataSnapshot.forEach(function(childSnapshot) {
+          var item = childSnapshot.val();
+          item["key"] = childSnapshot.key;
+          items.push(item);
+        });
+
+        this.setState({
+          fbData: items.reverse()
+        });
+      }.bind(this)
+    );
   }
 
   render() {
@@ -82,10 +78,28 @@ export default class Chat extends Component {
 class ListItem extends Component {
   render() {
     return (
-      <View style={styles.li}>
-        <Text style={styles.liText}>
-          {this.props.item.text} {this.props.item.key}
-        </Text>
+      <View style={styles.box}>
+        <View style={styles.leftBox}>
+          <Image
+            style={styles.avatarMini}
+            source={{
+              uri: this.props.item.avatarUrl
+            }}
+          />
+        </View>
+        <View style={styles.middleBox}>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.username}>
+              {this.props.item.username}
+            </Text>
+            <Text style={styles.time}>
+              <TimeAgo time={this.props.item.createdAt} minPeriod="60" />
+            </Text>
+          </View>
+          <Text style={styles.text}>
+            {this.props.item.text}
+          </Text>
+        </View>
       </View>
     );
   }
@@ -96,11 +110,11 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
-    padding: 5,
     marginTop: 20,
     flex: 1,
     flexDirection: "column",
-    justifyContent: "flex-start",
+    justifyContent: "center",
+    alignItems: "stretch",
     backgroundColor: colors.white
   },
   loading: {
@@ -108,31 +122,48 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 10
   },
-  iconBar: {
+  box: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "stretch",
-    padding: 5,
-    borderTopWidth: 0.5,
-    borderTopColor: "#d6d7da",
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#d6d7da",
-    backgroundColor: colors.white
+    margin: 5,
+    padding: 5
   },
-  icon: {
+  leftBox: {
+    flex: 1,
     padding: 2,
     margin: 2,
     backgroundColor: colors.white
   },
-  title: {
-    padding: 5,
+  middleBox: {
+    flex: 6,
+    padding: 2,
+    margin: 2,
+    backgroundColor: colors.white
+  },
+  rightBox: {
+    flex: 1.1
+  },
+  avatarMini: {
+    height: 40,
+    width: 40,
+    borderRadius: 20
+  },
+  username: {
     color: colors.grey,
     fontFamily: "Futura",
-    fontSize: fontSizes.primary
-  },
-  description: {
-    padding: 5,
-    color: colors.lightGrey,
     fontSize: fontSizes.secondary
+  },
+  time: {
+    padding: 3,
+    color: colors.lightGrey,
+    fontSize: fontSizes.small
+  },
+  text: {
+    color: colors.mediumGrey
+  },
+  iconText: {
+    fontSize: fontSizes.small,
+    color: colors.mediumGrey
   }
 });

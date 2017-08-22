@@ -4204,6 +4204,10 @@ react-native-tab-view@^0.0.67:
   dependencies:
     prop-types "^15.5.8"
 
+react-native-timeago@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/react-native-timeago/-/react-native-timeago-0.3.0.tgz#dc076c1a2fc3935f62cb3e2f327f95aeec233d24"
+
 react-native-vector-icons@4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-4.1.1.tgz#9ac75bde77d9243346668c51dca7756775428087"
@@ -4336,10 +4340,6 @@ react-test-renderer@16.0.0-alpha.12:
   dependencies:
     fbjs "^0.8.9"
     object-assign "^4.1.0"
-
-react-timeago@^3.4.3:
-  version "3.4.3"
-  resolved "https://registry.yarnpkg.com/react-timeago/-/react-timeago-3.4.3.tgz#eb9061eefb044e4a2b09ce8c99d34645b2dbfa25"
 
 react-timer-mixin@^0.13.2:
   version "0.13.3"
