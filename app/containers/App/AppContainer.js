@@ -43,7 +43,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         {this.state.isAuthenticating === true
-          ? <Splash />
+          ? <Chat />
           : <GamingSessionsList />}
       </View>
     );
@@ -56,10 +56,10 @@ const MainScreenNavigator = TabNavigator(
     Games: { screen: GamingSessionsList },
     Group: { screen: Group },
     Notifications: { screen: Notifications },
-    Chat: { screen: Chat }
+    Friends: { screen: Friends }
   },
   {
-    lazy: false,
+    // lazy: false,
     animationEnabled: true
   }
 );
@@ -110,8 +110,8 @@ Notifications.navigationOptions = {
     />
 };
 
-Chat.navigationOptions = {
-  tabBarLabel: "Chat",
+Friends.navigationOptions = {
+  tabBarLabel: "Friends",
   tabBarIcon: ({ tintColor, focused }) =>
     <MaterialCommunityIcons
       name={focused ? "account-star" : "account-star"}

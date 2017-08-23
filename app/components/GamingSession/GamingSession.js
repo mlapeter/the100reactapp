@@ -11,6 +11,8 @@ import {
   View
 } from "react-native";
 import PreSplash from "../../components/PreSplash/PreSplash";
+import Chat from "../../components/Chat/Chat";
+
 import PlayerList from "./PlayerList";
 import { colors, fontSizes } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
@@ -119,6 +121,7 @@ export default class GamingSession extends React.Component {
         <PlayerList
           confirmedSessions={this.state.dataSource.confirmed_sessions}
         />
+        <Chat chatroom={"help_chatroom"} />
       </View>
     );
   }

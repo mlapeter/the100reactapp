@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import AppContainer from "./app/containers/App/AppContainer";
+import { Font } from "expo";
 
 import { createStore, applyMiddleware, combineReducers, compose } from "redux";
 import { Provider } from "react-redux";

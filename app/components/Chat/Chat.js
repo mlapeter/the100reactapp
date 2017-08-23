@@ -4,6 +4,7 @@ import {
   Alert,
   Button,
   FlatList,
+  KeyboardAvoidingView,
   Image,
   ListView,
   StyleSheet,
@@ -31,13 +32,83 @@ const firebaseConfig = {
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 export default class Chat extends Component {
+  static propTypes = {
+    // chatroom: PropTypes.string.isRequired
+  };
+
   constructor(props) {
     super(props);
     this.state = {
-      fbData: [],
-      loading: false
+      isLoading: true,
+      items: [],
+      text: "",
+      username: "guest",
+      pwnmaster: false,
+      role: "user",
+      permission: "",
+      avatarUrl: "/default-avatar.png",
+      editing: null
     };
-    this.itemsRef = this.getRef().child("/chat/help_chatroom/");
+
+    if (this.props.token) {
+      firebase
+        .auth()
+        .signInWithCustomToken(this.props.token)
+        .then(
+          function() {
+            console.log("SIGNED IN REACT!");
+            writeUserData(firebase.auth().currentUser.uid);
+            firebase
+              .database()
+              .ref("/users/" + firebase.auth().currentUser.uid)
+              .on("value", snapshot => {
+                this.setState({ username: snapshot.val().username });
+                this.setState({ pwnmaster: snapshot.val().pwnmaster });
+                if (snapshot.val().pwnmaster == "true") {
+                  this.setState({ role: "developer" });
+                } else {
+                  this.setState({
+                    role: snapshot.val().groups[this.props.room]["role"]
+                  });
+                }
+                this.setState({
+                  permission: snapshot.val().groups[this.props.room][
+                    "permission"
+                  ]
+                });
+                this.setState({ avatarUrl: snapshot.val().avatar });
+                console.log("USER FOUND");
+              });
+          }.bind(this)
+        )
+        .catch(function(error) {
+          console.log("ERROR WITH TOKEN: " + error.code + ":" + error.message);
+        });
+    } else {
+      console.log("STARTING ANON SIGNIN");
+      firebase.auth().signInAnonymously().catch(function(error) {
+        console.log(
+          "ANON SIGNIN ERROR WITH TOKEN " + error.code + ":" + error.message
+        );
+      });
+    }
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        console.log("CURRENT USER: " + firebase.auth().currentUser.uid);
+        this.user = firebase.auth().currentUser;
+        // ...
+      } else {
+        // User is signed out.
+        // ...
+      }
+      // ...
+    });
+
+    this.onSubmit = this.onSubmit.bind(this);
+    // this.firebaseRef = this.getRef().child("/chat/" + this.props.chatroom);
+    this.firebaseRef = this.getRef().child("/chat/help_chatroom/");
   }
 
   getRef() {
@@ -45,8 +116,7 @@ export default class Chat extends Component {
   }
 
   componentDidMount() {
-    // this.listenForItems(this.itemsRef);
-    this.itemsRef.limitToLast(25).on(
+    this.firebaseRef.limitToLast(25).on(
       "value",
       function(dataSnapshot) {
         var items = [];
@@ -57,20 +127,76 @@ export default class Chat extends Component {
         });
 
         this.setState({
-          fbData: items.reverse()
+          items: items.reverse(),
+          isLoading: false
         });
       }.bind(this)
     );
   }
 
+  createImg(text) {
+    var imgPattern = /(https?:\/\/.*\.(?:png|jpg|gif|gifv|jpeg))/i;
+    var imgurPattern = /((http(s?):\/\/)?(imgur|i.imgur)\.com\/[a-zA-Z0-9]{6,8})(?!\.jpg|\.gif|\.gifv|\.png)(?:[^a-zA-Z0-9]|$)/;
+    if (text.match(imgPattern)) {
+      console.log(text.match(imgPattern));
+      return text.match(imgPattern)[0];
+    } else if (text.match(imgurPattern)) {
+      console.log(text.match(imgurPattern));
+      return text.match(imgurPattern)[0] + ".jpg";
+    } else {
+      return "";
+    }
+  }
+
+  onSubmit(text) {
+    if (text && text.trim().length !== 0) {
+      var imgSrc = this.createImg(text);
+      this.firebaseRef.push({
+        text: text,
+        imgSrc: imgSrc,
+        username: this.state.username,
+        avatarUrl: this.state.avatarUrl,
+        uid: firebase.auth().currentUser.uid,
+        role: this.state.role,
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+      });
+      // this.setState({ editing: null });
+      // var pattern = /\B@[a-z0-9_-]+/gi;
+      // if (text.match(pattern)) {
+      //   api.postUsernameMention(this.props.url, this.state.username, text.match(pattern), text)
+      //     .then(function (response) {
+      //       console.log(response)
+      //     })
+      // }
+    }
+  }
+
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     return (
-      <View style={styles.container}>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior="padding"
+        keyboardVerticalOffset={100}
+      >
         <FlatList
-          data={this.state.fbData}
+          data={this.state.items}
           renderItem={({ item }) => <ListItem item={item} />}
         />
-      </View>
+        <MessageInput
+          permission="RW"
+          room="help_chatroom"
+          url="chat/help_chatroom"
+          onSubmit={this.onSubmit}
+          onChange={this.onChange}
+        />
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -105,17 +231,63 @@ class ListItem extends Component {
   }
 }
 
+class MessageInput extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      text: ""
+    };
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(text) {
+    this.props.onSubmit(this.state.text);
+    this.setState({
+      text: ""
+    });
+  }
+
+  render() {
+    if (
+      !this.props.room.includes("group") ||
+      this.props.permission == "RW" ||
+      this.props.permission == "RWE" ||
+      this.props.permission == "A"
+    ) {
+      return (
+        <View style={styles.input}>
+          <TextInput
+            style={{ flex: 5 }}
+            placeholder="Enter your message..."
+            onChangeText={text => this.setState({ text })}
+            onSubmitEditing={text => this.handleSubmit(text)}
+            value={this.state.text}
+          />
+          <Button
+            style={{ flex: 1 }}
+            title="Chat"
+            onPress={text => this.handleSubmit(text)}
+          />
+        </View>
+      );
+    } else {
+      return <Text>Login first to chat.</Text>;
+    }
+  }
+}
+
 const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
   },
   container: {
-    marginTop: 20,
+    padding: 5,
+    margin: 3,
     flex: 1,
     flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "stretch",
-    backgroundColor: colors.white
+    justifyContent: "center"
   },
   loading: {
     alignItems: "center",
@@ -124,10 +296,16 @@ const styles = StyleSheet.create({
   },
   box: {
     flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "stretch",
     margin: 5,
     padding: 5
+  },
+  input: {
+    flexDirection: "row",
+    alignItems: "stretch",
+    margin: 5,
+    padding: 5,
+    borderTopWidth: 0.5,
+    borderTopColor: "#d6d7da"
   },
   leftBox: {
     flex: 1,
@@ -136,7 +314,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   middleBox: {
-    flex: 6,
+    flex: 7,
     padding: 2,
     margin: 2,
     backgroundColor: colors.white
@@ -156,7 +334,7 @@ const styles = StyleSheet.create({
   },
   time: {
     padding: 3,
-    color: colors.lightGrey,
+    color: colors.lightestGrey,
     fontSize: fontSizes.small
   },
   text: {
