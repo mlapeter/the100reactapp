@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import {
   Alert,
+  AsyncStorage,
   Button,
   Dimensions,
   Image,
@@ -17,7 +18,6 @@ import {
 import { StackNavigator } from "react-navigation";
 import { TabNavigator } from "react-navigation";
 
-import { AsyncStorage } from "react-native";
 import { colors, fontSizes } from "../../styles";
 const { height, width } = Dimensions.get("window");
 
