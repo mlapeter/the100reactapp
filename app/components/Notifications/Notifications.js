@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+
 import { colors, fontSizes } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import TimeAgo from "../../../node_modules/react-native-timeago";
@@ -20,6 +21,7 @@ export default class Notifications extends Component {
 
     this.state = {
       isLoading: true,
+      isAuthed: false,
       items: []
     };
 
@@ -27,20 +29,7 @@ export default class Notifications extends Component {
   }
 
   componentDidMount() {
-    AsyncStorage.getItem("id_token")
-      .then(token => {
-        if (value !== null) {
-          console.log(token);
-          this.fetchData();
-        }
-      })
-      .catch(error => {
-        console.log("Error fetching token from AsyncStorage");
-      });
-
-    // if (AsyncStorage.getItem("id_token") !== null) {
-    //   this.fetchData();
-    // }
+    this.fetchData();
   }
 
   fetchData() {
@@ -55,15 +44,22 @@ export default class Notifications extends Component {
         .then(response => response.json())
         .then(responseJson => {
           this.setState({
-            isLoading: false,
+            isLoading: token === null,
             items: responseJson
           });
-          return responseJson;
         })
         .catch(error => {
           console.error(error);
         });
     });
+  }
+
+  async userLogout() {
+    try {
+      await AsyncStorage.removeItem("id_token");
+    } catch (error) {
+      console.log("AsyncStorage error: " + error.message);
+    }
   }
 
   render() {
@@ -74,13 +70,24 @@ export default class Notifications extends Component {
             style={styles.buttonWrapper}
             onPress={this.fetchData}
           >
-            <Text style={styles.buttonText}> Get Notifications</Text>
+            <Text style={styles.buttonText}>
+              {" "}Get Notifications (if logged in)
+            </Text>
           </TouchableOpacity>
         </View>
       );
     }
     return (
       <View style={styles.container}>
+        <TouchableOpacity
+          style={styles.buttonWrapper}
+          onPress={this.userLogout}
+        >
+          <Text style={styles.buttonText}> Log out </Text>
+        </TouchableOpacity>
+        <Text>
+          {this.state.token}
+        </Text>
         <Text>Notifications</Text>
 
         <FlatList

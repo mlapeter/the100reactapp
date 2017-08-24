@@ -14,8 +14,10 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback
 } from "react-native";
-import { AsyncStorage } from "react-native";
+import { StackNavigator } from "react-navigation";
+import { TabNavigator } from "react-navigation";
 
+import { AsyncStorage } from "react-native";
 import { colors, fontSizes } from "../../styles";
 const { height, width } = Dimensions.get("window");
 
@@ -56,21 +58,20 @@ export default class Splash extends React.Component {
         console.log("LOGGING IN");
         console.log(responseData);
         this.saveItem("id_token", responseData.token);
+        Keyboard.dismiss();
+
+        this.props.navigation.navigate("Notifications");
       })
       .done();
   }
 
-  async userLogout() {
-    try {
-      await AsyncStorage.removeItem("id_token");
-      Alert.alert("Logout Success!");
-      Actions.Authentication();
-    } catch (error) {
-      console.log("AsyncStorage error: " + error.message);
-    }
-  }
+  static navigationOptions = {
+    title: "Welcome"
+  };
 
   render() {
+    const { navigate } = this.props.navigation;
+
     return (
       <TouchableWithoutFeedback
         onPress={() => {
@@ -113,14 +114,10 @@ export default class Splash extends React.Component {
               onPress={this.userLogin.bind(this)}
               title="Login"
             />
-
-            <Text style={styles.assuranceText}>Forgot password?</Text>
-            <TouchableOpacity
-              style={styles.buttonWrapper}
-              onPress={this.userLogout}
-            >
-              <Text style={styles.buttonText}> Log out </Text>
-            </TouchableOpacity>
+            <Button
+              onPress={() => navigate("Notifications")}
+              title="Go To Notifications"
+            />
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>
