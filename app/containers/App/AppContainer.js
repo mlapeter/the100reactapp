@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { AsyncStorage, Button, StyleSheet, Text, View } from "react-native";
 import { connect } from "react-redux";
 import { TabNavigator } from "react-navigation";
 import { StackNavigator } from "react-navigation";
+
 import PreSplash from "../../components/PreSplash/PreSplash";
 import Splash from "../../components/Splash/Splash";
 import SplashContainer from "../../containers/Splash/SplashContainer";
@@ -29,8 +30,14 @@ class HomeScreen extends React.Component {
     this.state = {
       isLoading: true,
       refreshing: false,
-      isAuthenticating: true
+      isAuthed: false
     };
+  }
+
+  componentWillMount() {
+    AsyncStorage.getItem("id_token").then(token => {
+      this.setState({ isAuthed: token !== null });
+    });
   }
 
   componentDidMount() {
@@ -42,9 +49,9 @@ class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        {this.state.isAuthenticating === true
-          ? <Chat />
-          : <GamingSessionsList />}
+        {this.state.isAuthed === true
+          ? <GamingSessionsList navigation={this.props.navigation} />
+          : <Splash navigation={this.props.navigation} />}
       </View>
     );
   }

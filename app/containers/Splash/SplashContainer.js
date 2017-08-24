@@ -9,7 +9,7 @@ export default class SplashContainer extends React.Component {
   };
 
   handeLoginFinished = () => {
-    Alert.alert("Your now pretend logged in!");
+    // Alert.alert("Your now pretend logged in!");
   };
 
   render() {
