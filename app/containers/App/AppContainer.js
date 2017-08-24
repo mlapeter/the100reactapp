@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
-// import { connect } from 'react-redux'
+import { connect } from "react-redux";
 import { TabNavigator } from "react-navigation";
 import { StackNavigator } from "react-navigation";
 import PreSplash from "../../components/PreSplash/PreSplash";
@@ -10,6 +10,8 @@ import GamingSessionsList from "../../components/GamingSessionsList/GamingSessio
 import Group from "../../components/Group/Group";
 import Notifications from "../../components/Notifications/Notifications";
 import Friends from "../../components/Friends/Friends";
+import Chat from "../../components/Chat/Chat";
+
 import GamingSession from "../../components/GamingSession/GamingSession";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -18,7 +20,8 @@ import { colors } from "../../styles";
 
 class HomeScreen extends React.Component {
   static propTypes = {
-    // isAuthenticating: PropTypes.bool.isRequired
+    // isAuthenticating: PropTypes.bool.isRequired,
+    navigation: PropTypes.object.isRequired
   };
 
   constructor(props) {
@@ -40,7 +43,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         {this.state.isAuthenticating === true
-          ? <Splash />
+          ? <Chat />
           : <GamingSessionsList />}
       </View>
     );
@@ -56,16 +59,16 @@ const MainScreenNavigator = TabNavigator(
     Friends: { screen: Friends }
   },
   {
-    lazy: false,
+    // lazy: false,
     animationEnabled: true
   }
 );
 
-// AppContainer = StackNavigator({
-export default (AppContainer = StackNavigator({
+AppContainer = StackNavigator({
+  // export default (AppContainer = StackNavigator({
   Home: { screen: MainScreenNavigator },
   GamingSession: { screen: GamingSession }
-}));
+});
 
 HomeScreen.navigationOptions = {
   tabBarLabel: "Home",
@@ -128,13 +131,11 @@ const styles = StyleSheet.create({
   }
 });
 
-// function mapStateToProps ({authentication}) {
-//   return {
-//     isAuthenticating: authentication.isAuthenticating,
-//   }
-// }
-//
-// // export default connect(
-// connect(
-//   mapStateToProps
-// )(HomeScreen)
+function mapStateToProps({ authentication }) {
+  return {
+    isAuthenticating: authentication.isAuthenticating
+  };
+}
+
+export default connect(mapStateToProps)(AppContainer);
+// connect(mapStateToProps)(HomeScreen);
