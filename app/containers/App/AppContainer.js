@@ -43,7 +43,7 @@ class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
         {this.state.isAuthenticating === true
-          ? <Chat />
+          ? <Splash />
           : <GamingSessionsList />}
       </View>
     );
