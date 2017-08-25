@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import {
   Alert,
+  AsyncStorage,
   Button,
   Dimensions,
   Image,
@@ -16,12 +17,13 @@ import {
 } from "react-native";
 import { StackNavigator } from "react-navigation";
 import { TabNavigator } from "react-navigation";
+import { connect } from "react-redux";
+import { onAuthChange } from "../../redux/modules/authentication";
 
-import { AsyncStorage } from "react-native";
 import { colors, fontSizes } from "../../styles";
 const { height, width } = Dimensions.get("window");
 
-export default class Splash extends React.Component {
+class Splash extends React.Component {
   static propTypes = {};
   constructor(props) {
     super(props);
@@ -59,8 +61,9 @@ export default class Splash extends React.Component {
         console.log(responseData);
         this.saveItem("id_token", responseData.token);
         Keyboard.dismiss();
+        this.props.dispatch(onAuthChange(responseData.token));
 
-        this.props.navigation.navigate("Notifications");
+        // this.props.navigation.navigate("Notifications");
       })
       .done();
   }
@@ -70,8 +73,6 @@ export default class Splash extends React.Component {
   };
 
   render() {
-    const { navigate } = this.props.navigation;
-
     return (
       <TouchableWithoutFeedback
         onPress={() => {
@@ -113,10 +114,6 @@ export default class Splash extends React.Component {
               }}
               onPress={this.userLogin.bind(this)}
               title="Login"
-            />
-            <Button
-              onPress={() => navigate("Notifications")}
-              title="Go To Notifications"
             />
           </KeyboardAvoidingView>
         </View>
@@ -161,3 +158,12 @@ const styles = StyleSheet.create({
     borderBottomColor: "#d6d7da"
   }
 });
+
+function mapStateToProps({ authentication }) {
+  return {
+    isAuthenticating: authentication.isAuthenticating,
+    isAuthed: authentication.isAuthed
+  };
+}
+
+export default connect(mapStateToProps)(Splash);
