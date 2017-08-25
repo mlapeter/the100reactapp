@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5
   },
   gamertag: {
-    fontFamily: "Futura",
+    //fontFamily: "Futura",
     paddingLeft: 5,
     fontSize: fontSizes.secondary
   },

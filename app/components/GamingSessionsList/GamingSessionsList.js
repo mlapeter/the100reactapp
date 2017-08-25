@@ -23,130 +23,187 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
-export default class GamingSessionsList extends React.Component {
+class MyListItem extends React.PureComponent {
+  constructor(props) {
+    super(props);
+  }
+
+  onPress = () => {
+    this.props.onPressItem(this.props.data.id);
+  };
+
+  render() {
+    return (
+      <TouchableHighlight onPress={this.onPress} underlayColor="white">
+        <View style={styles.box}>
+          <View style={styles.leftBox}>
+            <Image
+              style={styles.avatarMini}
+              source={{
+                uri: this.props.data.game_avatar_url
+              }}
+            />
+          </View>
+          <View style={styles.middleBox}>
+            <Text style={styles.gamingSessionTitle}>
+              {this.props.data.category}
+            </Text>
+            <Text style={styles.gamingSessionDescription} numberOfLines={2}>
+              {this.props.data.name}
+            </Text>
+          </View>
+          <View style={styles.rightBox}>
+            <Text style={styles.iconText}>
+              <MaterialCommunityIcons
+                name="calendar"
+                size={12}
+                color={colors.mediumGrey}
+              />
+              <Moment element={Text}>
+                {this.props.data.start_time}
+              </Moment>
+            </Text>
+            <Text style={styles.iconText}>
+              <MaterialCommunityIcons
+                name="account"
+                size={14}
+                color={colors.mediumGrey}
+              />{" "}
+              {this.props.data.primary_users_count}/{this.props.data.team_size}
+            </Text>
+            <Text style={styles.iconText}>
+              <MaterialCommunityIcons
+                name="gauge"
+                size={14}
+                color={colors.mediumGrey}
+              />
+              {this.props.data.light_level === null
+                ? " any"
+                : this.props.data.light_level}
+            </Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+    );
+  }
+}
+
+export default class GamingSessionsList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
+      loading: true,
+      data: [],
+      page: 1,
+      error: null,
       refreshing: false
     };
   }
 
-  onRefresh() {
-    this.setState({ refreshing: true });
-    this.fetchData().then(() => {
-      this.setState({ refreshing: false });
+  goToSession = id => {
+    this.props.navigation.navigate("GamingSession", {
+      gamingSessionId: id
     });
-  }
+  };
+
+  onRefresh = () => {
+    this.setState(
+      {
+        page: 1,
+        refreshing: true
+      },
+      () => {
+        this.fetchData();
+      }
+    );
+  };
+
+  onLoadMore = () => {
+    this.setState(
+      {
+        page: this.state.page + 1
+      },
+      () => {
+        this.fetchData();
+      }
+    );
+  };
 
   componentDidMount() {
     this.fetchData();
   }
 
-  fetchData() {
-    console.log("FETCHING DATA");
-    return fetch("https://www.the100.io/api/v1/gaming_sessions")
+  fetchData = () => {
+    const page = this.state.page;
+    const url = "https://www.the100.io/api/v1/gaming_sessions?page=${page}";
+    this.setState({ loading: true });
+
+    console.log("FETCHING DATA", url);
+    console.log("page", this.state.page);
+
+    fetch(url)
       .then(response => response.json())
-      .then(responseJson => {
-        let ds = new ListView.DataSource({
-          rowHasChanged: (r1, r2) => r1 !== r2
+      .then(response => {
+        console.log("this.state.data len before", this.state.data.length);
+        this.setState({
+          data: page === 1 ? response : [...this.state.data, ...response],
+          error: response.error || null,
+          loading: false,
+          refreshing: false
         });
-        this.setState(
-          {
-            dataSource: ds.cloneWithRows(responseJson),
-            isLoading: false
-          },
-          function() {
-            // do something with new state
-          }
-        );
+        console.log("this.state.data len after", this.state.data.length);
       })
       .catch(error => {
-        console.error(error);
+        this.setState({ error, loading: false });
       });
-  }
+  };
 
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.container}>
-          <PreSplash />
-        </View>
-      );
-    }
+  renderHeader = () => {
+    if (!this.state.refreshing) return null;
 
     return (
-      <View style={styles.container}>
-        <ListView
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={() => this.onRefresh}
-            />
-          }
-          dataSource={this.state.dataSource}
-          renderRow={rowData =>
-            <TouchableHighlight
-              onPress={() =>
-                this.props.navigation.navigate("GamingSession", {
-                  gamingSessionId: rowData.id
-                })}
-              underlayColor="white"
-            >
-              <View style={styles.box}>
-                <View style={styles.leftBox}>
-                  <Image
-                    style={styles.avatarMini}
-                    source={{
-                      uri: rowData.game_avatar_url
-                    }}
-                  />
-                </View>
-                <View style={styles.middleBox}>
-                  <Text style={styles.gamingSessionTitle}>
-                    {rowData.category}
-                  </Text>
-                  <Text
-                    style={styles.gamingSessionDescription}
-                    numberOfLines={2}
-                  >
-                    {rowData.name}
-                  </Text>
-                </View>
-                <View style={styles.rightBox}>
-                  <Text style={styles.iconText}>
-                    <MaterialCommunityIcons
-                      name="calendar"
-                      size={12}
-                      color={colors.mediumGrey}
-                    />
-                    <Moment element={Text}>
-                      {rowData.start_time}
-                    </Moment>
-                  </Text>
-                  <Text style={styles.iconText}>
-                    <MaterialCommunityIcons
-                      name="account"
-                      size={14}
-                      color={colors.mediumGrey}
-                    />{" "}
-                    {rowData.primary_users_count}/{rowData.team_size}
-                  </Text>
-                  <Text style={styles.iconText}>
-                    <MaterialCommunityIcons
-                      name="gauge"
-                      size={14}
-                      color={colors.mediumGrey}
-                    />
-                    {rowData.light_level === null
-                      ? " any"
-                      : rowData.light_level}
-                  </Text>
-                </View>
-              </View>
-            </TouchableHighlight>}
-        />
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: "#CED0CE"
+        }}
+      >
+        <ActivityIndicator animating size="large" />
       </View>
+    );
+  };
+
+  renderFooter = () => {
+    // if (!this.state.loading) return null;
+
+    return (
+      <View
+        style={{
+          paddingVertical: 20,
+          borderTopWidth: 1,
+          borderColor: "#CED0CE"
+        }}
+      >
+        <ActivityIndicator animating size="large" />
+      </View>
+    );
+  };
+
+  render() {
+    return (
+      <FlatList
+        data={this.state.data}
+        renderItem={({ item }) =>
+          <MyListItem data={item} onPressItem={this.goToSession} />}
+        ListHeaderComponent={this.renderHeader}
+        ListFooterComponent={this.renderFooter}
+        keyExtractor={(item, index) => index}
+        onRefresh={this.onRefresh}
+        refreshing={this.state.refreshing}
+        onEndReached={this.onLoadMore}
+        onEndReachedThreshold={2}
+      />
     );
   }
 }
@@ -199,8 +256,8 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   gamingSessionTitle: {
-    color: colors.grey,
-    fontFamily: "Futura"
+    color: colors.grey
+    //fontFamily: "Futura"
   },
   gamingSessionDescription: {
     color: colors.lightGrey
