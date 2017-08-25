@@ -23,15 +23,15 @@ const mapStateToProps = state => {
 };
 
 class TabBarNavigation extends React.Component {
+  static propTypes = {
+    authenticationState: PropTypes.object.isRequired
+  };
+
   // console.log("isAuthed: " + this.props.authenticationState.isAuthenticating === true)
   render() {
     const { dispatch, navigationState } = this.props;
     if (this.props.authenticationState.isAuthed === false) {
-      return (
-        <View>
-          <Text>Not Authed.</Text>
-        </View>
-      );
+      return <Splash />;
     }
     return (
       <TabBar
