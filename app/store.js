@@ -3,6 +3,7 @@
 // Redux
 import { applyMiddleware, combineReducers, createStore } from "redux";
 import logger from "redux-logger";
+import thunk from "redux-thunk";
 
 // Navigation
 import { GamingSessionsListNavigator } from "./components/GamingSessionsList/NavigationConfiguration";
@@ -15,14 +16,17 @@ import {
   tabBarReducer
 } from "./components/TabBar/NavigationConfiguration";
 
+import { authentication } from "./redux/modules/authentication";
+
 // Middleware
 const middleware = () => {
-  return applyMiddleware(logger);
+  return applyMiddleware(logger, thunk);
 };
 
 export default createStore(
   combineReducers({
     tabBar: tabBarReducer,
+    authentication: authentication,
 
     gamingSessionsListTab: (state, action) =>
       GamingSessionsListNavigator.router.getStateForAction(action, state),
