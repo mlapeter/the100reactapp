@@ -10,7 +10,8 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  View
+  View,
+  Modal
 } from "react-native";
 import { StackNavigator } from "react-navigation";
 
@@ -22,6 +23,53 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
+
+class ModalExample extends Component {
+  state = {
+    modalVisible: false
+  };
+
+  setModalVisible(visible) {
+    this.setState({ modalVisible: visible });
+  }
+
+  render() {
+    return (
+      <View style={{ marginTop: 22 }}>
+        <Modal
+          animationType={"slide"}
+          transparent={false}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {
+            alert("Modal has been closed.");
+          }}
+        >
+          <View style={{ marginTop: 22 }}>
+            <View>
+              <Text>Hello World!</Text>
+
+              <TouchableHighlight
+                onPress={() => {
+                  this.setModalVisible(!this.state.modalVisible);
+                }}
+              >
+                <Text>Hide Modal</Text>
+              </TouchableHighlight>
+            </View>
+          </View>
+        </Modal>
+
+        <TouchableHighlight
+          onPress={() => {
+            this.setModalVisible(true);
+          }}
+        >
+          <Text>Show Modal 2</Text>
+        </TouchableHighlight>
+      </View>
+    );
+  }
+}
 
 class MyListItem extends React.PureComponent {
   constructor(props) {
@@ -135,16 +183,14 @@ export default class GamingSessionsList extends React.PureComponent {
 
   fetchData = () => {
     const page = this.state.page;
-    const url = "https://www.the100.io/api/v1/gaming_sessions?page=${page}";
+    let url = "https://www.the100.io/api/v1/gaming_sessions?page=" + page;
     this.setState({ loading: true });
 
     console.log("FETCHING DATA", url);
-    console.log("page", this.state.page);
 
     fetch(url)
       .then(response => response.json())
       .then(response => {
-        console.log("this.state.data len before", this.state.data.length);
         this.setState({
           data: page === 1 ? response : [...this.state.data, ...response],
           error: response.error || null,
@@ -154,6 +200,7 @@ export default class GamingSessionsList extends React.PureComponent {
         console.log("this.state.data len after", this.state.data.length);
       })
       .catch(error => {
+        console.log("error", error);
         this.setState({ error, loading: false });
       });
   };
@@ -192,18 +239,21 @@ export default class GamingSessionsList extends React.PureComponent {
 
   render() {
     return (
-      <FlatList
-        data={this.state.data}
-        renderItem={({ item }) =>
-          <MyListItem data={item} onPressItem={this.goToSession} />}
-        ListHeaderComponent={this.renderHeader}
-        ListFooterComponent={this.renderFooter}
-        keyExtractor={(item, index) => index}
-        onRefresh={this.onRefresh}
-        refreshing={this.state.refreshing}
-        onEndReached={this.onLoadMore}
-        onEndReachedThreshold={2}
-      />
+      <View>
+        <ModalExample />
+        <FlatList
+          data={this.state.data}
+          renderItem={({ item }) =>
+            <MyListItem data={item} onPressItem={this.goToSession} />}
+          ListHeaderComponent={this.renderHeader}
+          ListFooterComponent={this.renderFooter}
+          keyExtractor={(item, index) => item.id}
+          onRefresh={this.onRefresh}
+          refreshing={this.state.refreshing}
+          onEndReached={this.onLoadMore}
+          onEndReachedThreshold={3}
+        />
+      </View>
     );
   }
 }
