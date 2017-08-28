@@ -9,12 +9,14 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { connect } from "react-redux";
+import { onAuthChange } from "../../redux/modules/authentication";
 
 import { colors, fontSizes } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import TimeAgo from "../../../node_modules/react-native-timeago";
 
-export default class Notifications extends Component {
+class Notifications extends Component {
   static propTypes = {};
   constructor(props) {
     super(props);
@@ -54,12 +56,13 @@ export default class Notifications extends Component {
     });
   }
 
-  async userLogout() {
+  userLogout() {
     try {
-      await AsyncStorage.removeItem("id_token");
+      AsyncStorage.removeItem("id_token");
     } catch (error) {
       console.log("AsyncStorage error: " + error.message);
     }
+    // this.props.dispatch(onAuthChange());
   }
 
   render() {
@@ -193,3 +196,12 @@ const styles = StyleSheet.create({
     color: colors.mediumGrey
   }
 });
+
+function mapStateToProps({ authentication }) {
+  return {
+    isAuthenticating: authentication.isAuthenticating,
+    isAuthed: authentication.isAuthed
+  };
+}
+
+export default connect(mapStateToProps)(Notifications);
