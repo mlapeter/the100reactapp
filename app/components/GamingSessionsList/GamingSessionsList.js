@@ -11,9 +11,11 @@ import {
   Text,
   TextInput,
   View,
+  Picker,
   Modal
 } from "react-native";
 import { StackNavigator } from "react-navigation";
+import FilterModal from "../../components/GamingSessionsList/GamingSessionListFilter";
 
 import PreSplash from "../../components/PreSplash/PreSplash";
 import { colors, fontSizes } from "../../styles";
@@ -23,53 +25,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
-
-class ModalExample extends Component {
-  state = {
-    modalVisible: false
-  };
-
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
-  }
-
-  render() {
-    return (
-      <View style={{ marginTop: 22 }}>
-        <Modal
-          animationType={"slide"}
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            alert("Modal has been closed.");
-          }}
-        >
-          <View style={{ marginTop: 22 }}>
-            <View>
-              <Text>Hello World!</Text>
-
-              <TouchableHighlight
-                onPress={() => {
-                  this.setModalVisible(!this.state.modalVisible);
-                }}
-              >
-                <Text>Hide Modal</Text>
-              </TouchableHighlight>
-            </View>
-          </View>
-        </Modal>
-
-        <TouchableHighlight
-          onPress={() => {
-            this.setModalVisible(true);
-          }}
-        >
-          <Text>Show Modal 2</Text>
-        </TouchableHighlight>
-      </View>
-    );
-  }
-}
 
 class MyListItem extends React.PureComponent {
   constructor(props) {
@@ -107,9 +62,7 @@ class MyListItem extends React.PureComponent {
                 size={12}
                 color={colors.mediumGrey}
               />
-              <Moment element={Text}>
-                {this.props.data.start_time}
-              </Moment>
+              <Moment element={Text}>{this.props.data.start_time}</Moment>
             </Text>
             <Text style={styles.iconText}>
               <MaterialCommunityIcons
@@ -125,9 +78,11 @@ class MyListItem extends React.PureComponent {
                 size={14}
                 color={colors.mediumGrey}
               />
-              {this.props.data.light_level === null
-                ? " any"
-                : this.props.data.light_level}
+              {this.props.data.light_level === null ? (
+                " any"
+              ) : (
+                this.props.data.light_level
+              )}
             </Text>
           </View>
         </View>
@@ -142,10 +97,17 @@ export default class GamingSessionsList extends React.PureComponent {
     this.state = {
       loading: true,
       data: [],
+      gamesData: [],
       page: 1,
+      gameType: 1,
+      platform: "xbox-one",
+      activity: "",
+      URL: "",
+      notFull: false,
       error: null,
       refreshing: false
     };
+    this.updateFilters = this.updateFilters.bind(this);
   }
 
   goToSession = id => {
@@ -177,13 +139,85 @@ export default class GamingSessionsList extends React.PureComponent {
     );
   };
 
-  componentDidMount() {
-    this.fetchData();
+  updateFilters(gameType, platform, activity, notFull) {
+    console.info("updateFilters");
+    this.setState(
+      {
+        gameType: gameType,
+        platform: platform,
+        activity: activity,
+        notFull: notFull
+      },
+      () => {
+        this.buildURL();
+      }
+    );
   }
+
+  buildURL = () => {
+    var _URL = "https://www.the100.io/api/v1/gaming_sessions?";
+
+    if (this.state.gameType != null) {
+      _URL += "q[game_id_eq]=" + this.state.gameType;
+    }
+
+    if (this.state.platform != null) {
+      _URL += "&q[platform_cont]=" + this.state.platform;
+    }
+
+    if (this.state.activity != "" && this.state.activity != "Any") {
+      _URL += "&q[category_cont]=" + this.state.activity;
+    }
+
+    if (this.state.notFull != null) {
+      _URL += "&q[with_available_slots]=" + this.state.notFull;
+    }
+
+    this.setState(
+      {
+        URL: _URL,
+        page: 1
+      },
+      () => {
+        this.fetchData();
+      }
+    );
+  };
+
+  componentDidMount() {
+    this.buildURL();
+    this.fetchGamesList();
+    // this.fetchData();
+  }
+
+  fetchGamesList = () => {
+    //http://pwn-staging.herokuapp.com/api/v1/games
+    let url = "https://www.the100.io/api/v1/games";
+    //this.setState({ loading: true });
+
+    console.log("FETCHING GAMES DATA", url);
+
+    fetch(url)
+      .then(response => response.json())
+      .then(response => {
+        this.setState({
+          gamesData: response,
+          error: response.error || null
+        });
+        console.log(
+          "this.state.gamesData len after",
+          this.state.gamesData.length
+        );
+      })
+      .catch(error => {
+        console.log("error", error);
+        this.setState({ error });
+      });
+  };
 
   fetchData = () => {
     const page = this.state.page;
-    let url = "https://www.the100.io/api/v1/gaming_sessions?page=" + page;
+    var url = this.state.URL + "&page=" + page;
     this.setState({ loading: true });
 
     console.log("FETCHING DATA", url);
@@ -211,7 +245,7 @@ export default class GamingSessionsList extends React.PureComponent {
     return (
       <View
         style={{
-          paddingVertical: 20,
+          paddingVertical: 5,
           borderTopWidth: 1,
           borderColor: "#CED0CE"
         }}
@@ -222,12 +256,12 @@ export default class GamingSessionsList extends React.PureComponent {
   };
 
   renderFooter = () => {
-    // if (!this.state.loading) return null;
+    if (!this.state.loading) return null;
 
     return (
       <View
         style={{
-          paddingVertical: 20,
+          paddingVertical: 25,
           borderTopWidth: 1,
           borderColor: "#CED0CE"
         }}
@@ -240,11 +274,20 @@ export default class GamingSessionsList extends React.PureComponent {
   render() {
     return (
       <View>
-        <ModalExample />
+        <FilterModal
+          onFilterUpdate={this.updateFilters}
+          onFilterClose={this.buildURL}
+          gamesData={this.state.gamesData}
+          gameType={this.state.gameType}
+          activity={this.state.activity}
+          platform={this.state.platform}
+          notFull={this.state.notFull}
+        />
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) =>
-            <MyListItem data={item} onPressItem={this.goToSession} />}
+          renderItem={({ item }) => (
+            <MyListItem data={item} onPressItem={this.goToSession} />
+          )}
           ListHeaderComponent={this.renderHeader}
           ListFooterComponent={this.renderFooter}
           keyExtractor={(item, index) => item.id}
@@ -263,7 +306,7 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
-    marginTop: 20,
+    marginTop: 2,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
@@ -279,9 +322,9 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "stretch",
-    margin: 5,
+    margin: 1,
     padding: 5,
-    borderBottomWidth: 0.5,
+    borderBottomWidth: 0.1,
     borderBottomColor: "#d6d7da",
     backgroundColor: colors.white
   },
