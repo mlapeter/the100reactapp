@@ -39,6 +39,7 @@ class GameSelector extends Component {
         <View style={styles.middleBox}>
           <Picker
             style={styles.pickerStyle}
+            itemStyle={styles.pickerItem}
             selectedValue={this.props.gameType}
             onValueChange={(itemValue, itemIndex) =>
               this.onGameSelect(itemValue)}
@@ -73,6 +74,7 @@ class PlatformSelector extends Component {
         <View style={styles.middleBox}>
           <Picker
             style={styles.pickerStyle}
+            itemStyle={styles.pickerItem}
             selectedValue={this.props.platform}
             onValueChange={(itemValue, itemIndex) =>
               this.onPlatformSelect(itemValue)}
@@ -109,6 +111,7 @@ class ActivitySelector extends Component {
         <View style={styles.middleBox}>
           <Picker
             style={styles.pickerStyle}
+            itemStyle={styles.pickerItem}
             selectedValue={this.props.activity}
             onValueChange={(itemValue, itemIndex) =>
               this.onActivitySelect(itemValue)}
@@ -258,6 +261,7 @@ export default class FilterModal extends Component {
           />
           <View>
             <Button
+              style={{ marginTop: 10 }}
               onPress={() => {
                 this.onModalClose();
                 this.setModalVisible(!this.state.modalVisible);
@@ -281,20 +285,26 @@ export default class FilterModal extends Component {
 const styles = StyleSheet.create({
   defaultText: {
     color: colors.primary,
-    fontSize: 20,
+    fontSize: fontSizes.small,
     fontWeight: "bold",
-    paddingTop: 6
+    paddingTop: 20
   },
   pickerStyle: {
     backgroundColor: colors.lightestGrey,
-    width: 400
+    flex: 1,
+    height: 40
+  },
+  pickerItem: {
+    height: 40,
+    color: "black",
+    fontSize: fontSizes.small
   },
   box: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "stretch",
     //margin: 2,
-    padding: 5,
+    padding: 2,
     borderBottomWidth: 0.2,
     borderBottomColor: "#d6d7da",
     backgroundColor: colors.white
