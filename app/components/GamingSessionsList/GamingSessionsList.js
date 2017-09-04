@@ -22,6 +22,8 @@ import { colors, fontSizes } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import GamesList from "../../components/GamingSessionsList/gameslist.json";
+import GameSessions from "../../components/GamingSessionsList/gamesessions.json";
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
@@ -135,7 +137,8 @@ export default class GamingSessionsList extends React.PureComponent {
   onLoadMore = () => {
     this.setState(
       {
-        page: this.state.page + 1
+        page: this.state.page + 1,
+        loading: true
       },
       () => {
         this.fetchData();
@@ -150,7 +153,8 @@ export default class GamingSessionsList extends React.PureComponent {
         gameType: gameType,
         platform: platform,
         activity: activity,
-        notFull: notFull
+        notFull: notFull,
+        refreshing: true
       },
       () => {
         this.buildURL();
@@ -195,8 +199,9 @@ export default class GamingSessionsList extends React.PureComponent {
   }
 
   fetchGamesList = () => {
-    //http://pwn-staging.herokuapp.com/api/v1/games
-    let url = "https://www.the100.io/api/v1/games";
+    let url = "http://pwn-staging.herokuapp.com/api/v1/games";
+    //let url = "https://www.the100.io/api/v1/games";
+    //  let = require("../../components/GamingSessionsList/gameslist.json");
     //this.setState({ loading: true });
 
     console.log("FETCHING GAMES DATA", url);
@@ -212,6 +217,13 @@ export default class GamingSessionsList extends React.PureComponent {
           "this.state.gamesData len after",
           this.state.gamesData.length
         );
+        if (this.state.gamesData.length == undefined) {
+          this.setState({
+            gamesData: GamesList,
+            error: response.error || null
+          });
+          console.info("local gameslist", GamesList[0]);
+        }
       })
       .catch(error => {
         console.log("error", error);
@@ -235,6 +247,12 @@ export default class GamingSessionsList extends React.PureComponent {
           loading: false,
           refreshing: false
         });
+        if (this.state.data.length == undefined) {
+          this.setState({
+            data: GameSessions,
+            error: response.error || null
+          });
+        }
         console.log("this.state.data len after", this.state.data.length);
       })
       .catch(error => {
@@ -244,7 +262,7 @@ export default class GamingSessionsList extends React.PureComponent {
   };
 
   renderHeader = () => {
-    if (!this.state.refreshing) return null;
+    if (!this.state.loading) return null;
 
     return (
       <View
@@ -293,7 +311,7 @@ export default class GamingSessionsList extends React.PureComponent {
             <MyListItem data={item} onPressItem={this.goToSession} />
           )}
           ListHeaderComponent={this.renderHeader}
-          ListFooterComponent={this.renderFooter}
+          //ListFooterComponent={this.renderFooter}
           keyExtractor={(item, index) => item.id}
           onRefresh={this.onRefresh}
           refreshing={this.state.refreshing}
