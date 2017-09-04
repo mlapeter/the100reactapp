@@ -42,9 +42,13 @@ class MyListItem extends React.PureComponent {
           <View style={styles.leftBox}>
             <Image
               style={styles.avatarMini}
-              source={{
-                uri: this.props.data.game_avatar_url
-              }}
+              source={
+                this.props.data.game_avatar_url === "img/default-avatar.png" ? (
+                  require("../../images/default-avatar.png")
+                ) : (
+                  { uri: this.props.data.game_avatar_url }
+                )
+              }
             />
           </View>
           <View style={styles.middleBox}>
