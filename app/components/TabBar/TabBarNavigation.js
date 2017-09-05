@@ -14,7 +14,8 @@ import { TabBar } from "./NavigationConfiguration";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => {
-  console.log("STATE IS: " + state.authentication.isAuthenticating);
+  console.log("isAuthenticating IS: " + state.authentication.isAuthenticating);
+  console.log("isAuthed IS: " + state.authentication.isAuthed);
 
   return {
     navigationState: state.tabBar,

@@ -57,12 +57,14 @@ class Notifications extends Component {
   }
 
   userLogout() {
-    // try {
-    //   AsyncStorage.removeItem("id_token");
-    // } catch (error) {
-    //   console.log("AsyncStorage error: " + error.message);
-    // }
-    this.props.dispatch(onAuthChange());
+    try {
+      AsyncStorage.removeItem("id_token");
+    } catch (error) {
+      console.log("AsyncStorage error: " + error.message);
+    }
+    this.props.dispatch(onAuthChange(""));
+
+    // this.props.dispatch(onAuthChange());
   }
 
   render() {
@@ -84,7 +86,7 @@ class Notifications extends Component {
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.buttonWrapper}
-          onPress={this.userLogout}
+          onPress={this.userLogout.bind(this)}
         >
           <Text style={styles.buttonText}> Log out </Text>
         </TouchableOpacity>
@@ -157,6 +159,9 @@ const styles = StyleSheet.create({
     padding: 5,
     borderTopWidth: 0.5,
     borderTopColor: "#d6d7da"
+  },
+  buttonWrapper: {
+    padding: 10
   },
   leftBox: {
     flex: 1,
