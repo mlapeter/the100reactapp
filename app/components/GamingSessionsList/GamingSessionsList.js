@@ -97,9 +97,11 @@ export default class GamingSessionsList extends React.Component {
                 <View style={styles.leftBox}>
                   <Image
                     style={styles.avatarMini}
-                    source={{
-                      uri: rowData.game_avatar_url
-                    }}
+                    source={
+                      rowData.game_avatar_url === "img/default-avatar.png"
+                        ? require("../../images/default-avatar.png")
+                        : { uri: rowData.game_avatar_url }
+                    }
                   />
                 </View>
                 <View style={styles.middleBox}>

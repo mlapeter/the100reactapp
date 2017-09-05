@@ -32,7 +32,7 @@ export function onAuthChange(token) {
 }
 
 const initialState = {
-  isAuthed: false,
+  isAuthed: true,
   isAuthenticating: false,
   authedId: "",
   token: ""

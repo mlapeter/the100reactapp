@@ -57,12 +57,12 @@ class Notifications extends Component {
   }
 
   userLogout() {
-    try {
-      AsyncStorage.removeItem("id_token");
-    } catch (error) {
-      console.log("AsyncStorage error: " + error.message);
-    }
-    // this.props.dispatch(onAuthChange());
+    // try {
+    //   AsyncStorage.removeItem("id_token");
+    // } catch (error) {
+    //   console.log("AsyncStorage error: " + error.message);
+    // }
+    this.props.dispatch(onAuthChange());
   }
 
   render() {
@@ -91,7 +91,7 @@ class Notifications extends Component {
         <Text>
           {this.state.token}
         </Text>
-        <Text>Notifications</Text>
+        <Text>Notifications: </Text>
 
         <FlatList
           data={this.state.items}
