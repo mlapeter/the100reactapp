@@ -116,6 +116,7 @@ class ActivitySelector extends Component {
             onValueChange={(itemValue, itemIndex) =>
               this.onActivitySelect(itemValue)}
           >
+            <Picker.Item key="Any" label="Any" value="Any" />
             {this.props.activities.map(activity => (
               <Picker.Item
                 key={activity}
@@ -198,7 +199,6 @@ export default class FilterModal extends Component {
     for (var index = 0; index < this.props.gamesData.length; index++) {
       var game = this.props.gamesData[index];
       if (game.id == Id) {
-        game.activities.unshift("Any");
         this.state.activities = game.activities;
       }
     }
@@ -233,14 +233,16 @@ export default class FilterModal extends Component {
 
   render() {
     return (
-      <View style={{ marginTop: 5 }}>
+      <View>
         <Modal
           animationType={"slide"}
           transparent={false}
           visible={this.state.modalVisible}
           onRequestClose={() => {}}
         >
+          <Text> </Text>
           <GameSelector
+            style={{ marginTop: 20 }}
             gamesData={this.props.gamesData}
             onGameSelect={this.onGameSelect}
             gameType={this.state.gameType}
@@ -261,7 +263,6 @@ export default class FilterModal extends Component {
           />
           <View>
             <Button
-              style={{ marginTop: 10 }}
               onPress={() => {
                 this.onModalClose();
                 this.setModalVisible(!this.state.modalVisible);
@@ -272,6 +273,7 @@ export default class FilterModal extends Component {
         </Modal>
 
         <Button
+          style={styles.buttonStyle}
           onPress={() => {
             this.setModalVisible(true);
           }}
@@ -288,6 +290,10 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.small,
     fontWeight: "bold",
     paddingTop: 20
+  },
+  buttonStyle: {
+    paddingTop: 10,
+    marginTop: 30
   },
   pickerStyle: {
     backgroundColor: colors.lightestGrey,

@@ -67,7 +67,7 @@ class MyListItem extends React.PureComponent {
                 name="calendar"
                 size={12}
                 color={colors.mediumGrey}
-              />
+              />{" "}
               <Moment element={Text}>{this.props.data.start_time}</Moment>
             </Text>
             <Text style={styles.iconText}>
@@ -101,7 +101,9 @@ export default class GamingSessionsList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loading: true,
+      loading: false, //load more
+      fetching: true, // any fetch
+      refreshing: true, // full refresh or load
       data: [],
       gamesData: [],
       page: 1,
@@ -110,8 +112,7 @@ export default class GamingSessionsList extends React.PureComponent {
       activity: "",
       URL: "",
       notFull: false,
-      error: null,
-      refreshing: false
+      error: null
     };
     this.updateFilters = this.updateFilters.bind(this);
   }
@@ -126,7 +127,8 @@ export default class GamingSessionsList extends React.PureComponent {
     this.setState(
       {
         page: 1,
-        refreshing: true
+        refreshing: true,
+        fetching: true
       },
       () => {
         this.fetchData();
@@ -135,10 +137,15 @@ export default class GamingSessionsList extends React.PureComponent {
   };
 
   onLoadMore = () => {
+    if (this.state.page >= 10) {
+      return null;
+    }
+
     this.setState(
       {
         page: this.state.page + 1,
-        loading: true
+        loading: true,
+        fetching: true
       },
       () => {
         this.fetchData();
@@ -154,7 +161,8 @@ export default class GamingSessionsList extends React.PureComponent {
         platform: platform,
         activity: activity,
         notFull: notFull,
-        refreshing: true
+        refreshing: true,
+        fetching: true
       },
       () => {
         this.buildURL();
@@ -193,6 +201,10 @@ export default class GamingSessionsList extends React.PureComponent {
   };
 
   componentDidMount() {
+    this.setState({
+      refreshing: true,
+      fetching: true
+    });
     this.buildURL();
     this.fetchGamesList();
     // this.fetchData();
@@ -234,7 +246,7 @@ export default class GamingSessionsList extends React.PureComponent {
   fetchData = () => {
     const page = this.state.page;
     var url = this.state.URL + "&page=" + page;
-    this.setState({ loading: true });
+    //this.setState({ refreshing: true });
 
     console.log("FETCHING DATA", url);
 
@@ -245,7 +257,8 @@ export default class GamingSessionsList extends React.PureComponent {
           data: page === 1 ? response : [...this.state.data, ...response],
           error: response.error || null,
           loading: false,
-          refreshing: false
+          refreshing: false,
+          fetching: false
         });
         if (this.state.data.length == undefined) {
           this.setState({
@@ -257,24 +270,13 @@ export default class GamingSessionsList extends React.PureComponent {
       })
       .catch(error => {
         console.log("error", error);
-        this.setState({ error, loading: false });
+        this.setState({
+          error,
+          loading: false,
+          refreshing: false,
+          fetching: false
+        });
       });
-  };
-
-  renderHeader = () => {
-    if (!this.state.loading) return null;
-
-    return (
-      <View
-        style={{
-          paddingVertical: 5,
-          borderTopWidth: 1,
-          borderColor: "#CED0CE"
-        }}
-      >
-        <ActivityIndicator animating size="large" />
-      </View>
-    );
   };
 
   renderFooter = () => {
@@ -283,41 +285,72 @@ export default class GamingSessionsList extends React.PureComponent {
     return (
       <View
         style={{
-          paddingVertical: 25,
-          borderTopWidth: 1,
-          borderColor: "#CED0CE"
+          //paddingVertical: 25,
+          //borderTopWidth: 1,
+          //borderColor: "#CED0CE",
+          backgroundColor: colors.red
         }}
       >
-        <ActivityIndicator animating size="large" />
+        <Text>Footer</Text>
       </View>
     );
   };
 
   render() {
     return (
-      <View>
-        <FilterModal
-          onFilterUpdate={this.updateFilters}
-          onFilterClose={this.buildURL}
-          gamesData={this.state.gamesData}
-          gameType={this.state.gameType}
-          activity={this.state.activity}
-          platform={this.state.platform}
-          notFull={this.state.notFull}
-        />
-        <FlatList
-          data={this.state.data}
-          renderItem={({ item }) => (
-            <MyListItem data={item} onPressItem={this.goToSession} />
-          )}
-          ListHeaderComponent={this.renderHeader}
-          //ListFooterComponent={this.renderFooter}
-          keyExtractor={(item, index) => item.id}
-          onRefresh={this.onRefresh}
-          refreshing={this.state.refreshing}
-          onEndReached={this.onLoadMore}
-          onEndReachedThreshold={3}
-        />
+      <View style={{ marginTop: 10 }}>
+        {this.state.refreshing == false && (
+          <FilterModal
+            onFilterUpdate={this.updateFilters}
+            onFilterClose={this.buildURL}
+            gamesData={this.state.gamesData}
+            gameType={this.state.gameType}
+            activity={this.state.activity}
+            platform={this.state.platform}
+            notFull={this.state.notFull}
+          />
+        )}
+
+        {this.state.refreshing == true && (
+          <View
+            style={{
+              paddingVertical: 200
+            }}
+          >
+            <PreSplash />
+          </View>
+        )}
+
+        {this.state.refreshing == false &&
+          (this.state.data.length > 0 && (
+            <FlatList
+              data={this.state.data}
+              renderItem={({ item }) => (
+                <MyListItem data={item} onPressItem={this.goToSession} />
+              )}
+              // ListHeaderComponent={this.renderHeader}
+              ListFooterComponent={this.renderFooter}
+              keyExtractor={(item, index) => item.id}
+              onRefresh={this.onRefresh}
+              refreshing={this.state.refreshing}
+              onEndReached={this.onLoadMore}
+              onEndReachedThreshold={0.5}
+            />
+          ))}
+
+        {this.state.fetching == false &&
+          (this.state.data.length <= 0 && (
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
+              <MaterialCommunityIcons
+                name="alert-circle"
+                size={24}
+                color={colors.mediumGrey}
+              />
+              <Text style={styles.alertText}>
+                There are no games of this type.
+              </Text>
+            </View>
+          ))}
       </View>
     );
   }
@@ -326,6 +359,11 @@ export default class GamingSessionsList extends React.PureComponent {
 const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
+  },
+  alertText: {
+    fontSize: fontSizes.large,
+    fontWeight: "bold",
+    paddingTop: 5
   },
   container: {
     marginTop: 2,
@@ -363,7 +401,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   rightBox: {
-    flex: 1.1
+    flex: 1.7,
+    padding: 2,
+    margin: 2
   },
   avatarMini: {
     height: 40,
