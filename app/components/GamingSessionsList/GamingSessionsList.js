@@ -211,8 +211,8 @@ export default class GamingSessionsList extends React.PureComponent {
   }
 
   fetchGamesList = () => {
-    let url = "http://pwn-staging.herokuapp.com/api/v1/games";
-    //let url = "https://www.the100.io/api/v1/games";
+    //let url = "http://pwn-staging.herokuapp.com/api/v1/games";
+    let url = "https://www.the100.io/api/v1/games";
     //  let = require("../../components/GamingSessionsList/gameslist.json");
     //this.setState({ loading: true });
 
