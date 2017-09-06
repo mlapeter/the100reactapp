@@ -1,9 +1,10 @@
 "use strict";
 
 // Redux
-import { applyMiddleware, combineReducers, createStore } from "redux";
+import { applyMiddleware, combineReducers, createStore, compose } from "redux";
 import logger from "redux-logger";
 import thunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
 
 // Navigation
 import { GamingSessionsListNavigator } from "./components/GamingSessionsList/NavigationConfiguration";
@@ -43,5 +44,5 @@ export default createStore(
     // tabThree: (state, action) =>
     //   NavigatorTabThree.router.getStateForAction(action, state)
   }),
-  middleware()
+  composeWithDevTools(middleware())
 );

@@ -68,6 +68,17 @@ class Splash extends React.Component {
       .done();
   }
 
+  userLogout() {
+    try {
+      AsyncStorage.removeItem("id_token");
+    } catch (error) {
+      console.log("AsyncStorage error: " + error.message);
+    }
+    this.props.dispatch(onAuthChange());
+
+    // this.props.dispatch(onAuthChange());
+  }
+
   static navigationOptions = {
     title: "Welcome"
   };
@@ -115,6 +126,12 @@ class Splash extends React.Component {
               onPress={this.userLogin.bind(this)}
               title="Login"
             />
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={this.userLogout.bind(this)}
+            >
+              <Text style={styles.buttonText}> Log out </Text>
+            </TouchableOpacity>
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>

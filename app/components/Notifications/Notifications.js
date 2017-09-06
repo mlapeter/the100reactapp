@@ -62,6 +62,8 @@ class Notifications extends Component {
     } catch (error) {
       console.log("AsyncStorage error: " + error.message);
     }
+    this.props.dispatch(onAuthChange(""));
+
     // this.props.dispatch(onAuthChange());
   }
 
@@ -84,14 +86,14 @@ class Notifications extends Component {
       <View style={styles.container}>
         <TouchableOpacity
           style={styles.buttonWrapper}
-          onPress={this.userLogout}
+          onPress={this.userLogout.bind(this)}
         >
           <Text style={styles.buttonText}> Log out </Text>
         </TouchableOpacity>
         <Text>
           {this.state.token}
         </Text>
-        <Text>Notifications</Text>
+        <Text>Notifications: </Text>
 
         <FlatList
           data={this.state.items}
@@ -157,6 +159,9 @@ const styles = StyleSheet.create({
     padding: 5,
     borderTopWidth: 0.5,
     borderTopColor: "#d6d7da"
+  },
+  buttonWrapper: {
+    padding: 10
   },
   leftBox: {
     flex: 1,
