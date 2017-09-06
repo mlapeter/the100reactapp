@@ -76,7 +76,11 @@ export default class GamingSession extends React.Component {
           {this.state.dataSource.category.toString()}
         </Text>
         <Text style={styles.description} numberOfLines={2}>
-          {this.state.dataSource.name.toString()}
+          {this.state.dataSource.name != null ? (
+            this.state.dataSource.name.toString()
+          ) : (
+            ""
+          )}
         </Text>
         <View style={styles.iconBar}>
           <Text style={styles.icon}>

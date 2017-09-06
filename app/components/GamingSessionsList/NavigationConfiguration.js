@@ -1,5 +1,5 @@
 "use strict";
-
+import { Platform } from "react-native";
 import { StackNavigator } from "react-navigation";
 
 // Screens
@@ -7,13 +7,23 @@ import GamingSessionsList from "../../components/GamingSessionsList/GamingSessio
 import GamingSession from "../../components/GamingSession/GamingSession";
 
 const routeConfiguration = {
-  GamingSessionsList: { screen: GamingSessionsList },
-  GamingSession: { screen: GamingSession }
+  GamingSessionsList: {
+    screen: GamingSessionsList,
+    navigationOptions: {
+      header: null
+    }
+  },
+  GamingSession: {
+    screen: GamingSession,
+    navigationOptions: {
+      headerMode: Platform.OS === "ios" ? "float" : "screen"
+    }
+  }
 };
 
 // going to disable the header for now
 const stackNavigatorConfiguration = {
-  headerMode: "none",
+  //headerMode: Platform.OS === "ios" ? "float" : "screen",
   initialRouteName: "GamingSessionsList"
 };
 

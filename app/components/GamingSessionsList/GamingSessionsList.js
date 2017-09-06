@@ -347,7 +347,7 @@ export default class GamingSessionsList extends React.PureComponent {
                 color={colors.mediumGrey}
               />
               <Text style={styles.alertText}>
-                There are no games of this type.
+                There are no puppies of this type.
               </Text>
             </View>
           ))}
