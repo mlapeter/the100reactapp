@@ -18,11 +18,8 @@ export default function PlayerList(props) {
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     padding: 5,
     flexDirection: "row",
-    // justifyContent: "space-between",
-    // alignItems: "flex-start",
     flexWrap: "wrap",
     borderBottomWidth: 0.5,
     borderBottomColor: "#d6d7da"
