@@ -45,7 +45,7 @@ export default class GamingSessionsList extends React.Component {
 
   fetchData() {
     console.log("FETCHING DATA");
-    return fetch("https://www.the100.io/api/v1/gaming_sessions")
+    return fetch("https://pwn-staging.herokuapp.com/api/v2/gaming_sessions")
       .then(response => response.json())
       .then(responseJson => {
         let ds = new ListView.DataSource({

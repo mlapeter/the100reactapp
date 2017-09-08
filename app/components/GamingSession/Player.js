@@ -12,10 +12,13 @@ export default function Player(props) {
       <View style={styles.profileBox}>
         <Image
           style={styles.profileAvatar}
-          source={{
-            uri: props.user.computed_avatar_api
-          }}
+          source={
+            props.user.computed_avatar_api === "img/default-avatar.png"
+              ? require("../../images/default-avatar.png")
+              : { uri: props.user.computed_avatar_api }
+          }
         />
+
         <View style={styles.profileText}>
           <Text style={styles.gamertag}>
             {props.user.gamertag}
