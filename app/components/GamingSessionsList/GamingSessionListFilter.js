@@ -232,6 +232,10 @@ export default class FilterModal extends Component {
   }
 
   render() {
+    if (this.props.loading) {
+      return null;
+    }
+
     return (
       <View>
         <Modal

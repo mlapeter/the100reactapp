@@ -23,12 +23,12 @@ import Moment from "../../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import GamesList from "../../components/GamingSessionsList/gameslist.json";
-import GameSessions from "../../components/GamingSessionsList/gamesessions.json";
+import GamingSessions from "../../components/GamingSessionsList/gamesessions.json";
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
-class MyListItem extends React.PureComponent {
+class GamingSessionsListItem extends React.PureComponent {
   constructor(props) {
     super(props);
   }
@@ -101,20 +101,19 @@ export default class GamingSessionsList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false, //load more
-      fetching: true, // any fetch
-      refreshing: true, // full refresh or load
-      data: [],
+      loading: true, //full load
+      refreshing: true, // full refresh
+      isGamingSessionsResponseEmpty: false,
+      gamingSessionsData: [],
       gamesData: [],
       page: 1,
-      gameType: 1,
+      gameType: 23,
       platform: "xbox-one",
       activity: "",
       URL: "",
       notFull: false,
       error: null
     };
-    this.updateFilters = this.updateFilters.bind(this);
   }
 
   goToSession = id => {
@@ -127,33 +126,37 @@ export default class GamingSessionsList extends React.PureComponent {
     this.setState(
       {
         page: 1,
-        refreshing: true,
-        fetching: true
+        refreshing: true
       },
       () => {
-        this.fetchData();
+        this.fetchGamingSessionsData();
       }
     );
   };
 
   onLoadMore = () => {
-    if (this.state.page >= 10) {
+    if (this.state.isGamingSessionsResponseEmpty) {
+      console.info("Won't load more! Last data was empty.");
+      return null;
+    }
+
+    // sanity check just in case the load more goes wild in a loop
+    if (this.state.page >= 30) {
+      console.info("Won't load more! Page is >= 30.");
       return null;
     }
 
     this.setState(
       {
-        page: this.state.page + 1,
-        loading: true,
-        fetching: true
+        page: this.state.page + 1
       },
       () => {
-        this.fetchData();
+        this.fetchGamingSessionsData();
       }
     );
   };
 
-  updateFilters(gameType, platform, activity, notFull) {
+  updateFilters = (gameType, platform, activity, notFull) => {
     console.info("updateFilters");
     this.setState(
       {
@@ -161,64 +164,27 @@ export default class GamingSessionsList extends React.PureComponent {
         platform: platform,
         activity: activity,
         notFull: notFull,
-        refreshing: true,
-        fetching: true
-      },
-      () => {
-        this.buildURL();
-      }
-    );
-  }
-
-  buildURL = () => {
-    var _URL = "https://www.the100.io/api/v1/gaming_sessions?";
-
-    if (this.state.gameType != null) {
-      _URL += "q[game_id_eq]=" + this.state.gameType;
-    }
-
-    if (this.state.platform != null) {
-      _URL += "&q[platform_cont]=" + this.state.platform;
-    }
-
-    if (this.state.activity != "" && this.state.activity != "Any") {
-      _URL += "&q[category_cont]=" + this.state.activity;
-    }
-
-    if (this.state.notFull != null) {
-      _URL += "&q[with_available_slots]=" + this.state.notFull;
-    }
-
-    this.setState(
-      {
-        URL: _URL,
+        loading: true,
         page: 1
       },
       () => {
-        this.fetchData();
+        this.fetchGamingSessionsData();
       }
     );
   };
 
   componentDidMount() {
-    this.setState({
-      refreshing: true,
-      fetching: true
-    });
-    this.buildURL();
-    this.fetchGamesList();
-    // this.fetchData();
+    this.fetchGamesData();
+    this.fetchGamingSessionsData();
   }
 
-  fetchGamesList = () => {
-    let url = "http://pwn-staging.herokuapp.com/api/v1/games";
-    //let url = "https://www.the100.io/api/v1/games";
-    //  let = require("../../components/GamingSessionsList/gameslist.json");
-    //this.setState({ loading: true });
+  fetchGamesData = () => {
+    //let gamesAPIURL = "http://pwn-staging.herokuapp.com/api/v1/games";
+    let gamesAPIURL = "https://www.the100.io/api/v1/games";
 
-    console.log("FETCHING GAMES DATA", url);
+    console.log("FETCHING GAMES DATA", gamesAPIURL);
 
-    fetch(url)
+    fetch(gamesAPIURL)
       .then(response => response.json())
       .then(response => {
         this.setState({
@@ -229,6 +195,7 @@ export default class GamingSessionsList extends React.PureComponent {
           "this.state.gamesData len after",
           this.state.gamesData.length
         );
+
         if (this.state.gamesData.length == undefined) {
           this.setState({
             gamesData: GamesList,
@@ -243,114 +210,134 @@ export default class GamingSessionsList extends React.PureComponent {
       });
   };
 
-  fetchData = () => {
-    const page = this.state.page;
-    var url = this.state.URL + "&page=" + page;
-    //this.setState({ refreshing: true });
+  buildGamingSessionsAPIURL = () => {
+    let gamingSessionsAPIURL = "https://www.the100.io/api/v1/gaming_sessions?";
 
-    console.log("FETCHING DATA", url);
+    if (this.state.gameType != null) {
+      gamingSessionsAPIURL += "q[game_id_eq]=" + this.state.gameType;
+    }
 
-    fetch(url)
+    if (this.state.platform != null) {
+      gamingSessionsAPIURL += "&q[platform_cont]=" + this.state.platform;
+    }
+
+    if (this.state.activity != "" && this.state.activity != "Any") {
+      gamingSessionsAPIURL += "&q[category_cont]=" + this.state.activity;
+    }
+
+    if (this.state.notFull != null) {
+      gamingSessionsAPIURL += "&q[with_available_slots]=" + this.state.notFull;
+    }
+    return gamingSessionsAPIURL + "&page=" + this.state.page;
+  };
+
+  fetchGamingSessionsData = () => {
+    let gamingSessionsAPIURL = this.buildGamingSessionsAPIURL();
+
+    console.log("FETCHING DATA", gamingSessionsAPIURL);
+
+    fetch(gamingSessionsAPIURL)
       .then(response => response.json())
       .then(response => {
         this.setState({
-          data: page === 1 ? response : [...this.state.data, ...response],
+          isGamingSessionsResponseEmpty: response.length === 0 ? true : false,
+          gamingSessionsData:
+            this.state.page === 1
+              ? response
+              : [...this.state.gamingSessionsData, ...response],
           error: response.error || null,
           loading: false,
-          refreshing: false,
-          fetching: false
+          refreshing: false
         });
-        if (this.state.data.length == undefined) {
-          this.setState({
-            data: GameSessions,
-            error: response.error || null
-          });
-        }
-        console.log("this.state.data len after", this.state.data.length);
       })
       .catch(error => {
         console.log("error", error);
         this.setState({
           error,
           loading: false,
-          refreshing: false,
-          fetching: false
+          refreshing: false
         });
       });
   };
 
+  /// This id displayed under the gaming sessions list
+  // if there is more data to fetch then show the activity indicator
+  // if there is no more data to fetch then show simple dots
   renderFooter = () => {
-    if (!this.state.loading) return null;
+    if (this.state.isGamingSessionsResponseEmpty === true) {
+      return (
+        <View style={styles.alertView}>
+          <MaterialCommunityIcons
+            name="dots-horizontal"
+            size={24}
+            color={colors.mediumGrey}
+          />
+        </View>
+      );
+    }
 
     return (
-      <View
-        style={{
-          //paddingVertical: 25,
-          //borderTopWidth: 1,
-          //borderColor: "#CED0CE",
-          backgroundColor: colors.red
-        }}
-      >
-        <Text>Footer</Text>
+      <ActivityIndicator
+        animating={true}
+        size="large"
+        style={styles.loadMoreActivityIndicator}
+      />
+    );
+  };
+
+  /// display if there is no data in the gaming sessions array
+  renderEmpty = () => {
+    if (this.state.gamingSessionsData.length !== 0) return null;
+
+    return (
+      <View style={styles.alertView}>
+        <MaterialCommunityIcons
+          name="alert-circle"
+          size={24}
+          color={colors.mediumGrey}
+        />
+        <Text style={styles.alertText}>There are no puppies of this type.</Text>
       </View>
     );
   };
 
   render() {
+    if (this.state.loading) {
+      return (
+        <View style={{ paddingVertical: 200 }}>
+          <PreSplash />
+        </View>
+      );
+    }
+
     return (
       <View style={{ marginTop: 10 }}>
-        {this.state.refreshing == false && (
-          <FilterModal
-            onFilterUpdate={this.updateFilters}
-            onFilterClose={this.buildURL}
-            gamesData={this.state.gamesData}
-            gameType={this.state.gameType}
-            activity={this.state.activity}
-            platform={this.state.platform}
-            notFull={this.state.notFull}
-          />
-        )}
-
-        {this.state.refreshing == true && (
-          <View
-            style={{
-              paddingVertical: 200
-            }}
-          >
-            <PreSplash />
-          </View>
-        )}
-
-        {this.state.refreshing == false &&
-          (this.state.data.length > 0 && (
-            <FlatList
-              data={this.state.data}
-              renderItem={({ item }) => (
-                <MyListItem data={item} onPressItem={this.goToSession} />
-              )}
-              // ListHeaderComponent={this.renderHeader}
-              ListFooterComponent={this.renderFooter}
-              keyExtractor={(item, index) => item.id}
-              onRefresh={this.onRefresh}
-              refreshing={this.state.refreshing}
-              onEndReached={this.onLoadMore}
-              onEndReachedThreshold={0.5}
+        <FilterModal
+          loading={this.state.loading}
+          onFilterUpdate={this.updateFilters}
+          onFilterClose={this.buildURL}
+          gamesData={this.state.gamesData}
+          gameType={this.state.gameType}
+          activity={this.state.activity}
+          platform={this.state.platform}
+          notFull={this.state.notFull}
+        />
+        <FlatList
+          data={this.state.gamingSessionsData}
+          renderItem={({ item }) => (
+            <GamingSessionsListItem
+              data={item}
+              onPressItem={this.goToSession}
             />
-          ))}
-
-        {this.state.fetching == false &&
-          (this.state.data.length <= 0 && (
-            <View style={{ flexDirection: "row", justifyContent: "center" }}>
-              <MaterialCommunityIcons
-                name="alert-circle"
-                size={24}
-                color={colors.mediumGrey}
-              />
-              <Text style={styles.alertText}>
-                There are no puppies of this type.
-              </Text>
-            </View>
-          ))}
+          )}
+          ListHeaderComponent={this.renderEmpty}
+          ListFooterComponent={this.renderFooter}
+          keyExtractor={(item, index) => item.id}
+          onRefresh={this.onRefresh}
+          refreshing={this.state.refreshing}
+          onEndReached={this.onLoadMore}
+          onEndReachedThreshold={0.5}
+        />
       </View>
     );
   }
@@ -359,6 +346,14 @@ export default class GamingSessionsList extends React.PureComponent {
 const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
+  },
+  loadMoreActivityIndicator: {
+    flex: 1,
+    height: 40
+  },
+  alertView: {
+    flexDirection: "row",
+    justifyContent: "center"
   },
   alertText: {
     fontSize: fontSizes.large,
