@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
   },
   profileBox: {
     padding: 1,
-    flexDirection: "row"
+    flexDirection: "row",
+    width: 160
   },
   profileText: {
     flexDirection: "column",
