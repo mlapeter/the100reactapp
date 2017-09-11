@@ -1,4 +1,4 @@
-import React, { PropTypes, Component } from "react";
+import React, { PropTypes, PureComponent, Component } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -16,7 +16,7 @@ import { colors, fontSizes } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import TimeAgo from "../../../node_modules/react-native-timeago";
 
-class Notifications extends Component {
+class Notifications extends PureComponent {
   static propTypes = {};
   constructor(props) {
     super(props);
@@ -24,6 +24,7 @@ class Notifications extends Component {
     this.state = {
       isLoading: true,
       isAuthed: false,
+      refreshing: false,
       items: []
     };
 
@@ -31,13 +32,15 @@ class Notifications extends Component {
   }
 
   componentDidMount() {
-    this.fetchData();
+    // this.fetchData();
   }
 
   fetchData() {
+    console.log("Fetching Notifications");
     AsyncStorage.getItem("id_token").then(token => {
+      console.log("token: " + token);
       fetch(
-        "http://pwn-staging.herokuapp.com/api/v1/users/11869/notifications",
+        "http://pwn-staging.herokuapp.com/api/v2/users/11869/notifications",
         {
           method: "GET",
           headers: { Authorization: "Bearer " + token }
@@ -47,7 +50,8 @@ class Notifications extends Component {
         .then(responseJson => {
           this.setState({
             isLoading: token === null,
-            items: responseJson
+            items: responseJson,
+            refreshing: false
           });
         })
         .catch(error => {
@@ -55,6 +59,17 @@ class Notifications extends Component {
         });
     });
   }
+
+  handleRefresh = () => {
+    this.setState(
+      {
+        refreshing: true
+      },
+      () => {
+        this.fetchData();
+      }
+    );
+  };
 
   userLogout() {
     try {
@@ -99,18 +114,22 @@ class Notifications extends Component {
           data={this.state.items}
           renderItem={({ item }) => <ListItem item={item} />}
           keyExtractor={(item, index) => index}
+          refreshing={this.state.refreshing}
+          onRefresh={this.handleRefresh}
         />
       </View>
     );
   }
 }
 
-class ListItem extends Component {
+class ListItem extends PureComponent {
   render() {
     return (
       <View style={styles.box}>
         <View style={styles.leftBox}>
-          <Text>A</Text>
+          <Text>
+            {this.props.item.id}
+          </Text>
         </View>
         <View style={styles.middleBox}>
           <View style={{ flexDirection: "row" }}>

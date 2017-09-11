@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import {
   ActivityIndicator,
   Alert,
+  AsyncStorage,
   Button,
   Image,
   ListView,
@@ -31,10 +32,12 @@ export default class GamingSession extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      hasJoined: false,
       isLoading: true,
       refreshing: false,
       gameData: ""
     };
+    gamingSessionId = this.props.navigation.state.params.gamingSessionId;
   }
 
   componentDidMount() {
@@ -42,16 +45,22 @@ export default class GamingSession extends React.Component {
   }
 
   fetchData() {
+    var userIds = [];
     return fetch(
-      "https://www.the100.io/api/v1/gaming_sessions/" +
-        this.props.navigation.state.params.gamingSessionId
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+        gamingSessionId
     )
       .then(response => response.json())
       .then(responseJson => {
+        responseJson.confirmed_sessions.map(confirmedSession =>
+          userIds.push(confirmedSession.user_id)
+        );
         this.setState({
           isLoading: false,
+          hasJoined: userIds.includes(11869),
           dataSource: responseJson
         });
+        console.log(responseJson);
         return responseJson;
       })
       .catch(error => {
@@ -59,8 +68,72 @@ export default class GamingSession extends React.Component {
       });
   }
 
+  joinGame() {
+    this.postData("/join");
+  }
+
+  leaveGame() {
+    this.postData("/leave");
+  }
+
+  postData(action) {
+    this.setState({
+      isLoading: true
+    });
+    AsyncStorage.getItem("id_token").then(token => {
+      console.log("token: " + token);
+      fetch(
+        "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+          gamingSessionId +
+          action,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          }
+        }
+      )
+        .then(response => response.json())
+        .then(responseJson => {
+          this.fetchData();
+          console.log("GAME JOINED OR LEFT");
+          console.log(responseJson);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
+  }
+
   render() {
     const { params } = this.props.navigation.state;
+    let button = null;
+    if (this.state.hasJoined) {
+      button = (
+        <Button
+          style={{
+            height: 30,
+            width: 180,
+            marginBottom: 15
+          }}
+          onPress={this.leaveGame.bind(this)}
+          title="Leave"
+        />
+      );
+    } else {
+      button = (
+        <Button
+          style={{
+            height: 30,
+            width: 180,
+            marginBottom: 15
+          }}
+          onPress={this.joinGame.bind(this)}
+          title="Join"
+        />
+      );
+    }
 
     if (this.state.isLoading) {
       return (
@@ -72,55 +145,28 @@ export default class GamingSession extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>
-          {this.state.dataSource.category.toString()}
-        </Text>
+        <View style={styles.titleBar}>
+          <Text style={styles.title}>
+            {this.state.dataSource.category != null
+              ? this.state.dataSource.category.toString()
+              : ""}
+          </Text>
+          {button}
+        </View>
         <Text style={styles.description} numberOfLines={2}>
-          {this.state.dataSource.name != null ? (
-            this.state.dataSource.name.toString()
-          ) : (
-            ""
-          )}
+          {this.state.dataSource.name != null
+            ? this.state.dataSource.name.toString()
+            : ""}
         </Text>
         <View style={styles.iconBar}>
-          <Text style={styles.icon}>
-            <MaterialCommunityIcons
-              name="calendar"
-              size={14}
-              color={colors.grey}
-            />
-            <Moment element={Text}>
-              {this.state.dataSource.start_time.toString()}
-            </Moment>
-          </Text>
-          <Text style={styles.icon}>
-            <MaterialCommunityIcons name="xbox" size={14} color={colors.grey} />
-            XBOX
-          </Text>
-          <Text style={styles.icon}>
-            <MaterialCommunityIcons
-              name="account"
-              size={14}
-              color={colors.grey}
-            />
-            2/4
-          </Text>
-          <Text style={styles.icon}>
-            <MaterialCommunityIcons
-              name="gauge"
-              size={14}
-              color={colors.grey}
-            />
-            400+
-          </Text>
-          <Text style={styles.icon}>
-            <MaterialCommunityIcons
-              name="security"
-              size={14}
-              color={colors.grey}
-            />
-            Sherpa-Led
-          </Text>
+          <TimeIcon startTime={this.state.dataSource.start_time} />
+          <PlatformIcon platform={this.state.dataSource.platform} />
+          <PlayerIcon
+            primaryUsersCount={this.state.dataSource.primary_users_count}
+            teamSize={this.state.dataSource.team_size}
+          />
+          <PowerIcon lightLevel={this.state.dataSource.light_level} />
+          <SherpaIcon sherpaLed={this.state.dataSource.sherpa_led} />
         </View>
         <PlayerList
           confirmedSessions={this.state.dataSource.confirmed_sessions}
@@ -131,13 +177,95 @@ export default class GamingSession extends React.Component {
   }
 }
 
+function PlatformIcon(props) {
+  if (props.platform === "ps4") {
+    return (
+      <Text style={styles.icon}>
+        <MaterialCommunityIcons
+          name="playstation"
+          size={14}
+          color={colors.grey}
+        />
+        PS4
+      </Text>
+    );
+  } else if (props.platform === "xbox-one") {
+    return (
+      <Text style={styles.icon}>
+        <MaterialCommunityIcons name="xbox" size={14} color={colors.grey} />
+        XBOX
+      </Text>
+    );
+  } else {
+    return (
+      <Text style={styles.icon}>
+        <MaterialCommunityIcons
+          name="microsoft"
+          size={14}
+          color={colors.grey}
+        />
+        PC
+      </Text>
+    );
+  }
+}
+
+function TimeIcon(props) {
+  return (
+    <Text style={styles.icon}>
+      <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
+      <Moment element={Text}>
+        {props.startTime.toString()}
+      </Moment>
+    </Text>
+  );
+}
+
+function PlayerIcon(props) {
+  return (
+    <Text style={styles.icon}>
+      <MaterialCommunityIcons name="account" size={14} color={colors.grey} />
+      {props.primaryUsersCount}/{props.teamSize}
+    </Text>
+  );
+}
+
+function PowerIcon(props) {
+  if (props.lightLevel) {
+    return (
+      <Text style={styles.icon}>
+        <MaterialCommunityIcons name="gauge" size={14} color={colors.grey} />
+        {props.lightLevel}
+      </Text>
+    );
+  }
+  return (
+    <Text style={styles.icon}>
+      <MaterialCommunityIcons name="gauge" size={14} color={colors.grey} />
+      Any
+    </Text>
+  );
+}
+
+function SherpaIcon(props) {
+  if (props.sherpaLed) {
+    return (
+      <Text style={styles.icon}>
+        <MaterialCommunityIcons name="security" size={14} color={colors.grey} />
+        Sherpa-Led
+      </Text>
+    );
+  }
+  return null;
+}
+
 const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
   },
   container: {
     padding: 5,
-    marginTop: 20,
+    paddingTop: 30,
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
@@ -145,8 +273,7 @@ const styles = StyleSheet.create({
   },
   loading: {
     alignItems: "center",
-    justifyContent: "center",
-    margin: 10
+    justifyContent: "center"
   },
   iconBar: {
     flexDirection: "row",
@@ -164,6 +291,13 @@ const styles = StyleSheet.create({
     margin: 2,
     backgroundColor: colors.white
   },
+  titleBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "stretch",
+    padding: 5
+  },
+
   title: {
     padding: 5,
     color: colors.grey,

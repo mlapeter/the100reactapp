@@ -185,6 +185,7 @@ export default class GamingSessionsList extends React.PureComponent {
     console.log("FETCHING GAMES DATA", gamesAPIURL);
 
     fetch(gamesAPIURL)
+
       .then(response => response.json())
       .then(response => {
         this.setState({

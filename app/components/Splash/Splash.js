@@ -44,7 +44,7 @@ class Splash extends React.Component {
 
   userLogin() {
     if (!this.state.username || !this.state.password) return;
-    fetch("http://pwn-staging.herokuapp.com/api/v1/sessions/", {
+    fetch("http://pwn-staging.herokuapp.com/api/v2/sessions/", {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -62,8 +62,6 @@ class Splash extends React.Component {
         this.saveItem("id_token", responseData.token);
         Keyboard.dismiss();
         this.props.dispatch(onAuthChange(responseData.token));
-
-        // this.props.navigation.navigate("Notifications");
       })
       .done();
   }

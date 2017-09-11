@@ -2,11 +2,11 @@ import React, { PropTypes } from "react";
 import { Image, View, StyleSheet, Text } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors, fontSizes } from "../../styles";
-Player.propTypes = {
+Friend.propTypes = {
   user: PropTypes.object.isRequired
 };
 
-export default function Player(props) {
+export default function Friend(props) {
   return (
     <View style={styles.container}>
       <View style={styles.profileBox}>
@@ -55,16 +55,21 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   profileBox: {
-    padding: 1,
     flexDirection: "row",
-    width: 160
+    justifyContent: "flex-start",
+    alignItems: "stretch",
+    margin: 5,
+    padding: 5,
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#d6d7da",
+    backgroundColor: colors.white
   },
   profileText: {
     flexDirection: "column",
     paddingLeft: 5
   },
   gamertag: {
-    //fontFamily: "Futura",
+    fontFamily: "Futura",
     paddingLeft: 5,
     fontSize: fontSizes.secondary
   },
