@@ -260,7 +260,7 @@ export default class GamingSessionsList extends React.PureComponent {
       });
   };
 
-  /// This id displayed under the gaming sessions list
+  /// This is displayed under the gaming sessions list
   // if there is more data to fetch then show the activity indicator
   // if there is no more data to fetch then show simple dots
   renderFooter = () => {
@@ -304,7 +304,7 @@ export default class GamingSessionsList extends React.PureComponent {
   render() {
     if (this.state.loading) {
       return (
-        <View style={{ paddingVertical: 200 }}>
+        <View>
           <PreSplash />
         </View>
       );
