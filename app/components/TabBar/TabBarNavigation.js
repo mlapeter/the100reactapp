@@ -56,7 +56,7 @@ class TabBarNavigation extends React.Component {
       return <ActivityIndicator />;
     }
 
-    if (this.props.authenticationState.isAuthed === null) {
+    if (this.props.authenticationState.isAuthed === true) {
       <View style={styles.container}>
         return <Splash />;
       </View>;
