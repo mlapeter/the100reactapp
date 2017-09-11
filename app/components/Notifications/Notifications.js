@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
   },
   username: {
     color: colors.grey,
-    fontFamily: "Futura",
+    //fontFamily: "Futura",
     fontSize: fontSizes.secondary
   },
   time: {

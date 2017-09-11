@@ -301,7 +301,7 @@ const styles = StyleSheet.create({
   title: {
     padding: 5,
     color: colors.grey,
-    fontFamily: "Futura",
+    //fontFamily: "Futura",
     fontSize: fontSizes.primary
   },
   description: {
