@@ -49,7 +49,6 @@ class TabBarNavigation extends React.Component {
     });
   }
 
-  // console.log("isAuthed: " + this.props.authenticationState.isAuthenticating === true)
   render() {
     const { dispatch, navigationState } = this.props;
 

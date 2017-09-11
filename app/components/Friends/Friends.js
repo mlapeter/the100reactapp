@@ -44,6 +44,7 @@ class Friends extends PureComponent {
       })
         .then(response => response.json())
         .then(responseJson => {
+          console.log(responseJson);
           this.setState({
             isLoading: token === null,
             items: responseJson,
