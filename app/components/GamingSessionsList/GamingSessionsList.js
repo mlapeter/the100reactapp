@@ -45,11 +45,9 @@ class GamingSessionsListItem extends React.PureComponent {
             <Image
               style={styles.avatarMini}
               source={
-                this.props.data.game_avatar_url === "img/default-avatar.png" ? (
-                  require("../../images/default-avatar.png")
-                ) : (
-                  { uri: this.props.data.game_avatar_url }
-                )
+                this.props.data.game_avatar_url === "img/default-avatar.png"
+                  ? require("../../images/default-avatar.png")
+                  : { uri: this.props.data.game_avatar_url }
               }
             />
           </View>
@@ -84,11 +82,9 @@ class GamingSessionsListItem extends React.PureComponent {
                 size={14}
                 color={colors.mediumGrey}
               />
-              {this.props.data.light_level === null ? (
-                " any"
-              ) : (
-                this.props.data.light_level
-              )}
+              {this.props.data.light_level === null
+                ? " any"
+                : this.props.data.light_level}
             </Text>
           </View>
         </View>
@@ -185,7 +181,6 @@ export default class GamingSessionsList extends React.PureComponent {
     console.log("FETCHING GAMES DATA", gamesAPIURL);
 
     fetch(gamesAPIURL)
-
       .then(response => response.json())
       .then(response => {
         this.setState({
@@ -267,12 +262,14 @@ export default class GamingSessionsList extends React.PureComponent {
   renderFooter = () => {
     if (this.state.isGamingSessionsResponseEmpty === true) {
       return (
-        <View style={styles.alertView}>
-          <MaterialCommunityIcons
-            name="dots-horizontal"
-            size={24}
-            color={colors.mediumGrey}
-          />
+        <View style={styles.container}>
+          <View style={styles.alertView}>
+            <MaterialCommunityIcons
+              name="dots-horizontal"
+              size={24}
+              color={colors.mediumGrey}
+            />
+          </View>
         </View>
       );
     }
@@ -305,14 +302,14 @@ export default class GamingSessionsList extends React.PureComponent {
   render() {
     if (this.state.loading) {
       return (
-        <View>
+        <View style={styles.container}>
           <PreSplash />
         </View>
       );
     }
 
     return (
-      <View style={{ marginTop: 10 }}>
+      <View style={styles.container}>
         <FilterModal
           loading={this.state.loading}
           onFilterUpdate={this.updateFilters}
@@ -325,12 +322,11 @@ export default class GamingSessionsList extends React.PureComponent {
         />
         <FlatList
           data={this.state.gamingSessionsData}
-          renderItem={({ item }) => (
+          renderItem={({ item }) =>
             <GamingSessionsListItem
               data={item}
               onPressItem={this.goToSession}
-            />
-          )}
+            />}
           ListHeaderComponent={this.renderEmpty}
           ListFooterComponent={this.renderFooter}
           keyExtractor={(item, index) => item.id}
@@ -362,7 +358,7 @@ const styles = StyleSheet.create({
     paddingTop: 5
   },
   container: {
-    marginTop: 2,
+    marginTop: 10,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",

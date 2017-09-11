@@ -54,7 +54,8 @@ export default class PreSplash extends React.Component {
 const styles = StyleSheet.create({
   container: {
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: colors.white
   },
   image: {
     resizeMode: "contain",
