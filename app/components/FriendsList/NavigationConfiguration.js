@@ -3,19 +3,19 @@
 import { StackNavigator } from "react-navigation";
 
 // Screens
-import Friends from "./Friends/";
+import FriendsList from "./FriendsList/";
 
 const routeConfiguration = {
-  Friends: { screen: Friends }
+  FriendsList: { screen: FriendsList }
 };
 
 // going to disable the header for now
 const stackNavigatorConfiguration = {
   headerMode: "none",
-  initialRouteName: "Friends"
+  initialRouteName: "FriendsList"
 };
 
-export const FriendsNavigator = StackNavigator(
+export const FriendsListNavigator = StackNavigator(
   routeConfiguration,
   stackNavigatorConfiguration
 );

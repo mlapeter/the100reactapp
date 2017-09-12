@@ -10,7 +10,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import { GamingSessionsListNavigator } from "./components/GamingSessionsList/NavigationConfiguration";
 import { GroupNavigator } from "./components/Group/NavigationConfiguration";
 import { NotificationsNavigator } from "./components/Notifications/NavigationConfiguration";
-import { FriendsNavigator } from "./components/Friends/NavigationConfiguration";
+import { FriendsListNavigator } from "./components/FriendsList/NavigationConfiguration";
 
 import {
   TabBar,
@@ -39,7 +39,7 @@ export default createStore(
       NotificationsNavigator.router.getStateForAction(action, state),
 
     friendsTab: (state, action) =>
-      FriendsNavigator.router.getStateForAction(action, state)
+      FriendsListNavigator.router.getStateForAction(action, state)
     //
     // tabThree: (state, action) =>
     //   NavigatorTabThree.router.getStateForAction(action, state)

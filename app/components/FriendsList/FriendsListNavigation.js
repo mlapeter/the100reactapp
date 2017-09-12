@@ -5,7 +5,7 @@ import React from "react";
 
 // Navigation
 import { addNavigationHelpers } from "react-navigation";
-import { FriendsNavigator } from "./NavigationConfiguration";
+import { FriendsListNavigator } from "./NavigationConfiguration";
 
 // Redux
 import { connect } from "react-redux";
@@ -16,11 +16,11 @@ const mapStateToProps = state => {
   };
 };
 
-class FriendsNavigation extends React.Component {
+class FriendsListNavigation extends React.Component {
   render() {
     const { navigationState, dispatch } = this.props;
     return (
-      <FriendsNavigator
+      <FriendsListNavigator
         navigation={addNavigationHelpers({
           dispatch: dispatch,
           state: navigationState
@@ -29,4 +29,4 @@ class FriendsNavigation extends React.Component {
     );
   }
 }
-export default connect(mapStateToProps)(FriendsNavigation);
+export default connect(mapStateToProps)(FriendsListNavigation);

@@ -31,7 +31,7 @@ class Friends extends PureComponent {
   }
 
   componentDidMount() {
-    // this.fetchData();
+    this.fetchData();
   }
 
   fetchData() {
@@ -111,59 +111,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 10
-  },
-  box: {
-    flexDirection: "row",
-    margin: 5,
-    padding: 5
-  },
-  input: {
-    flexDirection: "row",
-    alignItems: "stretch",
-    margin: 5,
-    padding: 5,
-    borderTopWidth: 0.5,
-    borderTopColor: "#d6d7da"
-  },
-  buttonWrapper: {
-    padding: 10
-  },
-  leftBox: {
-    flex: 1,
-    padding: 2,
-    margin: 2,
-    backgroundColor: colors.white
-  },
-  middleBox: {
-    flex: 7,
-    padding: 2,
-    margin: 2,
-    backgroundColor: colors.white
-  },
-  rightBox: {
-    flex: 1.1
-  },
-  avatarMini: {
-    height: 40,
-    width: 40,
-    borderRadius: 20
-  },
-  username: {
-    color: colors.grey,
-    fontFamily: "Futura",
-    fontSize: fontSizes.secondary
-  },
-  time: {
-    padding: 3,
-    color: colors.lightestGrey,
-    fontSize: fontSizes.small
-  },
-  text: {
-    color: colors.mediumGrey
-  },
-  iconText: {
-    fontSize: fontSizes.small,
-    color: colors.mediumGrey
   }
 });
 

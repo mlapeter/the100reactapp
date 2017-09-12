@@ -7,7 +7,7 @@ import Splash from "../../components/Splash/Splash";
 import GamingSessionsListNavigation from "../../components/GamingSessionsList/GamingSessionsListNavigation";
 import GroupNavigation from "../../components/Group/GroupNavigation";
 import NotificationsNavigation from "../../components/Notifications/NotificationsNavigation";
-import FriendsNavigation from "../../components/Friends/FriendsNavigation";
+import FriendsListNavigation from "../../components/FriendsList/FriendsListNavigation";
 import Chat from "../../components/Chat/Chat";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -17,7 +17,7 @@ const routeConfiguration = {
   GamingSessionsListNavigation: { screen: GamingSessionsListNavigation },
   GroupNavigation: { screen: GroupNavigation },
   NotificationsNavigation: { screen: NotificationsNavigation },
-  FriendsNavigation: { screen: FriendsNavigation }
+  FriendsListNavigation: { screen: FriendsListNavigation }
 };
 
 const tabBarConfiguration = {
@@ -62,7 +62,7 @@ NotificationsNavigation.navigationOptions = {
     />
 };
 
-FriendsNavigation.navigationOptions = {
+FriendsListNavigation.navigationOptions = {
   tabBarLabel: "Friends",
   tabBarIcon: ({ tintColor, focused }) =>
     <MaterialCommunityIcons
