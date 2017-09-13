@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableHighlight,
   View
 } from "react-native";
 import PreSplash from "../../components/PreSplash/PreSplash";
@@ -171,16 +172,17 @@ function KarmaButton(props) {
     return <Text>Karma Given</Text>;
   } else {
     return (
-      <View>
-        <Button
-          style={{
-            height: 30,
-            width: 150,
-            margin: 5
-          }}
-          onPress={props.giveKarma}
-          title="Give Karma"
-        />
+      <View style={styles.icon}>
+        <TouchableHighlight onPress={props.giveKarma} underlayColor="white">
+          <Text style={styles.iconText}>
+            <MaterialCommunityIcons
+              name="star"
+              size={18}
+              color={colors.mediumGrey}
+            />
+            Give Karma
+          </Text>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -192,16 +194,17 @@ function FriendButton(props) {
     return <Text>Friends</Text>;
   } else {
     return (
-      <View>
-        <Button
-          style={{
-            height: 30,
-            width: 150,
-            margin: 5
-          }}
-          onPress={props.addFriend}
-          title="Add Friend"
-        />
+      <View style={styles.icon}>
+        <TouchableHighlight onPress={props.addFriend} underlayColor="white">
+          <Text style={styles.iconText}>
+            <MaterialCommunityIcons
+              name="account-plus"
+              size={18}
+              color={colors.mediumGrey}
+            />
+            Add Friend
+          </Text>
+        </TouchableHighlight>
       </View>
     );
   }
@@ -282,6 +285,8 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     flexDirection: "column",
+    alignItems: "flex-end",
+    justifyContent: "space-between",
     margin: 5,
     flex: 1.4
   },
@@ -302,8 +307,11 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 2,
-    margin: 2,
-    backgroundColor: colors.white
+    margin: 2
+  },
+  iconText: {
+    fontSize: fontSizes.small,
+    color: colors.mediumGrey
   },
   profileAvatar: {
     height: 80,
