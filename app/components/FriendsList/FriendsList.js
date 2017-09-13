@@ -84,7 +84,8 @@ class Friends extends PureComponent {
       <View style={styles.container}>
         <FlatList
           data={this.state.items}
-          renderItem={({ item }) => <Friend user={item} />}
+          renderItem={({ item }) =>
+            <Friend user={item} navigation={this.props.navigation} />}
           keyExtractor={(item, index) => index}
           refreshing={this.state.refreshing}
           onRefresh={this.handleRefresh}

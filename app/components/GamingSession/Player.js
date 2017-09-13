@@ -1,46 +1,62 @@
 import React, { PropTypes } from "react";
-import { Image, View, StyleSheet, Text } from "react-native";
+import {
+  Image,
+  View,
+  StyleSheet,
+  Text,
+  TouchableHighlight
+} from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors, fontSizes } from "../../styles";
+import { StackNavigator } from "react-navigation";
+
 Player.propTypes = {
   user: PropTypes.object.isRequired
 };
 
 export default function Player(props) {
   return (
-    <View style={styles.container}>
-      <View style={styles.profileBox}>
-        <Image
-          style={styles.profileAvatar}
-          source={
-            props.user.computed_avatar_api === "img/default-avatar.png"
-              ? require("../../images/default-avatar.png")
-              : { uri: props.user.computed_avatar_api }
-          }
-        />
+    <TouchableHighlight
+      onPress={() =>
+        props.navigation.navigate("User", {
+          userId: props.user.id
+        })}
+      underlayColor="white"
+    >
+      <View style={styles.container}>
+        <View style={styles.profileBox}>
+          <Image
+            style={styles.profileAvatar}
+            source={
+              props.user.computed_avatar_api === "img/default-avatar.png"
+                ? require("../../images/default-avatar.png")
+                : { uri: props.user.computed_avatar_api }
+            }
+          />
 
-        <View style={styles.profileText}>
-          <Text style={styles.gamertag}>
-            {props.user.gamertag}
-          </Text>
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="gauge"
-              size={14}
-              color={colors.mediumGrey}
-            />
-            {props.user.light_level}
+          <View style={styles.profileText}>
+            <Text style={styles.gamertag}>
+              {props.user.gamertag}
+            </Text>
+            <Text style={styles.iconText}>
+              <MaterialCommunityIcons
+                name="gauge"
+                size={14}
+                color={colors.mediumGrey}
+              />
+              {props.user.light_level}
 
-            <MaterialCommunityIcons
-              name="star"
-              size={14}
-              color={colors.mediumGrey}
-            />
-            {props.user.karmas_count}
-          </Text>
+              <MaterialCommunityIcons
+                name="star"
+                size={14}
+                color={colors.mediumGrey}
+              />
+              {props.user.karmas_count}
+            </Text>
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableHighlight>
   );
 }
 

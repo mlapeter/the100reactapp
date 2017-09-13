@@ -1,5 +1,13 @@
-import React, { PropTypes } from "react";
-import { Image, View, StyleSheet, Text } from "react-native";
+import React, { Component, PropTypes } from "react";
+import {
+  Image,
+  View,
+  StyleSheet,
+  Text,
+  TouchableHighlight
+} from "react-native";
+import { StackNavigator } from "react-navigation";
+
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors, fontSizes } from "../../styles";
 Friend.propTypes = {
@@ -8,26 +16,34 @@ Friend.propTypes = {
 
 export default function Friend(props) {
   return (
-    <View style={styles.profileBox}>
-      <Image
-        style={styles.profileAvatar}
-        source={
-          props.user.computed_avatar_api === "img/default-avatar.png"
-            ? require("../../images/default-avatar.png")
-            : { uri: props.user.computed_avatar_api }
-        }
-      />
-      <View style={styles.profileText}>
-        <Text style={styles.gamertag}>
-          {props.user.gamertag}
-        </Text>
-        <View style={styles.iconBar}>
-          <LevelIcon lightLevel={props.user.light_level} />
-          <KarmaIcon karmasCount={props.user.karmas_count} />
-          <ProfanityIcon profanityOk={props.user.profanity_ok} />
+    <TouchableHighlight
+      onPress={() =>
+        props.navigation.navigate("User", {
+          userId: props.user.id
+        })}
+      underlayColor="white"
+    >
+      <View style={styles.profileBox}>
+        <Image
+          style={styles.profileAvatar}
+          source={
+            props.user.computed_avatar_api === "img/default-avatar.png"
+              ? require("../../images/default-avatar.png")
+              : { uri: props.user.computed_avatar_api }
+          }
+        />
+        <View style={styles.profileText}>
+          <Text style={styles.gamertag}>
+            {props.user.gamertag}
+          </Text>
+          <View style={styles.iconBar}>
+            <LevelIcon lightLevel={props.user.light_level} />
+            <KarmaIcon karmasCount={props.user.karmas_count} />
+            <ProfanityIcon profanityOk={props.user.profanity_ok} />
+          </View>
         </View>
       </View>
-    </View>
+    </TouchableHighlight>
   );
 }
 

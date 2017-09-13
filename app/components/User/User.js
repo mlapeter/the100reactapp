@@ -14,7 +14,6 @@ import {
 import PreSplash from "../../components/PreSplash/PreSplash";
 import Chat from "../../components/Chat/Chat";
 
-import PlayerList from "./PlayerList";
 import { colors, fontSizes } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
@@ -24,9 +23,9 @@ import { StackNavigator } from "react-navigation";
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
-export default class GamingSession extends React.Component {
+export default class User extends React.Component {
   static navigationOptions = {
-    title: "Game"
+    title: "User"
   };
 
   constructor(props) {
@@ -37,7 +36,7 @@ export default class GamingSession extends React.Component {
       refreshing: false,
       gameData: ""
     };
-    gamingSessionId = this.props.navigation.state.params.gamingSessionId;
+    userId = this.props.navigation.state.params.userId;
   }
 
   componentDidMount() {
@@ -45,35 +44,36 @@ export default class GamingSession extends React.Component {
   }
 
   fetchData() {
-    var userIds = [];
-    return fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
-        gamingSessionId
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        responseJson.confirmed_sessions.map(confirmedSession =>
-          userIds.push(confirmedSession.user_id)
-        );
-        this.setState({
-          isLoading: false,
-          hasJoined: userIds.includes(11869),
-          dataSource: responseJson
-        });
-        console.log(responseJson);
-        return responseJson;
+    console.log("Fetching User");
+    AsyncStorage.getItem("id_token").then(token => {
+      console.log("token: " + token);
+      fetch("https://pwn-staging.herokuapp.com/api/v2/users/" + userId, {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token }
       })
-      .catch(error => {
-        console.error(error);
-      });
+        .then(response => response.json())
+        .then(responseJson => {
+          this.setState({
+            isLoading: false,
+            dataSource: responseJson
+          });
+          console.log(responseJson);
+          return responseJson;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
   }
 
-  joinGame() {
-    this.postData("/join");
+  giveKarma() {
+    this.postData("/give_karma");
+    Alert.alert("Karma Given!");
   }
 
-  leaveGame() {
-    this.postData("/leave");
+  addFriend() {
+    this.postData("/add_friend");
+    Alert.alert("Friend Request Sent!");
   }
 
   postData(action) {
@@ -83,9 +83,7 @@ export default class GamingSession extends React.Component {
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
       fetch(
-        "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
-          gamingSessionId +
-          action,
+        "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + action,
         {
           method: "POST",
           headers: {
@@ -97,7 +95,7 @@ export default class GamingSession extends React.Component {
         .then(response => response.json())
         .then(responseJson => {
           this.fetchData();
-          console.log("GAME JOINED OR LEFT");
+          console.log("ACTION POSTED");
           console.log(responseJson);
         })
         .catch(error => {
@@ -108,32 +106,6 @@ export default class GamingSession extends React.Component {
 
   render() {
     const { params } = this.props.navigation.state;
-    let button = null;
-    if (this.state.hasJoined) {
-      button = (
-        <Button
-          style={{
-            height: 30,
-            width: 180,
-            marginBottom: 15
-          }}
-          onPress={this.leaveGame.bind(this)}
-          title="Leave"
-        />
-      );
-    } else {
-      button = (
-        <Button
-          style={{
-            height: 30,
-            width: 180,
-            marginBottom: 15
-          }}
-          onPress={this.joinGame.bind(this)}
-          title="Join"
-        />
-      );
-    }
 
     if (this.state.isLoading) {
       return (
@@ -146,33 +118,90 @@ export default class GamingSession extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.titleBar}>
-          <Text style={styles.title}>
-            {this.state.dataSource.category != null
-              ? this.state.dataSource.category.toString()
-              : ""}
-          </Text>
-          {button}
+          <Image
+            style={styles.profileAvatar}
+            source={
+              this.state.dataSource.computed_avatar_api ===
+              "img/default-avatar.png"
+                ? require("../../images/default-avatar.png")
+                : { uri: this.state.dataSource.computed_avatar_api }
+            }
+          />
+          <View style={styles.titleAndTags}>
+            <Text style={styles.title}>
+              {this.state.dataSource.gamertag}
+            </Text>
+          </View>
+          <View style={styles.actionButtons}>
+            <FriendButton
+              friendsWith={this.state.dataSource.karma_received_from}
+              addFriend={this.addFriend.bind(this)}
+            />
+            <KarmaButton
+              karmaReceivedFrom={this.state.dataSource.karma_received_from}
+              giveKarma={this.giveKarma.bind(this)}
+            />
+          </View>
         </View>
-        <Text style={styles.description} numberOfLines={2}>
-          {this.state.dataSource.name != null
-            ? this.state.dataSource.name.toString()
+        <Text style={styles.tagList}>
+          <MaterialCommunityIcons name="tag" size={14} color={colors.grey} />
+          {this.state.dataSource.tag_list.map(tag => tag + " ")}
+        </Text>
+        <Text style={styles.description} numberOfLines={4}>
+          {this.state.dataSource.description != null
+            ? this.state.dataSource.description
             : ""}
         </Text>
         <View style={styles.iconBar}>
-          <TimeIcon startTime={this.state.dataSource.start_time} />
           <PlatformIcon platform={this.state.dataSource.platform} />
-          <PlayerIcon
-            primaryUsersCount={this.state.dataSource.primary_users_count}
-            teamSize={this.state.dataSource.team_size}
-          />
           <PowerIcon lightLevel={this.state.dataSource.light_level} />
-          <SherpaIcon sherpaLed={this.state.dataSource.sherpa_led} />
+          <PlayScheduleIcon
+            playSchedule={this.state.dataSource.play_schedule}
+          />
         </View>
-        <PlayerList
-          confirmedSessions={this.state.dataSource.confirmed_sessions}
-          navigation={this.props.navigation}
-        />
         <Chat chatroom={"help_chatroom"} />
+      </View>
+    );
+  }
+}
+
+function KarmaButton(props) {
+  console.log("User ID: " + userId);
+  if (props.karmaReceivedFrom.includes(userId)) {
+    return <Text>Karma Given</Text>;
+  } else {
+    return (
+      <View>
+        <Button
+          style={{
+            height: 30,
+            width: 150,
+            margin: 5
+          }}
+          onPress={props.giveKarma}
+          title="Give Karma"
+        />
+      </View>
+    );
+  }
+}
+
+function FriendButton(props) {
+  console.log("User ID: " + userId);
+  if (props.friendsWith.includes(userId)) {
+    return <Text>Friends</Text>;
+  } else {
+    return (
+      <View>
+        <Button
+          style={{
+            height: 30,
+            width: 150,
+            margin: 5
+          }}
+          onPress={props.addFriend}
+          title="Add Friend"
+        />
       </View>
     );
   }
@@ -211,22 +240,13 @@ function PlatformIcon(props) {
   }
 }
 
-function TimeIcon(props) {
+function PlayScheduleIcon(props) {
   return (
     <Text style={styles.icon}>
       <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
-      <Moment element={Text}>
-        {props.startTime.toString()}
-      </Moment>
-    </Text>
-  );
-}
-
-function PlayerIcon(props) {
-  return (
-    <Text style={styles.icon}>
-      <MaterialCommunityIcons name="account" size={14} color={colors.grey} />
-      {props.primaryUsersCount}/{props.teamSize}
+      <Text style={styles.icon}>
+        {props.playSchedule.toString()}
+      </Text>
     </Text>
   );
 }
@@ -248,18 +268,6 @@ function PowerIcon(props) {
   );
 }
 
-function SherpaIcon(props) {
-  if (props.sherpaLed) {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons name="security" size={14} color={colors.grey} />
-        Sherpa-Led
-      </Text>
-    );
-  }
-  return null;
-}
-
 const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
@@ -271,6 +279,11 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     backgroundColor: colors.white
+  },
+  actionButtons: {
+    flexDirection: "column",
+    margin: 5,
+    flex: 1.4
   },
   loading: {
     alignItems: "center",
@@ -292,9 +305,15 @@ const styles = StyleSheet.create({
     margin: 2,
     backgroundColor: colors.white
   },
+  profileAvatar: {
+    height: 80,
+    width: 80,
+    borderRadius: 40,
+    flex: 1
+  },
   titleBar: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     alignItems: "stretch",
     padding: 5
   },
@@ -306,8 +325,17 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.primary
   },
   description: {
-    padding: 5,
     color: colors.lightGrey,
     fontSize: fontSizes.secondary
+  },
+  tagList: {
+    padding: 5,
+    paddingBottom: 10,
+    color: colors.lightGrey,
+    fontSize: fontSizes.secondary
+  },
+  titleAndTags: {
+    flexDirection: "column",
+    flex: 2
   }
 });

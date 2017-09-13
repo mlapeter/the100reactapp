@@ -4,6 +4,7 @@ import {
   Alert,
   AsyncStorage,
   FlatList,
+  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -32,7 +33,7 @@ class Notifications extends PureComponent {
   }
 
   componentDidMount() {
-    // this.fetchData();
+    this.fetchData();
   }
 
   fetchData() {
@@ -105,10 +106,6 @@ class Notifications extends PureComponent {
         >
           <Text style={styles.buttonText}> Log out </Text>
         </TouchableOpacity>
-        <Text>
-          {this.state.token}
-        </Text>
-        <Text>Notifications: </Text>
 
         <FlatList
           data={this.state.items}
@@ -127,9 +124,14 @@ class ListItem extends PureComponent {
     return (
       <View style={styles.box}>
         <View style={styles.leftBox}>
-          <Text>
-            {this.props.item.id}
-          </Text>
+          <Image
+            style={styles.avatarMini}
+            source={
+              this.props.item.avatar_url === null
+                ? require("../../images/default-avatar.png")
+                : { uri: this.props.item.avatar_url }
+            }
+          />
         </View>
         <View style={styles.middleBox}>
           <View style={{ flexDirection: "row" }}>

@@ -44,7 +44,7 @@ export default class GamingSessionsList extends React.Component {
   }
 
   fetchData() {
-    console.log("FETCHING DATA");
+    console.log("Fetching Games");
     return fetch("https://pwn-staging.herokuapp.com/api/v2/gaming_sessions")
       .then(response => response.json())
       .then(responseJson => {
