@@ -46,10 +46,7 @@ export default class GamingSession extends React.Component {
 
   fetchData() {
     var userIds = [];
-    return fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
-        gamingSessionId
-    )
+    return fetch("https://the100.io/api/v2/gaming_sessions/" + gamingSessionId)
       .then(response => response.json())
       .then(responseJson => {
         responseJson.confirmed_sessions.map(confirmedSession =>
