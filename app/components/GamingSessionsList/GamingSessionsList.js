@@ -96,7 +96,17 @@ export default class GamingSessionsList extends React.PureComponent {
   };
 
   renderFooter = () => {
-    if (!this.state.refreshing) return null;
+    if (!this.state.refreshing) {
+      return (
+        <View style={styles.alertView}>
+          <MaterialCommunityIcons
+            name="dots-horizontal"
+            size={24}
+            color={colors.mediumGrey}
+          />
+        </View>
+      );
+    }
     return (
       <View style={{ paddingVertical: 20 }}>
         <ActivityIndicator />
@@ -144,6 +154,16 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
     backgroundColor: colors.white
   },
+  alertView: {
+    flexDirection: "row",
+    justifyContent: "center"
+  },
+  alertText: {
+    fontSize: fontSizes.large,
+    fontWeight: "bold",
+    paddingTop: 5
+  },
+
   loading: {
     alignItems: "center",
     justifyContent: "center",
