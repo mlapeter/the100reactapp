@@ -39,7 +39,7 @@ export default class Group extends React.Component {
   }
 
   componentDidMount() {
-    // this.fetchData();
+    this.fetchData();
   }
 
   fetchData() {
