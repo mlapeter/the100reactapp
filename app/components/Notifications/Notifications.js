@@ -33,7 +33,7 @@ class Notifications extends PureComponent {
   }
 
   componentDidMount() {
-    this.fetchData();
+    // this.fetchData();
   }
 
   fetchData() {
