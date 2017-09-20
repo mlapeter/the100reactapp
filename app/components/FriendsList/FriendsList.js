@@ -31,7 +31,7 @@ class Friends extends PureComponent {
   }
 
   componentDidMount() {
-    this.fetchData();
+    // this.fetchData();
   }
 
   fetchData() {
@@ -40,7 +40,6 @@ class Friends extends PureComponent {
     });
     console.log("Fetching Friends");
     AsyncStorage.getItem("id_token").then(token => {
-      console.log("token: " + token);
       fetch("https://pwn-staging.herokuapp.com/api/v2/users/11869/friends", {
         method: "GET",
         headers: { Authorization: "Bearer " + token }

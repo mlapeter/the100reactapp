@@ -29,6 +29,7 @@ export default createStore(
   combineReducers({
     tabBar: tabBarReducer,
     authentication: authentication,
+    search: search,
 
     gamingSessionsListTab: (state, action) =>
       GamingSessionsListNavigator.router.getStateForAction(action, state),

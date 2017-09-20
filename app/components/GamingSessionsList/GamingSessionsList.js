@@ -15,7 +15,10 @@ import FilterModal from "../../components/GamingSessionsList/FilterModal";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default class GamingSessionsList extends React.PureComponent {
+import { connect } from "react-redux";
+import { fetchGames } from "../../redux/modules/search";
+
+class GamingSessionsList extends React.PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -25,44 +28,35 @@ export default class GamingSessionsList extends React.PureComponent {
       moreDataAvailable: true,
       gamesData: null,
       page: 1,
-      gameId: 23,
-      activity: "",
-      platform: "ps4",
-      notFull: 1,
-      error: null,
-      modalVisible: false
+      error: null
     };
     this.updateFilter = this.updateFilter.bind(this);
   }
 
   componentDidMount() {
-    this.fetchGamesData();
-    this.updateFilter(
-      this.state.platform,
-      this.state.gameId,
-      this.state.activity
-    );
+    // this.fetchGamesData();
+    this.fetchData();
   }
 
-  fetchGamesData() {
-    return fetch("https://www.the100.io/api/v1/games")
-      .then(response => response.json())
-      .then(responseJson => {
-        this.setState({
-          gamesData: responseJson
-        });
-      })
-      .catch(error => {
-        console.log("Error Fetching Games Data");
-      });
-  }
+  // fetchGamesData() {
+  //   return fetch("https://pwn-staging.herokuapp.com/api/v2/games")
+  //     .then(response => response.json())
+  //     .then(responseJson => {
+  //       console.log("responeJson is: ");
+  //       console.log(responseJson);
+  //       // this.setState({
+  //       //   gamesData: responseJson
+  //       // });
+  //       this.props.dispatch(fetchGames(responseJson));
+  //     })
+  //     .catch(error => {
+  //       console.log("Error Fetching Games Data");
+  //     });
+  // }
 
-  updateFilter(platform, gameId, activity) {
+  updateFilter() {
     this.setState(
       {
-        gameId: gameId,
-        activity: activity,
-        platform: platform,
         data: [],
         moreDataAvailable: true,
         page: 1
@@ -78,13 +72,13 @@ export default class GamingSessionsList extends React.PureComponent {
       "https://the100.io/api/v2/gaming_sessions?page=" +
         this.state.page +
         "&q[game_id_eq]=" +
-        this.state.gameId +
+        this.props.gameId +
         "&q[platform_cont]=" +
-        this.state.platform +
+        this.props.platform +
         "&q[category_cont]=" +
-        this.state.activity +
+        this.props.activity +
         "&q[with_available_slots]=" +
-        this.state.notFull
+        this.props.notFull
     );
   }
 
@@ -93,7 +87,7 @@ export default class GamingSessionsList extends React.PureComponent {
     return fetch(this.searchUrl())
       .then(response => response.json())
       .then(responseJson => {
-        console.log("Games Fetched");
+        console.log("Gaming Sessions Fetched");
         if (responseJson.length === 0) {
           console.log("No More Data");
           this.setState({
@@ -102,7 +96,7 @@ export default class GamingSessionsList extends React.PureComponent {
             moreDataAvailable: false
           });
         } else {
-          console.log("Games Found");
+          console.log("Gaming Sessions Found");
           this.setState({
             isLoading: false,
             refreshing: false,
@@ -148,10 +142,6 @@ export default class GamingSessionsList extends React.PureComponent {
     }
   };
 
-  setModalVisible(visible) {
-    this.setState({ modalVisible: visible });
-  }
-
   renderFooter = () => {
     if (!this.state.moreDataAvailable) {
       console.log(
@@ -194,14 +184,7 @@ export default class GamingSessionsList extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <FilterModal
-          updateFilter={this.updateFilter}
-          gameId={this.state.gameId}
-          activity={this.state.activity}
-          platform={this.state.platform}
-          notFull={this.state.notFull}
-          gamesData={this.state.gamesData}
-        />
+        <FilterModal updateFilter={this.updateFilter} />
 
         <FlatList
           data={this.state.data}
@@ -246,3 +229,21 @@ const styles = StyleSheet.create({
     margin: 10
   }
 });
+
+const mapStateToProps = state => {
+  const platform = state.search.platform;
+  const gameId = state.search.gameId;
+  const activity = state.search.activity;
+  const game = state.search.games[gameId] || {};
+  const notFull = state.search.notFull;
+
+  return {
+    platform,
+    gameId,
+    activity,
+    game,
+    notFull
+  };
+};
+
+export default connect(mapStateToProps)(GamingSessionsList);
