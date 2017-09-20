@@ -39,13 +39,12 @@ export default class Group extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchData();
+    // this.fetchData();
   }
 
   fetchData() {
     console.log("Fetching Group");
     AsyncStorage.getItem("id_token").then(token => {
-      console.log("token: " + token);
       fetch("https://pwn-staging.herokuapp.com/api/v2/groups/47", {
         method: "GET",
         headers: { Authorization: "Bearer " + token }
@@ -56,7 +55,6 @@ export default class Group extends React.Component {
             isLoading: false,
             dataSource: responseJson
           });
-          console.log(responseJson);
           return responseJson;
         })
         .catch(error => {

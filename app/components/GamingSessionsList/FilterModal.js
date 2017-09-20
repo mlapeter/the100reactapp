@@ -5,39 +5,27 @@ import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { changePlatform } from "../../redux/modules/search";
+import { changeGame } from "../../redux/modules/search";
+import { changeActivity } from "../../redux/modules/search";
 
-export default class FilterModal extends Component {
+import { connect } from "react-redux";
+
+class FilterModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
       modalVisible: false,
       platform: this.props.platform,
       gameId: this.props.gameId,
-      activities: [],
+      activities: this.props.activities,
       activity: this.props.activity
     };
   }
 
-  componentDidMount() {
-    this.updateGameActivities(this.state.gameId);
-  }
-
-  updateGameActivities(gameId) {
-    console.log("Updating Game Activities");
-    this.setState({ gameId: gameId }, () => {
-      for (var index = 0; index < this.props.gamesData.length; index++) {
-        var game = this.props.gamesData[index];
-        if (game.id == this.state.gameId) {
-          this.setState({
-            activities: game.activities
-          });
-        }
-      }
-    });
-  }
+  componentDidMount() {}
 
   setModalVisible(visible) {
-    console.log("Modal Activity: " + this.state.activity);
+    console.log("Modal Activity: " + this.props.activity);
     this.setState({
       modalVisible: visible
     });
@@ -61,9 +49,9 @@ export default class FilterModal extends Component {
           <View style={styles.modalContainer}>
             <Picker
               style={styles.pickerStyle}
-              selectedValue={this.state.platform}
+              selectedValue={this.props.platform}
               onValueChange={platform => {
-                console.log(changePlatform(platform));
+                this.props.dispatch(changePlatform(platform));
               }}
             >
               <Picker.Item label="Xbox One" value="xbox-one" />
@@ -71,8 +59,10 @@ export default class FilterModal extends Component {
             </Picker>
             <Picker
               style={styles.pickerStyle}
-              selectedValue={this.state.gameId.toString()}
-              onValueChange={gameId => this.updateGameActivities(gameId)}
+              selectedValue={this.props.gameId.toString()}
+              onValueChange={gameId => {
+                this.props.dispatch(changeGame(gameId));
+              }}
             >
               <Picker.Item label="Destiny" value="1" />
               <Picker.Item label="Destiny 2" value="23" />
@@ -80,15 +70,16 @@ export default class FilterModal extends Component {
 
             <Picker
               style={styles.pickerStyle}
-              selectedValue={this.state.activity}
-              onValueChange={activity => this.setState({ activity: activity })}
+              selectedValue={this.props.activity}
+              onValueChange={activity =>
+                this.props.dispatch(changeActivity(activity))}
             >
-              <Picker.Item label="Any" value="" />
-              {this.state.activities.map(activity =>
+              <Picker.Item label="All" value="" />
+              {this.props.activities.map(activity =>
                 <Picker.Item
-                  key={activity}
+                  key={activity.toString()}
                   label={activity.toString()}
-                  value={activity}
+                  value={activity.toString()}
                 />
               )}
             </Picker>
@@ -96,11 +87,7 @@ export default class FilterModal extends Component {
               <Button
                 onPress={() => {
                   this.setModalVisible(!this.state.modalVisible);
-                  this.props.updateFilter(
-                    this.state.platform,
-                    this.state.gameId,
-                    this.state.activity
-                  );
+                  this.props.updateFilter();
                 }}
                 title="Search"
               />
@@ -135,3 +122,21 @@ const styles = StyleSheet.create({
     margin: 20
   }
 });
+
+const mapStateToProps = state => {
+  const platform = state.search.platform;
+  const gameId = state.search.gameId;
+  const game = state.search.games[gameId] || {};
+  const activities = game.activities || {};
+  const activity = state.search.activity;
+
+  return {
+    platform,
+    gameId,
+    game,
+    activities,
+    activity
+  };
+};
+
+export default connect(mapStateToProps)(FilterModal);
