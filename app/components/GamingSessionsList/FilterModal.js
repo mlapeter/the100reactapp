@@ -3,29 +3,30 @@ import { Button, StyleSheet, Text, View, Picker, Modal } from "react-native";
 import { colors, fontSizes } from "../../styles";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
 import { changePlatform } from "../../redux/modules/search";
 import { changeGame } from "../../redux/modules/search";
 import { changeActivity } from "../../redux/modules/search";
-
 import { connect } from "react-redux";
 
 class FilterModal extends Component {
+  static propTypes = {
+    activities: PropTypes.array,
+    activity: PropTypes.string,
+    game: PropTypes.object,
+    gameId: PropTypes.string,
+    platform: PropTypes.string
+  };
+
   constructor(props) {
     super(props);
     this.state = {
-      modalVisible: false,
-      platform: this.props.platform,
-      gameId: this.props.gameId,
-      activities: this.props.activities,
-      activity: this.props.activity
+      modalVisible: false
     };
   }
 
   componentDidMount() {}
 
   setModalVisible(visible) {
-    console.log("Modal Activity: " + this.props.activity);
     this.setState({
       modalVisible: visible
     });
@@ -133,7 +134,6 @@ const mapStateToProps = state => {
   return {
     platform,
     gameId,
-    game,
     activities,
     activity
   };

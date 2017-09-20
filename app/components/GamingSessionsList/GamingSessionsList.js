@@ -19,6 +19,13 @@ import { connect } from "react-redux";
 import { fetchGames } from "../../redux/modules/search";
 
 class GamingSessionsList extends React.PureComponent {
+  static propTypes = {
+    activity: PropTypes.string,
+    game: PropTypes.object,
+    gameId: PropTypes.string,
+    notFull: PropTypes.number,
+    platform: PropTypes.string
+  };
   constructor(props) {
     super(props);
     this.state = {

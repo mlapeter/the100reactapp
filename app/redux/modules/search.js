@@ -24,10 +24,10 @@ export const fetchGames = games => ({
 });
 
 const initialState = {
-  gameId: 23,
+  gameId: "23",
   platform: "ps4",
   games: {
-    1: {
+    "1": {
       activities: [
         "Archon’s Forge Arena",
         "Bounty",
@@ -92,7 +92,7 @@ const initialState = {
         "Wrath of the Machine - Normal Mode"
       ]
     },
-    23: {
+    "23": {
       activities: [
         "Anything",
         "Adventures",
