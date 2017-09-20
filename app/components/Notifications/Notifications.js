@@ -39,7 +39,6 @@ class Notifications extends PureComponent {
   fetchData() {
     console.log("Fetching Notifications");
     AsyncStorage.getItem("id_token").then(token => {
-      console.log("token: " + token);
       fetch(
         "http://pwn-staging.herokuapp.com/api/v2/users/11869/notifications",
         {

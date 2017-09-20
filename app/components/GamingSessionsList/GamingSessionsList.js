@@ -175,6 +175,14 @@ export default class GamingSessionsList extends React.PureComponent {
     }
   };
 
+  renderEmpty = () => {
+    return (
+      <View>
+        <Text> No Results</Text>
+      </View>
+    );
+  };
+
   render() {
     if (this.state.isLoading) {
       return (
@@ -201,6 +209,8 @@ export default class GamingSessionsList extends React.PureComponent {
             <GamingSession data={item} navigation={this.props.navigation} />}
           ListHeaderComponent={this.renderEmpty}
           ListFooterComponent={this.renderFooter}
+          ListEmptyComponent={this.renderEmpty}
+          extraData={this.state}
           // Getting errors using game id
           // keyExtractor={item => item.id}
           keyExtractor={(item, index) => index}

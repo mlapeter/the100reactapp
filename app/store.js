@@ -18,6 +18,7 @@ import {
 } from "./components/TabBar/NavigationConfiguration";
 
 import { authentication } from "./redux/modules/authentication";
+import { search } from "./redux/modules/search";
 
 // Middleware
 const middleware = () => {

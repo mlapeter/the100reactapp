@@ -4,6 +4,8 @@ import { colors, fontSizes } from "../../styles";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
+import { changePlatform } from "../../redux/modules/search";
+
 export default class FilterModal extends Component {
   constructor(props) {
     super(props);
@@ -60,7 +62,9 @@ export default class FilterModal extends Component {
             <Picker
               style={styles.pickerStyle}
               selectedValue={this.state.platform}
-              onValueChange={platform => this.setState({ platform: platform })}
+              onValueChange={platform => {
+                console.log(changePlatform(platform));
+              }}
             >
               <Picker.Item label="Xbox One" value="xbox-one" />
               <Picker.Item label="PS4" value="ps4" />

@@ -22,9 +22,9 @@ class Friends extends PureComponent {
     super(props);
 
     this.state = {
-      isLoading: true,
+      isLoading: false,
       refreshing: false,
-      items: []
+      items: null
     };
 
     this.fetchData = this.fetchData.bind(this);
@@ -35,22 +35,28 @@ class Friends extends PureComponent {
   }
 
   fetchData() {
+    this.setState({
+      isLoading: true
+    });
     console.log("Fetching Friends");
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
-      fetch("http://pwn-staging.herokuapp.com/api/v2/users/11869/friends", {
+      fetch("https://pwn-staging.herokuapp.com/api/v2/users/11869/friends", {
         method: "GET",
         headers: { Authorization: "Bearer " + token }
       })
         .then(response => response.json())
+        .catch(error => console.warn("fetch error:", error))
         .then(responseJson => {
+          console.log("JSON received");
           this.setState({
-            isLoading: token === null,
-            items: responseJson,
-            refreshing: false
+            isLoading: false,
+            items: responseJson
           });
+          console.log(this.state.items);
         })
         .catch(error => {
+          console.log("Error Fetching Friends!");
           console.error(error);
         });
     });
@@ -68,7 +74,14 @@ class Friends extends PureComponent {
   };
 
   render() {
-    if (this.state.isLoading) {
+    if (this.state.isloading) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+    if (!this.state.items) {
       return (
         <View style={styles.container}>
           <TouchableOpacity
@@ -79,19 +92,21 @@ class Friends extends PureComponent {
           </TouchableOpacity>
         </View>
       );
+    } else {
+      return (
+        <View style={styles.container}>
+          <Text>Friends</Text>
+          <FlatList
+            data={this.state.items}
+            renderItem={({ item }) =>
+              <Friend user={item} navigation={this.props.navigation} />}
+            keyExtractor={(item, index) => index}
+            refreshing={this.state.refreshing}
+            onRefresh={this.handleRefresh}
+          />
+        </View>
+      );
     }
-    return (
-      <View style={styles.container}>
-        <FlatList
-          data={this.state.items}
-          renderItem={({ item }) =>
-            <Friend user={item} navigation={this.props.navigation} />}
-          keyExtractor={(item, index) => index}
-          refreshing={this.state.refreshing}
-          onRefresh={this.handleRefresh}
-        />
-      </View>
-    );
   }
 }
 
