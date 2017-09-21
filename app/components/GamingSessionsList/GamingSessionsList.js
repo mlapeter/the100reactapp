@@ -17,6 +17,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import { connect } from "react-redux";
 import { fetchGames } from "../../redux/modules/search";
+import { changePage } from "../../redux/modules/search";
 
 class GamingSessionsList extends React.PureComponent {
   static propTypes = {
@@ -24,6 +25,7 @@ class GamingSessionsList extends React.PureComponent {
     game: PropTypes.object,
     gameId: PropTypes.string,
     notFull: PropTypes.number,
+    page: PropTypes.number,
     platform: PropTypes.string
   };
   constructor(props) {
@@ -34,7 +36,6 @@ class GamingSessionsList extends React.PureComponent {
       data: [],
       moreDataAvailable: true,
       gamesData: null,
-      page: 1,
       error: null
     };
     this.updateFilter = this.updateFilter.bind(this);
@@ -62,11 +63,11 @@ class GamingSessionsList extends React.PureComponent {
   // }
 
   updateFilter() {
+    this.props.dispatch(changePage(1));
     this.setState(
       {
         data: [],
-        moreDataAvailable: true,
-        page: 1
+        moreDataAvailable: true
       },
       () => {
         this.fetchData();
@@ -77,7 +78,7 @@ class GamingSessionsList extends React.PureComponent {
   searchUrl() {
     return encodeURI(
       "https://the100.io/api/v2/gaming_sessions?page=" +
-        this.state.page +
+        this.props.page +
         "&q[game_id_eq]=" +
         this.props.gameId +
         "&q[platform_cont]=" +
@@ -108,7 +109,7 @@ class GamingSessionsList extends React.PureComponent {
             isLoading: false,
             refreshing: false,
             data:
-              this.state.page === 1
+              this.props.page === 1
                 ? responseJson
                 : [...this.state.data, ...responseJson],
             error: responseJson.error || null
@@ -123,9 +124,9 @@ class GamingSessionsList extends React.PureComponent {
 
   handleRefresh = () => {
     console.log("handleRefresh Triggered");
+    this.props.dispatch(changePage(1));
     this.setState(
       {
-        page: 1,
         refreshing: true
       },
       () => {
@@ -137,9 +138,9 @@ class GamingSessionsList extends React.PureComponent {
   handleLoadMore = () => {
     console.log("handleLoadMore Triggered");
     if (this.state.moreDataAvailable === true) {
+      this.props.dispatch(changePage(this.props.page + 1));
       this.setState(
         {
-          page: this.state.page + 1,
           refreshing: true
         },
         () => {
@@ -238,17 +239,19 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const platform = state.search.platform;
-  const gameId = state.search.gameId;
   const activity = state.search.activity;
+  const gameId = state.search.gameId;
   const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
+  const page = state.search.page;
+  const platform = state.search.platform;
 
   return {
-    platform,
-    gameId,
     activity,
     game,
+    gameId,
+    page,
+    platform,
     notFull
   };
 };

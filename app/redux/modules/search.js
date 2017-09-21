@@ -1,11 +1,12 @@
-const CHANGE_PLATFORM = "CHANGE_PLATFORM";
-const CHANGE_GAME = "CHANGE_GAME";
 const CHANGE_ACTIVITY = "CHANGE_ACTIVITY";
+const CHANGE_GAME = "CHANGE_GAME";
+const CHANGE_PAGE = "CHANGE_PAGE";
+const CHANGE_PLATFORM = "CHANGE_PLATFORM";
 const FETCH_GAMES = "FETCH_GAMES";
 
-export const changePlatform = platform => ({
-  type: CHANGE_PLATFORM,
-  platform
+export const changeActivity = activity => ({
+  type: CHANGE_ACTIVITY,
+  activity
 });
 
 export const changeGame = gameId => ({
@@ -13,9 +14,14 @@ export const changeGame = gameId => ({
   gameId
 });
 
-export const changeActivity = activity => ({
-  type: CHANGE_ACTIVITY,
-  activity
+export const changePage = page => ({
+  type: CHANGE_PAGE,
+  page
+});
+
+export const changePlatform = platform => ({
+  type: CHANGE_PLATFORM,
+  platform
 });
 
 export const fetchGames = games => ({
@@ -24,8 +30,8 @@ export const fetchGames = games => ({
 });
 
 const initialState = {
+  activity: "",
   gameId: "23",
-  platform: "ps4",
   games: {
     "1": {
       activities: [
@@ -111,26 +117,32 @@ const initialState = {
       ]
     }
   },
-  activity: "",
-  notFull: 1
+  notFull: 1,
+  page: 1,
+  platform: "ps4"
 };
 
 export const search = (state = initialState, action) => {
   switch (action.type) {
+    case CHANGE_ACTIVITY:
+      return {
+        ...state,
+        activity: action.activity
+      };
     case CHANGE_GAME:
       return {
         ...state,
         gameId: action.gameId
       };
+    case CHANGE_PAGE:
+      return {
+        ...state,
+        page: action.page
+      };
     case CHANGE_PLATFORM:
       return {
         ...state,
         platform: action.platform
-      };
-    case CHANGE_ACTIVITY:
-      return {
-        ...state,
-        activity: action.activity
       };
     case FETCH_GAMES:
       return {
