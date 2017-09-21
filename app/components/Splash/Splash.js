@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import {
+  ActivityIndicator,
   Alert,
   AsyncStorage,
   Button,
@@ -32,7 +33,8 @@ class Splash extends React.Component {
 
     this.state = {
       username: null,
-      password: null
+      password: null,
+      isLoaded: false
     };
   }
 
@@ -89,6 +91,10 @@ class Splash extends React.Component {
   };
 
   render() {
+    if (!this.state.isLoaded) {
+      return <ActivityIndicator />;
+    }
+
     if (this.props.authenticationState.isAuthed === true) {
       return <Navigator />;
     }
