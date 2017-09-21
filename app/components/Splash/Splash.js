@@ -44,6 +44,13 @@ class Splash extends React.Component {
     }
   }
 
+  componentDidMount() {
+    AsyncStorage.getItem("id_token").then(token => {
+      this.props.dispatch(onAuthChange(token));
+      this.setState({ isLoaded: true });
+    });
+  }
+
   userLogin() {
     if (!this.state.username || !this.state.password) return;
     fetch("http://pwn-staging.herokuapp.com/api/v2/sessions/", {
