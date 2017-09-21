@@ -44,7 +44,7 @@ class Splash extends React.Component {
     }
   }
 
-  componentDidMoun  t() {
+  componentDidMount() {
     AsyncStorage.getItem("id_token").then(token => {
       this.props.dispatch(onAuthChange(token));
       this.setState({ isLoaded: true });
