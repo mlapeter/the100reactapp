@@ -1,19 +1,19 @@
 import React, { Component, PropTypes } from "react";
-import AppContainer from "./app/containers/App/AppContainer";
 import devTools from "remote-redux-devtools";
+import Splash from "./app/components/Splash/Splash";
 
 import { Font } from "expo";
 
 import { Provider } from "react-redux";
 import store from "./app/store";
+import { connect } from "react-redux";
 
-import TabBarNavigation from "./app/components/TabBar/TabBarNavigation";
+import Navigator from "./app/config/routes";
 
 export default function App(props) {
   return (
     <Provider store={store}>
-      {/* <AppContainer /> */}
-      <TabBarNavigation />
+      <Splash />
     </Provider>
   );
 }

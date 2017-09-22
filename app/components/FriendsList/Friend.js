@@ -18,7 +18,7 @@ export default function Friend(props) {
   return (
     <TouchableHighlight
       onPress={() =>
-        props.navigation.navigate("User", {
+        props.navigation.navigate("Friend", {
           userId: props.user.id
         })}
       underlayColor="white"

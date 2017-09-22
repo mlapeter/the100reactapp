@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import {
+  ActivityIndicator,
   Alert,
   AsyncStorage,
   Button,
@@ -20,6 +21,8 @@ import { TabNavigator } from "react-navigation";
 import { connect } from "react-redux";
 import { onAuthChange } from "../../redux/modules/authentication";
 
+import Navigator from "../../config/routes";
+
 import { colors, fontSizes } from "../../styles";
 const { height, width } = Dimensions.get("window");
 
@@ -30,7 +33,8 @@ class Splash extends React.Component {
 
     this.state = {
       username: null,
-      password: null
+      password: null,
+      isLoaded: false
     };
   }
 
@@ -40,6 +44,13 @@ class Splash extends React.Component {
     } catch (error) {
       console.error("AsyncStorage error: " + error.message);
     }
+  }
+
+  componentDidMount() {
+    AsyncStorage.getItem("id_token").then(token => {
+      this.props.dispatch(onAuthChange(token));
+      this.setState({ isLoaded: true });
+    });
   }
 
   userLogin() {
@@ -57,8 +68,6 @@ class Splash extends React.Component {
     })
       .then(response => response.json())
       .then(responseData => {
-        console.log("LOGGING IN");
-        console.log(responseData);
         this.saveItem("id_token", responseData.token);
         Keyboard.dismiss();
         this.props.dispatch(onAuthChange(responseData.token));
@@ -82,6 +91,14 @@ class Splash extends React.Component {
   };
 
   render() {
+    if (!this.state.isLoaded) {
+      return <ActivityIndicator />;
+    }
+
+    if (this.props.authenticationState.isAuthed === true) {
+      return <Navigator />;
+    }
+
     return (
       <TouchableWithoutFeedback
         onPress={() => {
@@ -174,11 +191,10 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapStateToProps({ authentication }) {
+const mapStateToProps = state => {
   return {
-    isAuthenticating: authentication.isAuthenticating,
-    isAuthed: authentication.isAuthed
+    authenticationState: state.authentication
   };
-}
+};
 
 export default connect(mapStateToProps)(Splash);
