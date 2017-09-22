@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { connectAlert } from "../Alert";
 import { connect } from "react-redux";
 import { onAuthChange } from "../../redux/modules/authentication";
 
@@ -18,7 +19,10 @@ import Moment from "../../../node_modules/react-moment";
 import TimeAgo from "../../../node_modules/react-native-timeago";
 
 class Notifications extends PureComponent {
-  static propTypes = {};
+  static propTypes = {
+    navigation: PropTypes.object,
+    alertWithType: PropTypes.func
+  };
   constructor(props) {
     super(props);
 
@@ -72,12 +76,13 @@ class Notifications extends PureComponent {
   };
 
   userLogout() {
-    try {
-      AsyncStorage.removeItem("id_token");
-    } catch (error) {
-      console.log("AsyncStorage error: " + error.message);
-    }
-    this.props.dispatch(onAuthChange(""));
+    this.props.alertWithType("error", "Sorry!", "there was an error.");
+    // try {
+    //   AsyncStorage.removeItem("id_token");
+    // } catch (error) {
+    //   console.log("AsyncStorage error: " + error.message);
+    // }
+    // this.props.dispatch(onAuthChange(""));
 
     // this.props.dispatch(onAuthChange());
   }
@@ -229,4 +234,5 @@ function mapStateToProps({ authentication }) {
   };
 }
 
-export default connect(mapStateToProps)(Notifications);
+// export default connect(mapStateToProps)(Notifications);
+export default connectAlert(Notifications);

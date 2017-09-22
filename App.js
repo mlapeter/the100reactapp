@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from "react";
 import devTools from "remote-redux-devtools";
 import Splash from "./app/components/Splash/Splash";
+import { AlertProvider } from "./app/components/Alert";
 
 import { Font } from "expo";
 
@@ -12,8 +13,10 @@ import Navigator from "./app/config/routes";
 
 export default function App(props) {
   return (
-    <Provider store={store}>
-      <Splash />
-    </Provider>
+    <AlertProvider>
+      <Provider store={store}>
+        <Splash />
+      </Provider>
+    </AlertProvider>
   );
 }
