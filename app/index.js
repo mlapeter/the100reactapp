@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from "react";
 import devTools from "remote-redux-devtools";
-import Splash from "./screens/Splash/";
+import Login from "./screens/Login/";
 import { AlertProvider } from "./components/Alert";
 import EStylesheet from "react-native-extended-stylesheet";
 import Notifications from "./screens/Notifications";
@@ -33,7 +33,7 @@ export default function App(props) {
   return (
     <AlertProvider>
       <Provider store={store}>
-        <Splash />
+        <Login />
       </Provider>
     </AlertProvider>
   );

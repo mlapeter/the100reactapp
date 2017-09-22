@@ -3,7 +3,7 @@ import React, { Component, PropTypes } from "react";
 import { TabNavigator } from "react-navigation";
 import { StackNavigator } from "react-navigation";
 
-import Splash from "../screens/Splash/";
+import Login from "../screens/Login/";
 import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
 
