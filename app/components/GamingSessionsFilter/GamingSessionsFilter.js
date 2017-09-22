@@ -8,7 +8,7 @@ import { changeGame } from "../../redux/modules/search";
 import { changeActivity } from "../../redux/modules/search";
 import { connect } from "react-redux";
 
-class FilterModal extends Component {
+class GamingSessionsFilter extends Component {
   static propTypes = {
     activities: PropTypes.array,
     activity: PropTypes.string,
@@ -76,13 +76,13 @@ class FilterModal extends Component {
                 this.props.dispatch(changeActivity(activity))}
             >
               <Picker.Item label="All" value="" />
-              {this.props.activities.map(activity =>
+              {this.props.activities.map(activity => (
                 <Picker.Item
                   key={activity.toString()}
                   label={activity.toString()}
                   value={activity.toString()}
                 />
-              )}
+              ))}
             </Picker>
             <View style={styles.modalButtonStyle}>
               <Button
@@ -139,4 +139,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(FilterModal);
+export default connect(mapStateToProps)(GamingSessionsFilter);

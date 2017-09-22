@@ -11,12 +11,11 @@ import {
   TextInput,
   View
 } from "react-native";
-import PreSplash from "../../components/PreSplash/PreSplash";
-import Chat from "../../components/Chat/Chat";
+import Chat from "../components/Chat/Chat";
 
-import PlayerList from "./PlayerList";
-import { colors, fontSizes } from "../../styles";
-import Moment from "../../../node_modules/react-moment";
+import PlayersList from "../components/PlayersList/PlayersList";
+import { colors, fontSizes } from "../styles";
+import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigator } from "react-navigation";
@@ -165,7 +164,7 @@ export default class GamingSession extends React.Component {
           <PowerIcon lightLevel={this.state.dataSource.light_level} />
           <SherpaIcon sherpaLed={this.state.dataSource.sherpa_led} />
         </View>
-        <PlayerList
+        <PlayersList
           confirmedSessions={this.state.dataSource.confirmed_sessions}
           navigation={this.props.navigation}
         />
@@ -212,9 +211,7 @@ function TimeIcon(props) {
   return (
     <Text style={styles.icon}>
       <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
-      <Moment element={Text}>
-        {props.startTime.toString()}
-      </Moment>
+      <Moment element={Text}>{props.startTime.toString()}</Moment>
     </Text>
   );
 }

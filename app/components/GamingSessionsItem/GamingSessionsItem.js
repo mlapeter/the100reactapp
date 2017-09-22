@@ -23,7 +23,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
-export default function GamingSession(props) {
+export default function GamingSessionItem(props) {
   return (
     <TouchableHighlight
       onPress={() =>
@@ -44,9 +44,7 @@ export default function GamingSession(props) {
           />
         </View>
         <View style={styles.middleBox}>
-          <Text style={styles.gamingSessionTitle}>
-            {props.data.category}
-          </Text>
+          <Text style={styles.gamingSessionTitle}>{props.data.category}</Text>
           <Text style={styles.gamingSessionDescription} numberOfLines={2}>
             {props.data.name}
           </Text>

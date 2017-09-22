@@ -19,11 +19,11 @@ import {
 import { StackNavigator } from "react-navigation";
 import { TabNavigator } from "react-navigation";
 import { connect } from "react-redux";
-import { onAuthChange } from "../../redux/modules/authentication";
+import { onAuthChange } from "../redux/modules/authentication";
 
-import Navigator from "../../config/routes";
+import Navigator from "../config/routes";
 
-import { colors, fontSizes } from "../../styles";
+import { colors, fontSizes } from "../styles";
 const { height, width } = Dimensions.get("window");
 
 class Splash extends React.Component {
@@ -106,10 +106,7 @@ class Splash extends React.Component {
         }}
       >
         <View style={styles.container}>
-          <Image
-            style={styles.image}
-            source={require("../../images/logo.png")}
-          />
+          <Image style={styles.image} source={require("../images/logo.png")} />
           <KeyboardAvoidingView
             style={styles.loginContainer}
             behavior="padding"
