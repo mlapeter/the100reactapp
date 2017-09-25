@@ -11,11 +11,11 @@ import {
   TextInput,
   View
 } from "react-native";
-import PreSplash from "../../components/PreSplash/PreSplash";
-import Chat from "../../components/Chat/Chat";
+import PreSplash from "../components/PreSplash/PreSplash";
+import Chat from "../components/Chat/Chat";
 
-import { colors, fontSizes } from "../../styles";
-import Moment from "../../../node_modules/react-moment";
+import { colors, fontSizes } from "../styles";
+import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigator } from "react-navigation";
@@ -116,13 +116,11 @@ export default class Group extends React.Component {
           source={
             this.state.dataSource.header_background_image_api ===
             "img/default-avatar.png"
-              ? require("../../images/default-avatar.png")
+              ? require("../images/default-avatar.png")
               : { uri: this.state.dataSource.header_background_image_api }
           }
         >
-          <Text style={styles.title}>
-            {this.state.dataSource.name}
-          </Text>
+          <Text style={styles.title}>{this.state.dataSource.name}</Text>
         </Image>
         <View style={styles.innerContainer}>
           <Text style={styles.description} numberOfLines={3}>
@@ -230,9 +228,7 @@ function PlayScheduleIcon(props) {
   return (
     <Text style={styles.icon}>
       <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
-      <Text style={styles.icon}>
-        {props.playSchedule.toString()}
-      </Text>
+      <Text style={styles.icon}>{props.playSchedule.toString()}</Text>
     </Text>
   );
 }

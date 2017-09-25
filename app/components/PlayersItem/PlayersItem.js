@@ -10,11 +10,11 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { colors, fontSizes } from "../../styles";
 import { StackNavigator } from "react-navigation";
 
-Player.propTypes = {
+PlayersItem.propTypes = {
   user: PropTypes.object.isRequired
 };
 
-export default function Player(props) {
+export default function PlayersItem(props) {
   return (
     <TouchableHighlight
       onPress={() =>
@@ -35,9 +35,7 @@ export default function Player(props) {
           />
 
           <View style={styles.profileText}>
-            <Text style={styles.gamertag}>
-              {props.user.gamertag}
-            </Text>
+            <Text style={styles.gamertag}>{props.user.gamertag}</Text>
             <Text style={styles.iconText}>
               <MaterialCommunityIcons
                 name="gauge"

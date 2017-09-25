@@ -8,16 +8,16 @@ import {
   View
 } from "react-native";
 import { StackNavigator } from "react-navigation";
-import PreSplash from "../../components/PreSplash/PreSplash";
-import { colors, fontSizes } from "../../styles";
-import GamingSession from "./GamingSession";
-import FilterModal from "../../components/GamingSessionsList/FilterModal";
+import PreSplash from "../components/PreSplash/PreSplash";
+import { colors, fontSizes } from "../styles";
+import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
+import GamingSessionsFilter from "../components/GamingSessionsFilter/GamingSessionsFilter";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { connect } from "react-redux";
-import { fetchGames } from "../../redux/modules/search";
-import { changePage } from "../../redux/modules/search";
+import { fetchGames } from "../redux/modules/search";
+import { changePage } from "../redux/modules/search";
 
 class GamingSessionsList extends React.PureComponent {
   static propTypes = {
@@ -192,12 +192,16 @@ class GamingSessionsList extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <FilterModal updateFilter={this.updateFilter} />
+        <GamingSessionsFilter updateFilter={this.updateFilter} />
 
         <FlatList
           data={this.state.data}
-          renderItem={({ item }) =>
-            <GamingSession data={item} navigation={this.props.navigation} />}
+          renderItem={({ item }) => (
+            <GamingSessionsItem
+              data={item}
+              navigation={this.props.navigation}
+            />
+          )}
           ListHeaderComponent={this.renderEmpty}
           ListFooterComponent={this.renderFooter}
           ListEmptyComponent={this.renderEmpty}

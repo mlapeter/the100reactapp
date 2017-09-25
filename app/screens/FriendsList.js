@@ -10,11 +10,11 @@ import {
   View
 } from "react-native";
 import { connect } from "react-redux";
-import { onAuthChange } from "../../redux/modules/authentication";
-import { colors, fontSizes } from "../../styles";
-import Moment from "../../../node_modules/react-moment";
-import TimeAgo from "../../../node_modules/react-native-timeago";
-import Friend from "./Friend";
+import { onAuthChange } from "../redux/modules/authentication";
+import { colors, fontSizes } from "../styles";
+import Moment from "../../node_modules/react-moment";
+import TimeAgo from "../../node_modules/react-native-timeago";
+import Friend from "../components/Friend/Friend";
 
 class Friends extends PureComponent {
   static propTypes = {};
@@ -97,8 +97,9 @@ class Friends extends PureComponent {
           <Text>Friends</Text>
           <FlatList
             data={this.state.items}
-            renderItem={({ item }) =>
-              <Friend user={item} navigation={this.props.navigation} />}
+            renderItem={({ item }) => (
+              <Friend user={item} navigation={this.props.navigation} />
+            )}
             keyExtractor={(item, index) => index}
             refreshing={this.state.refreshing}
             onRefresh={this.handleRefresh}

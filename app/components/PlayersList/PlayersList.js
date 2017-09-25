@@ -1,22 +1,22 @@
 import React, { PropTypes } from "react";
 import { View, StyleSheet, Text } from "react-native";
-import Player from "./Player";
+import PlayersItem from "../PlayersItem/PlayersItem";
 import { StackNavigator } from "react-navigation";
 
-PlayerList.propTypes = {
+PlayersList.propTypes = {
   confirmedSessions: PropTypes.array.isRequired
 };
 
-export default function PlayerList(props) {
+export default function PlayersList(props) {
   return (
     <View style={styles.container}>
-      {props.confirmedSessions.map(confirmedSession =>
-        <Player
+      {props.confirmedSessions.map(confirmedSession => (
+        <PlayersItem
           user={confirmedSession.user}
           key={confirmedSession.id}
           navigation={props.navigation}
         />
-      )}
+      ))}
     </View>
   );
 }

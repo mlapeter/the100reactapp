@@ -5,18 +5,28 @@ import {
   AsyncStorage,
   FlatList,
   Image,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from "react-native";
-import { connectAlert } from "../Alert";
+import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
-import { onAuthChange } from "../../redux/modules/authentication";
+import { onAuthChange } from "../redux/modules/authentication";
 
-import { colors, fontSizes } from "../../styles";
-import Moment from "../../../node_modules/react-moment";
-import TimeAgo from "../../../node_modules/react-native-timeago";
+import { colors, fontSizes } from "../../app/styles";
+import Moment from "../../node_modules/react-moment";
+import TimeAgo from "../../node_modules/react-native-timeago";
+
+import { Container } from "../components/Container";
+
+// export default () => (
+//   <Container>
+//     <StatusBar translucent={false} barStyle="light-content" />
+//     <View />
+//   </Container>
+// );
 
 class Notifications extends PureComponent {
   static propTypes = {
@@ -96,7 +106,8 @@ class Notifications extends PureComponent {
             onPress={this.fetchData}
           >
             <Text style={styles.buttonText}>
-              {" "}Get Notifications (if logged in)
+              {" "}
+              Get Notifications (if logged in)
             </Text>
           </TouchableOpacity>
         </View>
@@ -132,7 +143,7 @@ class ListItem extends PureComponent {
             style={styles.avatarMini}
             source={
               this.props.item.avatar_url === null
-                ? require("../../images/default-avatar.png")
+                ? require("../../app/images/default-avatar.png")
                 : { uri: this.props.item.avatar_url }
             }
           />
@@ -146,9 +157,7 @@ class ListItem extends PureComponent {
               <TimeAgo time={this.props.item.created_at} minPeriod="60" />
             </Text>
           </View>
-          <Text style={styles.username}>
-            {this.props.item.message}
-          </Text>
+          <Text style={styles.username}>{this.props.item.message}</Text>
         </View>
       </View>
     );
