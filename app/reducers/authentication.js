@@ -12,36 +12,6 @@ const initialState = {
   token: ""
 };
 
-// export const onAuthChange = token => {
-//   if (!token) {
-//     console.log("NO TOKEN");
-//     dispatch(notAuthed());
-//   } else {
-//     console.log("YES TOKEN");
-//     dispatch(isAuthed(token));
-//   }
-// };
-
-// export function onAuthChange(token) {
-//   return function(dispatch) {
-//     if (!token) {
-//       dispatch(notAuthed());
-//     } else {
-//       dispatch(isAuthed(token));
-//     }
-//   };
-// }
-
-// export const onAuthChange = token => {
-//   if (!token) {
-//     console.log("NO TOKEN");
-//     dispatch(notAuthed());
-//   } else {
-//     console.log("YES TOKEN");
-//     dispatch(isAuthed(token));
-//   }
-// };
-
 export default (state = initialState, action) => {
   switch (action.type) {
     case ON_AUTH_CHANGE:

@@ -14,19 +14,11 @@ import {
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { onAuthChange } from "../actions/authentication";
+import { fetchNotifications } from "../actions/notifications";
 
 import { colors, fontSizes, fontStyles } from "../../app/styles";
 import Moment from "../../node_modules/react-moment";
 import TimeAgo from "../../node_modules/react-native-timeago";
-
-import { Container } from "../components/Container";
-
-// export default () => (
-//   <Container>
-//     <StatusBar translucent={false} barStyle="light-content" />
-//     <View />
-//   </Container>
-// );
 
 class Notifications extends PureComponent {
   static propTypes = {
@@ -46,32 +38,37 @@ class Notifications extends PureComponent {
     this.fetchData = this.fetchData.bind(this);
   }
 
+  componentWillMount() {
+    // this.props.dispatch(fetchNotifications());
+  }
   componentDidMount() {
     // this.fetchData();
   }
 
   fetchData() {
-    console.log("Fetching Notifications");
-    AsyncStorage.getItem("id_token").then(token => {
-      fetch(
-        "http://pwn-staging.herokuapp.com/api/v2/users/11869/notifications",
-        {
-          method: "GET",
-          headers: { Authorization: "Bearer " + token }
-        }
-      )
-        .then(response => response.json())
-        .then(responseJson => {
-          this.setState({
-            isLoading: token === null,
-            items: responseJson,
-            refreshing: false
-          });
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    });
+    this.props.dispatch(fetchNotifications());
+
+    // console.log("Fetching Notifications");
+    // AsyncStorage.getItem("id_token").then(token => {
+    //   fetch(
+    //     "http://pwn-staging.herokuapp.com/api/v2/users/11869/notifications",
+    //     {
+    //       method: "GET",
+    //       headers: { Authorization: "Bearer " + token }
+    //     }
+    //   )
+    //     .then(response => response.json())
+    //     .then(responseJson => {
+    //       this.setState({
+    //         isLoading: token === null,
+    //         items: responseJson,
+    //         refreshing: false
+    //       });
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //     });
+    // });
   }
 
   handleRefresh = () => {
@@ -98,20 +95,29 @@ class Notifications extends PureComponent {
   }
 
   render() {
-    if (this.state.isLoading) {
+    if (this.props.isLoading) {
       return (
         <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.buttonWrapper}
-            onPress={this.fetchData}
-          >
-            <Text style={styles.buttonText}>
-              {" "}
-              Get Notifications (if logged in)
-            </Text>
-          </TouchableOpacity>
+          <ActivityIndicator />
         </View>
       );
+    } else {
+      console.log("ITEMS: ", this.props.items);
+      if (this.props.items.length < 1) {
+        return (
+          <View style={styles.container}>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={this.fetchData}
+            >
+              <Text style={styles.buttonText}>
+                {" "}
+                Get Notifications (if logged in)
+              </Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
     }
     return (
       <View style={styles.container}>
@@ -123,7 +129,7 @@ class Notifications extends PureComponent {
         </TouchableOpacity>
 
         <FlatList
-          data={this.state.items}
+          data={this.props.items}
           renderItem={({ item }) => <ListItem item={item} />}
           keyExtractor={(item, index) => index}
           refreshing={this.state.refreshing}
@@ -236,12 +242,19 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapStateToProps({ authentication }) {
+const mapStateToProps = state => {
+  const isAuthenticating = state.authentication.isAuthenticating;
+  const isAuthed = state.authentication.isAuthed;
+  const items = state.notifications.notifications;
+  const isLoading = state.notifications.isLoading;
+
   return {
-    isAuthenticating: authentication.isAuthenticating,
-    isAuthed: authentication.isAuthed
+    isAuthenticating,
+    isAuthed,
+    items,
+    isLoading
   };
-}
+};
 
 export default connect(mapStateToProps)(Notifications);
 // export default connectAlert(Notifications);
