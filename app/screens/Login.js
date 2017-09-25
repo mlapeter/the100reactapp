@@ -18,15 +18,16 @@ import {
 } from "react-native";
 import { StackNavigator } from "react-navigation";
 import { TabNavigator } from "react-navigation";
+
 import { connect } from "react-redux";
-import { onAuthChange } from "../redux/modules/authentication";
+import { onAuthChange } from "../actions/authentication";
 
 import Navigator from "../config/routes";
 
 import { colors, fontSizes } from "../styles";
 const { height, width } = Dimensions.get("window");
 
-class Splash extends React.Component {
+class Login extends React.Component {
   static propTypes = {};
   constructor(props) {
     super(props);
@@ -96,7 +97,7 @@ class Splash extends React.Component {
     }
 
     if (this.props.authenticationState.isAuthed === true) {
-      return <Navigator />;
+      return <Navigator onNavigationStateChange={null} />;
     }
 
     return (
@@ -189,9 +190,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
+  const authenticationState = state.authentication;
+  // const onAuthChange = state.authentication.onAuthChange(token);
+
   return {
-    authenticationState: state.authentication
+    authenticationState
   };
 };
 
-export default connect(mapStateToProps)(Splash);
+export default connect(mapStateToProps)(Login);

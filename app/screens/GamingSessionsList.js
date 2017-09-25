@@ -16,8 +16,8 @@ import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { connect } from "react-redux";
-import { fetchGames } from "../redux/modules/search";
-import { changePage } from "../redux/modules/search";
+import { fetchGames } from "../actions/search";
+import { changePage } from "../actions/search";
 
 class GamingSessionsList extends React.PureComponent {
   static propTypes = {

@@ -7,7 +7,7 @@ import {
   TouchableHighlight
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { colors, fontSizes } from "../../styles";
+import { colors, fontSizes, fontStyles } from "../../styles";
 import { StackNavigator } from "react-navigation";
 
 PlayersItem.propTypes = {
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5
   },
   gamertag: {
-    fontFamily: "Futura",
+    fontFamily: fontStyles.primaryFont,
     paddingLeft: 5,
     fontSize: fontSizes.secondary
   },

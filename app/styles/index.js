@@ -17,3 +17,7 @@ export const fontSizes = {
   secondary: 15,
   small: 13
 };
+
+export const fontStyles = {
+  primaryFont: "Futura"
+};

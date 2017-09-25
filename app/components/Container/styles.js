@@ -55,7 +55,7 @@ export default EStylesheet.create({
   },
   username: {
     color: "$grey",
-    fontFamily: "Futura"
+    fontFamily: "$primaryFont"
     // fontSize: fontSizes.secondary
   },
   time: {
