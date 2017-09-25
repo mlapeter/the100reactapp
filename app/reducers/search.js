@@ -1,33 +1,10 @@
-const CHANGE_ACTIVITY = "CHANGE_ACTIVITY";
-const CHANGE_GAME = "CHANGE_GAME";
-const CHANGE_PAGE = "CHANGE_PAGE";
-const CHANGE_PLATFORM = "CHANGE_PLATFORM";
-const FETCH_GAMES = "FETCH_GAMES";
-
-export const changeActivity = activity => ({
-  type: CHANGE_ACTIVITY,
-  activity
-});
-
-export const changeGame = gameId => ({
-  type: CHANGE_GAME,
-  gameId
-});
-
-export const changePage = page => ({
-  type: CHANGE_PAGE,
-  page
-});
-
-export const changePlatform = platform => ({
-  type: CHANGE_PLATFORM,
-  platform
-});
-
-export const fetchGames = games => ({
-  type: FETCH_GAMES,
-  games
-});
+import {
+  CHANGE_ACTIVITY,
+  CHANGE_GAME,
+  CHANGE_PAGE,
+  CHANGE_PLATFORM,
+  FETCH_GAMES
+} from "../actions/search";
 
 const initialState = {
   activity: "",
@@ -122,7 +99,7 @@ const initialState = {
   platform: "ps4"
 };
 
-export const search = (state = initialState, action) => {
+export default (state = initialState, action) => {
   switch (action.type) {
     case CHANGE_ACTIVITY:
       return {

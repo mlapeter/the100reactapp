@@ -3,9 +3,9 @@ import { Button, StyleSheet, Text, View, Picker, Modal } from "react-native";
 import { colors, fontSizes } from "../../styles";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { changePlatform } from "../../redux/modules/search";
-import { changeGame } from "../../redux/modules/search";
-import { changeActivity } from "../../redux/modules/search";
+import { changePlatform } from "../../actions/search";
+import { changeGame } from "../../actions/search";
+import { changeActivity } from "../../actions/search";
 import { connect } from "react-redux";
 
 class GamingSessionsFilter extends Component {

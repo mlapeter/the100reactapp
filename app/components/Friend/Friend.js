@@ -9,7 +9,7 @@ import {
 import { StackNavigator } from "react-navigation";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { colors, fontSizes } from "../../styles";
+import { colors, fontSizes, fontStyles } from "../../styles";
 Friend.propTypes = {
   user: PropTypes.object.isRequired
 };
@@ -33,9 +33,7 @@ export default function Friend(props) {
           }
         />
         <View style={styles.profileText}>
-          <Text style={styles.gamertag}>
-            {props.user.gamertag}
-          </Text>
+          <Text style={styles.gamertag}>{props.user.gamertag}</Text>
           <View style={styles.iconBar}>
             <LevelIcon lightLevel={props.user.light_level} />
             <KarmaIcon karmasCount={props.user.karmas_count} />
@@ -100,7 +98,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5
   },
   gamertag: {
-    fontFamily: "Futura",
+    fontFamily: fontStyles.primaryFont,
     paddingLeft: 5,
     fontSize: fontSizes.secondary
   },

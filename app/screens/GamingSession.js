@@ -11,10 +11,11 @@ import {
   TextInput,
   View
 } from "react-native";
+
 import Chat from "../components/Chat/Chat";
 
 import PlayersList from "../components/PlayersList/PlayersList";
-import { colors, fontSizes } from "../styles";
+import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -296,7 +297,7 @@ const styles = StyleSheet.create({
   title: {
     padding: 5,
     color: colors.grey,
-    fontFamily: "Futura",
+    fontFamily: fontStyles.primaryFont,
     fontSize: fontSizes.primary
   },
   description: {

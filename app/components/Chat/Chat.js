@@ -13,7 +13,7 @@ import {
   View
 } from "react-native";
 import PreSplash from "../../components/PreSplash/PreSplash";
-import { colors, fontSizes } from "../../styles";
+import { colors, fontSizes, fontStyles } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import TimeAgo from "../../../node_modules/react-native-timeago";
 
@@ -86,11 +86,14 @@ export default class Chat extends Component {
         });
     } else {
       console.log("STARTING ANON SIGNIN");
-      firebase.auth().signInAnonymously().catch(function(error) {
-        console.log(
-          "ANON SIGNIN ERROR WITH TOKEN " + error.code + ":" + error.message
-        );
-      });
+      firebase
+        .auth()
+        .signInAnonymously()
+        .catch(function(error) {
+          console.log(
+            "ANON SIGNIN ERROR WITH TOKEN " + error.code + ":" + error.message
+          );
+        });
     }
 
     firebase.auth().onAuthStateChanged(function(user) {
@@ -215,16 +218,12 @@ class ListItem extends Component {
         </View>
         <View style={styles.middleBox}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={styles.username}>
-              {this.props.item.username}
-            </Text>
+            <Text style={styles.username}>{this.props.item.username}</Text>
             <Text style={styles.time}>
               <TimeAgo time={this.props.item.createdAt} minPeriod="60" />
             </Text>
           </View>
-          <Text style={styles.text}>
-            {this.props.item.text}
-          </Text>
+          <Text style={styles.text}>{this.props.item.text}</Text>
         </View>
       </View>
     );
@@ -329,7 +328,7 @@ const styles = StyleSheet.create({
   },
   username: {
     color: colors.grey,
-    fontFamily: "Futura",
+    fontFamily: fontStyles.primaryFont,
     fontSize: fontSizes.secondary
   },
   time: {

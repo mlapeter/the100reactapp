@@ -13,9 +13,9 @@ import {
 } from "react-native";
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
-import { onAuthChange } from "../redux/modules/authentication";
+import { onAuthChange } from "../actions/authentication";
 
-import { colors, fontSizes } from "../../app/styles";
+import { colors, fontSizes, fontStyles } from "../../app/styles";
 import Moment from "../../node_modules/react-moment";
 import TimeAgo from "../../node_modules/react-native-timeago";
 
@@ -86,13 +86,13 @@ class Notifications extends PureComponent {
   };
 
   userLogout() {
-    this.props.alertWithType("error", "Sorry!", "there was an error.");
-    // try {
-    //   AsyncStorage.removeItem("id_token");
-    // } catch (error) {
-    //   console.log("AsyncStorage error: " + error.message);
-    // }
-    // this.props.dispatch(onAuthChange(""));
+    // this.props.alertWithType("error", "Sorry!", "there was an error.");
+    try {
+      AsyncStorage.removeItem("id_token");
+    } catch (error) {
+      console.log("AsyncStorage error: " + error.message);
+    }
+    this.props.dispatch(onAuthChange(""));
 
     // this.props.dispatch(onAuthChange());
   }
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
   },
   username: {
     color: colors.grey,
-    fontFamily: "Futura",
+    fontFamily: fontStyles.primaryFont,
     fontSize: fontSizes.secondary
   },
   time: {
@@ -243,5 +243,5 @@ function mapStateToProps({ authentication }) {
   };
 }
 
-// export default connect(mapStateToProps)(Notifications);
-export default connectAlert(Notifications);
+export default connect(mapStateToProps)(Notifications);
+// export default connectAlert(Notifications);

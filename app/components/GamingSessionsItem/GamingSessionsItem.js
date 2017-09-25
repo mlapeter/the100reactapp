@@ -15,7 +15,7 @@ import {
 import { StackNavigator } from "react-navigation";
 
 import PreSplash from "../../components/PreSplash/PreSplash";
-import { colors, fontSizes } from "../../styles";
+import { colors, fontSizes, fontStyles } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
   },
   gamingSessionTitle: {
     color: colors.grey,
-    fontFamily: "Futura"
+    fontFamily: fontStyles.primaryFont
   },
   gamingSessionDescription: {
     color: colors.lightGrey
