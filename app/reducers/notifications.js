@@ -7,7 +7,6 @@ import {
 const initialState = {
   token: "",
   isLoading: false,
-  refreshing: true,
   notifications: []
 };
 
@@ -25,6 +24,11 @@ export default (state = initialState, action) => {
         isLoading: false
       };
     case FETCH_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false
+      };
     default:
       return state;
   }

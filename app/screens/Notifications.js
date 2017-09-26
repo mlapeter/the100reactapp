@@ -23,75 +23,42 @@ import TimeAgo from "../../node_modules/react-native-timeago";
 class Notifications extends PureComponent {
   static propTypes = {
     navigation: PropTypes.object,
-    alertWithType: PropTypes.func
+    alertWithType: PropTypes.func,
+    notificationsError: PropTypes.string
   };
   constructor(props) {
     super(props);
-
-    this.state = {
-      isLoading: true,
-      isAuthed: false,
-      refreshing: false,
-      items: []
-    };
-
     this.fetchData = this.fetchData.bind(this);
   }
 
   componentWillMount() {
     // this.props.dispatch(fetchNotifications());
   }
-  componentDidMount() {
-    // this.fetchData();
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.notificationsError &&
+      nextProps.notificationsError !== this.props.notificationsError
+    ) {
+      this.props.alertWithType("error", "Error", nextProps.notificationsError);
+    }
   }
 
   fetchData() {
     this.props.dispatch(fetchNotifications());
-
-    // console.log("Fetching Notifications");
-    // AsyncStorage.getItem("id_token").then(token => {
-    //   fetch(
-    //     "http://pwn-staging.herokuapp.com/api/v2/users/11869/notifications",
-    //     {
-    //       method: "GET",
-    //       headers: { Authorization: "Bearer " + token }
-    //     }
-    //   )
-    //     .then(response => response.json())
-    //     .then(responseJson => {
-    //       this.setState({
-    //         isLoading: token === null,
-    //         items: responseJson,
-    //         refreshing: false
-    //       });
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });
-    // });
   }
 
   handleRefresh = () => {
-    this.setState(
-      {
-        refreshing: true
-      },
-      () => {
-        this.fetchData();
-      }
-    );
+    this.fetchData();
   };
 
   userLogout() {
-    // this.props.alertWithType("error", "Sorry!", "there was an error.");
     try {
       AsyncStorage.removeItem("id_token");
     } catch (error) {
       console.log("AsyncStorage error: " + error.message);
     }
     this.props.dispatch(onAuthChange(""));
-
-    // this.props.dispatch(onAuthChange());
   }
 
   render() {
@@ -102,7 +69,6 @@ class Notifications extends PureComponent {
         </View>
       );
     } else {
-      console.log("ITEMS: ", this.props.items);
       if (this.props.items.length < 1) {
         return (
           <View style={styles.container}>
@@ -110,10 +76,7 @@ class Notifications extends PureComponent {
               style={styles.buttonWrapper}
               onPress={this.fetchData}
             >
-              <Text style={styles.buttonText}>
-                {" "}
-                Get Notifications (if logged in)
-              </Text>
+              <Text style={styles.buttonText}>Get Notifications</Text>
             </TouchableOpacity>
           </View>
         );
@@ -132,7 +95,7 @@ class Notifications extends PureComponent {
           data={this.props.items}
           renderItem={({ item }) => <ListItem item={item} />}
           keyExtractor={(item, index) => index}
-          refreshing={this.state.refreshing}
+          refreshing={this.props.isLoading}
           onRefresh={this.handleRefresh}
         />
       </View>
@@ -252,9 +215,9 @@ const mapStateToProps = state => {
     isAuthenticating,
     isAuthed,
     items,
-    isLoading
+    isLoading,
+    notificationsError: state.notifications.error
   };
 };
 
-export default connect(mapStateToProps)(Notifications);
-// export default connectAlert(Notifications);
+export default connect(mapStateToProps)(connectAlert(Notifications));
