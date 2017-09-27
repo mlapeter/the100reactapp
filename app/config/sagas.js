@@ -1,9 +1,15 @@
-import { takeEvery, select, call, put } from "redux-saga/effects";
+import { takeEvery, takeLatest, select, call, put } from "redux-saga/effects";
 import {
   FETCH_NOTIFICATIONS,
   FETCH_NOTIFICATIONS_RESULT,
   FETCH_NOTIFICATIONS_ERROR
 } from "../actions/notifications";
+
+import {
+  FETCH_FRIENDS,
+  FETCH_FRIENDS_RESULT,
+  FETCH_FRIENDS_ERROR
+} from "../actions/friends";
 
 function* fetchData(endpoint, success, failure) {
   try {
@@ -25,7 +31,7 @@ function* fetchData(endpoint, success, failure) {
 
 function* fetchNotifications() {
   try {
-    let userId = yield select(state => state.notifications.endpoint);
+    let userId = yield select(state => state.authentication.userId);
     let endpoint =
       "http://pwn-staging.herokuapp.com/api/v2/users/" +
       userId +
@@ -41,6 +47,18 @@ function* fetchNotifications() {
   }
 }
 
+function* fetchFriends() {
+  try {
+    let userId = yield select(state => state.authentication.userId);
+    let endpoint =
+      "http://pwn-staging.herokuapp.com/api/v2/users/" + userId + "/friends";
+    yield call(fetchData, endpoint, FETCH_FRIENDS_RESULT, FETCH_FRIENDS_ERROR);
+  } catch (e) {
+    yield put({ type: FETCH_FRIENDS_ERROR, error: e.message });
+  }
+}
+
 export default function* rootSaga() {
+  yield takeEvery(FETCH_FRIENDS, fetchFriends);
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
 }

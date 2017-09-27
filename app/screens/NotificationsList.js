@@ -25,7 +25,8 @@ class Notifications extends PureComponent {
   static propTypes = {
     navigation: PropTypes.object,
     alertWithType: PropTypes.func,
-    notificationsError: PropTypes.string
+    notificationsError: PropTypes.string,
+    items: PropTypes.array
   };
   constructor(props) {
     super(props);
@@ -33,7 +34,7 @@ class Notifications extends PureComponent {
   }
 
   componentWillMount() {
-    // this.props.dispatch(fetchNotifications());
+    this.props.dispatch(fetchNotifications());
   }
 
   componentWillReceiveProps(nextProps) {
