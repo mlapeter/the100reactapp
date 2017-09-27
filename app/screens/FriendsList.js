@@ -14,98 +14,78 @@ import { colors, fontSizes } from "../styles";
 import Moment from "../../node_modules/react-moment";
 import TimeAgo from "../../node_modules/react-native-timeago";
 import Friend from "../components/Friend/Friend";
+import { fetchFriends } from "../actions/friends";
+import { connectAlert } from "../components/Alert";
 
-class Friends extends PureComponent {
-  static propTypes = {};
+class FriendsList extends Component {
+  static propTypes = {
+    navigation: PropTypes.object,
+    alertWithType: PropTypes.func,
+    friendsError: PropTypes.string,
+    isLoading: PropTypes.bool,
+    items: PropTypes.array
+  };
   constructor(props) {
     super(props);
-
-    this.state = {
-      isLoading: false,
-      refreshing: false,
-      items: null
-    };
-
     this.fetchData = this.fetchData.bind(this);
   }
 
-  componentDidMount() {
-    // this.fetchData();
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.friendsError &&
+      nextProps.friendsError !== this.props.friendsError
+    ) {
+      this.props.alertWithType("error", "Error", nextProps.friendsError);
+    }
   }
 
   fetchData() {
-    this.setState({
-      isLoading: true
-    });
-    console.log("Fetching Friends");
-    AsyncStorage.getItem("id_token").then(token => {
-      fetch("https://pwn-staging.herokuapp.com/api/v2/users/11869/friends", {
-        method: "GET",
-        headers: { Authorization: "Bearer " + token }
-      })
-        .then(response => response.json())
-        .catch(error => console.warn("fetch error:", error))
-        .then(responseJson => {
-          console.log("JSON received");
-          this.setState({
-            isLoading: false,
-            items: responseJson
-          });
-          console.log(this.state.items);
-        })
-        .catch(error => {
-          console.log("Error Fetching Friends!");
-          console.error(error);
-        });
-    });
+    this.props.dispatch(fetchFriends());
   }
 
   handleRefresh = () => {
-    this.setState(
-      {
-        refreshing: true
-      },
-      () => {
-        this.fetchData();
-      }
-    );
+    this.fetchData();
   };
 
   render() {
-    if (this.state.isloading) {
+    if (this.props.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
         </View>
       );
-    }
-    if (!this.state.items) {
-      return (
-        <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.buttonWrapper}
-            onPress={this.fetchData}
-          >
-            <Text style={styles.buttonText}> Get Friends</Text>
-          </TouchableOpacity>
-        </View>
-      );
     } else {
-      return (
-        <View style={styles.container}>
-          <Text>Friends</Text>
-          <FlatList
-            data={this.state.items}
-            renderItem={({ item }) => (
-              <Friend user={item} navigation={this.props.navigation} />
-            )}
-            keyExtractor={(item, index) => index}
-            refreshing={this.state.refreshing}
-            onRefresh={this.handleRefresh}
-          />
-        </View>
-      );
+      if (this.props.items.length < 1) {
+        return (
+          <View style={styles.container}>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={this.fetchData}
+            >
+              <Text style={styles.buttonText}> Get Friends</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
     }
+    return (
+      <View style={styles.container}>
+        <Text>Friends</Text>
+        <FlatList
+          data={this.props.items}
+          renderItem={({ item }) => (
+            <Friend user={item} navigation={this.props.navigation} />
+          )}
+          keyExtractor={(item, index) => index}
+          refreshing={this.props.isLoading}
+          onRefresh={this.handleRefresh}
+        />
+      </View>
+    );
   }
 }
 
@@ -129,11 +109,15 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapStateToProps({ authentication }) {
-  return {
-    isAuthenticating: authentication.isAuthenticating,
-    isAuthed: authentication.isAuthed
-  };
-}
+const mapStateToProps = state => {
+  const items = state.friends.friends;
+  const isLoading = state.friends.isLoading;
 
-export default connect(mapStateToProps)(Friends);
+  return {
+    items,
+    isLoading,
+    friendsError: state.friends.error
+  };
+};
+
+export default connect(mapStateToProps)(connectAlert(FriendsList));

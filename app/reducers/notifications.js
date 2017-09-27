@@ -5,7 +5,6 @@ import {
 } from "../actions/notifications";
 
 const initialState = {
-  token: "",
   isLoading: false,
   notifications: []
 };
