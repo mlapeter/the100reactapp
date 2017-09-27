@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
@@ -20,47 +21,70 @@ import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigator } from "react-navigation";
 
+import { connectAlert } from "../components/Alert";
+import { connect } from "react-redux";
+import { fetchGroup } from "../actions/group";
+
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
-export default class Group extends React.Component {
+class Group extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.object,
+    alertWithType: PropTypes.func,
+    groupError: PropTypes.string,
+    dataSource: PropTypes.object
+  };
   static navigationOptions = {
     title: "User"
   };
 
   constructor(props) {
     super(props);
-    this.state = {
-      hasJoined: false,
-      isLoading: true,
-      refreshing: false,
-      gameData: ""
-    };
+    // this.state = {
+    //   hasJoined: false,
+    //   isLoading: true,
+    //   refreshing: false,
+    //   gameData: ""
+    // };
+    this.fetchData = this.fetchData.bind(this);
   }
 
-  componentDidMount() {
-    // this.fetchData();
+  componentWillMount() {
+    this.fetchData();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.groupError &&
+      nextProps.groupError !== this.props.groupError
+    ) {
+      this.props.alertWithType("error", "Error", nextProps.groupError);
+    }
   }
 
   fetchData() {
     console.log("Fetching Group");
-    AsyncStorage.getItem("id_token").then(token => {
-      fetch("https://pwn-staging.herokuapp.com/api/v2/groups/47", {
-        method: "GET",
-        headers: { Authorization: "Bearer " + token }
-      })
-        .then(response => response.json())
-        .then(responseJson => {
-          this.setState({
-            isLoading: false,
-            dataSource: responseJson
-          });
-          return responseJson;
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    });
+    this.props.dispatch(fetchGroup());
+
+    //
+    // AsyncStorage.getItem("id_token").then(token => {
+    //   fetch("https://pwn-staging.herokuapp.com/api/v2/groups/47", {
+    //     method: "GET",
+    //     headers: { Authorization: "Bearer " + token }
+    //   })
+    //     .then(response => response.json())
+    //     .then(responseJson => {
+    //       this.setState({
+    //         isLoading: false,
+    //         dataSource: responseJson
+    //       });
+    //       return responseJson;
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //     });
+    // });
   }
 
   // giveKarma() {
@@ -101,12 +125,25 @@ export default class Group extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
 
-    if (this.state.isLoading) {
+    if (this.props.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
         </View>
       );
+    } else {
+      if (this.props.dataSource === undefined) {
+        return (
+          <View style={styles.container}>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={this.fetchData}
+            >
+              <Text style={styles.buttonText}>Get Group</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
     }
 
     return (
@@ -114,33 +151,33 @@ export default class Group extends React.Component {
         <Image
           style={styles.backgroundImage}
           source={
-            this.state.dataSource.header_background_image_api ===
+            this.props.dataSource.header_background_image_api ===
             "img/default-avatar.png"
               ? require("../images/default-avatar.png")
-              : { uri: this.state.dataSource.header_background_image_api }
+              : { uri: this.props.dataSource.header_background_image_api }
           }
         >
-          <Text style={styles.title}>{this.state.dataSource.name}</Text>
+          <Text style={styles.title}>{this.props.dataSource.name}</Text>
         </Image>
         <View style={styles.innerContainer}>
           <Text style={styles.description} numberOfLines={3}>
-            {this.state.dataSource.description != null
-              ? this.state.dataSource.description
+            {this.props.dataSource.description != null
+              ? this.props.dataSource.description
               : ""}
           </Text>
 
           <Text style={styles.description} numberOfLines={2}>
-            {this.state.dataSource.latest_news != null
-              ? this.state.dataSource.latest_news
+            {this.props.dataSource.latest_news != null
+              ? this.props.dataSource.latest_news
               : ""}
           </Text>
 
           <View style={styles.iconBar}>
-            <PlatformIcon platform={this.state.dataSource.platform} />
-            <PlayerIcon usersCount={this.state.dataSource.users_count} />
-            <PlayScheduleIcon
-              playSchedule={this.state.dataSource.play_schedule}
-            />
+            <PlatformIcon platform={this.props.dataSource.platform} />
+            <PlayerIcon usersCount={this.props.dataSource.users_count} />
+            {/* <PlayScheduleIcon
+              playSchedule={this.props.dataSource.play_schedule}
+            /> */}
           </View>
           <Chat chatroom={"help_chatroom"} />
         </View>
@@ -343,3 +380,16 @@ const styles = StyleSheet.create({
     flex: 2
   }
 });
+
+const mapStateToProps = state => {
+  const dataSource = state.group.group;
+  const isLoading = state.group.isLoading;
+
+  return {
+    dataSource,
+    isLoading,
+    groupError: state.group.error
+  };
+};
+
+export default connect(mapStateToProps)(connectAlert(Group));

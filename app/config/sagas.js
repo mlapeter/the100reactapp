@@ -11,6 +11,12 @@ import {
   FETCH_FRIENDS_ERROR
 } from "../actions/friends";
 
+import {
+  FETCH_GROUP,
+  FETCH_GROUP_RESULT,
+  FETCH_GROUP_ERROR
+} from "../actions/group";
+
 function* fetchData(endpoint, success, failure) {
   try {
     let token = yield select(state => state.authentication.token);
@@ -58,7 +64,17 @@ function* fetchFriends() {
   }
 }
 
+function* fetchGroup() {
+  try {
+    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/groups/47";
+    yield call(fetchData, endpoint, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
+  } catch (e) {
+    yield put({ type: FETCH_GROUP_ERROR, error: e.message });
+  }
+}
+
 export default function* rootSaga() {
   yield takeEvery(FETCH_FRIENDS, fetchFriends);
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
+  yield takeEvery(FETCH_GROUP, fetchGroup);
 }
