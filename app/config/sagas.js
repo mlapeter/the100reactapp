@@ -1,35 +1,46 @@
 import { takeEvery, select, call, put } from "redux-saga/effects";
 import {
   FETCH_NOTIFICATIONS,
-  FETCH_RESULT,
-  FETCH_ERROR
+  FETCH_NOTIFICATIONS_RESULT,
+  FETCH_NOTIFICATIONS_ERROR
 } from "../actions/notifications";
 
-const fetchNotification = token =>
-  fetch("http://pwn-staging.herokuapp.com/api/v2/users/11869/notifications", {
-    method: "GET",
-    headers: { Authorization: "Bearer " + token }
-  });
-
-function* fetchAllNotifications(action) {
+function* fetchData(endpoint, success, failure) {
   try {
-    let token = action.token;
-    if (token === undefined) {
-      token = yield select(state => state.authentication.token);
-    }
-    const response = yield call(fetchNotification, token);
+    let token = yield select(state => state.authentication.token);
+    const response = yield fetch(endpoint, {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token }
+    });
     const result = yield response.json();
-
     if (result.error) {
-      yield put({ type: FETCH_ERROR, error: result.error });
+      yield put({ type: failure, error: result.error });
     } else {
-      yield put({ type: FETCH_RESULT, result });
+      yield put({ type: success, result });
     }
   } catch (e) {
-    yield put({ type: FETCH_ERROR, error: e.message });
+    yield put({ type: failure, error: e.message });
+  }
+}
+
+function* fetchNotifications() {
+  try {
+    let userId = yield select(state => state.notifications.endpoint);
+    let endpoint =
+      "http://pwn-staging.herokuapp.com/api/v2/users/" +
+      userId +
+      "/notifications";
+    yield call(
+      fetchData,
+      endpoint,
+      FETCH_NOTIFICATIONS_RESULT,
+      FETCH_NOTIFICATIONS_ERROR
+    );
+  } catch (e) {
+    yield put({ type: FETCH_NOTIFICATIONS_ERROR, error: e.message });
   }
 }
 
 export default function* rootSaga() {
-  yield takeEvery(FETCH_NOTIFICATIONS, fetchAllNotifications);
+  yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
 }

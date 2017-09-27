@@ -8,7 +8,7 @@ import {
 const initialState = {
   isAuthed: false,
   isAuthenticating: false,
-  authedId: "",
+  userId: "",
   token: ""
 };
 
@@ -20,7 +20,7 @@ export default (state = initialState, action) => {
           ...state,
           isAuthed: false,
           isAuthenticating: false,
-          authedId: "",
+          userId: "",
           token: ""
         };
       } else {
@@ -28,7 +28,7 @@ export default (state = initialState, action) => {
           ...state,
           isAuthed: true,
           isAuthenticating: false,
-          authedId: "",
+          userId: "11869",
           token: action.token
         };
       }
