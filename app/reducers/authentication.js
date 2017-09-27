@@ -8,39 +8,9 @@ import {
 const initialState = {
   isAuthed: false,
   isAuthenticating: false,
-  authedId: "",
+  userId: "",
   token: ""
 };
-
-// export const onAuthChange = token => {
-//   if (!token) {
-//     console.log("NO TOKEN");
-//     dispatch(notAuthed());
-//   } else {
-//     console.log("YES TOKEN");
-//     dispatch(isAuthed(token));
-//   }
-// };
-
-// export function onAuthChange(token) {
-//   return function(dispatch) {
-//     if (!token) {
-//       dispatch(notAuthed());
-//     } else {
-//       dispatch(isAuthed(token));
-//     }
-//   };
-// }
-
-// export const onAuthChange = token => {
-//   if (!token) {
-//     console.log("NO TOKEN");
-//     dispatch(notAuthed());
-//   } else {
-//     console.log("YES TOKEN");
-//     dispatch(isAuthed(token));
-//   }
-// };
 
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -50,7 +20,7 @@ export default (state = initialState, action) => {
           ...state,
           isAuthed: false,
           isAuthenticating: false,
-          authedId: "",
+          userId: "",
           token: ""
         };
       } else {
@@ -58,7 +28,7 @@ export default (state = initialState, action) => {
           ...state,
           isAuthed: true,
           isAuthenticating: false,
-          authedId: "",
+          userId: "11869",
           token: action.token
         };
       }

@@ -14,104 +14,73 @@ import {
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { onAuthChange } from "../actions/authentication";
+import { fetchNotifications } from "../actions/notifications";
 
 import { colors, fontSizes, fontStyles } from "../../app/styles";
 import Moment from "../../node_modules/react-moment";
 import TimeAgo from "../../node_modules/react-native-timeago";
 
-import { Container } from "../components/Container";
-
-// export default () => (
-//   <Container>
-//     <StatusBar translucent={false} barStyle="light-content" />
-//     <View />
-//   </Container>
-// );
-
 class Notifications extends PureComponent {
   static propTypes = {
     navigation: PropTypes.object,
-    alertWithType: PropTypes.func
+    alertWithType: PropTypes.func,
+    notificationsError: PropTypes.string
   };
   constructor(props) {
     super(props);
-
-    this.state = {
-      isLoading: true,
-      isAuthed: false,
-      refreshing: false,
-      items: []
-    };
-
     this.fetchData = this.fetchData.bind(this);
   }
 
-  componentDidMount() {
-    // this.fetchData();
+  componentWillMount() {
+    // this.props.dispatch(fetchNotifications());
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.notificationsError &&
+      nextProps.notificationsError !== this.props.notificationsError
+    ) {
+      this.props.alertWithType("error", "Error", nextProps.notificationsError);
+    }
   }
 
   fetchData() {
-    console.log("Fetching Notifications");
-    AsyncStorage.getItem("id_token").then(token => {
-      fetch(
-        "http://pwn-staging.herokuapp.com/api/v2/users/11869/notifications",
-        {
-          method: "GET",
-          headers: { Authorization: "Bearer " + token }
-        }
-      )
-        .then(response => response.json())
-        .then(responseJson => {
-          this.setState({
-            isLoading: token === null,
-            items: responseJson,
-            refreshing: false
-          });
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    });
+    this.props.dispatch(fetchNotifications());
   }
 
   handleRefresh = () => {
-    this.setState(
-      {
-        refreshing: true
-      },
-      () => {
-        this.fetchData();
-      }
-    );
+    this.fetchData();
   };
 
   userLogout() {
-    // this.props.alertWithType("error", "Sorry!", "there was an error.");
     try {
       AsyncStorage.removeItem("id_token");
     } catch (error) {
       console.log("AsyncStorage error: " + error.message);
     }
     this.props.dispatch(onAuthChange(""));
-
-    // this.props.dispatch(onAuthChange());
   }
 
   render() {
-    if (this.state.isLoading) {
+    if (this.props.isLoading) {
       return (
         <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.buttonWrapper}
-            onPress={this.fetchData}
-          >
-            <Text style={styles.buttonText}>
-              {" "}
-              Get Notifications (if logged in)
-            </Text>
-          </TouchableOpacity>
+          <ActivityIndicator />
         </View>
       );
+    } else {
+      if (this.props.items.length < 1) {
+        return (
+          <View style={styles.container}>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={this.fetchData}
+            >
+              <Text style={styles.buttonText}>Get Notifications</Text>
+            </TouchableOpacity>
+          </View>
+        );
+      }
     }
     return (
       <View style={styles.container}>
@@ -123,10 +92,10 @@ class Notifications extends PureComponent {
         </TouchableOpacity>
 
         <FlatList
-          data={this.state.items}
+          data={this.props.items}
           renderItem={({ item }) => <ListItem item={item} />}
           keyExtractor={(item, index) => index}
-          refreshing={this.state.refreshing}
+          refreshing={this.props.isLoading}
           onRefresh={this.handleRefresh}
         />
       </View>
@@ -236,12 +205,19 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapStateToProps({ authentication }) {
-  return {
-    isAuthenticating: authentication.isAuthenticating,
-    isAuthed: authentication.isAuthed
-  };
-}
+const mapStateToProps = state => {
+  const isAuthenticating = state.authentication.isAuthenticating;
+  const isAuthed = state.authentication.isAuthed;
+  const items = state.notifications.notifications;
+  const isLoading = state.notifications.isLoading;
 
-export default connect(mapStateToProps)(Notifications);
-// export default connectAlert(Notifications);
+  return {
+    isAuthenticating,
+    isAuthed,
+    items,
+    isLoading,
+    notificationsError: state.notifications.error
+  };
+};
+
+export default connect(mapStateToProps)(connectAlert(Notifications));
