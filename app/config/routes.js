@@ -8,7 +8,7 @@ import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
 
 import Group from "../screens/Group/";
-import Notifications from "../screens/Notifications";
+import NotificationsList from "../screens/NotificationsList";
 import FriendsList from "../screens/FriendsList";
 import User from "../screens/User";
 import Chat from "../components/Chat/Chat";
@@ -39,7 +39,7 @@ export default TabNavigator(
   {
     GamingSessionsList: { screen: GamingSessionsStack },
     Group: { screen: Group },
-    Notifications: { screen: Notifications },
+    NotificationsList: { screen: NotificationsList },
     FriendsList: { screen: FriendsStack }
   },
   {
@@ -68,7 +68,7 @@ Group.navigationOptions = {
     />
   )
 };
-Notifications.navigationOptions = {
+NotificationsList.navigationOptions = {
   tabBarLabel: "Notifications",
   tabBarIcon: ({ tintColor, focused }) => (
     <MaterialCommunityIcons
