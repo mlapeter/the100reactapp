@@ -20,10 +20,14 @@ import {
 import {
   FETCH_GAMING_SESSIONS,
   FETCH_GAMING_SESSIONS_RESULT,
-  FETCH_GAMING_SESSIONS_ERROR
+  FETCH_GAMING_SESSIONS_ERROR,
+  FETCH_GAMING_SESSIONS_NO_DATA,
+  REFRESH_GAMING_SESSIONS,
+  LOAD_MORE_GAMING_SESSIONS,
+  LOAD_MORE_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
 
-function* fetchData(endpoint, success, failure) {
+function* fetchData(endpoint, success, failure, noData) {
   try {
     let token = yield select(state => state.authentication.token);
     const response = yield fetch(endpoint, {
@@ -33,6 +37,8 @@ function* fetchData(endpoint, success, failure) {
     const result = yield response.json();
     if (result.error) {
       yield put({ type: failure, error: result.error });
+    } else if (result.length === 0) {
+      yield put({ type: noData, result });
     } else {
       yield put({ type: success, result });
     }
@@ -86,7 +92,23 @@ function* fetchGamingSessions() {
       fetchData,
       endpoint,
       FETCH_GAMING_SESSIONS_RESULT,
-      FETCH_GAMING_SESSIONS_ERROR
+      FETCH_GAMING_SESSIONS_ERROR,
+      FETCH_GAMING_SESSIONS_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_GAMING_SESSIONS_ERROR, error: e.message });
+  }
+}
+
+function* loadMoreGamingSessions() {
+  try {
+    let endpoint = yield select(state => state.gamingSessions.endpoint);
+    yield call(
+      fetchData,
+      endpoint,
+      LOAD_MORE_GAMING_SESSIONS_RESULT,
+      FETCH_GAMING_SESSIONS_ERROR,
+      FETCH_GAMING_SESSIONS_NO_DATA
     );
   } catch (e) {
     yield put({ type: FETCH_GAMING_SESSIONS_ERROR, error: e.message });
@@ -98,4 +120,6 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
   yield takeEvery(FETCH_GROUP, fetchGroup);
   yield takeEvery(FETCH_GAMING_SESSIONS, fetchGamingSessions);
+  yield takeEvery(REFRESH_GAMING_SESSIONS, fetchGamingSessions);
+  yield takeEvery(LOAD_MORE_GAMING_SESSIONS, loadMoreGamingSessions);
 }

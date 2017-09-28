@@ -31,7 +31,7 @@ class FriendsList extends Component {
   }
 
   componentWillMount() {
-    this.fetchData();
+    // this.fetchData();
   }
 
   componentWillReceiveProps(nextProps) {
