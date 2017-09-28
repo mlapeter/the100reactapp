@@ -1,0 +1,8 @@
+export const FETCH_GAMING_SESSIONS = "FETCH_GAMING_SESSIONS";
+export const FETCH_GAMING_SESSIONS_RESULT = "FETCH_GAMING_SESSIONS_RESULT";
+export const FETCH_GAMING_SESSIONS_ERROR = "FETCH_GAMING_SESSIONS_ERROR";
+
+export const fetchGamingSessions = endpoint => ({
+  type: FETCH_GAMING_SESSIONS,
+  endpoint
+});

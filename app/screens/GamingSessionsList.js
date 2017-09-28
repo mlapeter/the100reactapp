@@ -18,6 +18,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { connect } from "react-redux";
 import { fetchGames } from "../actions/search";
 import { changePage } from "../actions/search";
+import { fetchGamingSessions } from "../actions/gamingSessions";
 
 class GamingSessionsList extends React.PureComponent {
   static propTypes = {
@@ -91,48 +92,52 @@ class GamingSessionsList extends React.PureComponent {
   }
 
   fetchData() {
+    this.props.dispatch(fetchGamingSessions(this.searchUrl()));
+
     console.log(this.searchUrl());
-    return fetch(this.searchUrl())
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log("Gaming Sessions Fetched");
-        if (responseJson.length === 0) {
-          console.log("No More Data");
-          this.setState({
-            isLoading: false,
-            refreshing: false,
-            moreDataAvailable: false
-          });
-        } else {
-          console.log("Gaming Sessions Found");
-          this.setState({
-            isLoading: false,
-            refreshing: false,
-            data:
-              this.props.page === 1
-                ? responseJson
-                : [...this.state.data, ...responseJson],
-            error: responseJson.error || null
-          });
-        }
-      })
-      .catch(error => {
-        this.setState({ error, isloading: false, refreshing: false });
-        console.log("Error Fetching Gaming Sessions");
-      });
+    // return fetch(this.searchUrl())
+    //   .then(response => response.json())
+    //   .then(responseJson => {
+    //     console.log("Gaming Sessions Fetched");
+    //     if (responseJson.length === 0) {
+    //       console.log("No More Data");
+    //       this.setState({
+    //         isLoading: false,
+    //         refreshing: false,
+    //         moreDataAvailable: false
+    //       });
+    //     } else {
+    //       console.log("Gaming Sessions Found");
+    //       this.setState({
+    //         isLoading: false,
+    //         refreshing: false,
+    //         data:
+    //           this.props.page === 1
+    //             ? responseJson
+    //             : [...this.state.data, ...responseJson],
+    //         error: responseJson.error || null
+    //       });
+    //     }
+    //   })
+    //   .catch(error => {
+    //     this.setState({ error, isloading: false, refreshing: false });
+    //     console.log("Error Fetching Gaming Sessions");
+    //   });
   }
 
   handleRefresh = () => {
     console.log("handleRefresh Triggered");
-    this.props.dispatch(changePage(1));
-    this.setState(
-      {
-        refreshing: true
-      },
-      () => {
-        this.fetchData();
-      }
-    );
+    this.fetchData();
+
+    // this.props.dispatch(changePage(1));
+    // this.setState(
+    //   {
+    //     refreshing: true
+    //   },
+    //   () => {
+    //     this.fetchData();
+    //   }
+    // );
   };
 
   handleLoadMore = () => {
@@ -182,7 +187,7 @@ class GamingSessionsList extends React.PureComponent {
   };
 
   render() {
-    if (this.state.isLoading) {
+    if (this.props.isLoading) {
       return (
         <View style={styles.container}>
           <PreSplash />
@@ -195,7 +200,7 @@ class GamingSessionsList extends React.PureComponent {
         <GamingSessionsFilter updateFilter={this.updateFilter} />
 
         <FlatList
-          data={this.state.data}
+          data={this.props.data}
           renderItem={({ item }) => (
             <GamingSessionsItem
               data={item}
@@ -205,12 +210,12 @@ class GamingSessionsList extends React.PureComponent {
           ListHeaderComponent={this.renderEmpty}
           ListFooterComponent={this.renderFooter}
           ListEmptyComponent={this.renderEmpty}
-          extraData={this.state}
+          extraData={this.props}
           // Getting errors using game id
           // keyExtractor={item => item.id}
           keyExtractor={(item, index) => index}
+          refreshing={this.props.isLoading}
           onRefresh={this.handleRefresh}
-          refreshing={this.state.refreshing}
           onEndReached={this.handleLoadMore}
           onEndReachedThreshold={0}
         />
@@ -249,6 +254,8 @@ const mapStateToProps = state => {
   const notFull = state.search.notFull;
   const page = state.search.page;
   const platform = state.search.platform;
+  const isLoading = state.gamingSessions.isLoading;
+  const data = state.gamingSessions.gamingSessions;
 
   return {
     activity,
@@ -256,7 +263,9 @@ const mapStateToProps = state => {
     gameId,
     page,
     platform,
-    notFull
+    notFull,
+    isLoading,
+    data
   };
 };
 

@@ -17,6 +17,12 @@ import {
   FETCH_GROUP_ERROR
 } from "../actions/group";
 
+import {
+  FETCH_GAMING_SESSIONS,
+  FETCH_GAMING_SESSIONS_RESULT,
+  FETCH_GAMING_SESSIONS_ERROR
+} from "../actions/gamingSessions";
+
 function* fetchData(endpoint, success, failure) {
   try {
     let token = yield select(state => state.authentication.token);
@@ -73,8 +79,23 @@ function* fetchGroup() {
   }
 }
 
+function* fetchGamingSessions() {
+  try {
+    let endpoint = yield select(state => state.gamingSessions.endpoint);
+    yield call(
+      fetchData,
+      endpoint,
+      FETCH_GAMING_SESSIONS_RESULT,
+      FETCH_GAMING_SESSIONS_ERROR
+    );
+  } catch (e) {
+    yield put({ type: FETCH_GAMING_SESSIONS_ERROR, error: e.message });
+  }
+}
+
 export default function* rootSaga() {
   yield takeEvery(FETCH_FRIENDS, fetchFriends);
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
   yield takeEvery(FETCH_GROUP, fetchGroup);
+  yield takeEvery(FETCH_GAMING_SESSIONS, fetchGamingSessions);
 }

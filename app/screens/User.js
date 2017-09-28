@@ -155,7 +155,7 @@ export default class User extends React.Component {
             playSchedule={this.state.dataSource.play_schedule}
           />
         </View>
-        <Chat chatroom={"help_chatroom"} />
+        {/* <Chat chatroom={"help_chatroom"} /> */}
       </View>
     );
   }

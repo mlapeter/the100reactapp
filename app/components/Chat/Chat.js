@@ -49,7 +49,9 @@ export default class Chat extends Component {
       avatarUrl: "/default-avatar.png",
       editing: null
     };
+  }
 
+  componentWillMount() {
     if (this.props.token) {
       firebase
         .auth()
