@@ -2,22 +2,23 @@ import React, { Component, PropTypes, PureComponent } from "react";
 import {
   ActivityIndicator,
   FlatList,
-  Modal,
   StyleSheet,
   Text,
   View
 } from "react-native";
-import { StackNavigator } from "react-navigation";
-import PreSplash from "../components/PreSplash/PreSplash";
 import { colors, fontSizes } from "../styles";
+import { FontAwesome } from "@expo/vector-icons";
+import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
 import GamingSessionsFilter from "../components/GamingSessionsFilter/GamingSessionsFilter";
-import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { connect } from "react-redux";
 import { fetchGames } from "../actions/search";
 import { changePage } from "../actions/search";
+import { fetchGamingSessions } from "../actions/gamingSessions";
+import { refreshGamingSessions } from "../actions/gamingSessions";
+import { loadMoreGamingSessions } from "../actions/gamingSessions";
 
 class GamingSessionsList extends React.PureComponent {
   static propTypes = {
@@ -26,18 +27,14 @@ class GamingSessionsList extends React.PureComponent {
     gameId: PropTypes.string,
     notFull: PropTypes.number,
     page: PropTypes.number,
-    platform: PropTypes.string
+    platform: PropTypes.string,
+    isLoading: PropTypes.bool,
+    refreshing: PropTypes.bool,
+    moreDataAvailable: PropTypes.bool,
+    data: PropTypes.array
   };
   constructor(props) {
     super(props);
-    this.state = {
-      isLoading: true,
-      refreshing: false,
-      data: [],
-      moreDataAvailable: true,
-      gamesData: null,
-      error: null
-    };
     this.updateFilter = this.updateFilter.bind(this);
   }
 
@@ -91,69 +88,31 @@ class GamingSessionsList extends React.PureComponent {
   }
 
   fetchData() {
-    console.log(this.searchUrl());
-    return fetch(this.searchUrl())
-      .then(response => response.json())
-      .then(responseJson => {
-        console.log("Gaming Sessions Fetched");
-        if (responseJson.length === 0) {
-          console.log("No More Data");
-          this.setState({
-            isLoading: false,
-            refreshing: false,
-            moreDataAvailable: false
-          });
-        } else {
-          console.log("Gaming Sessions Found");
-          this.setState({
-            isLoading: false,
-            refreshing: false,
-            data:
-              this.props.page === 1
-                ? responseJson
-                : [...this.state.data, ...responseJson],
-            error: responseJson.error || null
-          });
-        }
-      })
-      .catch(error => {
-        this.setState({ error, isloading: false, refreshing: false });
-        console.log("Error Fetching Gaming Sessions");
-      });
+    this.props.dispatch(fetchGamingSessions(this.searchUrl()));
   }
 
   handleRefresh = () => {
     console.log("handleRefresh Triggered");
     this.props.dispatch(changePage(1));
-    this.setState(
-      {
-        refreshing: true
-      },
-      () => {
-        this.fetchData();
-      }
-    );
+    this.props.dispatch(refreshGamingSessions(this.searchUrl()));
   };
 
   handleLoadMore = () => {
     console.log("handleLoadMore Triggered");
-    if (this.state.moreDataAvailable === true) {
+    if (
+      this.props.refreshing === false &&
+      this.props.moreDataAvailable === true
+    ) {
+      console.log("handleLoadMore Activated");
       this.props.dispatch(changePage(this.props.page + 1));
-      this.setState(
-        {
-          refreshing: true
-        },
-        () => {
-          this.fetchData();
-        }
-      );
+      this.props.dispatch(loadMoreGamingSessions(this.searchUrl()));
     }
   };
 
   renderFooter = () => {
-    if (!this.state.moreDataAvailable) {
+    if (!this.props.moreDataAvailable) {
       console.log(
-        "In Footer moreDataAvailable: " + this.state.moreDataAvailable
+        "In Footer moreDataAvailable: " + this.props.moreDataAvailable
       );
       return (
         <View style={styles.alertView}>
@@ -182,7 +141,7 @@ class GamingSessionsList extends React.PureComponent {
   };
 
   render() {
-    if (this.state.isLoading) {
+    if (this.props.isLoading) {
       return (
         <View style={styles.container}>
           <PreSplash />
@@ -195,7 +154,7 @@ class GamingSessionsList extends React.PureComponent {
         <GamingSessionsFilter updateFilter={this.updateFilter} />
 
         <FlatList
-          data={this.state.data}
+          data={this.props.data}
           renderItem={({ item }) => (
             <GamingSessionsItem
               data={item}
@@ -205,12 +164,12 @@ class GamingSessionsList extends React.PureComponent {
           ListHeaderComponent={this.renderEmpty}
           ListFooterComponent={this.renderFooter}
           ListEmptyComponent={this.renderEmpty}
-          extraData={this.state}
+          extraData={this.props}
           // Getting errors using game id
           // keyExtractor={item => item.id}
           keyExtractor={(item, index) => index}
+          refreshing={this.props.refreshing}
           onRefresh={this.handleRefresh}
-          refreshing={this.state.refreshing}
           onEndReached={this.handleLoadMore}
           onEndReachedThreshold={0}
         />
@@ -249,6 +208,10 @@ const mapStateToProps = state => {
   const notFull = state.search.notFull;
   const page = state.search.page;
   const platform = state.search.platform;
+  const isLoading = state.gamingSessions.isLoading;
+  const refreshing = state.gamingSessions.refreshing;
+  const moreDataAvailable = state.gamingSessions.moreDataAvailable;
+  const data = state.gamingSessions.gamingSessions;
 
   return {
     activity,
@@ -256,7 +219,11 @@ const mapStateToProps = state => {
     gameId,
     page,
     platform,
-    notFull
+    notFull,
+    isLoading,
+    refreshing,
+    moreDataAvailable,
+    data
   };
 };
 

@@ -169,7 +169,7 @@ export default class GamingSession extends React.Component {
           confirmedSessions={this.state.dataSource.confirmed_sessions}
           navigation={this.props.navigation}
         />
-        <Chat chatroom={"help_chatroom"} />
+        {/* <Chat chatroom={"help_chatroom"} /> */}
       </View>
     );
   }
