@@ -132,13 +132,13 @@ class GamingSessionsList extends React.PureComponent {
     }
   };
 
-  renderEmpty = () => {
-    return (
-      <View>
-        <Text> No Results</Text>
-      </View>
-    );
-  };
+  // renderEmpty = () => {
+  //   return (
+  //     <View>
+  //       <Text> No Results</Text>
+  //     </View>
+  //   );
+  // };
 
   render() {
     if (this.props.isLoading) {
@@ -163,7 +163,7 @@ class GamingSessionsList extends React.PureComponent {
           )}
           ListHeaderComponent={this.renderEmpty}
           ListFooterComponent={this.renderFooter}
-          ListEmptyComponent={this.renderEmpty}
+          // ListEmptyComponent={this.renderEmpty}
           extraData={this.props}
           // Getting errors using game id
           // keyExtractor={item => item.id}
