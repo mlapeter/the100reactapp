@@ -1,5 +1,13 @@
 import React, { Component, PropTypes } from "react";
-import { Button, StyleSheet, Text, View, Picker, Modal } from "react-native";
+import {
+  Button,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Picker,
+  Modal
+} from "react-native";
 import { colors, fontSizes } from "../../styles";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -140,13 +148,26 @@ class GamingSessionsFilter extends Component {
           </View>
         </Modal>
 
-        <Button
+        {/* <Button
           style={styles.modalButtonStyle}
           onPress={() => {
             this.setModalVisible(true);
           }}
           title="Search Options"
-        />
+        /> */}
+
+        <TouchableOpacity
+          style={styles.optionContainer}
+          onPress={() => {
+            this.setModalVisible(true);
+          }}
+        >
+          <MaterialCommunityIcons
+            name="settings"
+            size={24}
+            color={colors.mediumGrey}
+          />
+        </TouchableOpacity>
       </View>
     );
   }
