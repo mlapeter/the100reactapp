@@ -11,6 +11,8 @@ import {
 import { colors, fontSizes } from "../../styles";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Icon from "react-native-vector-icons/Ionicons";
+
 import { changePlatform } from "../../actions/search";
 import { changeGame } from "../../actions/search";
 import { changeActivity } from "../../actions/search";
@@ -157,16 +159,11 @@ class GamingSessionsFilter extends Component {
         /> */}
 
         <TouchableOpacity
-          style={styles.optionContainer}
           onPress={() => {
             this.setModalVisible(true);
           }}
         >
-          <MaterialCommunityIcons
-            name="settings"
-            size={24}
-            color={colors.mediumGrey}
-          />
+          <Icon name="md-search" size={24} color={colors.mediumGrey} />
         </TouchableOpacity>
       </View>
     );
