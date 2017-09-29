@@ -2,16 +2,22 @@ import React, { Component, PropTypes, PureComponent } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  Image,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from "react-native";
 import { colors, fontSizes } from "../styles";
-import { FontAwesome } from "@expo/vector-icons";
 import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
 import GamingSessionsFilter from "../components/GamingSessionsFilter/GamingSessionsFilter";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+// import { Icon } from "@expo/vector-icons";
+import Ionicons from "react-native-vector-icons/Ionicons";
+
+import Tabs from "../components/Tabs/Tabs";
 
 import { connect } from "react-redux";
 import { fetchGames } from "../actions/search";
@@ -132,14 +138,6 @@ class GamingSessionsList extends React.PureComponent {
     }
   };
 
-  renderEmpty = () => {
-    return (
-      <View>
-        <Text> No Results</Text>
-      </View>
-    );
-  };
-
   render() {
     if (this.props.isLoading) {
       return (
@@ -151,53 +149,114 @@ class GamingSessionsList extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <GamingSessionsFilter updateFilter={this.updateFilter} />
-
-        <FlatList
-          data={this.props.data}
-          renderItem={({ item }) => (
-            <GamingSessionsItem
-              data={item}
-              navigation={this.props.navigation}
+        <View style={styles.optionsContainer}>
+          <TouchableOpacity style={styles.optionContainer}>
+            <Image
+              style={styles.avatarMini}
+              source={require("../../app/images/default-avatar.png")}
             />
-          )}
-          ListHeaderComponent={this.renderEmpty}
-          ListFooterComponent={this.renderFooter}
-          ListEmptyComponent={this.renderEmpty}
-          extraData={this.props}
-          // Getting errors using game id
-          // keyExtractor={item => item.id}
-          keyExtractor={(item, index) => index}
-          refreshing={this.props.refreshing}
-          onRefresh={this.handleRefresh}
-          onEndReached={this.handleLoadMore}
-          onEndReachedThreshold={0}
-        />
+          </TouchableOpacity>
+          <View style={styles.optionsContainerRight}>
+            <GamingSessionsFilter updateFilter={this.updateFilter} />
+            <TouchableOpacity style={styles.optionContainer}>
+              {/* <Text style={styles.tabText}>Options</Text> */}
+              <Ionicons name="md-add" size={24} color={colors.mediumGrey} />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <Tabs>
+          <View title="PUBLIC GAMES" style={styles.content}>
+            <FlatList
+              data={this.props.data}
+              renderItem={({ item }) => (
+                <GamingSessionsItem
+                  data={item}
+                  navigation={this.props.navigation}
+                />
+              )}
+              ListHeaderComponent={this.renderEmpty}
+              ListFooterComponent={this.renderFooter}
+              // ListEmptyComponent={this.renderEmpty}
+              extraData={this.props}
+              // Getting errors using game id
+              // keyExtractor={item => item.id}
+              keyExtractor={(item, index) => index}
+              refreshing={this.props.refreshing}
+              onRefresh={this.handleRefresh}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0}
+            />
+          </View>
+          <View title="GROUP GAMES" style={styles.content}>
+            <Text style={styles.header}>Group Games</Text>
+            <Text style={styles.text}>All group games would go here.</Text>
+          </View>
+          <View title="MY GAMES" style={styles.content}>
+            <Text style={styles.header}>My Games</Text>
+            <Text style={styles.text}>My games would go here.</Text>
+          </View>
+        </Tabs>
       </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  defaultText: {
-    color: colors.white
-  },
+  // App container
   container: {
-    marginTop: 20,
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "stretch",
-    backgroundColor: colors.white
+    flex: 1, // Take up all screen
+    backgroundColor: colors.white // Background color
+  },
+  // Tab content container
+  content: {
+    flex: 1, // Take up all available space
+    // justifyContent: "center", // Center vertically
+    // alignItems: "center", // Center horizontally
+    backgroundColor: colors.white // Darker background for content area
+  },
+  // Content header
+  header: {
+    margin: 10,
+    color: "#FFFFFF",
+    fontFamily: "Avenir",
+    fontSize: 26
+  },
+  // Content text
+  text: {
+    marginHorizontal: 20,
+    // color: "rgba(255, 255, 255, 0.75)", // Semi-transparent text
+    color: colors.grey,
+    textAlign: "center",
+    fontFamily: "Avenir",
+    fontSize: 18
+  },
+
+  optionsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingTop: 10
+  },
+  optionsContainerRight: {
+    flexDirection: "row"
+  },
+  optionContainer: {
+    // flex: 1,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10
+    // borderBottomWidth: 3, // Add thick border at the bottom
+    // borderBottomColor: "transparent" // Transparent border for inactive tabs
+  },
+  avatarMini: {
+    height: 24,
+    width: 24,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.grey
   },
   alertView: {
     flexDirection: "row",
     justifyContent: "center"
-  },
-  loading: {
-    alignItems: "center",
-    justifyContent: "center",
-    margin: 10
   }
 });
 

@@ -84,14 +84,14 @@ const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
   },
-  container: {
-    marginTop: 20,
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "stretch",
-    backgroundColor: colors.white
-  },
+  // container: {
+  //   marginTop: 20,
+  //   flex: 1,
+  //   flexDirection: "column",
+  //   justifyContent: "center",
+  //   alignItems: "stretch",
+  //   backgroundColor: colors.white
+  // },
   loading: {
     alignItems: "center",
     justifyContent: "center",
@@ -101,8 +101,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "stretch",
-    margin: 5,
-    padding: 5,
+    // marginTop: 8,
+    paddingBottom: 12,
+    paddingTop: 10,
+    paddingHorizontal: 5,
+    // padding: 5,
     borderBottomWidth: 0.5,
     borderBottomColor: "#d6d7da",
     backgroundColor: colors.white
@@ -110,17 +113,18 @@ const styles = StyleSheet.create({
   leftBox: {
     flex: 1,
     padding: 2,
-    margin: 2,
+    // margin: 2,
     backgroundColor: colors.white
   },
   middleBox: {
     flex: 6,
-    padding: 2,
-    margin: 2,
+    // padding: 2,
+    // margin: 2,
     backgroundColor: colors.white
   },
   rightBox: {
-    flex: 1.1
+    flex: 1.2,
+    justifyContent: "space-around"
   },
   avatarMini: {
     height: 40,
