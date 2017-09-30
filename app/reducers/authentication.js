@@ -1,58 +1,73 @@
 import {
-  AUTHENTICATING,
-  NOT_AUTHED,
-  IS_AUTHED,
-  ON_AUTH_CHANGE
+  FETCH_TOKEN,
+  FETCH_TOKEN_RESULT,
+  FETCH_TOKEN_ERROR,
+  DECODE_TOKEN,
+  DECODE_TOKEN_RESULT,
+  DECODE_TOKEN_ERROR,
+  REMOVE_TOKEN,
+  REMOVE_TOKEN_ERROR
 } from "../actions/authentication";
 
 const initialState = {
+  isLoading: false,
   isAuthed: false,
-  isAuthenticating: false,
-  userId: "",
+  user: {},
   token: ""
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case ON_AUTH_CHANGE:
-      if (!action.token) {
-        return {
-          ...state,
-          isAuthed: false,
-          isAuthenticating: false,
-          userId: "",
-          token: ""
-        };
-      } else {
-        return {
-          ...state,
-          isAuthed: true,
-          isAuthenticating: false,
-          userId: "11869",
-          token: action.token
-        };
-      }
-    case AUTHENTICATING:
+    case FETCH_TOKEN:
       return {
         ...state,
-        isAuthenticating: true
+        username: action.username,
+        password: action.password,
+        isLoading: true
       };
-    case NOT_AUTHED:
+    case FETCH_TOKEN_RESULT:
       return {
-        isAuthenticating: false,
+        ...state,
+        token: action.token
+      };
+    case FETCH_TOKEN_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+        isAuthed: false
+      };
+    case DECODE_TOKEN:
+      return {
+        ...state,
+        token: action.token,
+        isLoading: true
+      };
+    case DECODE_TOKEN_RESULT:
+      return {
+        ...state,
+        user: action.result,
+        isLoading: false,
+        isAuthed: true
+      };
+    case REMOVE_TOKEN:
+      return {
+        ...state,
         isAuthed: false,
-        authedId: "",
+        isLoading: false,
+        user: {},
         token: ""
       };
-    case IS_AUTHED:
+    case REMOVE_TOKEN_ERROR:
       return {
-        isAuthed: true,
-        isAuthenticating: false,
-        token: action.token
+        ...state,
+        error: action.error,
+        isLoading: false,
+        isAuthed: false,
+        user: {},
+        token: ""
       };
     default:
       return state;
   }
 };
-
-// export default reducer(initialState, onAuthChange);

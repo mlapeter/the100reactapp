@@ -3,6 +3,14 @@ import {
   FETCH_GAMING_SESSIONS_RESULT,
   FETCH_GAMING_SESSIONS_ERROR,
   FETCH_GAMING_SESSIONS_NO_DATA,
+  FETCH_MY_GAMING_SESSIONS,
+  FETCH_MY_GAMING_SESSIONS_RESULT,
+  FETCH_MY_GAMING_SESSIONS_ERROR,
+  FETCH_MY_GAMING_SESSIONS_NO_DATA,
+  FETCH_GROUP_GAMING_SESSIONS,
+  FETCH_GROUP_GAMING_SESSIONS_RESULT,
+  FETCH_GROUP_GAMING_SESSIONS_ERROR,
+  FETCH_GROUP_GAMING_SESSIONS_NO_DATA,
   REFRESH_GAMING_SESSIONS,
   LOAD_MORE_GAMING_SESSIONS,
   LOAD_MORE_GAMING_SESSIONS_RESULT
@@ -13,7 +21,9 @@ const initialState = {
   endpoint: "https://the100.io/api/v2/gaming_sessions",
   refreshing: false,
   moreDataAvailable: true,
-  gamingSessions: []
+  gamingSessions: [],
+  myGamingSessions: [],
+  groupGamingSessions: []
 };
 
 export default (state = initialState, action) => {
@@ -61,6 +71,60 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gamingSessions: [...state.gamingSessions, ...action.result],
+        isLoading: false,
+        refreshing: false
+      };
+    case FETCH_MY_GAMING_SESSIONS:
+      return {
+        ...state,
+        isLoading: true,
+        endpoint: action.endpoint
+      };
+    case FETCH_MY_GAMING_SESSIONS_RESULT:
+      return {
+        ...state,
+        myGamingSessions: action.result,
+        isLoading: false,
+        refreshing: false
+      };
+    case FETCH_MY_GAMING_SESSIONS_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+        refreshing: false
+      };
+    case FETCH_MY_GAMING_SESSIONS_NO_DATA:
+      return {
+        ...state,
+        moreDataAvailable: false,
+        isLoading: false,
+        refreshing: false
+      };
+    case FETCH_GROUP_GAMING_SESSIONS:
+      return {
+        ...state,
+        isLoading: true,
+        endpoint: action.endpoint
+      };
+    case FETCH_GROUP_GAMING_SESSIONS_RESULT:
+      return {
+        ...state,
+        groupGamingSessions: action.result,
+        isLoading: false,
+        refreshing: false
+      };
+    case FETCH_GROUP_GAMING_SESSIONS_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        isLoading: false,
+        refreshing: false
+      };
+    case FETCH_GROUP_GAMING_SESSIONS_NO_DATA:
+      return {
+        ...state,
+        moreDataAvailable: false,
         isLoading: false,
         refreshing: false
       };

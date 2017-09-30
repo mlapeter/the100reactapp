@@ -23,8 +23,11 @@
   "dependencies": {
     "expo": "^19.0.1",
     "firebase": "^4.4.0",
+    "install": "^0.10.1",
+    "jwt-decode": "^2.2.0",
     "moment": "^2.18.1",
     "moment-timezone": "^0.5.13",
+    "npm": "^5.4.2",
     "react": "^16.0.0-alpha.12",
     "react-moment": "^0.6.5",
     "react-native": "^0.46.4",
