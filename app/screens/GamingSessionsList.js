@@ -25,6 +25,8 @@ import { changePage } from "../actions/search";
 import { fetchGamingSessions } from "../actions/gamingSessions";
 import { refreshGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGamingSessions } from "../actions/gamingSessions";
+import { fetchMyGamingSessions } from "../actions/gamingSessions";
+import { fetchGroupGamingSessions } from "../actions/gamingSessions";
 
 class GamingSessionsList extends React.PureComponent {
   static propTypes = {
@@ -37,7 +39,9 @@ class GamingSessionsList extends React.PureComponent {
     isLoading: PropTypes.bool,
     refreshing: PropTypes.bool,
     moreDataAvailable: PropTypes.bool,
-    data: PropTypes.array
+    data: PropTypes.array,
+    myGamingSessions: PropTypes.array,
+    groupGamingSessions: PropTypes.array
   };
   constructor(props) {
     super(props);
@@ -47,6 +51,8 @@ class GamingSessionsList extends React.PureComponent {
   componentDidMount() {
     // this.fetchGamesData();
     this.fetchData();
+    this.props.dispatch(fetchMyGamingSessions());
+    this.props.dispatch(fetchGroupGamingSessions());
   }
 
   // fetchGamesData() {
@@ -153,8 +159,13 @@ class GamingSessionsList extends React.PureComponent {
           <TouchableOpacity style={styles.optionContainer}>
             <Image
               style={styles.avatarMini}
-              source={require("../../app/images/default-avatar.png")}
+              source={
+                this.props.user.computed_avatar_api === "img/default-avatar.png"
+                  ? require("../../app/images/default-avatar.png")
+                  : { uri: this.props.user.computed_avatar_api }
+              }
             />
+            <Text>{this.props.user.gamertag}</Text>
           </TouchableOpacity>
           <View style={styles.optionsContainerRight}>
             <GamingSessionsFilter updateFilter={this.updateFilter} />
@@ -188,12 +199,48 @@ class GamingSessionsList extends React.PureComponent {
             />
           </View>
           <View title="GROUP GAMES" style={styles.content}>
-            <Text style={styles.header}>Group Games</Text>
-            <Text style={styles.text}>All group games would go here.</Text>
+            <FlatList
+              data={this.props.groupGamingSessions}
+              renderItem={({ item }) => (
+                <GamingSessionsItem
+                  data={item}
+                  navigation={this.props.navigation}
+                />
+              )}
+              ListHeaderComponent={this.renderEmpty}
+              ListFooterComponent={this.renderFooter}
+              // ListEmptyComponent={this.renderEmpty}
+              extraData={this.props}
+              // Getting errors using game id
+              // keyExtractor={item => item.id}
+              keyExtractor={(item, index) => index}
+              refreshing={this.props.refreshing}
+              onRefresh={this.handleRefresh}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0}
+            />
           </View>
           <View title="MY GAMES" style={styles.content}>
-            <Text style={styles.header}>My Games</Text>
-            <Text style={styles.text}>My games would go here.</Text>
+            <FlatList
+              data={this.props.myGamingSessions}
+              renderItem={({ item }) => (
+                <GamingSessionsItem
+                  data={item}
+                  navigation={this.props.navigation}
+                />
+              )}
+              ListHeaderComponent={this.renderEmpty}
+              ListFooterComponent={this.renderFooter}
+              // ListEmptyComponent={this.renderEmpty}
+              extraData={this.props}
+              // Getting errors using game id
+              // keyExtractor={item => item.id}
+              keyExtractor={(item, index) => index}
+              refreshing={this.props.refreshing}
+              onRefresh={this.handleRefresh}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0}
+            />
           </View>
         </Tabs>
       </View>
@@ -248,11 +295,11 @@ const styles = StyleSheet.create({
     // borderBottomColor: "transparent" // Transparent border for inactive tabs
   },
   avatarMini: {
-    height: 24,
-    width: 24,
-    borderRadius: 12,
+    height: 32,
+    width: 32,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.grey
+    borderColor: colors.lightGrey
   },
   alertView: {
     flexDirection: "row",
@@ -271,6 +318,10 @@ const mapStateToProps = state => {
   const refreshing = state.gamingSessions.refreshing;
   const moreDataAvailable = state.gamingSessions.moreDataAvailable;
   const data = state.gamingSessions.gamingSessions;
+  const myGamingSessions = state.gamingSessions.myGamingSessions;
+  const groupGamingSessions = state.gamingSessions.groupGamingSessions;
+
+  const user = state.authentication.user;
 
   return {
     activity,
@@ -282,7 +333,10 @@ const mapStateToProps = state => {
     isLoading,
     refreshing,
     moreDataAvailable,
-    data
+    data,
+    myGamingSessions,
+    groupGamingSessions,
+    user
   };
 };
 

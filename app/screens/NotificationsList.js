@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
-import { onAuthChange } from "../actions/authentication";
+import { removeToken } from "../actions/authentication";
 import { fetchNotifications } from "../actions/notifications";
 import NotificationsItem from "../components/NotificationsItem/NotificationsItem";
 
@@ -60,7 +60,7 @@ class Notifications extends PureComponent {
     } catch (error) {
       console.log("AsyncStorage error: " + error.message);
     }
-    this.props.dispatch(onAuthChange(""));
+    this.props.dispatch(removeToken());
   }
 
   render() {

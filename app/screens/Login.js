@@ -20,7 +20,8 @@ import { StackNavigator } from "react-navigation";
 import { TabNavigator } from "react-navigation";
 
 import { connect } from "react-redux";
-import { onAuthChange } from "../actions/authentication";
+import { fetchToken } from "../actions/authentication";
+import { decodeToken } from "../actions/authentication";
 
 import Navigator from "../config/routes";
 
@@ -49,42 +50,15 @@ class Login extends React.Component {
 
   componentDidMount() {
     AsyncStorage.getItem("id_token").then(token => {
-      this.props.dispatch(onAuthChange(token));
+      this.props.dispatch(decodeToken(token));
       this.setState({ isLoaded: true });
     });
   }
 
   userLogin() {
     if (!this.state.username || !this.state.password) return;
-    fetch("http://pwn-staging.herokuapp.com/api/v2/sessions/", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        gamertag: this.state.username,
-        password: this.state.password
-      })
-    })
-      .then(response => response.json())
-      .then(responseData => {
-        this.saveItem("id_token", responseData.token);
-        Keyboard.dismiss();
-        this.props.dispatch(onAuthChange(responseData.token));
-      })
-      .done();
-  }
-
-  userLogout() {
-    try {
-      AsyncStorage.removeItem("id_token");
-    } catch (error) {
-      console.log("AsyncStorage error: " + error.message);
-    }
-    this.props.dispatch(onAuthChange());
-
-    // this.props.dispatch(onAuthChange());
+    Keyboard.dismiss();
+    this.props.dispatch(fetchToken(this.state.username, this.state.password));
   }
 
   static navigationOptions = {
@@ -139,12 +113,6 @@ class Login extends React.Component {
               onPress={this.userLogin.bind(this)}
               title="Login"
             />
-            <TouchableOpacity
-              style={styles.buttonWrapper}
-              onPress={this.userLogout.bind(this)}
-            >
-              <Text style={styles.buttonText}> Log out </Text>
-            </TouchableOpacity>
           </KeyboardAvoidingView>
         </View>
       </TouchableWithoutFeedback>

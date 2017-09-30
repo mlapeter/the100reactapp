@@ -1,22 +1,24 @@
-export const AUTHENTICATING = "AUTHENTICATING";
-export const NOT_AUTHED = "NOT_AUTHED";
-export const IS_AUTHED = "IS_AUTHED";
-export const ON_AUTH_CHANGE = "ON_AUTH_CHANGE";
+export const FETCH_TOKEN = "FETCH_TOKEN";
+export const FETCH_TOKEN_RESULT = "FETCH_TOKEN_RESULT";
+export const FETCH_TOKEN_ERROR = "FETCH_TOKEN_ERROR";
 
-export const authenticating = () => ({
-  type: AUTHENTICATING
+export const DECODE_TOKEN = "DECODE_TOKEN";
+export const DECODE_TOKEN_RESULT = "DECODE_TOKEN_RESULT";
+export const DECODE_TOKEN_ERROR = "DECODE_TOKEN_ERROR";
+export const REMOVE_TOKEN = "REMOVE_TOKEN";
+export const REMOVE_TOKEN_ERROR = "REMOVE_TOKEN_ERROR";
+
+export const fetchToken = (username, password) => ({
+  type: FETCH_TOKEN,
+  username,
+  password
 });
 
-export const notAuthed = () => ({
-  type: NOT_AUTHED
-});
-
-export const isAuthed = token => ({
-  type: IS_AUTHED,
+export const decodeToken = token => ({
+  type: DECODE_TOKEN,
   token
 });
 
-export const onAuthChange = token => ({
-  type: ON_AUTH_CHANGE,
-  token: token
+export const removeToken = () => ({
+  type: REMOVE_TOKEN
 });
