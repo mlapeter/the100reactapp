@@ -19,14 +19,13 @@ import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { StackNavigator } from "react-navigation";
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
 export default class GamingSession extends React.Component {
-  static navigationOptions = {
-    title: "Game"
+  static navigationOptions = () => {
+    headerTitle: "Game";
   };
 
   constructor(props) {
@@ -172,7 +171,7 @@ export default class GamingSession extends React.Component {
           confirmedSessions={this.state.dataSource.confirmed_sessions}
           navigation={this.props.navigation}
         />
-        {/* <Chat chatroom={"help_chatroom"} /> */}
+        <Chat chatroom={"help_chatroom"} />
       </View>
     );
   }

@@ -3,7 +3,7 @@ import { combineReducers } from "redux";
 import authentication from "./authentication";
 import search from "./search";
 import notifications from "./notifications";
-import friends from "./friends";
+import users from "./users";
 import group from "./group";
 import gamingSessions from "./gamingSessions";
 
@@ -11,7 +11,7 @@ export default combineReducers({
   authentication,
   search,
   notifications,
-  friends,
+  users,
   group,
   gamingSessions
 });

@@ -21,8 +21,19 @@ import {
 import {
   FETCH_FRIENDS,
   FETCH_FRIENDS_RESULT,
-  FETCH_FRIENDS_ERROR
-} from "../actions/friends";
+  FETCH_FRIENDS_ERROR,
+  FETCH_FRIENDS_NO_DATA,
+  LOAD_MORE_FRIENDS,
+  LOAD_MORE_FRIENDS_RESULT,
+  CHANGE_FRIENDS_PAGE,
+  FETCH_GROUP_MEMBERS,
+  FETCH_GROUP_MEMBERS_RESULT,
+  FETCH_GROUP_MEMBERS_ERROR,
+  FETCH_GROUP_MEMBERS_NO_DATA,
+  LOAD_MORE_GROUP_MEMBERS,
+  LOAD_MORE_GROUP_MEMBERS_RESULT,
+  CHANGE_GROUP_MEMBERS_PAGE
+} from "../actions/users";
 
 import {
   FETCH_GROUP,
@@ -148,9 +159,76 @@ function* fetchFriends() {
     let userId = yield select(state => state.authentication.user.user_id);
     let endpoint =
       "http://pwn-staging.herokuapp.com/api/v2/users/" + userId + "/friends";
-    yield call(fetchData, endpoint, FETCH_FRIENDS_RESULT, FETCH_FRIENDS_ERROR);
+    yield call(
+      fetchData,
+      endpoint,
+      FETCH_FRIENDS_RESULT,
+      FETCH_FRIENDS_ERROR,
+      FETCH_FRIENDS_NO_DATA
+    );
   } catch (e) {
     yield put({ type: FETCH_FRIENDS_ERROR, error: e.message });
+  }
+}
+
+function* loadMoreFriends() {
+  try {
+    let userId = yield select(state => state.authentication.user.user_id);
+    let current_page = yield select(state => state.users.friendsPage);
+    yield put({ type: CHANGE_FRIENDS_PAGE, page: current_page + 1 });
+    let new_page = yield select(state => state.users.friendsPage);
+
+    let endpoint =
+      "http://pwn-staging.herokuapp.com/api/v2/users/" +
+      userId +
+      "/friends?page=" +
+      new_page;
+    yield call(
+      fetchData,
+      endpoint,
+      LOAD_MORE_FRIENDS_RESULT,
+      FETCH_FRIENDS_ERROR,
+      FETCH_FRIENDS_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_FRIENDS_ERROR, error: e.message });
+  }
+}
+
+function* fetchGroupMembers() {
+  try {
+    let userId = yield select(state => state.authentication.user.user_id);
+    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/groups/47/users";
+
+    yield call(
+      fetchData,
+      endpoint,
+      FETCH_GROUP_MEMBERS_RESULT,
+      FETCH_GROUP_MEMBERS_ERROR
+    );
+  } catch (e) {
+    yield put({ type: FETCH_GROUP_MEMBERS_ERROR, error: e.message });
+  }
+}
+
+function* loadMoreGroupMembers() {
+  try {
+    let current_page = yield select(state => state.users.groupMembersPage);
+    yield put({ type: CHANGE_GROUP_MEMBERS_PAGE, page: current_page + 1 });
+    let new_page = yield select(state => state.users.groupMembersPage);
+
+    let endpoint =
+      "https://pwn-staging.herokuapp.com/api/v2/groups/47/users?page=" +
+      new_page;
+    yield call(
+      fetchData,
+      endpoint,
+      LOAD_MORE_GROUP_MEMBERS_RESULT,
+      FETCH_GROUP_MEMBERS_ERROR,
+      FETCH_GROUP_MEMBERS_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_GROUP_MEMBERS_ERROR, error: e.message });
   }
 }
 
@@ -258,6 +336,11 @@ export default function* rootSaga() {
   yield takeEvery(DECODE_TOKEN, decodeToken);
 
   yield takeEvery(FETCH_FRIENDS, fetchFriends);
+  yield takeEvery(LOAD_MORE_FRIENDS, loadMoreFriends);
+
+  yield takeEvery(FETCH_GROUP_MEMBERS, fetchGroupMembers);
+  yield takeEvery(LOAD_MORE_GROUP_MEMBERS, loadMoreGroupMembers);
+
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
   yield takeEvery(FETCH_GROUP, fetchGroup);
   yield takeEvery(FETCH_GAMING_SESSIONS, fetchGamingSessions);

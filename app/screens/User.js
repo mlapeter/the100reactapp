@@ -25,10 +25,6 @@ Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
 export default class User extends React.Component {
-  static navigationOptions = {
-    title: "User"
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -155,7 +151,7 @@ export default class User extends React.Component {
             playSchedule={this.state.dataSource.play_schedule}
           />
         </View>
-        {/* <Chat chatroom={"help_chatroom"} /> */}
+        <Chat chatroom={"help_chatroom"} />
       </View>
     );
   }
