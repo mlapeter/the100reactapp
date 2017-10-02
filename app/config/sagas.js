@@ -30,6 +30,8 @@ import {
   FETCH_GROUP_ERROR
 } from "../actions/group";
 
+import { CHANGE_PAGE } from "../actions/search";
+
 import {
   FETCH_GAMING_SESSIONS,
   FETCH_GAMING_SESSIONS_RESULT,
@@ -42,10 +44,14 @@ import {
   FETCH_MY_GAMING_SESSIONS_RESULT,
   FETCH_MY_GAMING_SESSIONS_ERROR,
   FETCH_MY_GAMING_SESSIONS_NO_DATA,
+  REFRESH_MY_GAMING_SESSIONS,
   FETCH_GROUP_GAMING_SESSIONS,
   FETCH_GROUP_GAMING_SESSIONS_RESULT,
   FETCH_GROUP_GAMING_SESSIONS_ERROR,
-  FETCH_GROUP_GAMING_SESSIONS_NO_DATA
+  FETCH_GROUP_GAMING_SESSIONS_NO_DATA,
+  REFRESH_GROUP_GAMING_SESSIONS,
+  LOAD_MORE_GROUP_GAMING_SESSIONS,
+  LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
 
 function* fetchToken() {
@@ -174,6 +180,9 @@ function* fetchGamingSessions() {
 
 function* loadMoreGamingSessions() {
   try {
+    let current_page = yield select(state => state.search.page);
+    yield put({ type: CHANGE_PAGE, page: current_page + 1 });
+
     let endpoint = yield select(state => state.gamingSessions.endpoint);
     yield call(
       fetchData,
@@ -223,6 +232,26 @@ function* fetchGroupGamingSessions() {
   }
 }
 
+function* loadMoreGroupGamingSessions() {
+  try {
+    let current_page = yield select(state => state.search.page);
+    yield put({ type: CHANGE_PAGE, page: current_page + 1 });
+    let new_page = yield select(state => state.search.page);
+    let endpoint =
+      "https://pwn-staging.herokuapp.com/api/v2/groups/47/gaming_sessions?page=" +
+      (new_page + 1);
+    yield call(
+      fetchData,
+      endpoint,
+      LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT,
+      FETCH_GROUP_GAMING_SESSIONS_ERROR,
+      FETCH_GROUP_GAMING_SESSIONS_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_GROUP_GAMING_SESSIONS_ERROR, error: e.message });
+  }
+}
+
 export default function* rootSaga() {
   yield takeEvery(FETCH_TOKEN, fetchToken);
   yield takeEvery(FETCH_TOKEN_RESULT, decodeToken);
@@ -235,5 +264,8 @@ export default function* rootSaga() {
   yield takeEvery(REFRESH_GAMING_SESSIONS, fetchGamingSessions);
   yield takeEvery(LOAD_MORE_GAMING_SESSIONS, loadMoreGamingSessions);
   yield takeEvery(FETCH_MY_GAMING_SESSIONS, fetchMyGamingSessions);
+  yield takeEvery(REFRESH_MY_GAMING_SESSIONS, fetchMyGamingSessions);
   yield takeEvery(FETCH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
+  yield takeEvery(REFRESH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
+  yield takeEvery(LOAD_MORE_GROUP_GAMING_SESSIONS, loadMoreGroupGamingSessions);
 }

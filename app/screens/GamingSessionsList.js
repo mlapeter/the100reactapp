@@ -12,6 +12,8 @@ import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
 import GamingSessionsFilter from "../components/GamingSessionsFilter/GamingSessionsFilter";
+import MyGamingSessionsList from "../components/MyGamingSessionsList/MyGamingSessionsList";
+
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 // import { Icon } from "@expo/vector-icons";
@@ -26,7 +28,11 @@ import { fetchGamingSessions } from "../actions/gamingSessions";
 import { refreshGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGamingSessions } from "../actions/gamingSessions";
 import { fetchMyGamingSessions } from "../actions/gamingSessions";
+import { refreshMyGamingSessions } from "../actions/gamingSessions";
+
 import { fetchGroupGamingSessions } from "../actions/gamingSessions";
+import { refreshGroupGamingSessions } from "../actions/gamingSessions";
+import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
 
 class GamingSessionsList extends React.PureComponent {
   static propTypes = {
@@ -51,8 +57,6 @@ class GamingSessionsList extends React.PureComponent {
   componentDidMount() {
     // this.fetchGamesData();
     this.fetchData();
-    this.props.dispatch(fetchMyGamingSessions());
-    this.props.dispatch(fetchGroupGamingSessions());
   }
 
   // fetchGamesData() {
@@ -101,28 +105,75 @@ class GamingSessionsList extends React.PureComponent {
 
   fetchData() {
     this.props.dispatch(fetchGamingSessions(this.searchUrl()));
+    this.props.dispatch(fetchMyGamingSessions());
+    this.props.dispatch(fetchGroupGamingSessions());
   }
 
-  handleRefresh = () => {
-    console.log("handleRefresh Triggered");
+  refreshGames = () => {
+    console.log("refreshGames Triggered");
     this.props.dispatch(changePage(1));
     this.props.dispatch(refreshGamingSessions(this.searchUrl()));
   };
 
-  handleLoadMore = () => {
-    console.log("handleLoadMore Triggered");
+  refreshMyGames = () => {
+    console.log("refreshMyGames Triggered");
+    this.props.dispatch(changePage(1));
+    this.props.dispatch(refreshMyGamingSessions());
+  };
+
+  refreshGroupGames = () => {
+    console.log("refreshGroupGames Triggered");
+    this.props.dispatch(changePage(1));
+    this.props.dispatch(refreshGroupGamingSessions());
+  };
+
+  loadMoreGamingSessions = () => {
+    console.log("LoadMoreGamingSessions Triggered");
     if (
       this.props.refreshing === false &&
       this.props.moreDataAvailable === true
     ) {
-      console.log("handleLoadMore Activated");
-      this.props.dispatch(changePage(this.props.page + 1));
+      console.log("LoadMoreGamingSessions Activated");
       this.props.dispatch(loadMoreGamingSessions(this.searchUrl()));
+    }
+  };
+
+  loadMoreGroupGamingSessions = () => {
+    console.log("LoadMoreGroupGamingSessions Triggered");
+    if (
+      this.props.refreshing === false &&
+      this.props.moreGroupDataAvailable === true
+    ) {
+      console.log("LoadMoreGroupGamingSessions Activated");
+      this.props.dispatch(loadMoreGroupGamingSessions());
     }
   };
 
   renderFooter = () => {
     if (!this.props.moreDataAvailable) {
+      console.log(
+        "In Footer moreDataAvailable: " + this.props.moreDataAvailable
+      );
+      return (
+        <View style={styles.alertView}>
+          <MaterialCommunityIcons
+            name="dots-horizontal"
+            size={24}
+            color={colors.mediumGrey}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{ paddingVertical: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+  };
+
+  renderGroupFooter = () => {
+    if (!this.props.moreGroupDataAvailable) {
       console.log(
         "In Footer moreDataAvailable: " + this.props.moreDataAvailable
       );
@@ -190,11 +241,11 @@ class GamingSessionsList extends React.PureComponent {
               // ListEmptyComponent={this.renderEmpty}
               extraData={this.props}
               // Getting errors using game id
-              // keyExtractor={item => item.id}
+              keyExtractor={item => item.id}
               keyExtractor={(item, index) => index}
               refreshing={this.props.refreshing}
-              onRefresh={this.handleRefresh}
-              onEndReached={this.handleLoadMore}
+              onRefresh={this.refreshGames}
+              onEndReached={this.loadMoreGamingSessions}
               onEndReachedThreshold={0}
             />
           </View>
@@ -208,15 +259,15 @@ class GamingSessionsList extends React.PureComponent {
                 />
               )}
               ListHeaderComponent={this.renderEmpty}
-              ListFooterComponent={this.renderFooter}
+              ListFooterComponent={this.renderGroupFooter}
               // ListEmptyComponent={this.renderEmpty}
               extraData={this.props}
               // Getting errors using game id
               // keyExtractor={item => item.id}
               keyExtractor={(item, index) => index}
               refreshing={this.props.refreshing}
-              onRefresh={this.handleRefresh}
-              onEndReached={this.handleLoadMore}
+              onRefresh={this.refreshGroupGames}
+              onEndReached={this.loadMoreGroupGamingSessions}
               onEndReachedThreshold={0}
             />
           </View>
@@ -230,16 +281,10 @@ class GamingSessionsList extends React.PureComponent {
                 />
               )}
               ListHeaderComponent={this.renderEmpty}
-              ListFooterComponent={this.renderFooter}
-              // ListEmptyComponent={this.renderEmpty}
               extraData={this.props}
-              // Getting errors using game id
-              // keyExtractor={item => item.id}
               keyExtractor={(item, index) => index}
               refreshing={this.props.refreshing}
-              onRefresh={this.handleRefresh}
-              onEndReached={this.handleLoadMore}
-              onEndReachedThreshold={0}
+              onRefresh={this.refreshMyGames}
             />
           </View>
         </Tabs>
@@ -249,17 +294,16 @@ class GamingSessionsList extends React.PureComponent {
 }
 
 const styles = StyleSheet.create({
-  // App container
   container: {
-    flex: 1, // Take up all screen
-    backgroundColor: colors.white // Background color
+    flex: 1,
+    backgroundColor: colors.white
   },
   // Tab content container
   content: {
-    flex: 1, // Take up all available space
-    // justifyContent: "center", // Center vertically
-    // alignItems: "center", // Center horizontally
-    backgroundColor: colors.white // Darker background for content area
+    flex: 1,
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: colors.white
   },
   // Content header
   header: {
@@ -320,6 +364,7 @@ const mapStateToProps = state => {
   const data = state.gamingSessions.gamingSessions;
   const myGamingSessions = state.gamingSessions.myGamingSessions;
   const groupGamingSessions = state.gamingSessions.groupGamingSessions;
+  const moreGroupDataAvailable = state.gamingSessions.moreGroupDataAvailable;
 
   const user = state.authentication.user;
 
@@ -336,6 +381,7 @@ const mapStateToProps = state => {
     data,
     myGamingSessions,
     groupGamingSessions,
+    moreGroupDataAvailable,
     user
   };
 };
