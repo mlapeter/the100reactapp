@@ -44,7 +44,7 @@ export default class User extends React.Component {
     console.log("Fetching User");
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
-      fetch("https://the100.io/api/v2/users/" + userId, {
+      fetch("https://pwntastic.herokuapp.com/api/v2/users/" + userId, {
         method: "GET",
         headers: { Authorization: "Bearer " + token }
       })
@@ -79,7 +79,7 @@ export default class User extends React.Component {
     });
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
-      fetch("https://the100.io/api/v2/users/" + userId + action, {
+      fetch("https://pwntastic.herokuapp.com/api/v2/users/" + userId + action, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

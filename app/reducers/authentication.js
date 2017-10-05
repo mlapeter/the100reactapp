@@ -10,6 +10,7 @@ import {
 } from "../actions/authentication";
 
 const initialState = {
+  appLoading: true,
   isLoading: false,
   isAuthed: false,
   user: {},

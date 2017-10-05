@@ -20,8 +20,12 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import { fetchFriends } from "../actions/users";
 import { loadMoreFriends } from "../actions/users";
+import { changeFriendsPage } from "../actions/users";
+import { refreshFriends } from "../actions/users";
+
 import { fetchGroupMembers } from "../actions/users";
 import { loadMoreGroupMembers } from "../actions/users";
+import { refreshGroupMembers } from "../actions/users";
 
 import { connectAlert } from "../components/Alert";
 
@@ -67,8 +71,10 @@ class FriendsList extends Component {
     this.props.dispatch(fetchGroupMembers());
   }
 
-  handleRefresh = () => {
-    this.fetchData();
+  refreshFriends = () => {
+    // this.fetchData();
+    console.log("refreshFriends Triggered");
+    this.props.dispatch(refreshFriends());
   };
 
   loadMoreFriends = () => {
@@ -80,6 +86,11 @@ class FriendsList extends Component {
       console.log("LoadMoreFriends Activated");
       this.props.dispatch(loadMoreFriends());
     }
+  };
+
+  refreshGroupMembers = () => {
+    console.log("refreshGroupMembers Triggered");
+    this.props.dispatch(refreshGroupMembers());
   };
 
   loadMoreGroupMembers = () => {
@@ -179,7 +190,7 @@ class FriendsList extends Component {
               extraData={this.props}
               ListFooterComponent={this.renderFooter}
               refreshing={this.props.isLoading}
-              onRefresh={this.handleRefresh}
+              onRefresh={this.refreshFriends}
               onEndReached={this.loadMoreFriends}
               onEndReachedThreshold={0}
             />
@@ -194,7 +205,7 @@ class FriendsList extends Component {
               extraData={this.props}
               ListFooterComponent={this.renderGroupFooter}
               refreshing={this.props.isLoading}
-              onRefresh={this.handleRefresh}
+              onRefresh={this.refreshGroupMembers}
               onEndReached={this.loadMoreGroupMembers}
               onEndReachedThreshold={0}
             />

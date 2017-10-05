@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import { StackNavigator } from "react-navigation";
 import { TabNavigator } from "react-navigation";
+import PreSplash from "../components/PreSplash/PreSplash";
 
 import { connect } from "react-redux";
 import { fetchToken } from "../actions/authentication";
@@ -61,16 +62,25 @@ class Login extends React.Component {
     this.props.dispatch(fetchToken(this.state.username, this.state.password));
   }
 
+  userLogout() {
+    try {
+      AsyncStorage.removeItem("id_token");
+    } catch (error) {
+      console.log("AsyncStorage error: " + error.message);
+    }
+    this.props.dispatch(removeToken());
+  }
+
   static navigationOptions = {
     title: "Welcome"
   };
 
   render() {
     if (!this.state.isLoaded) {
-      return <ActivityIndicator />;
+      return <PreSplash />;
     }
 
-    if (this.props.authenticationState.isAuthed === true) {
+    if (this.props.authentication.isAuthed === true) {
       return <Navigator onNavigationStateChange={null} />;
     }
 
@@ -158,11 +168,11 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const authenticationState = state.authentication;
+  const authentication = state.authentication;
   // const onAuthChange = state.authentication.onAuthChange(token);
 
   return {
-    authenticationState
+    authentication
   };
 };
 

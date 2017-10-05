@@ -20,12 +20,13 @@ import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-Moment.globalFormat = "h:mm";
+// Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
 export default class GamingSession extends React.Component {
   static navigationOptions = () => {
-    headerTitle: "Game";
+    // headerTitle: "Game";
+    // Not Working
   };
 
   constructor(props) {
@@ -46,7 +47,7 @@ export default class GamingSession extends React.Component {
   fetchData() {
     var userIds = [];
     return fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
         gamingSessionId
     )
       .then(response => response.json())
@@ -67,13 +68,16 @@ export default class GamingSession extends React.Component {
       });
   }
 
-  joinGame() {
+  joinGame = () => {
+    console.log("JOIN CLICKED");
     this.postData("/join");
-  }
+  };
 
-  leaveGame() {
+  leaveGame = () => {
+    console.log("LEAVE CLICKED");
+
     this.postData("/leave");
-  }
+  };
 
   postData(action) {
     this.setState({
@@ -82,7 +86,7 @@ export default class GamingSession extends React.Component {
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
       fetch(
-        "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+        "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
           gamingSessionId +
           action,
         {
@@ -107,32 +111,32 @@ export default class GamingSession extends React.Component {
 
   render() {
     const { params } = this.props.navigation.state;
-    let button = null;
-    if (this.state.hasJoined) {
-      button = (
-        <Button
-          style={{
-            height: 30,
-            width: 180,
-            marginBottom: 15
-          }}
-          onPress={this.leaveGame.bind(this)}
-          title="Leave"
-        />
-      );
-    } else {
-      button = (
-        <Button
-          style={{
-            height: 30,
-            width: 180,
-            marginBottom: 15
-          }}
-          onPress={this.joinGame.bind(this)}
-          title="Join"
-        />
-      );
-    }
+    // let button = null;
+    // if (this.state.hasJoined) {
+    //   button = (
+    //     <Button
+    //       style={{
+    //         height: 30,
+    //         width: 180,
+    //         marginBottom: 15
+    //       }}
+    //       onPress={this.leaveGame.bind(this)}
+    //       title="Leave"
+    //     />
+    //   );
+    // } else {
+    //   button = (
+    //     <Button
+    //       style={{
+    //         height: 30,
+    //         width: 180,
+    //         marginBottom: 15
+    //       }}
+    //       onPress={this.joinGame.bind(this)}
+    //       title="Join"
+    //     />
+    //   );
+    // }
 
     if (this.state.isLoading) {
       return (
@@ -150,7 +154,11 @@ export default class GamingSession extends React.Component {
               ? this.state.dataSource.category.toString()
               : ""}
           </Text>
-          {button}
+          <JoinLeaveButton
+            hasJoined={this.state.hasJoined}
+            leaveGame={this.leaveGame.bind(this)}
+            joinGame={this.joinGame}
+          />
         </View>
         <Text style={styles.description} numberOfLines={2}>
           {this.state.dataSource.name != null
@@ -173,6 +181,34 @@ export default class GamingSession extends React.Component {
         />
         <Chat chatroom={"help_chatroom"} />
       </View>
+    );
+  }
+}
+
+export function JoinLeaveButton(props) {
+  if (props.hasJoined) {
+    return (
+      <Button
+        style={{
+          height: 30,
+          width: 180,
+          marginBottom: 15
+        }}
+        onPress={() => props.leaveGame()}
+        title="Leave"
+      />
+    );
+  } else {
+    return (
+      <Button
+        style={{
+          height: 30,
+          width: 180,
+          marginBottom: 15
+        }}
+        onPress={() => props.joinGame()}
+        title="Join"
+      />
     );
   }
 }
@@ -214,7 +250,10 @@ function TimeIcon(props) {
   return (
     <Text style={styles.icon}>
       <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
-      <Moment element={Text}>{props.startTime.toString()}</Moment>
+
+      <Moment format="hh:mm A  MM/DD/YY" element={Text}>
+        {props.startTime.toString()}
+      </Moment>
     </Text>
   );
 }

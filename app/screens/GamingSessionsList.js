@@ -23,12 +23,15 @@ import Tabs from "../components/Tabs/Tabs";
 
 import { connect } from "react-redux";
 import { fetchGames } from "../actions/search";
-import { changePage } from "../actions/search";
+import { changeGamingSessionsPage } from "../actions/search";
+
 import { fetchGamingSessions } from "../actions/gamingSessions";
 import { refreshGamingSessions } from "../actions/gamingSessions";
+
 import { loadMoreGamingSessions } from "../actions/gamingSessions";
 import { fetchMyGamingSessions } from "../actions/gamingSessions";
 import { refreshMyGamingSessions } from "../actions/gamingSessions";
+import { loadMoreMyGamingSessions } from "../actions/gamingSessions";
 
 import { fetchGroupGamingSessions } from "../actions/gamingSessions";
 import { refreshGroupGamingSessions } from "../actions/gamingSessions";
@@ -55,28 +58,28 @@ class GamingSessionsList extends React.PureComponent {
   }
 
   componentDidMount() {
-    // this.fetchGamesData();
+    this.fetchGamesData();
     this.fetchData();
   }
 
-  // fetchGamesData() {
-  //   return fetch("https://pwn-staging.herokuapp.com/api/v2/games")
-  //     .then(response => response.json())
-  //     .then(responseJson => {
-  //       console.log("responeJson is: ");
-  //       console.log(responseJson);
-  //       // this.setState({
-  //       //   gamesData: responseJson
-  //       // });
-  //       this.props.dispatch(fetchGames(responseJson));
-  //     })
-  //     .catch(error => {
-  //       console.log("Error Fetching Games Data");
-  //     });
-  // }
+  fetchGamesData() {
+    this.props.dispatch(fetchGames());
+    // return fetch("https://pwn-staging.herokuapp.com/api/v2/games")
+    //   .then(response => response.json())
+    //   .then(responseJson => {
+    //     console.log("responeJson is: ");
+    //     console.log(responseJson);
+    //     // this.setState({
+    //     //   gamesData: responseJson
+    //     // });
+    //     this.props.dispatch(fetchGames(responseJson));
+    //   })
+    //   .catch(error => {
+    //     console.log("Error Fetching Games Data");
+    //   });
+  }
 
   updateFilter() {
-    this.props.dispatch(changePage(1));
     this.setState(
       {
         data: [],
@@ -90,9 +93,9 @@ class GamingSessionsList extends React.PureComponent {
 
   searchUrl() {
     return encodeURI(
-      "https://the100.io/api/v2/gaming_sessions?page=" +
-        this.props.page +
-        "&q[game_id_eq]=" +
+      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions" +
+        // this.props.gamingSessionsPage +
+        "?q[game_id_eq]=" +
         this.props.gameId +
         "&q[platform_cont]=" +
         this.props.platform +
@@ -111,27 +114,23 @@ class GamingSessionsList extends React.PureComponent {
 
   refreshGames = () => {
     console.log("refreshGames Triggered");
-    this.props.dispatch(changePage(1));
     this.props.dispatch(refreshGamingSessions(this.searchUrl()));
   };
 
   refreshMyGames = () => {
     console.log("refreshMyGames Triggered");
-    this.props.dispatch(changePage(1));
     this.props.dispatch(refreshMyGamingSessions());
   };
 
   refreshGroupGames = () => {
     console.log("refreshGroupGames Triggered");
-    this.props.dispatch(changePage(1));
     this.props.dispatch(refreshGroupGamingSessions());
   };
 
   loadMoreGamingSessions = () => {
-    console.log("LoadMoreGamingSessions Triggered");
     if (
       this.props.refreshing === false &&
-      this.props.moreDataAvailable === true
+      this.props.moreGamingSessionsAvailable === true
     ) {
       console.log("LoadMoreGamingSessions Activated");
       this.props.dispatch(loadMoreGamingSessions(this.searchUrl()));
@@ -139,10 +138,9 @@ class GamingSessionsList extends React.PureComponent {
   };
 
   loadMoreGroupGamingSessions = () => {
-    console.log("LoadMoreGroupGamingSessions Triggered");
     if (
       this.props.refreshing === false &&
-      this.props.moreGroupDataAvailable === true
+      this.props.moreGroupGamingSessionsAvailable === true
     ) {
       console.log("LoadMoreGroupGamingSessions Activated");
       this.props.dispatch(loadMoreGroupGamingSessions());
@@ -150,9 +148,10 @@ class GamingSessionsList extends React.PureComponent {
   };
 
   renderFooter = () => {
-    if (!this.props.moreDataAvailable) {
+    if (!this.props.moreGamingSessionsAvailable) {
       console.log(
-        "In Footer moreDataAvailable: " + this.props.moreDataAvailable
+        "In Footer moreGamingSessionsAvailable: " +
+          this.props.moreGamingSessionsAvailable
       );
       return (
         <View style={styles.alertView}>
@@ -173,10 +172,27 @@ class GamingSessionsList extends React.PureComponent {
   };
 
   renderGroupFooter = () => {
-    if (!this.props.moreGroupDataAvailable) {
-      console.log(
-        "In Footer moreDataAvailable: " + this.props.moreDataAvailable
+    if (!this.props.moreGroupGamingSessionsAvailable) {
+      return (
+        <View style={styles.alertView}>
+          <MaterialCommunityIcons
+            name="dots-horizontal"
+            size={24}
+            color={colors.mediumGrey}
+          />
+        </View>
       );
+    } else {
+      return (
+        <View style={{ paddingVertical: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+  };
+
+  renderMyFooter = () => {
+    if (!this.props.moreMyGamingSessionsAvailable) {
       return (
         <View style={styles.alertView}>
           <MaterialCommunityIcons
@@ -196,7 +212,7 @@ class GamingSessionsList extends React.PureComponent {
   };
 
   render() {
-    if (this.props.isLoading) {
+    if (this.props.gamingSessionsLoading) {
       return (
         <View style={styles.container}>
           <PreSplash />
@@ -207,7 +223,10 @@ class GamingSessionsList extends React.PureComponent {
     return (
       <View style={styles.container}>
         <View style={styles.optionsContainer}>
-          <TouchableOpacity style={styles.optionContainer}>
+          <TouchableOpacity
+            style={styles.optionContainer}
+            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+          >
             <Image
               style={styles.avatarMini}
               source={
@@ -218,6 +237,7 @@ class GamingSessionsList extends React.PureComponent {
             />
             <Text>{this.props.user.gamertag}</Text>
           </TouchableOpacity>
+
           <View style={styles.optionsContainerRight}>
             <GamingSessionsFilter updateFilter={this.updateFilter} />
             <TouchableOpacity style={styles.optionContainer}>
@@ -246,7 +266,7 @@ class GamingSessionsList extends React.PureComponent {
               refreshing={this.props.refreshing}
               onRefresh={this.refreshGames}
               onEndReached={this.loadMoreGamingSessions}
-              onEndReachedThreshold={0}
+              onEndReachedThreshold={5}
             />
           </View>
           <View title="GROUP GAMES" style={styles.content}>
@@ -281,10 +301,13 @@ class GamingSessionsList extends React.PureComponent {
                 />
               )}
               ListHeaderComponent={this.renderEmpty}
+              ListFooterComponent={this.renderMyFooter}
               extraData={this.props}
               keyExtractor={(item, index) => index}
               refreshing={this.props.refreshing}
               onRefresh={this.refreshMyGames}
+              onEndReached={this.loadMoreMyGamingSessions}
+              onEndReachedThreshold={0}
             />
           </View>
         </Tabs>
@@ -356,15 +379,23 @@ const mapStateToProps = state => {
   const gameId = state.search.gameId;
   const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
-  const page = state.search.page;
   const platform = state.search.platform;
-  const isLoading = state.gamingSessions.isLoading;
+
+  const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
+  const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;
+  const groupGamingSessionsLoading =
+    state.gamingSessions.groupGamingSessionsLoading;
   const refreshing = state.gamingSessions.refreshing;
   const moreDataAvailable = state.gamingSessions.moreDataAvailable;
   const data = state.gamingSessions.gamingSessions;
   const myGamingSessions = state.gamingSessions.myGamingSessions;
   const groupGamingSessions = state.gamingSessions.groupGamingSessions;
-  const moreGroupDataAvailable = state.gamingSessions.moreGroupDataAvailable;
+  const moreGamingSessionsAvailable =
+    state.gamingSessions.moreGamingSessionsAvailable;
+  const moreMyGamingSessionsAvailable =
+    state.gamingSessions.moreMyGamingSessionsAvailable;
+  const moreGroupGamingSessionsAvailable =
+    state.gamingSessions.moreGroupGamingSessionsAvailable;
 
   const user = state.authentication.user;
 
@@ -372,16 +403,19 @@ const mapStateToProps = state => {
     activity,
     game,
     gameId,
-    page,
     platform,
     notFull,
-    isLoading,
+    gamingSessionsLoading,
+    myGamingSessionsLoading,
+    groupGamingSessionsLoading,
     refreshing,
     moreDataAvailable,
     data,
     myGamingSessions,
     groupGamingSessions,
-    moreGroupDataAvailable,
+    moreGamingSessionsAvailable,
+    moreMyGamingSessionsAvailable,
+    moreGroupGamingSessionsAvailable,
     user
   };
 };

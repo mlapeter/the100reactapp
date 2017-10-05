@@ -1,101 +1,26 @@
 import {
   CHANGE_ACTIVITY,
   CHANGE_GAME,
-  CHANGE_PAGE,
+  CHANGE_GAMING_SESSIONS_PAGE,
+  CHANGE_MY_GAMING_SESSIONS_PAGE,
+  CHANGE_GROUP_GAMING_SESSIONS_PAGE,
   CHANGE_PLATFORM,
-  FETCH_GAMES
+  FETCH_GAMES,
+  FETCH_GAMES_RESULT,
+  FETCH_GAMES_ERROR,
+  FETCH_ACTIVITIES_RESULT
 } from "../actions/search";
 
 const initialState = {
   activity: "",
   gameId: "23",
-  games: {
-    "1": {
-      activities: [
-        "Archon’s Forge Arena",
-        "Bounty",
-        "Cerberus Vae III",
-        "Challenge of Elders - Level 42",
-        "Court of Oryx",
-        "Crota's End - Hard Mode",
-        "Crota's End - Normal Mode",
-        "Crucible - 3 Person",
-        "Crucible - 6 Person",
-        "Crucible - Clash",
-        "Crucible - Control",
-        "Crucible - Crimson Doubles",
-        "Crucible - Doubles Skirmish",
-        "Crucible - Elimination",
-        "Crucible - Iron Banner",
-        "Crucible - Mayhem",
-        "Crucible - Private Match",
-        "Crucible - Rift",
-        "Crucible - Salvage",
-        "Crucible - Skirmish",
-        "Crucible - Supremacy",
-        "Daily Heroic Mission",
-        "Darkblade",
-        "Dust Palace",
-        "Exotic Weapon Bounty",
-        "Festival of the Lost - Candy Farming",
-        "King's Fall - Hard Mode",
-        "King's Fall - Normal Mode",
-        "Miscellaneous - 3 Person",
-        "Miscellaneous - 6 Person",
-        "Mission",
-        "Patrol",
-        "Prison of Elders - Level 28",
-        "Prison of Elders - Level 32",
-        "Prison of Elders - Level 34",
-        "Prison of Elders - Level 35",
-        "Prison of Elders - Level 41",
-        "Queen's Kill Order",
-        "Quest",
-        "S.A.B.R.E 2",
-        "Shield Brothers",
-        "Sparrow Racing",
-        "Story Missions",
-        "Story Missions - Rise of Iron",
-        "Strike",
-        "The Devil's Lair",
-        "The Nexus",
-        "The Shadow Thief",
-        "The Summoning Pits",
-        "The Undying Mind",
-        "The Will of Crota",
-        "Trials of Osiris",
-        "Vanguard Heroic Strikes Playlist",
-        "Vanguard Legacy Strike Playlist",
-        "Vanguard Strikes Playlist",
-        "Vault of Glass - Hard Mode",
-        "Vault of Glass - Normal Mode",
-        "Weekly Nightfall Strike",
-        "Winter's Run",
-        "Wrath of the Machine - Heroic Mode",
-        "Wrath of the Machine - Normal Mode"
-      ]
-    },
-    "23": {
-      activities: [
-        "Anything",
-        "Adventures",
-        "Crucible - Control",
-        "Crucible - Countdown",
-        "Crucible - Survival",
-        "Crucible - Trials of the Nine",
-        "Lost Sectors",
-        "Public Events",
-        "Raid - Leviathan - Normal",
-        "Quest",
-        "Story Missions",
-        "Strike - Inverted Spire",
-        "Strike - Nightfall",
-        "Strike - Playlist"
-      ]
-    }
-  },
+  games: [],
+  game: {},
+  activities: [],
   notFull: 1,
-  page: 1,
+  gamingSessionsPage: 1,
+  myGamingSessionsPage: 1,
+  groupGamingSessionsPage: 1,
   platform: "ps4"
 };
 
@@ -111,10 +36,20 @@ export default (state = initialState, action) => {
         ...state,
         gameId: action.gameId
       };
-    case CHANGE_PAGE:
+    case CHANGE_GAMING_SESSIONS_PAGE:
       return {
         ...state,
-        page: action.page
+        gamingSessionsPage: action.page
+      };
+    case CHANGE_MY_GAMING_SESSIONS_PAGE:
+      return {
+        ...state,
+        myGamingSessionsPage: action.page
+      };
+    case CHANGE_GROUP_GAMING_SESSIONS_PAGE:
+      return {
+        ...state,
+        groupGamingSessionsPage: action.page
       };
     case CHANGE_PLATFORM:
       return {
@@ -123,10 +58,109 @@ export default (state = initialState, action) => {
       };
     case FETCH_GAMES:
       return {
+        ...state
+      };
+    case FETCH_GAMES_RESULT:
+      return {
         ...state,
-        games: action.games
+        games: action.result
+      };
+    case FETCH_GAMES_ERROR:
+      return {
+        ...state,
+        error: action.error
+      };
+    case FETCH_ACTIVITIES_RESULT:
+      return {
+        ...state,
+        game: action.game,
+        activities: action.game.activities
       };
     default:
       return state;
   }
 };
+
+// "1": {
+//   activities: [
+//     "Archon’s Forge Arena",
+//     "Bounty",
+//     "Cerberus Vae III",
+//     "Challenge of Elders - Level 42",
+//     "Court of Oryx",
+//     "Crota's End - Hard Mode",
+//     "Crota's End - Normal Mode",
+//     "Crucible - 3 Person",
+//     "Crucible - 6 Person",
+//     "Crucible - Clash",
+//     "Crucible - Control",
+//     "Crucible - Crimson Doubles",
+//     "Crucible - Doubles Skirmish",
+//     "Crucible - Elimination",
+//     "Crucible - Iron Banner",
+//     "Crucible - Mayhem",
+//     "Crucible - Private Match",
+//     "Crucible - Rift",
+//     "Crucible - Salvage",
+//     "Crucible - Skirmish",
+//     "Crucible - Supremacy",
+//     "Daily Heroic Mission",
+//     "Darkblade",
+//     "Dust Palace",
+//     "Exotic Weapon Bounty",
+//     "Festival of the Lost - Candy Farming",
+//     "King's Fall - Hard Mode",
+//     "King's Fall - Normal Mode",
+//     "Miscellaneous - 3 Person",
+//     "Miscellaneous - 6 Person",
+//     "Mission",
+//     "Patrol",
+//     "Prison of Elders - Level 28",
+//     "Prison of Elders - Level 32",
+//     "Prison of Elders - Level 34",
+//     "Prison of Elders - Level 35",
+//     "Prison of Elders - Level 41",
+//     "Queen's Kill Order",
+//     "Quest",
+//     "S.A.B.R.E 2",
+//     "Shield Brothers",
+//     "Sparrow Racing",
+//     "Story Missions",
+//     "Story Missions - Rise of Iron",
+//     "Strike",
+//     "The Devil's Lair",
+//     "The Nexus",
+//     "The Shadow Thief",
+//     "The Summoning Pits",
+//     "The Undying Mind",
+//     "The Will of Crota",
+//     "Trials of Osiris",
+//     "Vanguard Heroic Strikes Playlist",
+//     "Vanguard Legacy Strike Playlist",
+//     "Vanguard Strikes Playlist",
+//     "Vault of Glass - Hard Mode",
+//     "Vault of Glass - Normal Mode",
+//     "Weekly Nightfall Strike",
+//     "Winter's Run",
+//     "Wrath of the Machine - Heroic Mode",
+//     "Wrath of the Machine - Normal Mode"
+//   ]
+// },
+// "23": {
+//   activities: [
+//     "Anything",
+//     "Adventures",
+//     "Crucible - Control",
+//     "Crucible - Countdown",
+//     "Crucible - Survival",
+//     "Crucible - Trials of the Nine",
+//     "Lost Sectors",
+//     "Public Events",
+//     "Raid - Leviathan - Normal",
+//     "Quest",
+//     "Story Missions",
+//     "Strike - Inverted Spire",
+//     "Strike - Nightfall",
+//     "Strike - Playlist"
+//   ]
+// }

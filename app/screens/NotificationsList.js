@@ -142,4 +142,14 @@ const mapStateToProps = state => {
   };
 };
 
+export const userLogout = () => {
+  try {
+    AsyncStorage.removeItem("id_token");
+  } catch (error) {
+    console.log("AsyncStorage error: " + error.message);
+  }
+  // this.props.dispatch(removeToken());
+  // Not Working
+};
+
 export default connect(mapStateToProps)(connectAlert(Notifications));

@@ -14,6 +14,9 @@ export const FETCH_MY_GAMING_SESSIONS_ERROR = "FETCH_MY_GAMING_SESSIONS_ERROR";
 export const FETCH_MY_GAMING_SESSIONS_NO_DATA =
   "FETCH_MY_GAMING_SESSIONS_NO_DATA";
 export const REFRESH_MY_GAMING_SESSIONS = "REFRESH_MY_GAMING_SESSIONS";
+export const LOAD_MORE_MY_GAMING_SESSIONS = "LOAD_MORE_MY_GAMING_SESSIONS";
+export const LOAD_MORE_MY_GAMING_SESSIONS_RESULT =
+  "LOAD_MORE_MY_GAMING_SESSIONS_RESULT";
 
 export const FETCH_GROUP_GAMING_SESSIONS = "FETCH_GROUP_GAMING_SESSIONS";
 export const FETCH_GROUP_GAMING_SESSIONS_RESULT =
@@ -50,6 +53,11 @@ export const fetchMyGamingSessions = endpoint => ({
 
 export const refreshMyGamingSessions = endpoint => ({
   type: REFRESH_MY_GAMING_SESSIONS,
+  endpoint
+});
+
+export const loadMoreMyGamingSessions = endpoint => ({
+  type: LOAD_MORE_MY_GAMING_SESSIONS,
   endpoint
 });
 

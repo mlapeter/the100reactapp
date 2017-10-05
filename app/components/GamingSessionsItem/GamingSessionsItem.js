@@ -19,6 +19,7 @@ import { colors, fontSizes, fontStyles } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import JoinLeaveButton from "../../screens/GamingSession";
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
@@ -29,6 +30,17 @@ export default function GamingSessionItem(props) {
       onPress={() =>
         props.navigation.navigate("GamingSession", {
           gamingSessionId: props.data.id
+          // headerRight: (
+          //   <Button
+          //     style={{
+          //       height: 30,
+          //       width: 180,
+          //       marginBottom: 15
+          //     }}
+          //     onPress={() => this.joinGame()}
+          //     title="Join"
+          //   />
+          // )
         })}
       underlayColor="white"
     >
@@ -42,6 +54,7 @@ export default function GamingSessionItem(props) {
                 : { uri: props.data.game_avatar_url }
             }
           />
+          <Text style={styles.groupNameText}>{props.data.clan_tag}</Text>
         </View>
         <View style={styles.middleBox}>
           <Text style={styles.gamingSessionTitle}>{props.data.category}</Text>
@@ -56,7 +69,9 @@ export default function GamingSessionItem(props) {
               size={12}
               color={colors.mediumGrey}
             />{" "}
-            <Moment element={Text}>{props.data.start_time}</Moment>
+            <Moment format="h:mma" element={Text}>
+              {props.data.start_time}
+            </Moment>
           </Text>
           <Text style={styles.iconText}>
             <MaterialCommunityIcons
@@ -112,7 +127,10 @@ const styles = StyleSheet.create({
   },
   leftBox: {
     flex: 1,
-    padding: 2,
+    paddingTop: 2,
+    paddingRight: 2,
+    alignItems: "center",
+    justifyContent: "center",
     // margin: 2,
     backgroundColor: colors.white
   },
@@ -123,7 +141,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   rightBox: {
-    flex: 1.2,
+    flex: 1.6,
     justifyContent: "space-around"
   },
   avatarMini: {
@@ -141,5 +159,10 @@ const styles = StyleSheet.create({
   iconText: {
     fontSize: fontSizes.small,
     color: colors.mediumGrey
+  },
+  groupNameText: {
+    paddingTop: 2,
+    fontSize: fontSizes.small,
+    color: colors.lightestGrey
   }
 });

@@ -44,6 +44,20 @@ class GamingSessionsFilter extends Component {
     this.setState({ selectedIndex: selectedIndex });
   }
 
+  updateFilter() {
+    this.fetchData();
+
+    // this.setState(
+    //   {
+    //     data: [],
+    //     moreDataAvailable: true
+    //   },
+    //   () => {
+    //     this.fetchData();
+    //   }
+    // );
+  }
+
   componentWillMount() {}
 
   setModalVisible(visible) {
@@ -191,13 +205,14 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   const platform = state.search.platform;
   const gameId = state.search.gameId;
-  const game = state.search.games[gameId] || {};
-  const activities = game.activities || {};
+  const games = state.search.games;
+  const activities = state.search.activities;
   const activity = state.search.activity;
 
   return {
     platform,
     gameId,
+    games,
     activities,
     activity
   };
