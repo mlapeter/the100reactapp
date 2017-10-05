@@ -43,6 +43,7 @@ export default (state = initialState, action) => {
     case FETCH_GAMING_SESSIONS:
       return {
         ...state,
+        moreGamingSessionsAvailable: true,
         gamingSessionsLoading: true,
         endpoint: action.endpoint
       };
@@ -70,6 +71,7 @@ export default (state = initialState, action) => {
     case REFRESH_GAMING_SESSIONS:
       return {
         ...state,
+        moreGamingSessionsAvailable: true,
         refreshing: true,
         endpoint: action.endpoint
       };
@@ -89,6 +91,7 @@ export default (state = initialState, action) => {
     case FETCH_MY_GAMING_SESSIONS:
       return {
         ...state,
+        moreMyGamingSessionsAvailable: true,
         myGamingSessionsLoading: true,
         endpoint: action.endpoint
       };
@@ -116,6 +119,7 @@ export default (state = initialState, action) => {
     case REFRESH_MY_GAMING_SESSIONS:
       return {
         ...state,
+        moreMyGamingSessionsAvailable: true,
         refreshing: true,
         endpoint: action.endpoint
       };
@@ -141,6 +145,7 @@ export default (state = initialState, action) => {
     case FETCH_GROUP_GAMING_SESSIONS_RESULT:
       return {
         ...state,
+        moreGroupGamingSessionsAvailable: true,
         groupGamingSessions: action.result,
         groupGamingSessionsLoading: false,
         refreshing: false
@@ -162,6 +167,7 @@ export default (state = initialState, action) => {
     case REFRESH_GROUP_GAMING_SESSIONS:
       return {
         ...state,
+        moreGroupGamingSessionsAvailable: true,
         refreshing: true,
         endpoint: action.endpoint
       };

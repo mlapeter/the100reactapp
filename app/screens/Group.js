@@ -41,12 +41,6 @@ class Group extends React.Component {
 
   constructor(props) {
     super(props);
-    // this.state = {
-    //   hasJoined: false,
-    //   isLoading: true,
-    //   refreshing: false,
-    //   gameData: ""
-    // };
     this.fetchData = this.fetchData.bind(this);
   }
 
@@ -66,25 +60,6 @@ class Group extends React.Component {
   fetchData() {
     console.log("Fetching Group");
     this.props.dispatch(fetchGroup());
-
-    //
-    // AsyncStorage.getItem("id_token").then(token => {
-    //   fetch("https://pwn-staging.herokuapp.com/api/v2/groups/47", {
-    //     method: "GET",
-    //     headers: { Authorization: "Bearer " + token }
-    //   })
-    //     .then(response => response.json())
-    //     .then(responseJson => {
-    //       this.setState({
-    //         isLoading: false,
-    //         dataSource: responseJson
-    //       });
-    //       return responseJson;
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });
-    // });
   }
 
   // giveKarma() {
@@ -152,8 +127,8 @@ class Group extends React.Component {
           style={styles.backgroundImage}
           source={
             this.props.dataSource.header_background_image_api ===
-            "img/default-avatar.png"
-              ? require("../images/default-avatar.png")
+            "img/default-group-header.jpg"
+              ? require("../images/destiny-wallpaper-1.jpg")
               : { uri: this.props.dataSource.header_background_image_api }
           }
         >
@@ -307,7 +282,9 @@ const styles = StyleSheet.create({
     borderTopWidth: 0.5,
     borderTopColor: "#d6d7da",
     borderBottomWidth: 0.5,
-    borderBottomColor: "#d6d7da"
+    borderBottomColor: "#d6d7da",
+    justifyContent: "center",
+    alignItems: "center"
   },
   innerContainer: {
     padding: 5,

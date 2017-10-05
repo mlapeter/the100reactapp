@@ -5,6 +5,7 @@ import {
   Image,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View
 } from "react-native";
@@ -64,31 +65,21 @@ class GamingSessionsList extends React.PureComponent {
 
   fetchGamesData() {
     this.props.dispatch(fetchGames());
-    // return fetch("https://pwn-staging.herokuapp.com/api/v2/games")
-    //   .then(response => response.json())
-    //   .then(responseJson => {
-    //     console.log("responeJson is: ");
-    //     console.log(responseJson);
-    //     // this.setState({
-    //     //   gamesData: responseJson
-    //     // });
-    //     this.props.dispatch(fetchGames(responseJson));
-    //   })
-    //   .catch(error => {
-    //     console.log("Error Fetching Games Data");
-    //   });
   }
 
   updateFilter() {
-    this.setState(
-      {
-        data: [],
-        moreDataAvailable: true
-      },
-      () => {
-        this.fetchData();
-      }
-    );
+    console.log(this.searchUrl());
+    this.props.dispatch(fetchGamingSessions(this.searchUrl()));
+
+    // this.setState(
+    //   {
+    //     data: [],
+    //     moreDataAvailable: true
+    //   },
+    //   () => {
+    //     this.fetchData(this.searchUrl());
+    //   }
+    // );
   }
 
   searchUrl() {
@@ -235,14 +226,26 @@ class GamingSessionsList extends React.PureComponent {
                   : { uri: this.props.user.computed_avatar_api }
               }
             />
-            <Text>{this.props.user.gamertag}</Text>
           </TouchableOpacity>
-
+          <View style={styles.search}>
+            <View style={styles.input}>
+              <Ionicons
+                name="md-search"
+                size={24}
+                color={colors.lightGrey}
+                style={{ marginRight: 5 }}
+              />
+              <TextInput
+                placeholder="Coming Soon"
+                style={{ color: colors.white }}
+              />
+            </View>
+          </View>
           <View style={styles.optionsContainerRight}>
             <GamingSessionsFilter updateFilter={this.updateFilter} />
             <TouchableOpacity style={styles.optionContainer}>
               {/* <Text style={styles.tabText}>Options</Text> */}
-              <Ionicons name="md-add" size={24} color={colors.mediumGrey} />
+              <Ionicons name="md-add" size={32} color={colors.mediumGrey} />
             </TouchableOpacity>
           </View>
         </View>
@@ -318,6 +321,7 @@ class GamingSessionsList extends React.PureComponent {
 
 const styles = StyleSheet.create({
   container: {
+    paddingTop: 25,
     flex: 1,
     backgroundColor: colors.white
   },
@@ -347,30 +351,54 @@ const styles = StyleSheet.create({
 
   optionsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    paddingTop: 10
+    justifyContent: "space-between"
+    // paddingTop: 10
   },
   optionsContainerRight: {
+    marginTop: 3,
+    padding: 3,
     flexDirection: "row"
   },
   optionContainer: {
     // flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10
+    paddingHorizontal: 20
+    // paddingTop: 5
+    // paddingBottom: 10
     // borderBottomWidth: 3, // Add thick border at the bottom
     // borderBottomColor: "transparent" // Transparent border for inactive tabs
   },
   avatarMini: {
-    height: 32,
-    width: 32,
-    borderRadius: 16,
+    height: 36,
+    width: 36,
+    marginTop: 5,
+    borderRadius: 18,
     borderWidth: 1,
     borderColor: colors.lightGrey
   },
   alertView: {
     flexDirection: "row",
     justifyContent: "center"
+  },
+  search: {
+    flexDirection: "row",
+    flex: 10,
+    // paddingTop: 5,
+    // marginLeft: 25,
+    // marginRight: 10,
+    alignItems: "center",
+    paddingHorizontal: 15,
+    // borderRadius: 3,
+    // borderBottomColor: colors.lightGrey,
+    backgroundColor: colors.white
+  },
+  input: {
+    flexDirection: "row",
+    flex: 1,
+    padding: 5,
+    borderRadius: 16,
+    borderWidth: 0.5,
+    borderColor: "#e0e0e0",
+    backgroundColor: colors.searchbar
   }
 });
 

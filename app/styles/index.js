@@ -16,7 +16,7 @@ export const colors = {
 export const fontSizes = {
   primary: 20,
   secondary: 15,
-  small: 13
+  small: 12
 };
 
 export const fontStyles = {

@@ -47,6 +47,7 @@ import {
   FETCH_GAMES,
   FETCH_GAMES_ERROR,
   FETCH_GAMES_RESULT,
+  CHANGE_GAME,
   FETCH_ACTIVITIES_RESULT,
   CHANGE_GAMING_SESSIONS_PAGE,
   CHANGE_MY_GAMING_SESSIONS_PAGE,
@@ -171,6 +172,7 @@ function* fetchGames() {
   try {
     let endpoint = "https://pwntastic.herokuapp.com/api/v1/games?";
     yield call(fetchData, endpoint, 1, FETCH_GAMES_RESULT, FETCH_GAMES_ERROR);
+    yield call(fetchActivities);
   } catch (e) {
     yield put({ type: FETCH_GAMES_ERROR, error: e.message });
   }
@@ -178,7 +180,6 @@ function* fetchGames() {
 
 function* fetchActivities() {
   try {
-    yield call(fetchGames);
     let gameId = yield select(state => state.search.gameId);
 
     let games = yield select(state => state.search.games);
@@ -326,7 +327,7 @@ function* refreshGroupMembers() {
 
 function* fetchGroup() {
   try {
-    let endpoint = "https://pwntastic.herokuapp.com/api/v2/groups/1513";
+    let endpoint = "https://pwntastic.herokuapp.com/api/v2/groups/1578";
     yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
   } catch (e) {
     yield put({ type: FETCH_GROUP_ERROR, error: e.message });
@@ -335,6 +336,7 @@ function* fetchGroup() {
 
 function* fetchGamingSessions() {
   try {
+    yield put({ type: CHANGE_GAMING_SESSIONS_PAGE, page: 1 });
     let endpoint = yield select(state => state.gamingSessions.endpoint);
     let current_page = yield select(state => state.search.gamingSessionsPage);
 
@@ -344,7 +346,7 @@ function* fetchGamingSessions() {
       current_page,
       FETCH_GAMING_SESSIONS_RESULT,
       FETCH_GAMING_SESSIONS_ERROR,
-      FETCH_GAMING_SESSIONS_NO_DATA
+      FETCH_GAMING_SESSIONS_RESULT
     );
   } catch (e) {
     yield put({ type: FETCH_GAMING_SESSIONS_ERROR, error: e.message });
@@ -374,8 +376,10 @@ function* loadMoreGamingSessions() {
 
 function* fetchMyGamingSessions() {
   try {
+    yield put({ type: CHANGE_MY_GAMING_SESSIONS_PAGE, page: 1 });
+
     let userId = yield select(state => state.authentication.user.user_id);
-    let current_page = yield select(state => state.search.gamingSessionsPage);
+    let current_page = yield select(state => state.search.myGamingSessionsPage);
     let endpoint =
       "https://pwntastic.herokuapp.com/api/v2/users/" +
       userId +
@@ -420,6 +424,8 @@ function* loadMoreMyGamingSessions() {
 
 function* fetchGroupGamingSessions() {
   try {
+    yield put({ type: CHANGE_GROUP_GAMING_SESSIONS_PAGE, page: 1 });
+
     let userId = yield select(state => state.authentication.user.user_id);
     let current_page = yield select(
       state => state.search.groupGamingSessionsPage
@@ -486,7 +492,8 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
   yield takeEvery(FETCH_GROUP, fetchGroup);
 
-  yield takeEvery(FETCH_GAMES, fetchActivities);
+  yield takeEvery(FETCH_GAMES, fetchGames);
+  yield takeEvery(CHANGE_GAME, fetchActivities);
 
   yield takeEvery(FETCH_GAMING_SESSIONS, fetchGamingSessions);
   yield takeEvery(REFRESH_GAMING_SESSIONS, fetchGamingSessions);
