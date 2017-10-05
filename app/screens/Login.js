@@ -21,6 +21,8 @@ import { TabNavigator } from "react-navigation";
 import PreSplash from "../components/PreSplash/PreSplash";
 
 import { connect } from "react-redux";
+import { connectAlert } from "../components/Alert";
+
 import { fetchToken } from "../actions/authentication";
 import { decodeToken } from "../actions/authentication";
 
@@ -46,6 +48,15 @@ class Login extends React.Component {
       await AsyncStorage.setItem(item, selectedValue);
     } catch (error) {
       console.error("AsyncStorage error: " + error.message);
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.authenticationError &&
+      nextProps.authenticationError !== this.props.authenticationError
+    ) {
+      this.props.alertWithType("error", "Error", nextProps.authenticationError);
     }
   }
 
@@ -172,8 +183,9 @@ const mapStateToProps = state => {
   // const onAuthChange = state.authentication.onAuthChange(token);
 
   return {
-    authentication
+    authentication,
+    authenticationError: state.authentication.error
   };
 };
 
-export default connect(mapStateToProps)(Login);
+export default connect(mapStateToProps)(connectAlert(Login));

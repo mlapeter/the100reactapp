@@ -100,7 +100,11 @@ function* fetchToken() {
     const result = yield response.json();
     if (result.error) {
       yield put({ type: FETCH_TOKEN_ERROR, error: result.error });
+    } else if (result.message === "Invalid credentials") {
+      yield put({ type: FETCH_TOKEN_ERROR, error: result.message });
     } else {
+      console.log("RESULT:", result);
+
       token = result.token;
       AsyncStorage.setItem("id_token", token);
       yield put({ type: FETCH_TOKEN_RESULT, token });

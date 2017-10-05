@@ -1,6 +1,7 @@
 import React, { PropTypes, Component } from "react";
 import { View } from "react-native";
 import DropdownAlert from "react-native-dropdownalert";
+import { Font } from "expo";
 
 class AlertProvider extends Component {
   static childContextTypes = {
@@ -11,6 +12,12 @@ class AlertProvider extends Component {
   static propTypes = {
     children: PropTypes.any
   };
+
+  componentWillMount() {
+    Font.loadAsync({
+      Nunito: require("../../assets/fonts/Nunito-Bold.ttf")
+    });
+  }
 
   getChildContext() {
     return {

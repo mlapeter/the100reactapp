@@ -20,5 +20,5 @@ export const fontSizes = {
 };
 
 export const fontStyles = {
-  primaryFont: "Futura"
+  primaryFont: "Nunito"
 };
