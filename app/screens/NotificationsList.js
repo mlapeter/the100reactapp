@@ -34,7 +34,7 @@ class Notifications extends PureComponent {
   }
 
   componentWillMount() {
-    // this.props.dispatch(fetchNotifications());
+    this.props.dispatch(fetchNotifications());
   }
 
   componentWillReceiveProps(nextProps) {

@@ -4,9 +4,11 @@ import {
   Alert,
   AsyncStorage,
   FlatList,
+  Keyboard,
   StyleSheet,
   Text,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View
 } from "react-native";
 import { connect } from "react-redux";
@@ -177,44 +179,50 @@ class FriendsList extends Component {
       }
     }
     return (
-      <View style={styles.container}>
-        <TopNav user={this.props.user} style={{ flex: 1 }} />
-        <Tabs>
-          <View title="MY FRIENDS" style={styles.content}>
-            <FlatList
-              data={this.props.friends}
-              renderItem={({ item }) => (
-                <Friend user={item} navigation={this.props.navigation} />
-              )}
-              keyExtractor={(item, index) => index}
-              extraData={this.props}
-              ListFooterComponent={this.renderFooter}
-              refreshing={this.props.isLoading}
-              onRefresh={this.refreshFriends}
-              onEndReached={this.loadMoreFriends}
-              onEndReachedThreshold={0}
-            />
-          </View>
-          <View title="MY GROUP" style={styles.content}>
-            <FlatList
-              data={this.props.groupMembers}
-              renderItem={({ item }) => (
-                <Friend user={item} navigation={this.props.navigation} />
-              )}
-              keyExtractor={(item, index) => index}
-              extraData={this.props}
-              ListFooterComponent={this.renderGroupFooter}
-              refreshing={this.props.isLoading}
-              onRefresh={this.refreshGroupMembers}
-              onEndReached={this.loadMoreGroupMembers}
-              onEndReachedThreshold={0}
-            />
-          </View>
-          <View title="RECENT" style={styles.content}>
-            <Text>Coming Soon</Text>
-          </View>
-        </Tabs>
-      </View>
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View style={styles.container}>
+          <TopNav user={this.props.user} style={{ flex: 1 }} />
+          <Tabs>
+            <View title="MY FRIENDS" style={styles.content}>
+              <FlatList
+                data={this.props.friends}
+                renderItem={({ item }) => (
+                  <Friend user={item} navigation={this.props.navigation} />
+                )}
+                keyExtractor={(item, index) => index}
+                extraData={this.props}
+                ListFooterComponent={this.renderFooter}
+                refreshing={this.props.isLoading}
+                onRefresh={this.refreshFriends}
+                onEndReached={this.loadMoreFriends}
+                onEndReachedThreshold={0}
+              />
+            </View>
+            <View title="MY GROUP" style={styles.content}>
+              <FlatList
+                data={this.props.groupMembers}
+                renderItem={({ item }) => (
+                  <Friend user={item} navigation={this.props.navigation} />
+                )}
+                keyExtractor={(item, index) => index}
+                extraData={this.props}
+                ListFooterComponent={this.renderGroupFooter}
+                refreshing={this.props.isLoading}
+                onRefresh={this.refreshGroupMembers}
+                onEndReached={this.loadMoreGroupMembers}
+                onEndReachedThreshold={0}
+              />
+            </View>
+            <View title="RECENT" style={styles.content}>
+              <Text>Coming Soon</Text>
+            </View>
+          </Tabs>
+        </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

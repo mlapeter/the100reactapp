@@ -1,12 +1,15 @@
 import React, { Component, PropTypes, PureComponent } from "react";
 import {
   ActivityIndicator,
+  Alert,
   FlatList,
   Image,
+  Keyboard,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   View
 } from "react-native";
 import { colors, fontSizes } from "../styles";
@@ -19,6 +22,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 // import { Icon } from "@expo/vector-icons";
 import Ionicons from "react-native-vector-icons/Ionicons";
+import Octicons from "react-native-vector-icons/Octicons";
 
 import Tabs from "../components/Tabs/Tabs";
 
@@ -115,7 +119,9 @@ class GamingSessionsList extends React.PureComponent {
 
   refreshGroupGames = () => {
     console.log("refreshGroupGames Triggered");
-    this.props.dispatch(refreshGroupGamingSessions());
+    if (this.props.refreshing === false) {
+      this.props.dispatch(refreshGroupGamingSessions());
+    }
   };
 
   loadMoreGamingSessions = () => {
@@ -212,193 +218,197 @@ class GamingSessionsList extends React.PureComponent {
     }
 
     return (
-      <View style={styles.container}>
-        <View style={styles.optionsContainer}>
-          <TouchableOpacity
-            style={styles.optionContainer}
-            onPress={() => this.props.navigation.navigate("DrawerOpen")}
-          >
-            <Image
-              style={styles.avatarMini}
-              source={
-                this.props.user.computed_avatar_api === "img/default-avatar.png"
-                  ? require("../../app/images/default-avatar.png")
-                  : { uri: this.props.user.computed_avatar_api }
-              }
-            />
-          </TouchableOpacity>
-          <View style={styles.search}>
-            <View style={styles.input}>
-              <Ionicons
-                name="md-search"
-                size={24}
-                color={colors.lightGrey}
-                style={{ marginRight: 5 }}
-              />
-              <TextInput
-                placeholder="Coming Soon"
-                style={{ color: colors.white }}
-              />
+      <TouchableWithoutFeedback
+        onPress={() => {
+          Keyboard.dismiss();
+        }}
+      >
+        <View style={styles.container}>
+          <View style={styles.optionsContainer}>
+            <View style={styles.menu}>
+              <TouchableOpacity
+                style={styles.optionContainer}
+                onPress={() => this.props.navigation.navigate("DrawerOpen")}
+              >
+                <Image
+                  style={styles.avatarMini}
+                  source={
+                    this.props.user.computed_avatar_api ===
+                    "img/default-avatar.png"
+                      ? require("../../app/images/default-avatar.png")
+                      : { uri: this.props.user.computed_avatar_api }
+                  }
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.search}>
+              <View style={styles.input}>
+                <GamingSessionsFilter updateFilter={this.updateFilter} />
+                <TextInput
+                  placeholder="Search Coming Soon"
+                  style={{ color: colors.white, marginLeft: 5 }}
+                />
+              </View>
+            </View>
+
+            <View style={styles.add}>
+              <TouchableOpacity onPress={() => Alert.alert("Coming Soon")}>
+                <MaterialIcons
+                  name="add-box"
+                  size={28}
+                  style={{
+                    color: colors.mediumGrey
+                  }}
+                />
+              </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.optionsContainerRight}>
-            <GamingSessionsFilter updateFilter={this.updateFilter} />
-            <TouchableOpacity style={styles.optionContainer}>
-              {/* <Text style={styles.tabText}>Options</Text> */}
-              <Ionicons name="md-add" size={32} color={colors.mediumGrey} />
-            </TouchableOpacity>
-          </View>
+
+          <Tabs>
+            <View title="PUBLIC GAMES" style={styles.content}>
+              <FlatList
+                data={this.props.data}
+                renderItem={({ item }) => (
+                  <GamingSessionsItem
+                    data={item}
+                    navigation={this.props.navigation}
+                  />
+                )}
+                ListHeaderComponent={this.renderEmpty}
+                ListFooterComponent={this.renderFooter}
+                // ListEmptyComponent={this.renderEmpty}
+                extraData={this.props}
+                // Getting errors using game id
+                keyExtractor={item => item.id}
+                keyExtractor={(item, index) => index}
+                refreshing={this.props.gamingSessionsRefreshing}
+                onRefresh={this.refreshGames}
+                onEndReached={this.loadMoreGamingSessions}
+                onEndReachedThreshold={0.8}
+              />
+            </View>
+            <View title="GROUP GAMES" style={styles.content}>
+              <FlatList
+                data={this.props.groupGamingSessions}
+                renderItem={({ item }) => (
+                  <GamingSessionsItem
+                    data={item}
+                    navigation={this.props.navigation}
+                  />
+                )}
+                ListHeaderComponent={this.renderEmpty}
+                ListFooterComponent={this.renderGroupFooter}
+                // ListEmptyComponent={this.renderEmpty}
+                extraData={this.props}
+                // Getting errors using game id
+                // keyExtractor={item => item.id}
+                keyExtractor={(item, index) => index}
+                refreshing={this.props.groupGamingSessionsRefreshing}
+                onRefresh={this.refreshGroupGames}
+                onEndReached={this.loadMoreGroupGamingSessions}
+                onEndReachedThreshold={0}
+              />
+            </View>
+            <View title="MY GAMES" style={styles.content}>
+              <FlatList
+                data={this.props.myGamingSessions}
+                renderItem={({ item }) => (
+                  <GamingSessionsItem
+                    data={item}
+                    navigation={this.props.navigation}
+                  />
+                )}
+                ListHeaderComponent={this.renderEmpty}
+                ListFooterComponent={this.renderMyFooter}
+                extraData={this.props}
+                keyExtractor={(item, index) => index}
+                refreshing={this.props.myGamingSessionsRefreshing}
+                onRefresh={this.refreshMyGames}
+                onEndReached={this.loadMoreMyGamingSessions}
+                onEndReachedThreshold={0}
+              />
+            </View>
+          </Tabs>
         </View>
-        <Tabs>
-          <View title="PUBLIC GAMES" style={styles.content}>
-            <FlatList
-              data={this.props.data}
-              renderItem={({ item }) => (
-                <GamingSessionsItem
-                  data={item}
-                  navigation={this.props.navigation}
-                />
-              )}
-              ListHeaderComponent={this.renderEmpty}
-              ListFooterComponent={this.renderFooter}
-              // ListEmptyComponent={this.renderEmpty}
-              extraData={this.props}
-              // Getting errors using game id
-              keyExtractor={item => item.id}
-              keyExtractor={(item, index) => index}
-              refreshing={this.props.refreshing}
-              onRefresh={this.refreshGames}
-              onEndReached={this.loadMoreGamingSessions}
-              onEndReachedThreshold={5}
-            />
-          </View>
-          <View title="GROUP GAMES" style={styles.content}>
-            <FlatList
-              data={this.props.groupGamingSessions}
-              renderItem={({ item }) => (
-                <GamingSessionsItem
-                  data={item}
-                  navigation={this.props.navigation}
-                />
-              )}
-              ListHeaderComponent={this.renderEmpty}
-              ListFooterComponent={this.renderGroupFooter}
-              // ListEmptyComponent={this.renderEmpty}
-              extraData={this.props}
-              // Getting errors using game id
-              // keyExtractor={item => item.id}
-              keyExtractor={(item, index) => index}
-              refreshing={this.props.refreshing}
-              onRefresh={this.refreshGroupGames}
-              onEndReached={this.loadMoreGroupGamingSessions}
-              onEndReachedThreshold={0}
-            />
-          </View>
-          <View title="MY GAMES" style={styles.content}>
-            <FlatList
-              data={this.props.myGamingSessions}
-              renderItem={({ item }) => (
-                <GamingSessionsItem
-                  data={item}
-                  navigation={this.props.navigation}
-                />
-              )}
-              ListHeaderComponent={this.renderEmpty}
-              ListFooterComponent={this.renderMyFooter}
-              extraData={this.props}
-              keyExtractor={(item, index) => index}
-              refreshing={this.props.refreshing}
-              onRefresh={this.refreshMyGames}
-              onEndReached={this.loadMoreMyGamingSessions}
-              onEndReachedThreshold={0}
-            />
-          </View>
-        </Tabs>
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
+    padding: 5,
     paddingTop: 25,
     flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
     backgroundColor: colors.white
   },
   // Tab content container
-  content: {
-    flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
-    backgroundColor: colors.white
-  },
-  // Content header
-  header: {
-    margin: 10,
-    color: "#FFFFFF",
-    fontFamily: "Avenir",
-    fontSize: 26
-  },
-  // Content text
-  text: {
-    marginHorizontal: 20,
-    // color: "rgba(255, 255, 255, 0.75)", // Semi-transparent text
-    color: colors.grey,
-    textAlign: "center",
-    fontFamily: "Avenir",
-    fontSize: 18
-  },
-
   optionsContainer: {
     flexDirection: "row",
-    justifyContent: "space-between"
-    // paddingTop: 10
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 5
   },
-  optionsContainerRight: {
-    marginTop: 3,
-    padding: 3,
-    flexDirection: "row"
-  },
-  optionContainer: {
-    // flex: 1,
-    paddingHorizontal: 20
-    // paddingTop: 5
-    // paddingBottom: 10
-    // borderBottomWidth: 3, // Add thick border at the bottom
-    // borderBottomColor: "transparent" // Transparent border for inactive tabs
-  },
-  avatarMini: {
-    height: 36,
-    width: 36,
-    marginTop: 5,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: colors.lightGrey
-  },
-  alertView: {
-    flexDirection: "row",
-    justifyContent: "center"
+
+  menu: {
+    flex: 1,
+    marginHorizontal: 10,
+    alignItems: "flex-start"
   },
   search: {
     flexDirection: "row",
     flex: 10,
-    // paddingTop: 5,
-    // marginLeft: 25,
-    // marginRight: 10,
+    marginLeft: 25,
+    marginRight: 10,
+    padding: 5,
     alignItems: "center",
-    paddingHorizontal: 15,
+    paddingHorizontal: 5,
     // borderRadius: 3,
     // borderBottomColor: colors.lightGrey,
     backgroundColor: colors.white
   },
   input: {
     flexDirection: "row",
-    flex: 1,
+    flex: 10,
     padding: 5,
     borderRadius: 16,
     borderWidth: 0.5,
     borderColor: "#e0e0e0",
     backgroundColor: colors.searchbar
+  },
+  add: {
+    flex: 1,
+    marginRight: 10,
+    alignItems: "center"
+  },
+
+  optionContainer: {
+    // flex: 1,
+    // paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 10
+    // borderBottomWidth: 3, // Add thick border at the bottom
+    // borderBottomColor: "transparent" // Transparent border for inactive tabs
+  },
+  avatarMini: {
+    marginBottom: 5,
+    height: 32,
+    width: 32,
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: colors.lightGrey
+  },
+  content: {
+    flex: 1,
+    // justifyContent: "center",
+    // alignItems: "center",
+    backgroundColor: colors.white
+  },
+  alertView: {
+    flexDirection: "row",
+    justifyContent: "center"
   }
 });
 
@@ -413,6 +423,13 @@ const mapStateToProps = state => {
   const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;
   const groupGamingSessionsLoading =
     state.gamingSessions.groupGamingSessionsLoading;
+  const gamingSessionsRefreshing =
+    state.gamingSessions.gamingSessionsRefreshing;
+  const groupGamingSessionsRefreshing =
+    state.gamingSessions.groupGamingSessionsRefreshing;
+  const myGamingSessionsRefreshing =
+    state.gamingSessions.myGamingSessionsRefreshing;
+
   const refreshing = state.gamingSessions.refreshing;
   const moreDataAvailable = state.gamingSessions.moreDataAvailable;
   const data = state.gamingSessions.gamingSessions;
@@ -436,6 +453,9 @@ const mapStateToProps = state => {
     gamingSessionsLoading,
     myGamingSessionsLoading,
     groupGamingSessionsLoading,
+    gamingSessionsRefreshing,
+    myGamingSessionsRefreshing,
+    groupGamingSessionsRefreshing,
     refreshing,
     moreDataAvailable,
     data,

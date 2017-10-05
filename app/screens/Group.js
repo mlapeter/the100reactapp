@@ -35,9 +35,6 @@ class Group extends React.Component {
     groupError: PropTypes.string,
     dataSource: PropTypes.object
   };
-  static navigationOptions = {
-    title: "User"
-  };
 
   constructor(props) {
     super(props);
@@ -150,9 +147,17 @@ class Group extends React.Component {
           <View style={styles.iconBar}>
             <PlatformIcon platform={this.props.dataSource.platform} />
             <PlayerIcon usersCount={this.props.dataSource.users_count} />
-            {/* <PlayScheduleIcon
+            <Text style={styles.icon}>
+              <MaterialCommunityIcons
+                name="human-greeting"
+                size={14}
+                color={colors.grey}
+              />
+              <Text style={styles.icon}>Casual</Text>
+            </Text>
+            <PlayScheduleIcon
               playSchedule={this.props.dataSource.play_schedule}
-            /> */}
+            />
           </View>
           <Chat chatroom={"help_chatroom"} />
         </View>
@@ -240,7 +245,7 @@ function PlayScheduleIcon(props) {
   return (
     <Text style={styles.icon}>
       <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
-      <Text style={styles.icon}>{props.playSchedule.toString()}</Text>
+      <Text style={styles.icon}>Weekday Mornings</Text>
     </Text>
   );
 }

@@ -33,6 +33,10 @@ const initialState = {
   myGamingSessionsLoading: false,
   groupGamingSessionsLoading: false,
 
+  gamingSessionsRefreshing: false,
+  myGamingSessionsRefreshing: false,
+  groupGamingSessionsRefreshing: false,
+
   gamingSessions: [],
   myGamingSessions: [],
   groupGamingSessions: []
@@ -52,33 +56,33 @@ export default (state = initialState, action) => {
         ...state,
         gamingSessions: action.result,
         gamingSessionsLoading: false,
-        refreshing: false
+        gamingSessionsRefreshing: false
       };
     case FETCH_GAMING_SESSIONS_ERROR:
       return {
         ...state,
         error: action.error,
         gamingSessionsLoading: false,
-        refreshing: false
+        gamingSessionsRefreshing: false
       };
     case FETCH_GAMING_SESSIONS_NO_DATA:
       return {
         ...state,
         moreGamingSessionsAvailable: false,
         gamingSessionsLoading: false,
-        refreshing: false
+        gamingSessionsRefreshing: false
       };
     case REFRESH_GAMING_SESSIONS:
       return {
         ...state,
         moreGamingSessionsAvailable: true,
-        refreshing: true,
+        gamingSessionsRefreshing: true,
         endpoint: action.endpoint
       };
     case LOAD_MORE_GAMING_SESSIONS:
       return {
         ...state,
-        refreshing: true,
+        gamingSessionsRefreshing: true,
         endpoint: action.endpoint
       };
     case LOAD_MORE_GAMING_SESSIONS_RESULT:
@@ -86,7 +90,7 @@ export default (state = initialState, action) => {
         ...state,
         gamingSessions: [...state.gamingSessions, ...action.result],
         gamingSessionsLoading: false,
-        refreshing: false
+        gamingSessionsRefreshing: false
       };
     case FETCH_MY_GAMING_SESSIONS:
       return {
@@ -100,33 +104,33 @@ export default (state = initialState, action) => {
         ...state,
         myGamingSessions: action.result,
         myGamingSessionsLoading: false,
-        refreshing: false
+        myGamingSessionsRefreshing: false
       };
     case FETCH_MY_GAMING_SESSIONS_ERROR:
       return {
         ...state,
         error: action.error,
         myGamingSessionsLoading: false,
-        refreshing: false
+        myGamingSessionsRefreshing: false
       };
     case FETCH_MY_GAMING_SESSIONS_NO_DATA:
       return {
         ...state,
         moreMyGamingSessionsAvailable: false,
         myGamingSessionsLoading: false,
-        refreshing: false
+        myGamingSessionsRefreshing: false
       };
     case REFRESH_MY_GAMING_SESSIONS:
       return {
         ...state,
         moreMyGamingSessionsAvailable: true,
-        refreshing: true,
+        myGamingSessionsRefreshing: true,
         endpoint: action.endpoint
       };
     case LOAD_MORE_MY_GAMING_SESSIONS:
       return {
         ...state,
-        refreshing: true,
+        myGamingSessionsRefreshing: true,
         endpoint: action.endpoint
       };
     case LOAD_MORE_MY_GAMING_SESSIONS_RESULT:
@@ -134,7 +138,7 @@ export default (state = initialState, action) => {
         ...state,
         myGamingSessions: [...state.myGamingSessions, ...action.result],
         myGamingSessionsLoading: false,
-        refreshing: false
+        myGamingSessionsRefreshing: false
       };
     case FETCH_GROUP_GAMING_SESSIONS:
       return {
@@ -148,33 +152,33 @@ export default (state = initialState, action) => {
         moreGroupGamingSessionsAvailable: true,
         groupGamingSessions: action.result,
         groupGamingSessionsLoading: false,
-        refreshing: false
+        groupGamingSessionsRefreshing: false
       };
     case FETCH_GROUP_GAMING_SESSIONS_ERROR:
       return {
         ...state,
         error: action.error,
         groupGamingSessionsLoading: false,
-        refreshing: false
+        groupGamingSessionsRefreshing: false
       };
     case FETCH_GROUP_GAMING_SESSIONS_NO_DATA:
       return {
         ...state,
         moreGroupGamingSessionsAvailable: false,
         groupGamingSessionsLoading: false,
-        refreshing: false
+        groupGamingSessionsRefreshing: false
       };
     case REFRESH_GROUP_GAMING_SESSIONS:
       return {
         ...state,
         moreGroupGamingSessionsAvailable: true,
-        refreshing: true,
+        groupGamingSessionsRefreshing: true,
         endpoint: action.endpoint
       };
     case LOAD_MORE_GROUP_GAMING_SESSIONS:
       return {
         ...state,
-        refreshing: true,
+        groupGamingSessionsRefreshing: true,
         endpoint: action.endpoint
       };
     case LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT:
@@ -182,7 +186,7 @@ export default (state = initialState, action) => {
         ...state,
         groupGamingSessions: [...state.groupGamingSessions, ...action.result],
         groupGamingSessionsLoading: false,
-        refreshing: false
+        groupGamingSessionsRefreshing: false
       };
     default:
       return state;

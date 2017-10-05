@@ -36,7 +36,7 @@ export default function TopNav(props) {
             style={{ marginRight: 5 }}
           />
           <TextInput
-            placeholder="Search Users"
+            placeholder="Search Coming Soon"
             style={{ color: colors.white }}
           />
         </View>

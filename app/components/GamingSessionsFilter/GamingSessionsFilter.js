@@ -74,7 +74,7 @@ class GamingSessionsFilter extends Component {
     const { selectedIndex } = this.state;
 
     return (
-      <View style={{ paddingTop: 2 }}>
+      <View style={{ paddingTop: 0 }}>
         <Modal
           animationType={"slide"}
           transparent={true}
@@ -177,7 +177,7 @@ class GamingSessionsFilter extends Component {
             this.setModalVisible(true);
           }}
         >
-          <Icon name="md-search" size={28} color={colors.mediumGrey} />
+          <Icon name="md-search" size={24} color={colors.mediumGrey} />
         </TouchableOpacity>
       </View>
     );

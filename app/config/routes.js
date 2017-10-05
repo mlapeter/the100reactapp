@@ -25,6 +25,8 @@ import Menu from "../screens/Menu";
 
 import Chat from "../components/Chat/Chat";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { colors, fontSizes } from "../styles";
 
@@ -142,8 +144,8 @@ Group.navigationOptions = {
 NotificationsList.navigationOptions = {
   tabBarLabel: "Notifications",
   tabBarIcon: ({ tintColor, focused }) => (
-    <MaterialCommunityIcons
-      name={focused ? "notification-clear-all" : "notification-clear-all"}
+    <MaterialIcons
+      name={focused ? "notifications" : "notifications"}
       size={26}
       style={{ color: tintColor }}
     />
@@ -162,7 +164,7 @@ FriendsList.navigationOptions = {
 };
 User.navigationOptions = {
   tabBarLabel: "User",
-  headerRight: <Button title="Add Friend" />,
+  // headerRight: <Button title="Add Friend" />,
   tabBarIcon: ({ tintColor, focused }) => (
     <MaterialCommunityIcons
       name={focused ? "account" : "account"}
