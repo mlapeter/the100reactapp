@@ -246,7 +246,12 @@ class GamingSessionsList extends React.PureComponent {
                 <GamingSessionsFilter updateFilter={this.updateFilter} />
                 <TextInput
                   placeholder="Search Coming Soon"
-                  style={{ color: colors.white, marginLeft: 5 }}
+                  style={{
+                    flexDirection: "row",
+                    flex: 5,
+                    color: colors.white,
+                    marginLeft: 5
+                  }}
                 />
               </View>
             </View>
