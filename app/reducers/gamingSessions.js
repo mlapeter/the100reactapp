@@ -1,4 +1,7 @@
 import {
+  CREATE_GAMING_SESSION,
+  CREATE_GAMING_SESSION_RESULT,
+  CREATE_GAMING_SESSION_ERROR,
   FETCH_GAMING_SESSIONS,
   FETCH_GAMING_SESSIONS_RESULT,
   FETCH_GAMING_SESSIONS_ERROR,
@@ -23,7 +26,7 @@ import {
 } from "../actions/gamingSessions";
 
 const initialState = {
-  endpoint: "https://pwntastic.herokuapp.com/api/v2/gaming_sessions",
+  endpoint: "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions",
   refreshing: false,
   moreGamingSessionsAvailable: true,
   moreGroupGamingSessionsAvailable: true,
@@ -39,11 +42,29 @@ const initialState = {
 
   gamingSessions: [],
   myGamingSessions: [],
-  groupGamingSessions: []
+  groupGamingSessions: [],
+
+  gamingSession: {}
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case CREATE_GAMING_SESSION:
+      return {
+        ...state,
+        gamingSession: action.gamingSession,
+        endpoint: action.endpoint
+      };
+    case CREATE_GAMING_SESSION:
+      return {
+        ...state,
+        gamingSession: action.result
+      };
+    case CREATE_GAMING_SESSION_ERROR:
+      return {
+        ...state,
+        error: action.error
+      };
     case FETCH_GAMING_SESSIONS:
       return {
         ...state,

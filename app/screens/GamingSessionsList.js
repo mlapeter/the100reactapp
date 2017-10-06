@@ -27,6 +27,7 @@ import Octicons from "react-native-vector-icons/Octicons";
 import Tabs from "../components/Tabs/Tabs";
 
 import { connect } from "react-redux";
+
 import { fetchGames } from "../actions/search";
 import { changeGamingSessionsPage } from "../actions/search";
 
@@ -51,7 +52,7 @@ class GamingSessionsList extends React.PureComponent {
     page: PropTypes.number,
     platform: PropTypes.string,
     isLoading: PropTypes.bool,
-    refreshing: PropTypes.bool,
+    // refreshing: PropTypes.bool,
     moreDataAvailable: PropTypes.bool,
     data: PropTypes.array,
     myGamingSessions: PropTypes.array,
@@ -88,7 +89,7 @@ class GamingSessionsList extends React.PureComponent {
 
   searchUrl() {
     return encodeURI(
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions" +
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions" +
         // this.props.gamingSessionsPage +
         "?q[game_id_eq]=" +
         this.props.gameId +
@@ -109,24 +110,28 @@ class GamingSessionsList extends React.PureComponent {
 
   refreshGames = () => {
     console.log("refreshGames Triggered");
-    this.props.dispatch(refreshGamingSessions(this.searchUrl()));
+    if (this.props.gamingSessionsRefreshing === false) {
+      this.props.dispatch(refreshGamingSessions(this.searchUrl()));
+    }
   };
 
   refreshMyGames = () => {
     console.log("refreshMyGames Triggered");
-    this.props.dispatch(refreshMyGamingSessions());
+    if (this.props.myGamingSessionsRefreshing === false) {
+      this.props.dispatch(refreshMyGamingSessions());
+    }
   };
 
   refreshGroupGames = () => {
     console.log("refreshGroupGames Triggered");
-    if (this.props.refreshing === false) {
+    if (this.props.groupGamingSessionsRefreshing === false) {
       this.props.dispatch(refreshGroupGamingSessions());
     }
   };
 
   loadMoreGamingSessions = () => {
     if (
-      this.props.refreshing === false &&
+      this.props.gamingSessionsRefreshing === false &&
       this.props.moreGamingSessionsAvailable === true
     ) {
       console.log("LoadMoreGamingSessions Activated");
@@ -136,7 +141,7 @@ class GamingSessionsList extends React.PureComponent {
 
   loadMoreGroupGamingSessions = () => {
     if (
-      this.props.refreshing === false &&
+      this.props.groupGamingSessionsRefreshing === false &&
       this.props.moreGroupGamingSessionsAvailable === true
     ) {
       console.log("LoadMoreGroupGamingSessions Activated");
@@ -252,7 +257,10 @@ class GamingSessionsList extends React.PureComponent {
             </View>
 
             <View style={styles.add}>
-              <TouchableOpacity onPress={() => Alert.alert("Coming Soon")}>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate("GamingSessionCreate")}
+              >
                 <MaterialIcons
                   name="add-box"
                   size={28}
@@ -393,7 +401,7 @@ const styles = StyleSheet.create({
     // borderBottomColor: "transparent" // Transparent border for inactive tabs
   },
   avatarMini: {
-    marginBottom: 5,
+    marginBottom: 6,
     height: 32,
     width: 32,
     borderRadius: 16,
@@ -430,7 +438,7 @@ const mapStateToProps = state => {
   const myGamingSessionsRefreshing =
     state.gamingSessions.myGamingSessionsRefreshing;
 
-  const refreshing = state.gamingSessions.refreshing;
+  // const refreshing = state.gamingSessions.refreshing;
   const moreDataAvailable = state.gamingSessions.moreDataAvailable;
   const data = state.gamingSessions.gamingSessions;
   const myGamingSessions = state.gamingSessions.myGamingSessions;
@@ -456,7 +464,7 @@ const mapStateToProps = state => {
     gamingSessionsRefreshing,
     myGamingSessionsRefreshing,
     groupGamingSessionsRefreshing,
-    refreshing,
+    // refreshing,
     moreDataAvailable,
     data,
     myGamingSessions,

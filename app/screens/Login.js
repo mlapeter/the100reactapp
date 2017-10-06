@@ -30,6 +30,7 @@ import Navigator from "../config/routes";
 
 import { colors, fontSizes } from "../styles";
 const { height, width } = Dimensions.get("window");
+import { Font } from "expo";
 
 class Login extends React.Component {
   static propTypes = {};
@@ -39,7 +40,8 @@ class Login extends React.Component {
     this.state = {
       username: null,
       password: null,
-      isLoaded: false
+      isLoaded: false,
+      fontLoaded: false
     };
   }
 
@@ -65,6 +67,11 @@ class Login extends React.Component {
       this.props.dispatch(decodeToken(token));
       this.setState({ isLoaded: true });
     });
+    Font.loadAsync({
+      Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
+    }).then(result => {
+      this.setState({ fontLoaded: true });
+    });
   }
 
   userLogin() {
@@ -87,7 +94,7 @@ class Login extends React.Component {
   };
 
   render() {
-    if (!this.state.isLoaded) {
+    if (!this.state.isLoaded || !this.state.fontLoaded) {
       return <PreSplash />;
     }
 
@@ -144,14 +151,12 @@ class Login extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: colors.white,
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: 50,
     paddingBottom: 40
   },
   slogan: {
-    color: colors.blue,
     fontSize: 40,
     margin: 20,
     textAlign: "center"
@@ -166,8 +171,6 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   assuranceText: {
-    color: colors.secondary,
-    fontSize: fontSizes.secondary,
     textAlign: "center"
   },
   input: {

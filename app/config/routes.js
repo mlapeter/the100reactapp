@@ -16,6 +16,7 @@ import { DrawerNavigator } from "react-navigation";
 import Login from "../screens/Login/";
 import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
+import GamingSessionCreate from "../screens/GamingSessionCreate";
 
 import Group from "../screens/Group/";
 import NotificationsList from "../screens/NotificationsList";
@@ -44,7 +45,8 @@ const GamingSessionsStack = StackNavigator(
         // headerRight: navigation.state.params.headerRight
       })
     },
-    Player: { screen: User }
+    Player: { screen: User },
+    GamingSessionCreate: { screen: GamingSessionCreate }
   }
   // {
   //   headerMode: "none"

@@ -13,12 +13,6 @@ class AlertProvider extends Component {
     children: PropTypes.any
   };
 
-  componentWillMount() {
-    Font.loadAsync({
-      Nunito: require("../../assets/fonts/Nunito-Bold.ttf")
-    });
-  }
-
   getChildContext() {
     return {
       alert: (...args) => this.dropdown.alert(...args),
