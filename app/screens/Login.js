@@ -177,7 +177,9 @@ const styles = StyleSheet.create({
     margin: 5,
     padding: 5,
     borderBottomWidth: 0.5,
-    borderBottomColor: "#d6d7da"
+    borderBottomColor: "#d6d7da",
+    flexDirection: "row",
+    flex: 5
   }
 });
 
