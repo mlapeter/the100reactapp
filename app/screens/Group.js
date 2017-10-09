@@ -42,7 +42,7 @@ class Group extends React.Component {
   }
 
   componentWillMount() {
-    this.fetchData();
+    // this.fetchData();
   }
 
   componentWillReceiveProps(nextProps) {

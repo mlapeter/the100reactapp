@@ -160,7 +160,12 @@ function* fetchData(endpoint, page, success, failure, noData) {
 function* createGamingSession() {
   try {
     let token = yield select(state => state.authentication.token);
+    let gamingSession = yield select(
+      state => state.gamingSessions.gamingSession
+    );
+    let platform = yield select(state => state.search.platform);
 
+    console.log("gamingSession is: ", gamingSession);
     const response = yield fetch(
       "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/",
       {
@@ -171,10 +176,10 @@ function* createGamingSession() {
           Authorization: "Bearer " + token
         },
         body: JSON.stringify({
-          name: "Raid!",
-          category: "Raid - Leviathan - Normal",
-          platform: "xbox-one",
-          start_time: "2017-10-07 19:00:00 -0700"
+          name: gamingSession.description,
+          category: gamingSession.activity,
+          platform: platform,
+          start_time: gamingSession.start_time
         })
       }
     );
@@ -187,7 +192,7 @@ function* createGamingSession() {
     } else {
       console.log("RESULT:", result);
 
-      yield put({ type: CREATE_GAMING_SESSION_RESULT, token });
+      yield put({ type: CREATE_GAMING_SESSION_RESULT, result });
     }
   } catch (e) {
     yield put({ type: CREATE_GAMING_SESSION_ERROR, error: e.message });

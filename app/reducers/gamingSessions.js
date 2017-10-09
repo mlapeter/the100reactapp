@@ -28,6 +28,8 @@ import {
 const initialState = {
   endpoint: "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions",
   refreshing: false,
+  isCreating: false,
+  gameCreated: false,
   moreGamingSessionsAvailable: true,
   moreGroupGamingSessionsAvailable: true,
   moreMyGamingSessionsAvailable: true,
@@ -52,17 +54,21 @@ export default (state = initialState, action) => {
     case CREATE_GAMING_SESSION:
       return {
         ...state,
-        gamingSession: action.gamingSession,
-        endpoint: action.endpoint
+        isCreating: true,
+        gamingSession: action.gamingSession
       };
-    case CREATE_GAMING_SESSION:
+    case CREATE_GAMING_SESSION_RESULT:
       return {
         ...state,
+        isCreating: false,
+        gameCreated: true,
         gamingSession: action.result
       };
     case CREATE_GAMING_SESSION_ERROR:
       return {
         ...state,
+        isCreating: false,
+        gameCreated: false,
         error: action.error
       };
     case FETCH_GAMING_SESSIONS:

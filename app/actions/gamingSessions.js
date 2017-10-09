@@ -37,7 +37,8 @@ export const LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT =
   "LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT";
 
 export const createGamingSession = gamingSession => ({
-  type: CREATE_GAMING_SESSION
+  type: CREATE_GAMING_SESSION,
+  gamingSession
 });
 
 export const fetchGamingSessions = endpoint => ({

@@ -122,6 +122,11 @@ export default TabNavigator(
   }
 );
 
+GamingSessionCreate.navigationOptions = {
+  // headerRight: <Button title="Join Game" />,
+  headerTitle: "New Gaming Session"
+};
+
 GamingSessionsList.navigationOptions = {
   tabBarLabel: "Games",
   header: false,
