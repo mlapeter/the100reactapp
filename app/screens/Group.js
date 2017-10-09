@@ -42,7 +42,7 @@ class Group extends React.Component {
   }
 
   componentWillMount() {
-    // this.fetchData();
+    this.fetchData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -75,7 +75,7 @@ class Group extends React.Component {
   //   });
   //   AsyncStorage.getItem("id_token").then(token => {
   //     console.log("token: " + token);
-  //     fetch("https://pwn-staging.herokuapp.com/api/v2/groups/" + action, {
+  //     fetch("https://pwntastic.herokuapp.com/api/v2/groups/" + action, {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",

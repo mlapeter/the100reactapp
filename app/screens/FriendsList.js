@@ -165,18 +165,18 @@ class FriendsList extends Component {
         </View>
       );
     } else {
-      if (this.props.friends.length < 1) {
-        return (
-          <View style={styles.container}>
-            <TouchableOpacity
-              style={styles.buttonWrapper}
-              onPress={this.fetchData}
-            >
-              <Text style={styles.buttonText}> Get Friends</Text>
-            </TouchableOpacity>
-          </View>
-        );
-      }
+      // if (this.props.friends.length < 1) {
+      //   return (
+      //     <View style={styles.container}>
+      //       <TouchableOpacity
+      //         style={styles.buttonWrapper}
+      //         onPress={this.fetchData}
+      //       >
+      //         <Text style={styles.buttonText}> Get Friends</Text>
+      //       </TouchableOpacity>
+      //     </View>
+      //   );
+      // }
     }
     return (
       <TouchableWithoutFeedback
