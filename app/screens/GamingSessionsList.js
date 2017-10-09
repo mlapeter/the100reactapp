@@ -149,6 +149,16 @@ class GamingSessionsList extends React.PureComponent {
     }
   };
 
+  loadMoreMyGamingSessions = () => {
+    if (
+      this.props.gamingSessionsRefreshing === false &&
+      this.props.moreMyGamingSessionsAvailable === true
+    ) {
+      console.log("LoadMoreMyGamingSessions Activated");
+      this.props.dispatch(loadMoreMyGamingSessions(this.searchUrl()));
+    }
+  };
+
   renderFooter = () => {
     if (!this.props.moreGamingSessionsAvailable) {
       console.log(
@@ -176,13 +186,19 @@ class GamingSessionsList extends React.PureComponent {
   renderGroupFooter = () => {
     if (!this.props.moreGroupGamingSessionsAvailable) {
       return (
-        <View style={styles.alertView}>
-          <MaterialCommunityIcons
-            name="dots-horizontal"
-            size={24}
-            color={colors.mediumGrey}
-          />
-        </View>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
+          <View style={styles.alertView}>
+            <MaterialCommunityIcons
+              name="dots-horizontal"
+              size={24}
+              color={colors.mediumGrey}
+            />
+          </View>
+        </TouchableWithoutFeedback>
       );
     } else {
       return (
@@ -223,60 +239,59 @@ class GamingSessionsList extends React.PureComponent {
     }
 
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
-        <View style={styles.container}>
-          <View style={styles.optionsContainer}>
-            <View style={styles.menu}>
-              <TouchableOpacity
-                style={styles.optionContainer}
-                onPress={() => this.props.navigation.navigate("DrawerOpen")}
-              >
-                <Image
-                  style={styles.avatarMini}
-                  source={
-                    this.props.user.computed_avatar_api ===
-                    "img/default-avatar.png"
-                      ? require("../../app/images/default-avatar.png")
-                      : { uri: this.props.user.computed_avatar_api }
-                  }
-                />
-              </TouchableOpacity>
-            </View>
-            <View style={styles.search}>
-              <View style={styles.input}>
-                <GamingSessionsFilter updateFilter={this.updateFilter} />
-                <TextInput
-                  placeholder="Search Coming Soon"
-                  style={{
-                    flexDirection: "row",
-                    flex: 5,
-                    color: colors.white,
-                    marginLeft: 5
-                  }}
-                />
-              </View>
-            </View>
-
-            <View style={styles.add}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("GamingSessionCreate")}
-              >
-                <MaterialIcons
-                  name="add-box"
-                  size={28}
-                  style={{
-                    color: colors.mediumGrey
-                  }}
-                />
-              </TouchableOpacity>
+      <View style={styles.container}>
+        <View style={styles.optionsContainer}>
+          <View style={styles.menu}>
+            <TouchableOpacity
+              style={styles.optionContainer}
+              onPress={() => this.props.navigation.navigate("DrawerOpen")}
+            >
+              <Image
+                style={styles.avatarMini}
+                source={
+                  this.props.user.computed_avatar_api ===
+                  "img/default-avatar.png"
+                    ? require("../../app/images/default-avatar.png")
+                    : { uri: this.props.user.computed_avatar_api }
+                }
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.search}>
+            <View style={styles.input}>
+              <GamingSessionsFilter updateFilter={this.updateFilter} />
+              <TextInput
+                placeholder="Search Coming Soon"
+                style={{
+                  flexDirection: "row",
+                  flex: 5,
+                  color: colors.white,
+                  marginLeft: 5
+                }}
+              />
             </View>
           </View>
 
+          <View style={styles.add}>
+            <TouchableOpacity
+              onPress={() =>
+                this.props.navigation.navigate("GamingSessionCreate")}
+            >
+              <MaterialIcons
+                name="add-box"
+                size={28}
+                style={{
+                  color: colors.mediumGrey
+                }}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
           <Tabs>
             <View title="PUBLIC GAMES" style={styles.content}>
               <FlatList
@@ -311,7 +326,7 @@ class GamingSessionsList extends React.PureComponent {
                 )}
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderGroupFooter}
-                // ListEmptyComponent={this.renderEmpty}
+                ListEmptyComponent={this.renderEmpty}
                 extraData={this.props}
                 // Getting errors using game id
                 // keyExtractor={item => item.id}
@@ -342,8 +357,8 @@ class GamingSessionsList extends React.PureComponent {
               />
             </View>
           </Tabs>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </View>
     );
   }
 }
@@ -421,7 +436,8 @@ const styles = StyleSheet.create({
   },
   alertView: {
     flexDirection: "row",
-    justifyContent: "center"
+    justifyContent: "center",
+    height: 50
   }
 });
 

@@ -127,6 +127,18 @@ GamingSessionCreate.navigationOptions = {
   headerTitle: "New Gaming Session"
 };
 
+MenuDrawer.navigationOptions = {
+  tabBarLabel: "Games",
+  header: false,
+  tabBarIcon: ({ tintColor, focused }) => (
+    <Ionicons
+      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
+      size={26}
+      style={{ color: tintColor }}
+    />
+  )
+};
+
 GamingSessionsList.navigationOptions = {
   tabBarLabel: "Games",
   header: false,
