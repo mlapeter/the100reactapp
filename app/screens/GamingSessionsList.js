@@ -27,6 +27,7 @@ import Octicons from "react-native-vector-icons/Octicons";
 import Tabs from "../components/Tabs/Tabs";
 
 import { connect } from "react-redux";
+import { connectAlert } from "../components/Alert";
 
 import { fetchGames } from "../actions/search";
 import { changeGamingSessionsPage } from "../actions/search";
@@ -66,6 +67,15 @@ class GamingSessionsList extends React.PureComponent {
   componentDidMount() {
     this.fetchGamesData();
     this.fetchData();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.gamingSessionsError &&
+      nextProps.gamingSessionsError !== this.props.gamingSessionsError
+    ) {
+      this.props.alertWithType("error", "Error", nextProps.gamingSessionsError);
+    }
   }
 
   fetchGamesData() {
@@ -493,8 +503,9 @@ const mapStateToProps = state => {
     moreGamingSessionsAvailable,
     moreMyGamingSessionsAvailable,
     moreGroupGamingSessionsAvailable,
-    user
+    user,
+    gamingSessionsError: state.gamingSessions.error
   };
 };
 
-export default connect(mapStateToProps)(GamingSessionsList);
+export default connect(mapStateToProps)(connectAlert(GamingSessionsList));

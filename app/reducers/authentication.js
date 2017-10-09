@@ -51,6 +51,12 @@ export default (state = initialState, action) => {
         isLoading: false,
         isAuthed: true
       };
+    case DECODE_TOKEN_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        isAuthed: false
+      };
     case REMOVE_TOKEN:
       return {
         ...state,

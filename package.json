@@ -33,6 +33,7 @@
     "react-native": "^0.46.4",
     "react-native-dropdownalert": "^2.11.0",
     "react-native-elements": "^0.17.0",
+    "react-native-keyboard-aware-scroll-view": "^0.3.0",
     "react-native-modalbox": "^1.4.2",
     "react-native-timeago": "^0.3.0",
     "react-navigation": "^1.0.0-beta.12",

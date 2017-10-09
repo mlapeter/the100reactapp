@@ -20,6 +20,8 @@ import { StackNavigator } from "react-navigation";
 import { TabNavigator } from "react-navigation";
 import PreSplash from "../components/PreSplash/PreSplash";
 
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 
@@ -28,7 +30,7 @@ import { decodeToken } from "../actions/authentication";
 
 import Navigator from "../config/routes";
 
-import { colors, fontSizes } from "../styles";
+import { colors, fontSizes, fontStyles } from "../styles";
 const { height, width } = Dimensions.get("window");
 import { Font } from "expo";
 
@@ -76,7 +78,6 @@ class Login extends React.Component {
 
   userLogin() {
     if (!this.state.username || !this.state.password) return;
-    Keyboard.dismiss();
     this.props.dispatch(fetchToken(this.state.username, this.state.password));
   }
 
@@ -94,7 +95,11 @@ class Login extends React.Component {
   };
 
   render() {
-    if (!this.state.isLoaded || !this.state.fontLoaded) {
+    if (
+      !this.state.isLoaded ||
+      !this.state.fontLoaded ||
+      this.props.authentication.isLoading
+    ) {
       return <PreSplash />;
     }
 
@@ -103,54 +108,54 @@ class Login extends React.Component {
     }
 
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
+      <KeyboardAwareScrollView
+        contentContainerStyle={styles.container}
+        extraHeight={100}
+        keyboardOpeningTime={10}
       >
         <View style={styles.container}>
           <Image style={styles.image} source={require("../images/logo.png")} />
-          <KeyboardAvoidingView
-            style={styles.loginContainer}
-            behavior="padding"
-            keyboardVerticalOffset={100}
-          >
-            <TextInput
-              onChangeText={username => this.setState({ username })}
-              placeholder="Username"
-              ref="username"
-              returnKeyType="next"
-              style={styles.input}
-              value={this.state.username}
-            />
 
-            <TextInput
-              onChangeText={password => this.setState({ password })}
-              placeholder="Password"
-              ref="password"
-              secureTextEntry={true}
-              style={styles.input}
-              value={this.state.password}
-            />
-            <Button
+          <TextInput
+            onChangeText={username => this.setState({ username })}
+            placeholder="Username"
+            ref="username"
+            returnKeyType="next"
+            style={styles.input}
+            value={this.state.username}
+          />
+
+          <TextInput
+            onChangeText={password => this.setState({ password })}
+            placeholder="Password"
+            ref="password"
+            secureTextEntry={true}
+            style={styles.input}
+            value={this.state.password}
+          />
+          <TouchableOpacity style={{}} onPress={this.userLogin.bind(this)}>
+            <Text
               style={{
-                height: 30,
-                width: 180,
+                textAlign: "center",
+                padding: 15,
+                fontFamily: fontStyles.primaryFont,
+                fontSize: fontSizes.primary,
+                height: 50,
+                width: 300,
                 marginBottom: 15
               }}
-              onPress={this.userLogin.bind(this)}
-              title="Login"
-            />
-          </KeyboardAvoidingView>
+            >
+              Login
+            </Text>
+          </TouchableOpacity>
         </View>
-      </TouchableWithoutFeedback>
+      </KeyboardAwareScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: 50,
@@ -168,18 +173,30 @@ const styles = StyleSheet.create({
   },
   loginContainer: {
     padding: 30,
-    alignItems: "center"
+    alignItems: "center",
+    flex: 1
   },
   assuranceText: {
     textAlign: "center"
   },
+  buttonStyle: {
+    fontFamily: fontStyles.primaryFont,
+    fontSize: fontSizes.primary,
+    height: 100,
+    width: 200,
+    backgroundColor: colors.grey,
+    marginBottom: 15
+  },
   input: {
-    margin: 5,
+    margin: 15,
     padding: 5,
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#d6d7da",
-    flexDirection: "row",
-    flex: 5
+    fontFamily: fontStyles.primaryFont,
+    fontSize: fontSizes.primary,
+    borderWidth: 0.5,
+    borderColor: "#d6d7da",
+    height: 50,
+    width: 300,
+    flexDirection: "row"
   }
 });
 

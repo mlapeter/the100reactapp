@@ -90,7 +90,8 @@ export default (state = initialState, action) => {
         ...state,
         error: action.error,
         gamingSessionsLoading: false,
-        gamingSessionsRefreshing: false
+        gamingSessionsRefreshing: false,
+        moreGamingSessionsAvailable: false
       };
     case FETCH_GAMING_SESSIONS_NO_DATA:
       return {
