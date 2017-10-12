@@ -1,4 +1,7 @@
 import {
+  FETCH_USER,
+  FETCH_USER_RESULT,
+  FETCH_USER_ERROR,
   FETCH_FRIENDS,
   FETCH_FRIENDS_RESULT,
   FETCH_FRIENDS_ERROR,
@@ -18,6 +21,8 @@ import {
 const initialState = {
   isLoading: false,
   refreshing: false,
+  userLoading: true,
+  user: {},
   friends: [],
   groupMembers: [],
   moreFriendsAvailable: true,
@@ -28,6 +33,24 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case FETCH_USER:
+      return {
+        ...state,
+        userId: action.userId,
+        userLoading: true
+      };
+    case FETCH_USER_RESULT:
+      return {
+        ...state,
+        user: action.result,
+        userLoading: false
+      };
+    case FETCH_USER_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        userLoading: false
+      };
     case FETCH_FRIENDS:
       return {
         ...state,

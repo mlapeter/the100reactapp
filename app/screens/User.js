@@ -17,6 +17,7 @@ import Chat from "../components/Chat/Chat";
 
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
+import { fetchUser } from "../actions/users";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -32,7 +33,7 @@ export class User extends React.Component {
     super(props);
     this.state = {
       hasJoined: false,
-      isLoading: true,
+      // isLoading: true,
       refreshing: false,
       gameData: ""
     };
@@ -51,25 +52,28 @@ export class User extends React.Component {
 
   fetchData() {
     console.log("Fetching User");
-    AsyncStorage.getItem("id_token").then(token => {
-      console.log("token: " + token);
-      fetch("https://pwn-staging.herokuapp.com/api/v2/users/" + userId, {
-        method: "GET",
-        headers: { Authorization: "Bearer " + token }
-      })
-        .then(response => response.json())
-        .then(responseJson => {
-          this.setState({
-            isLoading: false,
-            dataSource: responseJson
-          });
-          console.log(responseJson);
-          return responseJson;
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    });
+    this.props.dispatch(fetchUser("11867"));
+    //
+    // AsyncStorage.getItem("id_token").then(token => {
+    //   console.log("token: " + token);
+    //   fetch("https://pwn-staging.herokuapp.com/api/v2/users/" + userId, {
+    //     method: "GET",
+    //     headers: { Authorization: "Bearer " + token }
+    //   })
+    //     .then(response => response.json())
+    //     .then(responseJson => {
+    //       this.setState({
+    //         isLoading: false,
+    //         dataSource: responseJson
+    //       });
+    //       console.log("User Fetched");
+    //       console.log(responseJson);
+    //       return responseJson;
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //     });
+    // });
   }
 
   giveKarma() {
@@ -79,7 +83,12 @@ export class User extends React.Component {
 
   addFriend() {
     this.postData("/add_friend");
-    Alert.alert("Friend Request Sent!");
+    this.props.alertWithType("success", "Success", "Friend Request Sent!");
+  }
+
+  checkFriendStatus() {
+    this.postData("/add_friend");
+    this.props.alertWithType("success", "Success", "Friend Request Sent!");
   }
 
   postData(action) {
@@ -113,7 +122,7 @@ export class User extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
 
-    if (this.state.isLoading) {
+    if (this.props.userLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
@@ -127,22 +136,23 @@ export class User extends React.Component {
           <Image
             style={styles.profileAvatar}
             source={
-              this.state.dataSource.computed_avatar_api ===
+              this.props.dataSource.computed_avatar_api ===
               "img/default-avatar.png"
                 ? require("../images/default-avatar.png")
-                : { uri: this.state.dataSource.computed_avatar_api }
+                : { uri: this.props.dataSource.computed_avatar_api }
             }
           />
           <View style={styles.titleAndTags}>
-            <Text style={styles.title}>{this.state.dataSource.gamertag}</Text>
+            <Text style={styles.title}>{this.props.dataSource.gamertag}</Text>
           </View>
           <View style={styles.actionButtons}>
             <FriendButton
-              friendsWith={this.state.dataSource.karma_received_from}
+              friendshipStatus={this.props.dataSource.friendship_status}
               addFriend={this.addFriend.bind(this)}
             />
             <KarmaButton
-              karmaReceivedFrom={this.state.dataSource.karma_received_from}
+              karmaStatus={this.props.dataSource.karma_status}
+              karmaReceivedFrom={this.props.dataSource.karma_received_from}
               currentUser={this.props.user}
               giveKarma={this.giveKarma.bind(this)}
             />
@@ -150,18 +160,18 @@ export class User extends React.Component {
         </View>
         <Text style={styles.tagList}>
           <MaterialCommunityIcons name="tag" size={14} color={colors.grey} />
-          {this.state.dataSource.tag_list.map(tag => tag + " ")}
+          {/* {this.props.dataSource.tag_list.map(tag => tag + " ")} */}
         </Text>
         <Text style={styles.description} numberOfLines={4}>
-          {this.state.dataSource.description != null
-            ? this.state.dataSource.description
+          {this.props.dataSource.description != null
+            ? this.props.dataSource.description
             : ""}
         </Text>
         <View style={styles.iconBar}>
-          <PlatformIcon platform={this.state.dataSource.platform} />
-          <PowerIcon lightLevel={this.state.dataSource.light_level} />
+          <PlatformIcon platform={this.props.dataSource.platform} />
+          <PowerIcon lightLevel={this.props.dataSource.light_level} />
           <PlayScheduleIcon
-            playSchedule={this.state.dataSource.play_schedule}
+            playSchedule={this.props.dataSource.play_schedule}
           />
         </View>
         <Chat chatroom={"help_chatroom"} />
@@ -172,7 +182,7 @@ export class User extends React.Component {
 
 function KarmaButton(props) {
   console.log(props.currentUser);
-  if (props.karmaReceivedFrom.includes(props.currentUser.user_id)) {
+  if (props.karmaStatus === "given") {
     return (
       <View style={styles.icon}>
         <TouchableHighlight onPress={props.giveKarma} underlayColor="white">
@@ -181,7 +191,7 @@ function KarmaButton(props) {
               name="star"
               size={18}
               color={colors.mediumGrey}
-            />
+            />{" "}
             Karma Given
           </Text>
         </TouchableHighlight>
@@ -196,7 +206,7 @@ function KarmaButton(props) {
               name="star"
               size={18}
               color={colors.mediumGrey}
-            />
+            />{" "}
             Give Karma
           </Text>
         </TouchableHighlight>
@@ -207,8 +217,24 @@ function KarmaButton(props) {
 
 function FriendButton(props) {
   console.log("User ID: " + userId);
-  if (props.friendsWith.includes(userId)) {
-    return <Text>Friends</Text>;
+  if (
+    props.friendshipStatus === "confirmed" ||
+    props.friendshipStatus === "pending"
+  ) {
+    return (
+      <View style={styles.icon}>
+        <TouchableHighlight onPress={props.addFriend} underlayColor="white">
+          <Text style={styles.iconText}>
+            <MaterialCommunityIcons
+              name="account-plus"
+              size={18}
+              color={colors.mediumGrey}
+            />{" "}
+            {props.friendshipStatus}
+          </Text>
+        </TouchableHighlight>
+      </View>
+    );
   } else {
     return (
       <View style={styles.icon}>
@@ -218,7 +244,7 @@ function FriendButton(props) {
               name="account-plus"
               size={18}
               color={colors.mediumGrey}
-            />
+            />{" "}
             Add Friend
           </Text>
         </TouchableHighlight>
@@ -321,10 +347,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   icon: {
-    padding: 2,
-    margin: 2
+    padding: 3,
+    margin: 2,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center"
   },
   iconText: {
+    marginLeft: 3,
     fontSize: fontSizes.small,
     color: colors.mediumGrey
   },
@@ -365,10 +395,14 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   const user = state.authentication.user;
+  const dataSource = state.users.user;
+  const userLoading = state.users.userLoading;
 
   return {
     user,
-    userError: state.authentication.error
+    dataSource,
+    userLoading,
+    userError: state.users.error
 
     // authenticationError: state.authentication.error
   };

@@ -1,3 +1,7 @@
+export const FETCH_USER = "FETCH_USER";
+export const FETCH_USER_RESULT = "FETCH_USER_RESULT";
+export const FETCH_USER_ERROR = "FETCH_USER_ERROR";
+
 export const FETCH_FRIENDS = "FETCH_FRIENDS";
 export const FETCH_FRIENDS_RESULT = "FETCH_FRIENDS_RESULT";
 export const FETCH_FRIENDS_ERROR = "FETCH_FRIENDS_ERROR";
@@ -15,6 +19,10 @@ export const LOAD_MORE_GROUP_MEMBERS = "LOAD_MORE_GROUP_MEMBERS";
 export const LOAD_MORE_GROUP_MEMBERS_RESULT = "LOAD_MORE_GROUP_MEMBERS_RESULT";
 export const CHANGE_GROUP_MEMBERS_PAGE = "CHANGE_GROUP_MEMBERS_PAGE";
 export const REFRESH_GROUP_MEMBERS = "REFRESH_GROUP_MEMBERS";
+
+export const fetchUser = userId => ({
+  type: FETCH_USER
+});
 
 export const fetchFriends = () => ({
   type: FETCH_FRIENDS

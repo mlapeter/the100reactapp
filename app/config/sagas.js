@@ -20,6 +20,9 @@ import {
 } from "../actions/notifications";
 
 import {
+  FETCH_USER,
+  FETCH_USER_RESULT,
+  FETCH_USER_ERROR,
   FETCH_FRIENDS,
   FETCH_FRIENDS_RESULT,
   FETCH_FRIENDS_ERROR,
@@ -241,6 +244,17 @@ function* fetchActivities() {
     console.log("---------GAME!! -------", game);
   } catch (e) {
     yield put({ type: FETCH_GAMES_ERROR, error: e.message });
+  }
+}
+
+function* fetchUser() {
+  try {
+    let userId = yield select(state => state.users.userId);
+
+    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/users/11867";
+    yield call(fetchData, endpoint, 1, FETCH_USER_RESULT, FETCH_USER_ERROR);
+  } catch (e) {
+    yield put({ type: FETCH_USER_ERROR, error: e.message });
   }
 }
 
@@ -530,6 +544,8 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_TOKEN, fetchToken);
   yield takeEvery(FETCH_TOKEN_RESULT, decodeToken);
   yield takeEvery(DECODE_TOKEN, decodeToken);
+
+  yield takeEvery(FETCH_USER, fetchUser);
 
   yield takeEvery(FETCH_FRIENDS, fetchFriends);
   yield takeEvery(LOAD_MORE_FRIENDS, loadMoreFriends);
