@@ -124,8 +124,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         moreMyGamingSessionsAvailable: true,
-        myGamingSessionsLoading: true,
-        endpoint: action.endpoint
+        myGamingSessionsLoading: true
       };
     case FETCH_MY_GAMING_SESSIONS_RESULT:
       return {
@@ -171,8 +170,7 @@ export default (state = initialState, action) => {
     case FETCH_GROUP_GAMING_SESSIONS:
       return {
         ...state,
-        groupGamingSessionsLoading: true,
-        endpoint: action.endpoint
+        groupGamingSessionsLoading: true
       };
     case FETCH_GROUP_GAMING_SESSIONS_RESULT:
       return {

@@ -99,7 +99,7 @@ class GamingSessionsList extends React.PureComponent {
 
   searchUrl() {
     return encodeURI(
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions" +
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions" +
         // this.props.gamingSessionsPage +
         "?q[game_id_eq]=" +
         this.props.gameId +

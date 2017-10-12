@@ -15,6 +15,9 @@ import {
 import PreSplash from "../components/PreSplash/PreSplash";
 import Chat from "../components/Chat/Chat";
 
+import { connect } from "react-redux";
+import { connectAlert } from "../components/Alert";
+
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
@@ -24,7 +27,7 @@ import { StackNavigator } from "react-navigation";
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
-export default class User extends React.Component {
+export class User extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,11 +43,17 @@ export default class User extends React.Component {
     this.fetchData();
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.userError && nextProps.userError !== this.props.userError) {
+      this.props.alertWithType("error", "Error", nextProps.userError);
+    }
+  }
+
   fetchData() {
     console.log("Fetching User");
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
-      fetch("https://pwntastic.herokuapp.com/api/v2/users/" + userId, {
+      fetch("https://pwn-staging.herokuapp.com/api/v2/users/" + userId, {
         method: "GET",
         headers: { Authorization: "Bearer " + token }
       })
@@ -65,7 +74,7 @@ export default class User extends React.Component {
 
   giveKarma() {
     this.postData("/give_karma");
-    Alert.alert("Karma Given!");
+    this.props.alertWithType("success", "Success", "Karma Given!");
   }
 
   addFriend() {
@@ -79,13 +88,16 @@ export default class User extends React.Component {
     });
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
-      fetch("https://pwntastic.herokuapp.com/api/v2/users/" + userId + action, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
+      fetch(
+        "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + action,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          }
         }
-      })
+      )
         .then(response => response.json())
         .then(responseJson => {
           this.fetchData();
@@ -131,6 +143,7 @@ export default class User extends React.Component {
             />
             <KarmaButton
               karmaReceivedFrom={this.state.dataSource.karma_received_from}
+              currentUser={this.props.user}
               giveKarma={this.giveKarma.bind(this)}
             />
           </View>
@@ -158,9 +171,22 @@ export default class User extends React.Component {
 }
 
 function KarmaButton(props) {
-  console.log("User ID: " + userId);
-  if (props.karmaReceivedFrom.includes(userId)) {
-    return <Text>Karma Given</Text>;
+  console.log(props.currentUser);
+  if (props.karmaReceivedFrom.includes(props.currentUser.user_id)) {
+    return (
+      <View style={styles.icon}>
+        <TouchableHighlight onPress={props.giveKarma} underlayColor="white">
+          <Text style={styles.iconText}>
+            <MaterialCommunityIcons
+              name="star"
+              size={18}
+              color={colors.mediumGrey}
+            />
+            Karma Given
+          </Text>
+        </TouchableHighlight>
+      </View>
+    );
   } else {
     return (
       <View style={styles.icon}>
@@ -336,3 +362,16 @@ const styles = StyleSheet.create({
     flex: 2
   }
 });
+
+const mapStateToProps = state => {
+  const user = state.authentication.user;
+
+  return {
+    user,
+    userError: state.authentication.error
+
+    // authenticationError: state.authentication.error
+  };
+};
+
+export default connect(mapStateToProps)(connectAlert(User));
