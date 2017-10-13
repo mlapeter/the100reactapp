@@ -45,6 +45,9 @@ import { refreshGroupGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
 
 class GamingSessionsList extends React.PureComponent {
+  state = {
+    searchText: "testing"
+  };
   static propTypes = {
     activity: PropTypes.string,
     game: PropTypes.object,
@@ -80,6 +83,12 @@ class GamingSessionsList extends React.PureComponent {
 
   fetchGamesData() {
     this.props.dispatch(fetchGames());
+  }
+
+  submitSearch() {
+    this.setState({
+      searchText: "SUBMITTED"
+    });
   }
 
   updateFilter() {
@@ -271,6 +280,9 @@ class GamingSessionsList extends React.PureComponent {
             <View style={styles.input}>
               <GamingSessionsFilter updateFilter={this.updateFilter} />
               <TextInput
+                value={this.state.searchText}
+                onChangeText={searchText => this.setState({ searchText })}
+                onSubmitEditing={() => this.submitSearch()}
                 placeholder="Search Coming Soon"
                 style={{
                   flexDirection: "row",
