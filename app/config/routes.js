@@ -22,6 +22,8 @@ import Group from "../screens/Group/";
 import NotificationsList from "../screens/NotificationsList";
 import FriendsList from "../screens/FriendsList";
 import User from "../screens/User";
+import UserEdit from "../screens/UserEdit";
+
 import Menu from "../screens/Menu";
 
 import Chat from "../components/Chat/Chat";
@@ -63,7 +65,21 @@ const MenuDrawer = DrawerNavigator(
           <MaterialCommunityIcons
             name="arrow-left"
             size={24}
-            style={{ color: colors.grey }}
+            // style={{ color: colors.grey }}
+            // style={styles.icon}
+          />
+        )
+      })
+    },
+    "Edit Profile": {
+      screen: UserEdit,
+      navigationOptions: ({ navigation }) => ({
+        drawerLabel: "Edit Profile",
+        drawerIcon: () => (
+          <MaterialCommunityIcons
+            name="account-settings-variant"
+            size={24}
+            // style={{ color: colors.grey }}
             // style={styles.icon}
           />
         )

@@ -20,6 +20,9 @@ import {
 } from "../actions/notifications";
 
 import {
+  UPDATE_USER,
+  UPDATE_USER_RESULT,
+  UPDATE_USER_ERROR,
   FETCH_USER,
   FETCH_USER_RESULT,
   FETCH_USER_ERROR,
@@ -157,6 +160,44 @@ function* fetchData(endpoint, page, success, failure, noData) {
     }
   } catch (e) {
     yield put({ type: failure, error: e.message });
+  }
+}
+
+function* updateUser() {
+  try {
+    let token = yield select(state => state.authentication.token);
+    let userId = yield select(state => state.authentication.user.user_id);
+    let user = yield select(state => state.users.user);
+
+    console.log("User is: ", user);
+    console.log("USER ID is:", userId);
+    const response = yield fetch(
+      "https://pwn-staging.herokuapp.com/api/v2/users/" + userId,
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({
+          gamertag: user.gamertag
+        })
+      }
+    );
+    const result = yield response.json();
+    console.log("RESULT----", result);
+    if (result.error) {
+      yield put({ type: UPDATE_USER_ERROR, error: result.error });
+    } else if (result.message === "Invalid credentials") {
+      yield put({ type: UPDATE_USER_ERROR, error: result.message });
+    } else {
+      console.log("RESULT:", result);
+
+      yield put({ type: UPDATE_USER_RESULT, result });
+    }
+  } catch (e) {
+    yield put({ type: UPDATE_USER_ERROR, error: e.message });
   }
 }
 
@@ -544,6 +585,8 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_TOKEN, fetchToken);
   yield takeEvery(FETCH_TOKEN_RESULT, decodeToken);
   yield takeEvery(DECODE_TOKEN, decodeToken);
+
+  yield takeEvery(UPDATE_USER, updateUser);
 
   yield takeEvery(FETCH_USER, fetchUser);
 

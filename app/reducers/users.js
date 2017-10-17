@@ -1,4 +1,7 @@
 import {
+  UPDATE_USER,
+  UPDATE_USER_RESULT,
+  UPDATE_USER_ERROR,
   FETCH_USER,
   FETCH_USER_RESULT,
   FETCH_USER_ERROR,
@@ -19,6 +22,8 @@ import {
 } from "../actions/users";
 
 const initialState = {
+  isUpdating: false,
+  userUpdated: false,
   isLoading: false,
   refreshing: false,
   userLoading: true,
@@ -33,6 +38,26 @@ const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case UPDATE_USER:
+      return {
+        ...state,
+        isUpdating: true,
+        user: action.user
+      };
+    case UPDATE_USER_RESULT:
+      return {
+        ...state,
+        isUpdating: false,
+        userUpdated: true,
+        user: action.result
+      };
+    case UPDATE_USER_ERROR:
+      return {
+        ...state,
+        isUpdating: false,
+        userUpdated: false,
+        error: action.error
+      };
     case FETCH_USER:
       return {
         ...state,
