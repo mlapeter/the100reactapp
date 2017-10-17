@@ -12,47 +12,62 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-export default function TopNav(props) {
-  return (
-    <View style={styles.optionsContainer}>
-      <View style={styles.menu}>
-        <TouchableOpacity>
-          <Image
-            style={styles.avatarMini}
-            source={
-              props.user.computed_avatar_api === "img/default-avatar.png"
-                ? require("../../images/default-avatar.png")
-                : { uri: props.user.computed_avatar_api }
-            }
-          />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.search}>
-        <View style={styles.input}>
-          <Icon
-            name="md-search"
-            size={24}
-            color={colors.lightGrey}
-            style={{ marginRight: 5 }}
-          />
-          <TextInput
-            placeholder="Search Coming Soon"
-            style={{ color: colors.white }}
-          />
+export default class TopNav extends Component {
+  state = {
+    searchText: "testing"
+  };
+
+  submitSearch() {
+    this.setState({
+      searchText: "SUBMITTED"
+    });
+  }
+
+  render() {
+    return (
+      <View style={styles.optionsContainer}>
+        <View style={styles.menu}>
+          <TouchableOpacity>
+            <Image
+              style={styles.avatarMini}
+              source={
+                this.props.user.computed_avatar_api === "img/default-avatar.png"
+                  ? require("../../images/default-avatar.png")
+                  : { uri: this.props.user.computed_avatar_api }
+              }
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.search}>
+          <View style={styles.input}>
+            <Icon
+              name="md-search"
+              size={24}
+              color={colors.lightGrey}
+              style={{ marginRight: 5 }}
+            />
+            <TextInput
+              value={this.state.searchText}
+              onChangeText={searchText => this.setState({ searchText })}
+              onSubmitEditing={() => this.submitSearch()}
+              placeholder="Search Coming Soon"
+              style={{ color: colors.white }}
+            />
+          </View>
+        </View>
+
+        <View style={styles.add}>
+          <TouchableOpacity>
+            <MaterialCommunityIcons
+              name="account-plus"
+              size={24}
+              style={{ color: colors.mediumGrey }}
+            />
+          </TouchableOpacity>
         </View>
       </View>
-
-      <View style={styles.add}>
-        <TouchableOpacity>
-          <MaterialCommunityIcons
-            name="account-plus"
-            size={24}
-            style={{ color: colors.mediumGrey }}
-          />
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+    );
+  }
 }
 
 const styles = StyleSheet.create({

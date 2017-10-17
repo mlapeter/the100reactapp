@@ -32,6 +32,9 @@ import { refreshGroupMembers } from "../actions/users";
 import { connectAlert } from "../components/Alert";
 
 class FriendsList extends Component {
+  state = {
+    searchText: "testing"
+  };
   static navigationOptions = {
     header: null,
     title: "test"

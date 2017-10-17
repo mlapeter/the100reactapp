@@ -45,9 +45,6 @@ import { refreshGroupGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
 
 class GamingSessionsList extends React.PureComponent {
-  state = {
-    searchText: "testing"
-  };
   static propTypes = {
     activity: PropTypes.string,
     game: PropTypes.object,
@@ -85,25 +82,9 @@ class GamingSessionsList extends React.PureComponent {
     this.props.dispatch(fetchGames());
   }
 
-  submitSearch() {
-    this.setState({
-      searchText: "SUBMITTED"
-    });
-  }
-
   updateFilter() {
     console.log(this.searchUrl());
     this.props.dispatch(fetchGamingSessions(this.searchUrl()));
-
-    // this.setState(
-    //   {
-    //     data: [],
-    //     moreDataAvailable: true
-    //   },
-    //   () => {
-    //     this.fetchData(this.searchUrl());
-    //   }
-    // );
   }
 
   searchUrl() {
@@ -259,10 +240,9 @@ class GamingSessionsList extends React.PureComponent {
 
     return (
       <View style={styles.container}>
-        <View style={styles.optionsContainer}>
-          <View style={styles.menu}>
+        <View style={styles.topContainer}>
+          <View style={styles.leftContainer}>
             <TouchableOpacity
-              style={styles.optionContainer}
               onPress={() => this.props.navigation.navigate("DrawerOpen")}
             >
               <Image
@@ -276,39 +256,27 @@ class GamingSessionsList extends React.PureComponent {
               />
             </TouchableOpacity>
           </View>
-          <View style={styles.search}>
-            <View style={styles.input}>
+          <View style={styles.rightContainer}>
+            <View style={styles.searchOptions}>
               <GamingSessionsFilter updateFilter={this.updateFilter} />
-              <TextInput
-                value={this.state.searchText}
-                onChangeText={searchText => this.setState({ searchText })}
-                onSubmitEditing={() => this.submitSearch()}
-                placeholder="Search Coming Soon"
-                style={{
-                  flexDirection: "row",
-                  flex: 5,
-                  color: colors.white,
-                  marginLeft: 5
-                }}
-              />
+            </View>
+            <View style={styles.newButton}>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate("GamingSessionCreate")}
+              >
+                <MaterialIcons
+                  name="add-box"
+                  size={28}
+                  style={{
+                    color: colors.mediumGrey
+                  }}
+                />
+              </TouchableOpacity>
             </View>
           </View>
-
-          <View style={styles.add}>
-            <TouchableOpacity
-              onPress={() =>
-                this.props.navigation.navigate("GamingSessionCreate")}
-            >
-              <MaterialIcons
-                name="add-box"
-                size={28}
-                style={{
-                  color: colors.mediumGrey
-                }}
-              />
-            </TouchableOpacity>
-          </View>
         </View>
+
         <TouchableWithoutFeedback
           onPress={() => {
             Keyboard.dismiss();
@@ -388,59 +356,27 @@ class GamingSessionsList extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     padding: 5,
-    paddingTop: 25,
+    paddingTop: 35,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: colors.white
   },
-  // Tab content container
-  optionsContainer: {
+  topContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 5
+    padding: 10
   },
-
-  menu: {
-    flex: 1,
-    marginHorizontal: 10,
-    alignItems: "flex-start"
-  },
-  search: {
+  leftContainer: {},
+  rightContainer: {
     flexDirection: "row",
-    flex: 10,
-    marginLeft: 25,
-    marginRight: 10,
-    padding: 5,
-    alignItems: "center",
-    paddingHorizontal: 5,
-    // borderRadius: 3,
-    // borderBottomColor: colors.lightGrey,
-    backgroundColor: colors.white
+    justifyContent: "space-between"
   },
-  input: {
-    flexDirection: "row",
-    flex: 10,
-    padding: 5,
-    borderRadius: 16,
-    borderWidth: 0.5,
-    borderColor: "#e0e0e0",
-    backgroundColor: colors.searchbar
+  newButton: {
+    paddingHorizontal: 10
   },
-  add: {
-    flex: 1,
-    marginRight: 10,
-    alignItems: "center"
-  },
-
-  optionContainer: {
-    // flex: 1,
-    // paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10
-    // borderBottomWidth: 3, // Add thick border at the bottom
-    // borderBottomColor: "transparent" // Transparent border for inactive tabs
+  searchOptions: {
+    paddingHorizontal: 10
   },
   avatarMini: {
     marginBottom: 6,
@@ -452,8 +388,6 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
     backgroundColor: colors.white
   },
   alertView: {
