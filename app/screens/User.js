@@ -38,6 +38,7 @@ export class User extends React.Component {
       gameData: ""
     };
     userId = this.props.navigation.state.params.userId;
+    console.log("USER ID:", userId);
   }
 
   componentDidMount() {
@@ -46,34 +47,17 @@ export class User extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.userError && nextProps.userError !== this.props.userError) {
-      this.props.alertWithType("error", "Error", nextProps.userError);
+      this.props.alertWithType(
+        "error",
+        "Error",
+        "User ID:" + userId + nextProps.userError
+      );
     }
   }
 
   fetchData() {
     console.log("Fetching User");
-    this.props.dispatch(fetchUser("11867"));
-    //
-    // AsyncStorage.getItem("id_token").then(token => {
-    //   console.log("token: " + token);
-    //   fetch("https://pwn-staging.herokuapp.com/api/v2/users/" + userId, {
-    //     method: "GET",
-    //     headers: { Authorization: "Bearer " + token }
-    //   })
-    //     .then(response => response.json())
-    //     .then(responseJson => {
-    //       this.setState({
-    //         isLoading: false,
-    //         dataSource: responseJson
-    //       });
-    //       console.log("User Fetched");
-    //       console.log(responseJson);
-    //       return responseJson;
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });
-    // });
+    this.props.dispatch(fetchUser(userId));
   }
 
   giveKarma() {
@@ -96,7 +80,6 @@ export class User extends React.Component {
       isLoading: true
     });
     AsyncStorage.getItem("id_token").then(token => {
-      console.log("token: " + token);
       fetch(
         "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + action,
         {
@@ -216,10 +199,9 @@ function KarmaButton(props) {
 }
 
 function FriendButton(props) {
-  console.log("User ID: " + userId);
   if (
-    props.friendshipStatus === "confirmed" ||
-    props.friendshipStatus === "pending"
+    props.friendshipStatus === "Friends" ||
+    props.friendshipStatus === "Pending"
   ) {
     return (
       <View style={styles.icon}>

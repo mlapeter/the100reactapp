@@ -21,7 +21,8 @@ export const CHANGE_GROUP_MEMBERS_PAGE = "CHANGE_GROUP_MEMBERS_PAGE";
 export const REFRESH_GROUP_MEMBERS = "REFRESH_GROUP_MEMBERS";
 
 export const fetchUser = userId => ({
-  type: FETCH_USER
+  type: FETCH_USER,
+  userId
 });
 
 export const fetchFriends = () => ({

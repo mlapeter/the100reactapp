@@ -57,7 +57,7 @@ export default class GamingSession extends React.Component {
         );
         this.setState({
           isLoading: false,
-          hasJoined: userIds.includes(11869),
+          // hasJoined: userIds.includes(11869),
           dataSource: responseJson
         });
         console.log(responseJson);

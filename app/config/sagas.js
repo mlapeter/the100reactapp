@@ -250,8 +250,8 @@ function* fetchActivities() {
 function* fetchUser() {
   try {
     let userId = yield select(state => state.users.userId);
-
-    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/users/11867";
+    console.log("USERID IN SAGA:", userId);
+    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/users/" + userId;
     yield call(fetchData, endpoint, 1, FETCH_USER_RESULT, FETCH_USER_ERROR);
   } catch (e) {
     yield put({ type: FETCH_USER_ERROR, error: e.message });
