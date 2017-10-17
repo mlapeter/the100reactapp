@@ -33,7 +33,8 @@ import { connectAlert } from "../components/Alert";
 
 class FriendsList extends Component {
   state = {
-    searchText: "testing"
+    searchText: "",
+    searchResults: []
   };
   static navigationOptions = {
     header: null,
@@ -69,6 +70,33 @@ class FriendsList extends Component {
     ) {
       this.props.alertWithType("error", "Error", nextProps.friendsError);
     }
+  }
+
+  setSearchText(text) {
+    console.log("Text: ", text);
+    this.setState({
+      searchText: text
+    });
+    this.setState({
+      searchResults: this.filterUsers(text)
+    });
+  }
+
+  filterUsers(searchText) {
+    function remove_duplicates_es6(arr) {
+      let s = new Set(arr);
+      let it = s.values();
+      return Array.from(it);
+    }
+
+    allUsers = this.props.friends.concat(this.props.groupMembers);
+    // not removing duplicates currently
+    var users = [...new Set(allUsers)];
+    let text = searchText.toLowerCase();
+    let result = users.filter(user => {
+      return text !== "" && user.gamertag.toLowerCase().search(text) !== -1;
+    });
+    return result;
   }
 
   fetchData() {
@@ -167,19 +195,6 @@ class FriendsList extends Component {
           <ActivityIndicator />
         </View>
       );
-    } else {
-      // if (this.props.friends.length < 1) {
-      //   return (
-      //     <View style={styles.container}>
-      //       <TouchableOpacity
-      //         style={styles.buttonWrapper}
-      //         onPress={this.fetchData}
-      //       >
-      //         <Text style={styles.buttonText}> Get Friends</Text>
-      //       </TouchableOpacity>
-      //     </View>
-      //   );
-      // }
     }
     return (
       <TouchableWithoutFeedback
@@ -188,7 +203,23 @@ class FriendsList extends Component {
         }}
       >
         <View style={styles.container}>
-          <TopNav user={this.props.user} style={{ flex: 1 }} />
+          <TopNav
+            setSearchText={text => this.setSearchText(text)}
+            searchText={this.state.searchText}
+            user={this.props.user}
+            style={{ flex: 1 }}
+          />
+          <View Style={styles.searchResults}>
+            <FlatList
+              data={this.state.searchResults}
+              renderItem={({ item }) => (
+                <Friend user={item} navigation={this.props.navigation} />
+              )}
+              keyExtractor={(item, index) => index}
+              extraData={this.props}
+              onEndReachedThreshold={0}
+            />
+          </View>
           <Tabs>
             <View title="MY FRIENDS" style={styles.content}>
               <FlatList
@@ -248,6 +279,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     margin: 10
+  },
+  searchResults: {
+    flex: 1
   },
   content: {
     flex: 1,

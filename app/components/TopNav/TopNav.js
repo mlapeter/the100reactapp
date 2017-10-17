@@ -1,5 +1,6 @@
 import React, { PropTypes, PureComponent, Component } from "react";
 import {
+  Alert,
   Image,
   StyleSheet,
   Text,
@@ -14,7 +15,8 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 export default class TopNav extends Component {
   state = {
-    searchText: "testing"
+    searchText: "",
+    foundWord: ""
   };
 
   submitSearch() {
@@ -22,6 +24,31 @@ export default class TopNav extends Component {
       searchText: "SUBMITTED"
     });
   }
+
+  // setSearchText(text) {
+  //   this.setState({
+  //     searchText: text
+  //   });
+  //   this.filterNotes(text);
+  // }
+  //
+  // filterNotes(searchText) {
+  //   var words = [
+  //     "spray",
+  //     "limit",
+  //     "elite",
+  //     "exuberant",
+  //     "destruction",
+  //     "present"
+  //   ];
+  //   let text = searchText.toLowerCase();
+  //
+  //   let result = words.filter(word => {
+  //     if (word.search(text) !== -1) {
+  //       Alert.alert(word);
+  //     }
+  //   });
+  // }
 
   render() {
     return (
@@ -47,12 +74,24 @@ export default class TopNav extends Component {
               style={{ marginRight: 5 }}
             />
             <TextInput
-              value={this.state.searchText}
-              onChangeText={searchText => this.setState({ searchText })}
+              value={this.props.searchText}
+              onChangeText={searchText => this.props.setSearchText(searchText)}
               onSubmitEditing={() => this.submitSearch()}
-              placeholder="Search Coming Soon"
+              placeholder="Search Users"
               style={{ color: colors.white }}
             />
+            <TouchableOpacity onPress={() => this.props.setSearchText("")}>
+              <Icon
+                name="ios-close"
+                size={24}
+                color={
+                  this.props.searchText === ""
+                    ? colors.searchbar
+                    : colors.lightGrey
+                }
+                style={{ marginHorizontal: 5 }}
+              />
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -97,6 +136,8 @@ const styles = StyleSheet.create({
   },
   input: {
     flexDirection: "row",
+    justifyContent: "space-between",
+
     flex: 1,
     padding: 5,
     borderRadius: 16,
