@@ -181,7 +181,22 @@ function* updateUser() {
           Authorization: "Bearer " + token
         },
         body: JSON.stringify({
-          gamertag: user.gamertag
+          gamertag: user.gamertag,
+          platform: user.platform,
+          play_style: user.play_style,
+          play_schedule: user.play_schedule,
+          light_level: user.light_level,
+          age: user.age,
+          no_emails: user.no_emails,
+          no_push_notifications: user.no_push_notifications,
+          push_new_group_game: user.push_new_group_game,
+          push_new_friend_game: user.push_new_friend_game,
+          push_player_joined_left: user.push_player_joined_left,
+          push_game_time_changed: user.push_game_time_changed,
+          push_username_mention: user.push_username_mention,
+          push_karma_received: user.push_karma_received,
+          push_private_message_received: user.push_private_message_received,
+          push_game_reminder: user.push_game_reminder
         })
       }
     );

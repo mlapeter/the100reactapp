@@ -83,23 +83,85 @@ class UserEdit extends React.Component {
       );
     }
 
+    var Platform = t.enums({
+      ps4: "PS4",
+      "xbox-one": "XBOX ONE"
+    });
+
+    var PlayStyle = t.enums({
+      casual: "Casual",
+      serious: "Serious"
+    });
+
+    var PlaySchedule = t.enums({
+      "Weekday Mornings and Weekends": "Weekday Mornings and Weekends",
+      "Weekday Afternoons and Weekends": "Weekday Afternoons and Weekends",
+      "Weekday Evenings and Weekends": "Weekday Evenings and Weekends"
+    });
+
     var User = t.struct({
-      gamertag: t.maybe(t.String)
+      gamertag: t.String,
+      platform: Platform,
+      play_style: PlayStyle,
+      play_schedule: PlaySchedule,
+      light_level: t.Number,
+      age: t.Number,
+      push_new_group_game: t.Boolean,
+      push_new_friend_game: t.Boolean,
+      push_player_joined_left: t.Boolean,
+      push_game_time_changed: t.Boolean,
+      push_username_mention: t.Boolean,
+      push_karma_received: t.Boolean,
+      push_private_message_received: t.Boolean,
+      push_game_reminder: t.Boolean,
+      no_emails: t.Boolean,
+      no_push_notifications: t.Boolean
     });
 
     var value = {
-      gamertag: this.props.user.gamertag
-      // activity: "Raid - Leviathan - Normal"
-      // created_by: "mobile-app"
+      gamertag: this.props.user.gamertag,
+      platform: this.props.user.platform,
+      play_style: this.props.user.play_style,
+      play_schedule: this.props.user.play_schedule,
+      light_level: this.props.user.light_level,
+      age: this.props.user.age,
+      no_emails: this.props.user.no_emails,
+      no_push_notifications: this.props.user.no_push_notifications,
+      push_new_group_game: this.props.user.push_new_group_game,
+      push_new_friend_game: this.props.user.push_new_friend_game,
+      push_player_joined_left: this.props.user.push_player_joined_left,
+      push_game_time_changed: this.props.user.push_game_time_changed,
+      push_username_mention: this.props.user.push_username_mention,
+      push_karma_received: this.props.user.push_karma_received,
+      push_private_message_received: this.props.user
+        .push_private_message_received,
+      push_game_reminder: this.props.user.push_game_reminder
     };
 
     var options = {
       fields: {
-        // gamertag: {
-        //   value: this.props.user.gamertag
-        // }
+        no_emails: {
+          label: "Turn off ALL emails"
+        },
+        no_push_notifications: {
+          label: "Turn off ALL push notifications"
+        }
       }
     };
+    if (this.props.userLoading) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+    if (this.props.isUpdating) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     return (
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -179,12 +241,16 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   const authedUser = state.authentication.user;
   const user = state.users.user;
+  const isUpdating = state.users.isUpdating;
+  const userLoading = state.users.userLoading;
 
   // const isUpdating = state.users.isUpdating;
 
   return {
     authedUser,
     user,
+    isUpdating,
+    userLoading,
     userError: state.users.error,
     userUpdated: state.users.userUpdated
   };
