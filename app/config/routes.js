@@ -29,62 +29,27 @@ import Menu from "../screens/Menu";
 import Chat from "../components/Chat/Chat";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { colors, fontSizes } from "../styles";
-
 import { DrawerItems } from "react-navigation";
 import { connect } from "react-redux";
 import { userLogout } from "../screens/NotificationsList";
 
-const GamingSessionsStack = StackNavigator(
-  {
-    GamingSessionsList: { screen: GamingSessionsList },
-    GamingSession: {
-      screen: GamingSession,
-      navigationOptions: ({ navigation }) => ({
-        // headerTitle: navigation.state.params.title
-        // headerRight: navigation.state.params.headerRight
-      })
-    },
-    Player: { screen: User },
-    GamingSessionCreate: { screen: GamingSessionCreate }
-  }
-  // {
-  //   headerMode: "none"
-  // }
-);
+const GamingSessionsStack = StackNavigator({
+  GamingSessionsList: { screen: GamingSessionsList },
+  GamingSession: { screen: GamingSession },
+  Player: { screen: User },
+  GamingSessionCreate: { screen: GamingSessionCreate }
+});
+
+const UserEditStack = StackNavigator({
+  UserEdit: { screen: UserEdit }
+});
 
 const MenuDrawer = DrawerNavigator(
   {
-    Back: {
-      screen: GamingSessionsStack,
-      navigationOptions: ({ navigation }) => ({
-        drawerLabel: "",
-        drawerIcon: () => (
-          <MaterialCommunityIcons
-            name="arrow-left"
-            size={24}
-            // style={{ color: colors.grey }}
-            // style={styles.icon}
-          />
-        )
-      })
-    },
-    "Edit Profile": {
-      screen: UserEdit,
-      navigationOptions: ({ navigation }) => ({
-        drawerLabel: "Edit Profile",
-        drawerIcon: () => (
-          <MaterialCommunityIcons
-            name="account-settings-variant"
-            size={24}
-            // style={{ color: colors.grey }}
-            // style={styles.icon}
-          />
-        )
-      })
-    }
+    Back: { screen: GamingSessionsStack },
+    "Edit Profile": { screen: UserEditStack }
   },
   {
     contentComponent: props => (
@@ -117,12 +82,8 @@ const MenuDrawer = DrawerNavigator(
 );
 
 const FriendsStack = StackNavigator({
-  FriendsList: {
-    screen: FriendsList
-  },
-  Friend: {
-    screen: User
-  }
+  FriendsList: { screen: FriendsList },
+  Friend: { screen: User }
 });
 
 export default TabNavigator(
@@ -133,10 +94,38 @@ export default TabNavigator(
     FriendsList: { screen: FriendsStack }
   },
   {
-    // cardStyle: { paddingTop: StatusBar.currentHeight },
-    headerMode: "none"
+    // headerMode: "none"
   }
 );
+
+UserEdit.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <Button
+      title="Cancel"
+      onPress={() => navigation.navigate("GamingSessionsList")}
+    />
+  ),
+  headerTitle: "Edit Profile",
+  drawerLabel: "Edit Profile",
+  drawerIcon: () => (
+    <MaterialCommunityIcons
+      name="account-settings-variant"
+      size={24}
+      // style={{ color: colors.grey }}
+    />
+  )
+});
+
+GamingSessionsStack.navigationOptions = {
+  drawerLabel: "",
+  drawerIcon: () => (
+    <MaterialCommunityIcons
+      name="arrow-left"
+      size={24}
+      // style={{ color: colors.grey }}
+    />
+  )
+};
 
 GamingSessionCreate.navigationOptions = {
   // headerRight: <Button title="Join Game" />,
@@ -145,7 +134,7 @@ GamingSessionCreate.navigationOptions = {
 
 MenuDrawer.navigationOptions = {
   tabBarLabel: "Games",
-  header: false,
+  // header: false,
   tabBarIcon: ({ tintColor, focused }) => (
     <Ionicons
       name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}

@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     margin: 5,
     marginBottom: 5,
     padding: 5,
-    paddingBottom: 15,
+    paddingBottom: 5,
     borderBottomWidth: 0.5,
     borderBottomColor: "#d6d7da",
     backgroundColor: colors.white
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "stretch",
-    padding: 5
+    paddingLeft: 3
   },
   icon: {
     padding: 2,
