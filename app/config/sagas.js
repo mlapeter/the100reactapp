@@ -20,6 +20,9 @@ import {
 } from "../actions/notifications";
 
 import {
+  UPDATE_USER,
+  UPDATE_USER_RESULT,
+  UPDATE_USER_ERROR,
   FETCH_USER,
   FETCH_USER_RESULT,
   FETCH_USER_ERROR,
@@ -160,6 +163,59 @@ function* fetchData(endpoint, page, success, failure, noData) {
   }
 }
 
+function* updateUser() {
+  try {
+    let token = yield select(state => state.authentication.token);
+    let userId = yield select(state => state.authentication.user.user_id);
+    let user = yield select(state => state.users.user);
+
+    console.log("User is: ", user);
+    console.log("USER ID is:", userId);
+    const response = yield fetch(
+      "https://pwn-staging.herokuapp.com/api/v2/users/" + userId,
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({
+          gamertag: user.gamertag,
+          platform: user.platform,
+          play_style: user.play_style,
+          play_schedule: user.play_schedule,
+          light_level: user.light_level,
+          age: user.age,
+          no_emails: user.no_emails,
+          no_push_notifications: user.no_push_notifications,
+          push_new_group_game: user.push_new_group_game,
+          push_new_friend_game: user.push_new_friend_game,
+          push_player_joined_left: user.push_player_joined_left,
+          push_game_time_changed: user.push_game_time_changed,
+          push_username_mention: user.push_username_mention,
+          push_karma_received: user.push_karma_received,
+          push_private_message_received: user.push_private_message_received,
+          push_game_reminder: user.push_game_reminder
+        })
+      }
+    );
+    const result = yield response.json();
+    console.log("RESULT----", result);
+    if (result.error) {
+      yield put({ type: UPDATE_USER_ERROR, error: result.error });
+    } else if (result.message === "Invalid credentials") {
+      yield put({ type: UPDATE_USER_ERROR, error: result.message });
+    } else {
+      console.log("RESULT:", result);
+
+      yield put({ type: UPDATE_USER_RESULT, result });
+    }
+  } catch (e) {
+    yield put({ type: UPDATE_USER_ERROR, error: e.message });
+  }
+}
+
 function* createGamingSession() {
   try {
     let token = yield select(state => state.authentication.token);
@@ -250,8 +306,8 @@ function* fetchActivities() {
 function* fetchUser() {
   try {
     let userId = yield select(state => state.users.userId);
-
-    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/users/11867";
+    console.log("USERID IN SAGA:", userId);
+    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/users/" + userId;
     yield call(fetchData, endpoint, 1, FETCH_USER_RESULT, FETCH_USER_ERROR);
   } catch (e) {
     yield put({ type: FETCH_USER_ERROR, error: e.message });
@@ -544,6 +600,8 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_TOKEN, fetchToken);
   yield takeEvery(FETCH_TOKEN_RESULT, decodeToken);
   yield takeEvery(DECODE_TOKEN, decodeToken);
+
+  yield takeEvery(UPDATE_USER, updateUser);
 
   yield takeEvery(FETCH_USER, fetchUser);
 

@@ -1,3 +1,7 @@
+export const UPDATE_USER = "UPDATE_USER";
+export const UPDATE_USER_RESULT = "UPDATE_USER_RESULT";
+export const UPDATE_USER_ERROR = "UPDATE_USER_ERROR";
+
 export const FETCH_USER = "FETCH_USER";
 export const FETCH_USER_RESULT = "FETCH_USER_RESULT";
 export const FETCH_USER_ERROR = "FETCH_USER_ERROR";
@@ -21,7 +25,13 @@ export const CHANGE_GROUP_MEMBERS_PAGE = "CHANGE_GROUP_MEMBERS_PAGE";
 export const REFRESH_GROUP_MEMBERS = "REFRESH_GROUP_MEMBERS";
 
 export const fetchUser = userId => ({
-  type: FETCH_USER
+  type: FETCH_USER,
+  userId
+});
+
+export const updateUser = user => ({
+  type: UPDATE_USER,
+  user
 });
 
 export const fetchFriends = () => ({
