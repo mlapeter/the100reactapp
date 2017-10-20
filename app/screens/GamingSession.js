@@ -47,7 +47,7 @@ export default class GamingSession extends React.Component {
   fetchData() {
     var userIds = [];
     return fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
         gamingSessionId
     )
       .then(response => response.json())
@@ -86,7 +86,7 @@ export default class GamingSession extends React.Component {
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
       fetch(
-        "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+        "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
           gamingSessionId +
           action,
         {
@@ -101,7 +101,6 @@ export default class GamingSession extends React.Component {
         .then(responseJson => {
           this.fetchData();
           console.log("GAME JOINED OR LEFT");
-          console.log(responseJson);
         })
         .catch(error => {
           console.error(error);

@@ -94,7 +94,7 @@ function* fetchToken() {
     let password = yield select(state => state.authentication.password);
 
     const response = yield fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/sessions/",
+      "https://pwntastic.herokuapp.com/api/v2/sessions/",
       {
         method: "POST",
         headers: {
@@ -113,8 +113,6 @@ function* fetchToken() {
     } else if (result.message === "Invalid credentials") {
       yield put({ type: FETCH_TOKEN_ERROR, error: result.message });
     } else {
-      console.log("RESULT:", result);
-
       token = result.token;
       AsyncStorage.setItem("id_token", token);
       yield put({ type: FETCH_TOKEN_RESULT, token });
@@ -128,6 +126,7 @@ function* decodeToken() {
   try {
     let token = yield select(state => state.authentication.token);
     let result = jwtDecode(token);
+    let userId = yield select(state => state.authentication.user.user_id);
 
     yield put({ type: DECODE_TOKEN_RESULT, result });
   } catch (e) {
@@ -169,10 +168,8 @@ function* updateUser() {
     let userId = yield select(state => state.authentication.user.user_id);
     let user = yield select(state => state.users.user);
 
-    console.log("User is: ", user);
-    console.log("USER ID is:", userId);
     const response = yield fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/users/" + userId,
+      "https://pwntastic.herokuapp.com/api/v2/users/" + userId,
       {
         method: "PUT",
         headers: {
@@ -201,14 +198,11 @@ function* updateUser() {
       }
     );
     const result = yield response.json();
-    console.log("RESULT----", result);
     if (result.error) {
       yield put({ type: UPDATE_USER_ERROR, error: result.error });
     } else if (result.message === "Invalid credentials") {
       yield put({ type: UPDATE_USER_ERROR, error: result.message });
     } else {
-      console.log("RESULT:", result);
-
       yield put({ type: UPDATE_USER_RESULT, result });
     }
   } catch (e) {
@@ -224,9 +218,8 @@ function* createGamingSession() {
     );
     let platform = yield select(state => state.search.platform);
 
-    console.log("gamingSession is: ", gamingSession);
     const response = yield fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/",
+      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/",
       {
         method: "POST",
         headers: {
@@ -235,22 +228,21 @@ function* createGamingSession() {
           Authorization: "Bearer " + token
         },
         body: JSON.stringify({
-          name: gamingSession.description,
-          category: gamingSession.activity,
+          description: gamingSession.description,
+          activity: gamingSession.activity,
           platform: platform,
-          start_time: gamingSession.start_time
+          start_time: gamingSession.start_time,
+          friends_only: gamingSession.friends_only,
+          group_only: gamingSession.group_only
         })
       }
     );
     const result = yield response.json();
-    console.log("RESULT----", result);
     if (result.error) {
       yield put({ type: CREATE_GAMING_SESSION_ERROR, error: result.error });
     } else if (result.message === "Invalid credentials") {
       yield put({ type: CREATE_GAMING_SESSION_ERROR, error: result.message });
     } else {
-      console.log("RESULT:", result);
-
       yield put({ type: CREATE_GAMING_SESSION_RESULT, result });
     }
   } catch (e) {
@@ -262,7 +254,7 @@ function* fetchNotifications() {
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      "https://pwntastic.herokuapp.com/api/v2/users/" +
       userId +
       "/notifications?";
     yield call(
@@ -279,7 +271,7 @@ function* fetchNotifications() {
 
 function* fetchGames() {
   try {
-    let endpoint = "https://pwn-staging.herokuapp.com/api/v1/games?";
+    let endpoint = "https://pwntastic.herokuapp.com/api/v1/games?";
     yield call(fetchData, endpoint, 1, FETCH_GAMES_RESULT, FETCH_GAMES_ERROR);
     yield call(fetchActivities);
   } catch (e) {
@@ -296,18 +288,25 @@ function* fetchActivities() {
       return obj.id == gameId;
     })[0];
     yield put({ type: FETCH_ACTIVITIES_RESULT, game });
-
-    console.log("---------GAME!! -------", game);
   } catch (e) {
     yield put({ type: FETCH_GAMES_ERROR, error: e.message });
+  }
+}
+
+function* fetchCurrentUser() {
+  try {
+    let userId = yield select(state => state.authentication.user.user_id);
+    let endpoint = "https://pwntastic.herokuapp.com/api/v2/users/" + userId;
+    yield call(fetchData, endpoint, 1, FETCH_USER_RESULT, FETCH_USER_ERROR);
+  } catch (e) {
+    yield put({ type: FETCH_USER_ERROR, error: e.message });
   }
 }
 
 function* fetchUser() {
   try {
     let userId = yield select(state => state.users.userId);
-    console.log("USERID IN SAGA:", userId);
-    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/users/" + userId;
+    let endpoint = "https://pwntastic.herokuapp.com/api/v2/users/" + userId;
     yield call(fetchData, endpoint, 1, FETCH_USER_RESULT, FETCH_USER_ERROR);
   } catch (e) {
     yield put({ type: FETCH_USER_ERROR, error: e.message });
@@ -320,7 +319,7 @@ function* fetchFriends() {
     let current_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + "/friends?";
+      "https://pwntastic.herokuapp.com/api/v2/users/" + userId + "/friends?";
     yield call(
       fetchData,
       endpoint,
@@ -342,7 +341,7 @@ function* loadMoreFriends() {
     let new_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + "/friends?";
+      "https://pwntastic.herokuapp.com/api/v2/users/" + userId + "/friends?";
     yield call(
       fetchData,
       endpoint,
@@ -363,7 +362,7 @@ function* refreshFriends() {
     let new_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + "/friends?";
+      "https://pwntastic.herokuapp.com/api/v2/users/" + userId + "/friends?";
     yield call(
       fetchData,
       endpoint,
@@ -383,7 +382,7 @@ function* fetchGroupMembers() {
     let current_page = yield select(state => state.users.groupMembersPage);
 
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      "https://pwntastic.herokuapp.com/api/v2/users/" +
       userId +
       "/group_members?";
 
@@ -407,7 +406,7 @@ function* loadMoreGroupMembers() {
     let new_page = yield select(state => state.users.groupMembersPage);
 
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      "https://pwntastic.herokuapp.com/api/v2/users/" +
       userId +
       "/group_members?";
     yield call(
@@ -429,7 +428,7 @@ function* refreshGroupMembers() {
     yield put({ type: CHANGE_GROUP_MEMBERS_PAGE, page: 1 });
     let new_page = yield select(state => state.users.groupMembersPage);
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      "https://pwntastic.herokuapp.com/api/v2/users/" +
       userId +
       "/group_members?";
     yield call(
@@ -447,7 +446,16 @@ function* refreshGroupMembers() {
 
 function* fetchGroup() {
   try {
-    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/groups/47";
+    let userId = yield select(state => state.authentication.user.user_id);
+    yield call(fetchCurrentUser);
+
+    let user = yield select(state => state.users.user);
+
+    console.log("USER IS:", user);
+
+    let endpoint =
+      "https://pwntastic.herokuapp.com/api/v2/groups/" +
+      user.memberships[0]["group_id"];
     yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
   } catch (e) {
     yield put({ type: FETCH_GROUP_ERROR, error: e.message });
@@ -501,7 +509,7 @@ function* fetchMyGamingSessions() {
     let userId = yield select(state => state.authentication.user.user_id);
     let current_page = yield select(state => state.search.myGamingSessionsPage);
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      "https://pwntastic.herokuapp.com/api/v2/users/" +
       userId +
       "/gaming_sessions?";
 
@@ -525,7 +533,7 @@ function* loadMoreMyGamingSessions() {
     yield put({ type: CHANGE_MY_GAMING_SESSIONS_PAGE, page: current_page + 1 });
     let new_page = yield select(state => state.search.myGamingSessionsPage);
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      "https://pwntastic.herokuapp.com/api/v2/users/" +
       userId +
       "/gaming_sessions?";
 
@@ -551,7 +559,7 @@ function* fetchGroupGamingSessions() {
       state => state.search.groupGamingSessionsPage
     );
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      "https://pwntastic.herokuapp.com/api/v2/users/" +
       userId +
       "/group_gaming_sessions?";
     yield call(
@@ -579,7 +587,7 @@ function* loadMoreGroupGamingSessions() {
     });
     let new_page = yield select(state => state.search.groupGamingSessionsPage);
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      "https://pwntastic.herokuapp.com/api/v2/users/" +
       userId +
       "/group_gaming_sessions?";
 

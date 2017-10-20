@@ -57,8 +57,8 @@ class Login extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (
-      nextProps.authenticationError &&
-      nextProps.authenticationError !== this.props.authenticationError
+      nextProps.authenticationError
+      // && nextProps.authenticationError !== this.props.authenticationError
     ) {
       this.props.alertWithType("error", "Error", nextProps.authenticationError);
     }

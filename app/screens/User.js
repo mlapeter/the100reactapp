@@ -2,9 +2,12 @@ import React, { Component, PropTypes } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Animated,
   AsyncStorage,
   Button,
   Image,
+  LayoutAnimation,
+  Linking,
   ListView,
   StyleSheet,
   Text,
@@ -14,6 +17,7 @@ import {
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
 import Chat from "../components/Chat/Chat";
+import Panel from "../components/Panel/Panel";
 
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -23,6 +27,8 @@ import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import Octicons from "react-native-vector-icons/Octicons";
+
 import { StackNavigator } from "react-navigation";
 
 Moment.globalFormat = "h:mm";
@@ -35,7 +41,8 @@ export class User extends React.Component {
       hasJoined: false,
       // isLoading: true,
       refreshing: false,
-      gameData: ""
+      gameData: "",
+      viewStats: false
     };
     userId = this.props.navigation.state.params.userId;
     console.log("USER ID:", userId);
@@ -70,6 +77,17 @@ export class User extends React.Component {
     this.props.alertWithType("success", "Success", "Friend Request Sent!");
   }
 
+  toggleStats() {
+    this.setState({
+      viewStats: !this.state.viewStats
+    });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+  }
+
+  destinyStatusLink() {
+    Linking.openURL(this.props.dataSource.destiny_status_link);
+  }
+
   checkFriendStatus() {
     this.postData("/add_friend");
     this.props.alertWithType("success", "Success", "Friend Request Sent!");
@@ -80,21 +98,17 @@ export class User extends React.Component {
       isLoading: true
     });
     AsyncStorage.getItem("id_token").then(token => {
-      fetch(
-        "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + action,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token
-          }
+      fetch("https://pwntastic.herokuapp.com/api/v2/users/" + userId + action, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
         }
-      )
+      })
         .then(response => response.json())
         .then(responseJson => {
           this.fetchData();
           console.log("ACTION POSTED");
-          console.log(responseJson);
         })
         .catch(error => {
           console.error(error);
@@ -112,6 +126,46 @@ export class User extends React.Component {
         </View>
       );
     }
+    if (this.state.viewStats) {
+      stats = (
+        <View style={styles.statsContainer}>
+          <View style={styles.statsLink}>
+            <TouchableHighlight
+              onPress={() =>
+                Linking.openURL(this.props.dataSource.destiny_status_link)}
+              underlayColor="white"
+            >
+              <Text>Destiny Status</Text>
+            </TouchableHighlight>
+          </View>
+          <View style={styles.statsLink}>
+            <TouchableHighlight
+              onPress={() =>
+                Linking.openURL(this.props.dataSource.destiny_tracker_link)}
+              underlayColor="white"
+            >
+              <Text>Destiny Tracker</Text>
+            </TouchableHighlight>
+          </View>
+        </View>
+      );
+    } else {
+      stats = null;
+    }
+
+    if (this.props.dataSource.tag_list.length > 0) {
+      tags = (
+        <View style={styles.tagList}>
+          <MaterialCommunityIcons name="tag" size={14} color={colors.grey} />
+          <Panel
+            text={this.props.dataSource.tag_list.map(tag => tag + " ")}
+            numberOfLines={1}
+          />
+        </View>
+      );
+    } else {
+      tags = null;
+    }
 
     return (
       <View style={styles.container}>
@@ -127,32 +181,32 @@ export class User extends React.Component {
           />
           <View style={styles.titleAndTags}>
             <Text style={styles.title}>{this.props.dataSource.gamertag}</Text>
+            <SupporterBadge supporter={this.props.dataSource.supporter} />
           </View>
           <View style={styles.actionButtons}>
             <FriendButton
               friendshipStatus={this.props.dataSource.friendship_status}
-              addFriend={this.addFriend.bind(this)}
+              addFriend={() => this.addFriend()}
             />
             <KarmaButton
               karmaStatus={this.props.dataSource.karma_status}
               karmaReceivedFrom={this.props.dataSource.karma_received_from}
               currentUser={this.props.user}
-              giveKarma={this.giveKarma.bind(this)}
+              giveKarma={() => this.giveKarma()}
+            />
+            <StatsButton
+              toggleStats={() => this.toggleStats()}
+              destinyStatusLink={() => this.destinyStatusLink()}
             />
           </View>
         </View>
-        <Text style={styles.tagList}>
-          <MaterialCommunityIcons name="tag" size={14} color={colors.grey} />
-          {/* {this.props.dataSource.tag_list.map(tag => tag + " ")} */}
-        </Text>
-        <Text style={styles.description} numberOfLines={4}>
-          {this.props.dataSource.description != null
-            ? this.props.dataSource.description
-            : ""}
-        </Text>
+        <View>{stats}</View>
+        <View style={{ marginRight: 4, paddingRight: 4 }}>{tags}</View>
+        <Panel text={this.props.dataSource.description} numberOfLines={3} />
         <View style={styles.iconBar}>
           <PlatformIcon platform={this.props.dataSource.platform} />
           <PowerIcon lightLevel={this.props.dataSource.light_level} />
+          <KarmaIcon karmasCount={this.props.dataSource.karmas_count} />
           <PlayScheduleIcon
             playSchedule={this.props.dataSource.play_schedule}
           />
@@ -164,7 +218,6 @@ export class User extends React.Component {
 }
 
 function KarmaButton(props) {
-  console.log(props.currentUser);
   if (props.karmaStatus === "given") {
     return (
       <View style={styles.icon}>
@@ -235,6 +288,23 @@ function FriendButton(props) {
   }
 }
 
+function StatsButton(props) {
+  return (
+    <View style={styles.icon}>
+      <TouchableHighlight onPress={props.toggleStats} underlayColor="white">
+        <Text style={styles.iconText}>
+          <MaterialCommunityIcons
+            name="chart-bar"
+            size={18}
+            color={colors.mediumGrey}
+          />{" "}
+          View Stats
+        </Text>
+      </TouchableHighlight>
+    </View>
+  );
+}
+
 function PlatformIcon(props) {
   if (props.platform === "ps4") {
     return (
@@ -269,10 +339,15 @@ function PlatformIcon(props) {
 }
 
 function PlayScheduleIcon(props) {
+  var schedule = props.playSchedule
+    .split(" ")
+    .slice(0, 2)
+    .join(" ");
+
   return (
     <Text style={styles.icon}>
       <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
-      <Text style={styles.icon}>{props.playSchedule.toString()}</Text>
+      <Text style={styles.icon}>{schedule}</Text>
     </Text>
   );
 }
@@ -294,13 +369,45 @@ function PowerIcon(props) {
   );
 }
 
+function KarmaIcon(props) {
+  if (props.karmasCount) {
+    return (
+      <Text style={styles.icon}>
+        <MaterialCommunityIcons name="star" size={14} color={colors.grey} />
+        {props.karmasCount}
+      </Text>
+    );
+  }
+  return (
+    <Text style={styles.icon}>
+      <MaterialCommunityIcons name="star" size={14} color={colors.grey} />
+      New!
+    </Text>
+  );
+}
+
+function SupporterBadge(props) {
+  if (props.supporter) {
+    return (
+      <View style={styles.supporterBadge}>
+        <Text style={styles.supporterText}>
+          <Octicons name="flame" size={14} color={colors.white} />
+          SUPPORTER
+        </Text>
+      </View>
+    );
+  } else {
+    return null;
+  }
+}
+
 const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
   },
   container: {
     padding: 5,
-    paddingTop: 30,
+    paddingTop: 20,
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
@@ -308,10 +415,10 @@ const styles = StyleSheet.create({
   },
   actionButtons: {
     flexDirection: "column",
-    alignItems: "flex-end",
+    alignItems: "flex-start",
     justifyContent: "space-between",
-    margin: 5,
-    flex: 1.4
+    // marginBottom: 5,
+    flex: 1.3
   },
   loading: {
     alignItems: "center",
@@ -340,11 +447,27 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.small,
     color: colors.mediumGrey
   },
+  supporterText: {
+    padding: 3,
+    margin: 2,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    fontSize: fontSizes.small,
+    color: colors.white
+  },
+  supporterBadge: {
+    margin: 5,
+    backgroundColor: colors.blue,
+    width: 100,
+    alignItems: "center",
+    borderRadius: 3
+  },
   profileAvatar: {
     height: 80,
     width: 80,
-    borderRadius: 40,
-    flex: 1
+    borderRadius: 40
+    // flex: 1
   },
   titleBar: {
     flexDirection: "row",
@@ -359,15 +482,26 @@ const styles = StyleSheet.create({
     fontFamily: fontStyles.primaryFont,
     fontSize: fontSizes.primary
   },
+  statsContainer: {
+    margin: 5,
+    padding: 5,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  statsLink: {
+    margin: 5,
+    padding: 5
+  },
   description: {
     color: colors.lightGrey,
     fontSize: fontSizes.secondary
   },
   tagList: {
-    padding: 5,
-    paddingBottom: 10,
-    color: colors.lightGrey,
-    fontSize: fontSizes.secondary
+    flexDirection: "row",
+    alignItems: "center"
+    // paddingBottom: 10
+    // color: colors.lightGrey,
+    // fontSize: fontSizes.secondary
   },
   titleAndTags: {
     flexDirection: "column",
