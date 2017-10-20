@@ -54,7 +54,9 @@ export default class TopNav extends Component {
     return (
       <View style={styles.optionsContainer}>
         <View style={styles.menu}>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate("DrawerOpen")}
+          >
             <Image
               style={styles.avatarMini}
               source={

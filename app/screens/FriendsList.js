@@ -5,6 +5,7 @@ import {
   AsyncStorage,
   FlatList,
   Keyboard,
+  LayoutAnimation,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -73,13 +74,13 @@ class FriendsList extends Component {
   }
 
   setSearchText(text) {
-    console.log("Text: ", text);
     this.setState({
       searchText: text
     });
     this.setState({
       searchResults: this.filterUsers(text)
     });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }
 
   filterUsers(searchText) {
@@ -106,42 +107,33 @@ class FriendsList extends Component {
 
   refreshFriends = () => {
     // this.fetchData();
-    console.log("refreshFriends Triggered");
     this.props.dispatch(refreshFriends());
   };
 
   loadMoreFriends = () => {
-    console.log("LoadMoreFriends Triggered");
     if (
       this.props.refreshing === false &&
       this.props.moreFriendsAvailable === true
     ) {
-      console.log("LoadMoreFriends Activated");
       this.props.dispatch(loadMoreFriends());
     }
   };
 
   refreshGroupMembers = () => {
-    console.log("refreshGroupMembers Triggered");
     this.props.dispatch(refreshGroupMembers());
   };
 
   loadMoreGroupMembers = () => {
-    console.log("loadMoreGroupMembers Triggered");
     if (
       this.props.refreshing === false &&
       this.props.moreGroupMembersAvailable === true
     ) {
-      console.log("loadMoreGroupMembers Activated");
       this.props.dispatch(loadMoreGroupMembers());
     }
   };
 
   renderFooter = () => {
     if (!this.props.moreFriendsAvailable) {
-      console.log(
-        "In Footer moreFriendsAvailable: " + this.props.moreFriendsAvailable
-      );
       return (
         <View style={styles.alertView}>
           <MaterialCommunityIcons
@@ -162,14 +154,6 @@ class FriendsList extends Component {
 
   renderGroupFooter = () => {
     if (!this.props.moreGroupMembersAvailable) {
-      console.log(
-        "In Footer moreGroupMembersAvailable: " +
-          this.props.moreGroupMembersAvailable
-      );
-      console.log(
-        "In Footer moreGroupMembersAvailable: " +
-          this.props.moreGroupMembersAvailable
-      );
       return (
         <View style={styles.alertView}>
           <MaterialCommunityIcons
@@ -207,6 +191,7 @@ class FriendsList extends Component {
             setSearchText={text => this.setSearchText(text)}
             searchText={this.state.searchText}
             user={this.props.user}
+            navigation={this.props.navigation}
             style={{ flex: 1 }}
           />
           <View Style={styles.searchResults}>

@@ -75,7 +75,7 @@ class Group extends React.Component {
   //   });
   //   AsyncStorage.getItem("id_token").then(token => {
   //     console.log("token: " + token);
-  //     fetch("https://pwn-staging.herokuapp.com/api/v2/groups/" + action, {
+  //     fetch("https://pwntastic.herokuapp.com/api/v2/groups/" + action, {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",
@@ -167,7 +167,6 @@ class Group extends React.Component {
 }
 
 function KarmaButton(props) {
-  console.log("User ID: " + userId);
   if (props.karmaReceivedFrom.includes(userId)) {
     return <Text>Karma Given</Text>;
   } else {
@@ -188,7 +187,6 @@ function KarmaButton(props) {
 }
 
 function FriendButton(props) {
-  console.log("User ID: " + userId);
   if (props.friendsWith.includes(userId)) {
     return <Text>Friends</Text>;
   } else {
