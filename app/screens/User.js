@@ -6,6 +6,7 @@ import {
   AsyncStorage,
   Button,
   Image,
+  Keyboard,
   LayoutAnimation,
   Linking,
   ListView,
@@ -13,6 +14,7 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
+  TouchableWithoutFeedback,
   View
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";

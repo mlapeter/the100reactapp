@@ -49,6 +49,7 @@ export default class Chat extends Component {
       avatarUrl: "/default-avatar.png",
       editing: null
     };
+    this.firebaseRef = this.getRef().child("/chat/help_chatroom/");
   }
 
   componentWillMount() {
@@ -111,33 +112,58 @@ export default class Chat extends Component {
       // ...
     });
 
-    this.onSubmit = this.onSubmit.bind(this);
+    // this.onSubmit = this.onSubmit.bind(this);
     // this.firebaseRef = this.getRef().child("/chat/" + this.props.chatroom);
-    this.firebaseRef = this.getRef().child("/chat/help_chatroom/");
   }
 
   getRef() {
     return firebaseApp.database().ref();
   }
 
-  componentDidMount() {
-    var items = [];
+  listenForItems(itemsRef) {
+    itemsRef.limitToLast(25).on("value", snap => {
+      // get children as an array
+      var items = [];
+      snap.forEach(child => {
+        var item = child.val();
+        item["key"] = child.key;
+        items.push(item);
+      });
 
-    this.firebaseRef.limitToLast(25).on(
-      "value",
-      function(dataSnapshot) {
-        dataSnapshot.forEach(function(childSnapshot) {
-          var item = childSnapshot.val();
-          item["key"] = childSnapshot.key;
-          items.push(item);
-        });
-      }.bind(this)
-    );
-    this.setState({
-      items: items.reverse(),
-      isLoading: false
+      this.setState({
+        items: items.reverse(),
+        isLoading: false
+      });
     });
   }
+
+  componentDidMount() {
+    this.listenForItems(this.firebaseRef);
+  }
+
+  componentWillUnmount() {
+    this.firebaseRef.off();
+  }
+
+  // componentDidMount() {
+  //   var items = [];
+  //
+  //   this.firebaseRef.limitToLast(25).on(
+  //     "value",
+  //     function(dataSnapshot) {
+  //       dataSnapshot.forEach(function(childSnapshot) {
+  //         var item = childSnapshot.val();
+  //         item["key"] = childSnapshot.key;
+  //         items.push(item);
+  //       });
+  //
+  //       this.setState({
+  //         items: items.reverse(),
+  //         isLoading: false
+  //       });
+  //     }.bind(this)
+  //   );
+  // }
 
   createImg(text) {
     var imgPattern = /(https?:\/\/.*\.(?:png|jpg|gif|gifv|jpeg))/i;
@@ -153,7 +179,7 @@ export default class Chat extends Component {
     }
   }
 
-  onSubmit(text) {
+  onSubmit = text => {
     if (text && text.trim().length !== 0) {
       var imgSrc = this.createImg(text);
       this.firebaseRef.push({
@@ -165,7 +191,7 @@ export default class Chat extends Component {
         role: this.state.role,
         createdAt: firebase.database.ServerValue.TIMESTAMP
       });
-      // this.setState({ editing: null });
+      this.setState({ editing: null });
       // var pattern = /\B@[a-z0-9_-]+/gi;
       // if (text.match(pattern)) {
       //   api.postUsernameMention(this.props.url, this.state.username, text.match(pattern), text)
@@ -174,7 +200,7 @@ export default class Chat extends Component {
       //     })
       // }
     }
-  }
+  };
 
   render() {
     if (this.state.isLoading) {
@@ -186,13 +212,17 @@ export default class Chat extends Component {
     }
     return (
       <KeyboardAvoidingView
-        style={styles.container}
-        behavior="padding"
-        keyboardVerticalOffset={100}
+        style={styles.keyboardView}
+        contentContainerStyle={styles.keyboardView}
+        behavior="position"
+        keyboardVerticalOffset={90}
       >
         <FlatList
           data={this.state.items}
           renderItem={({ item }) => <ListItem item={item} />}
+          // duplicates due to multiple instances of same chat in app
+          keyExtractor={(item, index) => index}
+          extraData={this.state.items}
         />
         <MessageInput
           permission="RW"
@@ -240,7 +270,7 @@ class MessageInput extends React.Component {
       text: ""
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleSubmit(text) {
@@ -263,13 +293,17 @@ class MessageInput extends React.Component {
             style={{ flex: 5 }}
             placeholder="Enter your message..."
             onChangeText={text => this.setState({ text })}
-            onSubmitEditing={text => this.handleSubmit(text)}
+            onSubmitEditing={text => {
+              this.handleSubmit(text);
+            }}
             value={this.state.text}
           />
           <Button
             style={{ flex: 1 }}
             title="Chat"
-            onPress={text => this.handleSubmit(text)}
+            onPress={text => {
+              this.handleSubmit(text);
+            }}
           />
         </View>
       );
@@ -283,12 +317,19 @@ const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
   },
+  keyboardView: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    backgroundColor: colors.white
+  },
   container: {
     padding: 5,
     margin: 3,
     flex: 1,
     flexDirection: "column",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: colors.lightGrey
   },
   loading: {
     alignItems: "center",
