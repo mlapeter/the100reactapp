@@ -100,13 +100,16 @@ export class User extends React.Component {
       isLoading: true
     });
     AsyncStorage.getItem("id_token").then(token => {
-      fetch("https://pwntastic.herokuapp.com/api/v2/users/" + userId + action, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
+      fetch(
+        "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + action,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          }
         }
-      })
+      )
         .then(response => response.json())
         .then(responseJson => {
           this.fetchData();
@@ -213,7 +216,7 @@ export class User extends React.Component {
             playSchedule={this.props.dataSource.play_schedule}
           />
         </View>
-        <Chat chatroom={"help_chatroom"} />
+        {/* <Chat chatroom={"help_chatroom"} room="help_chatroom" /> */}
       </View>
     );
   }

@@ -6,7 +6,8 @@ import {
   DECODE_TOKEN_RESULT,
   DECODE_TOKEN_ERROR,
   REMOVE_TOKEN,
-  REMOVE_TOKEN_ERROR
+  REMOVE_TOKEN_ERROR,
+  SET_FIREBASE_TOKEN
 } from "../actions/authentication";
 
 const initialState = {
@@ -14,7 +15,8 @@ const initialState = {
   isLoading: false,
   isAuthed: false,
   user: {},
-  token: ""
+  token: "",
+  firebaseToken: ""
 };
 
 export default (state = initialState, action) => {
@@ -29,7 +31,8 @@ export default (state = initialState, action) => {
     case FETCH_TOKEN_RESULT:
       return {
         ...state,
-        token: action.token
+        token: action.token,
+        firebaseToken: action.firebaseToken
       };
     case FETCH_TOKEN_ERROR:
       return {
@@ -73,6 +76,11 @@ export default (state = initialState, action) => {
         isAuthed: false,
         user: {},
         token: ""
+      };
+    case SET_FIREBASE_TOKEN:
+      return {
+        ...state,
+        firebaseToken: action.token
       };
     default:
       return state;

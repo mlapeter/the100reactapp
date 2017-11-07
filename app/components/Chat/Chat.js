@@ -21,6 +21,9 @@ import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigator } from "react-navigation";
 
+import { connect } from "react-redux";
+import { connectAlert } from "../../components/Alert";
+
 import * as firebase from "firebase";
 
 const firebaseConfig = {
@@ -31,7 +34,7 @@ const firebaseConfig = {
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
-export default class Chat extends Component {
+class Chat extends Component {
   static propTypes = {
     // chatroom: PropTypes.string.isRequired
   };
@@ -47,20 +50,21 @@ export default class Chat extends Component {
       role: "user",
       permission: "",
       avatarUrl: "/default-avatar.png",
-      editing: null
+      editing: null,
+      room: this.props.room
     };
     this.firebaseRef = this.getRef().child("/chat/help_chatroom/");
   }
 
   componentWillMount() {
-    if (this.props.token) {
+    if (this.props.firebaseToken) {
       firebase
         .auth()
-        .signInWithCustomToken(this.props.token)
+        .signInWithCustomToken(this.props.firebaseToken)
         .then(
           function() {
-            console.log("SIGNED IN REACT!");
-            writeUserData(firebase.auth().currentUser.uid);
+            console.log("SIGNED IN TO FIREBASE!");
+            // writeUserData(firebase.auth().currentUser.uid);
             firebase
               .database()
               .ref("/users/" + firebase.auth().currentUser.uid)
@@ -104,25 +108,18 @@ export default class Chat extends Component {
         // User is signed in.
         console.log("CURRENT USER: " + firebase.auth().currentUser.uid);
         this.user = firebase.auth().currentUser;
-        // ...
       } else {
         // User is signed out.
-        // ...
       }
-      // ...
     });
-
-    // this.onSubmit = this.onSubmit.bind(this);
-    // this.firebaseRef = this.getRef().child("/chat/" + this.props.chatroom);
   }
 
   getRef() {
     return firebaseApp.database().ref();
   }
 
-  listenForItems(itemsRef) {
-    itemsRef.limitToLast(25).on("value", snap => {
-      // get children as an array
+  listenForItems(firebaseRef) {
+    firebaseRef.limitToLast(25).on("value", snap => {
       var items = [];
       snap.forEach(child => {
         var item = child.val();
@@ -131,7 +128,7 @@ export default class Chat extends Component {
       });
 
       this.setState({
-        items: items.reverse(),
+        items: items,
         isLoading: false
       });
     });
@@ -144,26 +141,6 @@ export default class Chat extends Component {
   componentWillUnmount() {
     this.firebaseRef.off();
   }
-
-  // componentDidMount() {
-  //   var items = [];
-  //
-  //   this.firebaseRef.limitToLast(25).on(
-  //     "value",
-  //     function(dataSnapshot) {
-  //       dataSnapshot.forEach(function(childSnapshot) {
-  //         var item = childSnapshot.val();
-  //         item["key"] = childSnapshot.key;
-  //         items.push(item);
-  //       });
-  //
-  //       this.setState({
-  //         items: items.reverse(),
-  //         isLoading: false
-  //       });
-  //     }.bind(this)
-  //   );
-  // }
 
   createImg(text) {
     var imgPattern = /(https?:\/\/.*\.(?:png|jpg|gif|gifv|jpeg))/i;
@@ -215,9 +192,12 @@ export default class Chat extends Component {
         style={styles.keyboardView}
         contentContainerStyle={styles.keyboardView}
         behavior="position"
-        keyboardVerticalOffset={90}
+        keyboardVerticalOffset={60}
       >
         <FlatList
+          ref={ref => {
+            this.flatListRef = ref;
+          }}
           data={this.state.items}
           renderItem={({ item }) => <ListItem item={item} />}
           // duplicates due to multiple instances of same chat in app
@@ -299,7 +279,7 @@ class MessageInput extends React.Component {
             value={this.state.text}
           />
           <Button
-            style={{ flex: 1 }}
+            style={styles.button}
             title="Chat"
             onPress={text => {
               this.handleSubmit(text);
@@ -319,6 +299,8 @@ const styles = StyleSheet.create({
   },
   keyboardView: {
     flex: 1,
+    height: 900,
+    width: 400,
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: colors.white
@@ -329,7 +311,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    backgroundColor: colors.lightGrey
+    backgroundColor: colors.white
   },
   loading: {
     alignItems: "center",
@@ -348,6 +330,10 @@ const styles = StyleSheet.create({
     padding: 5,
     borderTopWidth: 0.5,
     borderTopColor: "#d6d7da"
+  },
+  button: {
+    margin: 5,
+    padding: 5
   },
   leftBox: {
     flex: 1,
@@ -387,3 +373,21 @@ const styles = StyleSheet.create({
     color: colors.mediumGrey
   }
 });
+
+const mapStateToProps = state => {
+  const user = state.authentication.user;
+  const dataSource = state.users.user;
+  const userLoading = state.users.userLoading;
+  const firebaseToken = state.authentication.firebaseToken;
+  return {
+    user,
+    dataSource,
+    userLoading,
+    firebaseToken,
+    userError: state.users.error
+
+    // authenticationError: state.authentication.error
+  };
+};
+
+export default connect(mapStateToProps)(connectAlert(Chat));

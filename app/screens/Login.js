@@ -27,6 +27,7 @@ import { connectAlert } from "../components/Alert";
 
 import { fetchToken } from "../actions/authentication";
 import { decodeToken } from "../actions/authentication";
+import { setFirebaseToken } from "../actions/authentication";
 
 import Navigator from "../config/routes";
 
@@ -69,6 +70,10 @@ class Login extends React.Component {
       this.props.dispatch(decodeToken(token));
       this.setState({ isLoaded: true });
     });
+    AsyncStorage.getItem("fb_token").then(token => {
+      this.props.dispatch(setFirebaseToken(token));
+    });
+
     Font.loadAsync({
       Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
     }).then(result => {

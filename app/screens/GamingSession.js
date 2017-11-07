@@ -5,6 +5,7 @@ import {
   AsyncStorage,
   Button,
   Image,
+  KeyboardAvoidingView,
   ListView,
   StyleSheet,
   Text,
@@ -47,7 +48,7 @@ export default class GamingSession extends React.Component {
   fetchData() {
     var userIds = [];
     return fetch(
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
         gamingSessionId
     )
       .then(response => response.json())
@@ -86,7 +87,7 @@ export default class GamingSession extends React.Component {
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
       fetch(
-        "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
+        "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
           gamingSessionId +
           action,
         {
@@ -178,7 +179,11 @@ export default class GamingSession extends React.Component {
           confirmedSessions={this.state.dataSource.confirmed_sessions}
           navigation={this.props.navigation}
         />
-        <Chat chatroom={"help_chatroom"} />
+        <Chat
+          chatroom={"help_chatroom"}
+          room="help_chatroom"
+          style={{ flex: 5 }}
+        />
       </View>
     );
   }
@@ -298,6 +303,13 @@ function SherpaIcon(props) {
 const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
+  },
+  keyboardView: {
+    paddingTop: 30,
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    backgroundColor: colors.grey
   },
   container: {
     padding: 5,

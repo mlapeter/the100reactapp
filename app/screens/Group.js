@@ -75,7 +75,7 @@ class Group extends React.Component {
   //   });
   //   AsyncStorage.getItem("id_token").then(token => {
   //     console.log("token: " + token);
-  //     fetch("https://pwntastic.herokuapp.com/api/v2/groups/" + action, {
+  //     fetch("https://pwn-staging.herokuapp.com/api/v2/groups/" + action, {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",
@@ -159,7 +159,7 @@ class Group extends React.Component {
               playSchedule={this.props.dataSource.play_schedule}
             />
           </View>
-          <Chat chatroom={"help_chatroom"} />
+          {/* <Chat chatroom={"help_chatroom"} /> */}
         </View>
       </View>
     );

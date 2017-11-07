@@ -23,6 +23,7 @@ import NotificationsList from "../screens/NotificationsList";
 import FriendsList from "../screens/FriendsList";
 import User from "../screens/User";
 import UserEdit from "../screens/UserEdit";
+import HelpChat from "../screens/HelpChat/";
 
 import Menu from "../screens/Menu";
 
@@ -46,10 +47,15 @@ const UserEditStack = StackNavigator({
   UserEdit: { screen: UserEdit }
 });
 
+const HelpChatStack = StackNavigator({
+  HelpChat: { screen: HelpChat }
+});
+
 const MenuDrawer = DrawerNavigator(
   {
     Back: { screen: GamingSessionsStack },
-    "Edit Profile": { screen: UserEditStack }
+    "Edit Profile": { screen: UserEditStack },
+    "Help Chat": { screen: HelpChatStack }
   },
   {
     contentComponent: props => (
@@ -110,6 +116,24 @@ UserEdit.navigationOptions = ({ navigation }) => ({
   drawerIcon: () => (
     <MaterialCommunityIcons
       name="account-settings-variant"
+      size={24}
+      // style={{ color: colors.grey }}
+    />
+  )
+});
+
+HelpChat.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <Button
+      title="Back"
+      onPress={() => navigation.navigate("GamingSessionsList")}
+    />
+  ),
+  headerTitle: "Help Chat",
+  drawerLabel: "Help Chat",
+  drawerIcon: () => (
+    <MaterialCommunityIcons
+      name="help-circle"
       size={24}
       // style={{ color: colors.grey }}
     />
