@@ -98,7 +98,7 @@ export default class TopNav extends Component {
         </View>
 
         <View style={styles.add}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => Alert.alert("Coming Soon")}>
             <MaterialCommunityIcons
               name="account-plus"
               size={24}

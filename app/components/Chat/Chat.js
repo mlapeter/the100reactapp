@@ -69,6 +69,7 @@ class Chat extends Component {
               .database()
               .ref("/users/" + firebase.auth().currentUser.uid)
               .on("value", snapshot => {
+                console.log(snapshot);
                 this.setState({ username: snapshot.val().username });
                 this.setState({ pwnmaster: snapshot.val().pwnmaster });
                 if (snapshot.val().pwnmaster == "true") {
@@ -128,7 +129,7 @@ class Chat extends Component {
       });
 
       this.setState({
-        items: items,
+        items: items.reverse(),
         isLoading: false
       });
     });

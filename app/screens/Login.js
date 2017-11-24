@@ -84,6 +84,7 @@ class Login extends React.Component {
   userLogin() {
     if (!this.state.username || !this.state.password) return;
     this.props.dispatch(fetchToken(this.state.username, this.state.password));
+    this.setState({ password: "" });
   }
 
   userLogout() {

@@ -71,7 +71,7 @@ const MenuDrawer = DrawerNavigator(
               size={24}
               style={styles.icon}
             />
-            <Text style={styles.menuText}>LOG OUT</Text>
+            <Text style={styles.menuText}>Log Out</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.menuItem}>
@@ -250,9 +250,8 @@ const styles = StyleSheet.create({
     color: colors.grey
   },
   menuText: {
-    color: colors.lightGrey,
-    fontFamily: "Avenir",
     fontWeight: "bold",
-    textAlign: "center"
+    marginLeft: 6
+    // textAlign: "center"
   }
 });

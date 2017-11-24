@@ -20,11 +20,13 @@ import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { connect } from "react-redux";
+import { connectAlert } from "../components/Alert";
 
 // Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
-export default class GamingSession extends React.Component {
+class GamingSession extends React.Component {
   static navigationOptions = () => {
     // headerTitle: "Game";
     // Not Working
@@ -48,7 +50,7 @@ export default class GamingSession extends React.Component {
   fetchData() {
     var userIds = [];
     return fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
         gamingSessionId
     )
       .then(response => response.json())
@@ -58,7 +60,7 @@ export default class GamingSession extends React.Component {
         );
         this.setState({
           isLoading: false,
-          // hasJoined: userIds.includes(11869),
+          hasJoined: userIds.includes(this.props.user.user_id),
           dataSource: responseJson
         });
         console.log(responseJson);
@@ -87,7 +89,7 @@ export default class GamingSession extends React.Component {
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
       fetch(
-        "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+        "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
           gamingSessionId +
           action,
         {
@@ -111,32 +113,6 @@ export default class GamingSession extends React.Component {
 
   render() {
     const { params } = this.props.navigation.state;
-    // let button = null;
-    // if (this.state.hasJoined) {
-    //   button = (
-    //     <Button
-    //       style={{
-    //         height: 30,
-    //         width: 180,
-    //         marginBottom: 15
-    //       }}
-    //       onPress={this.leaveGame.bind(this)}
-    //       title="Leave"
-    //     />
-    //   );
-    // } else {
-    //   button = (
-    //     <Button
-    //       style={{
-    //         height: 30,
-    //         width: 180,
-    //         marginBottom: 15
-    //       }}
-    //       onPress={this.joinGame.bind(this)}
-    //       title="Join"
-    //     />
-    //   );
-    // }
 
     if (this.state.isLoading) {
       return (
@@ -358,3 +334,13 @@ const styles = StyleSheet.create({
     fontSize: fontSizes.secondary
   }
 });
+
+const mapStateToProps = state => {
+  const user = state.authentication.user;
+
+  return {
+    user
+  };
+};
+
+export default connect(mapStateToProps)(connectAlert(GamingSession));

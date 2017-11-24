@@ -85,7 +85,8 @@ class UserEdit extends React.Component {
 
     var Platform = t.enums({
       ps4: "PS4",
-      "xbox-one": "XBOX ONE"
+      "xbox-one": "XBOX ONE",
+      pc: "PC"
     });
 
     var PlayStyle = t.enums({

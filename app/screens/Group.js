@@ -75,7 +75,7 @@ class Group extends React.Component {
   //   });
   //   AsyncStorage.getItem("id_token").then(token => {
   //     console.log("token: " + token);
-  //     fetch("https://pwn-staging.herokuapp.com/api/v2/groups/" + action, {
+  //     fetch("https://pwntastic.herokuapp.com/api/v2/groups/" + action, {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",
@@ -137,13 +137,11 @@ class Group extends React.Component {
               ? this.props.dataSource.description
               : ""}
           </Text>
-
           <Text style={styles.description} numberOfLines={2}>
             {this.props.dataSource.latest_news != null
               ? this.props.dataSource.latest_news
               : ""}
           </Text>
-
           <View style={styles.iconBar}>
             <PlatformIcon platform={this.props.dataSource.platform} />
             <PlayerIcon usersCount={this.props.dataSource.users_count} />
@@ -159,7 +157,7 @@ class Group extends React.Component {
               playSchedule={this.props.dataSource.play_schedule}
             />
           </View>
-          {/* <Chat chatroom={"help_chatroom"} /> */}
+          <Chat chatroom={"help_chatroom"} room="help_chatroom" />
         </View>
       </View>
     );
