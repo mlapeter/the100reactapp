@@ -21,20 +21,20 @@ export default class The100Chat extends EventEmitter2 {
   }
 
   unsubscribe() {
+    this.removeAllListeners();
     this.chat.unsubscribe();
-    this.chat.removeAllListeners();
   }
 
   connected = () => {
-    console.warn("[CHAT CHANNEL] Connected:", this.chatId);
+    console.log("[CHAT CHANNEL] Connected:", this.chatId);
   };
 
   disconnected = () => {
-    console.warn("[CHAT CHANNEL] Disconnected:", this.chatId);
+    console.log("[CHAT CHANNEL] Disconnected:", this.chatId);
   };
 
   received = data => {
-    console.warn("[CHAT CHANNEL] Received:", this.chatId, "-", data);
+    console.log("[CHAT CHANNEL] Received:", this.chatId, "-", data);
     if (data.command === "new_message") {
       this.emit("new_message", data.message);
     } else if (data.command === "edit_message") {

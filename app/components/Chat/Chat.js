@@ -2,7 +2,6 @@ import React, { Component, PropTypes } from "react";
 import {
   ActivityIndicator,
   Alert,
-  AsyncStorage,
   Button,
   FlatList,
   KeyboardAvoidingView,
@@ -38,7 +37,10 @@ class Chat extends Component {
     super(props);
     this.state = {
       editing: null,
-      messages: {}
+      messages: this.props.messages.reduce((a, m) => {
+        a[m.id] = m;
+        return a;
+      }, {})
     };
 
     this.chat = null;
@@ -76,13 +78,12 @@ class Chat extends Component {
       this.chat = null;
     }
 
-    AsyncStorage.getItem("id_token").then(token => {
-      console.warn("CREATING CHAT", token);
-      this.chat = new The100Chat(token, 1);
+    if (this.props.userToken) {
+      this.chat = new The100Chat(this.props.userToken, 1);
       this.chat.on("new_message", this.onMessageCreatedEdited);
       this.chat.on("edit_message", this.onMessageCreatedEdited);
       this.chat.on("delete_message", this.onMessageDeleted);
-    });
+    }
   }
 
   componentWillUnmount() {
@@ -118,6 +119,12 @@ class Chat extends Component {
         </View>
       );
     }
+
+    let messages = Object.values(this.state.messages);
+    messages.sort((messageA, messageB) => {
+      return messageB.createdAt - messageA.createdAt;
+    });
+
     return (
       <KeyboardAvoidingView
         style={styles.keyboardView}
@@ -129,11 +136,10 @@ class Chat extends Component {
           ref={ref => {
             this.flatListRef = ref;
           }}
-          data={this.props.chatMessages}
-          renderItem={({ item }) => <ListItem item={item} />}
-          // duplicates due to multiple instances of same chat in app
-          keyExtractor={(item, index) => index}
-          extraData={this.props.chatMessages}
+          data={messages}
+          renderItem={({ item }) => <MessageListItem message={item} />}
+          keyExtractor={(message, index) => message.id}
+          extraData={messages}
         />
         <MessageInput
           permission="RW"
@@ -147,7 +153,7 @@ class Chat extends Component {
   }
 }
 
-class ListItem extends Component {
+class MessageListItem extends Component {
   render() {
     return (
       <View style={styles.box}>
@@ -155,18 +161,21 @@ class ListItem extends Component {
           <Image
             style={styles.avatarMini}
             source={{
-              uri: this.props.item.avatarUrl
+              uri: this.props.message.user.avatar
             }}
           />
         </View>
         <View style={styles.middleBox}>
           <View style={{ flexDirection: "row" }}>
-            <Text style={styles.username}>{this.props.item.username}</Text>
-            <Text style={styles.time}>
-              <TimeAgo time={this.props.item.createdAt} minPeriod="60" />
+            <Text style={styles.username}>
+              {this.props.message.user.username}
             </Text>
+            <Text style={styles.time}>
+              <TimeAgo time={this.props.message.createdAt} minPeriod="60" />
+            </Text>
+            <Text style={styles.time} />
           </View>
-          <Text style={styles.text}>{this.props.item.text}</Text>
+          <Text style={styles.text}>{this.props.message.text}</Text>
         </View>
       </View>
     );
@@ -306,17 +315,13 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const user = state.authentication.user;
-  const dataSource = state.users.user;
-  const userLoading = state.users.userLoading;
   return {
-    user,
-    dataSource,
-    userLoading,
+    user: state.authentication.user,
+    userToken: state.authentication.token,
+    dataSource: state.users.user,
+    isLoading: state.users.userLoading,
     userError: state.users.error,
-    chatMessages: state.chat_messages.chat_messages
-
-    // authenticationError: state.authentication.error
+    messages: state.chat_messages.chat_messages
   };
 };
 
