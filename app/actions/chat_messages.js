@@ -1,0 +1,7 @@
+export const FETCH_CHAT_MESSAGES = "FETCH_CHAT_MESSAGES";
+export const FETCH_CHAT_MESSAGES_RESULT = "FETCH_CHAT_MESSAGES_RESULT";
+export const FETCH_CHAT_MESSAGES_ERROR = "FETCH_CHAT_MESSAGES_ERROR";
+
+export const fetchChatMessages = () => ({
+  type: FETCH_CHAT_MESSAGES
+});

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from "react";
 import {
   ActivityIndicator,
   Alert,
+  AsyncStorage,
   Button,
   FlatList,
   KeyboardAvoidingView,
@@ -24,15 +25,9 @@ import { StackNavigator } from "react-navigation";
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
 
-import * as firebase from "firebase";
+import { fetchChatMessages } from "../../actions/chat_messages";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDTZp0K0KXe7Xt-vGNeYEBDBq-PeJyUTKw",
-  authDomain: "the100-staging-42536.firebaseapp.com",
-  databaseURL: "https://the100-staging-42536.firebaseio.com/",
-  storageBucket: "the100-staging-42536.appspot.com"
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+import The100Chat from "./the100chat";
 
 class Chat extends Component {
   static propTypes = {
@@ -42,123 +37,64 @@ class Chat extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
-      items: [],
-      text: "",
-      username: "guest",
-      pwnmaster: false,
-      role: "user",
-      permission: "",
-      avatarUrl: "/default-avatar.png",
       editing: null,
-      room: this.props.room
+      messages: {}
     };
-    this.firebaseRef = this.getRef().child("/chat/help_chatroom/");
+
+    this.chat = null;
   }
 
-  componentWillMount() {
-    if (this.props.firebaseToken) {
-      firebase
-        .auth()
-        .signInWithCustomToken(this.props.firebaseToken)
-        .then(
-          function() {
-            console.log("SIGNED IN TO FIREBASE!");
-            // writeUserData(firebase.auth().currentUser.uid);
-            firebase
-              .database()
-              .ref("/users/" + firebase.auth().currentUser.uid)
-              .on("value", snapshot => {
-                console.log(snapshot);
-                this.setState({ username: snapshot.val().username });
-                this.setState({ pwnmaster: snapshot.val().pwnmaster });
-                if (snapshot.val().pwnmaster == "true") {
-                  this.setState({ role: "developer" });
-                } else {
-                  this.setState({
-                    role: snapshot.val().groups[this.props.room]["role"]
-                  });
-                }
-                this.setState({
-                  permission: snapshot.val().groups[this.props.room][
-                    "permission"
-                  ]
-                });
-                this.setState({ avatarUrl: snapshot.val().avatar });
-                console.log("USER FOUND");
-              });
-          }.bind(this)
-        )
-        .catch(function(error) {
-          console.log("ERROR WITH TOKEN: " + error.code + ":" + error.message);
-        });
-    } else {
-      console.log("STARTING ANON SIGNIN");
-      firebase
-        .auth()
-        .signInAnonymously()
-        .catch(function(error) {
-          console.log(
-            "ANON SIGNIN ERROR WITH TOKEN " + error.code + ":" + error.message
-          );
-        });
-    }
-
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        // User is signed in.
-        console.log("CURRENT USER: " + firebase.auth().currentUser.uid);
-        this.user = firebase.auth().currentUser;
-      } else {
-        // User is signed out.
-      }
+  addMessages(newMessages) {
+    this.setState(prevState => {
+      let { messages } = prevState;
+      newMessages.forEach(message => {
+        messages[message.id] = message;
+      });
+      return {
+        messages: messages
+      };
     });
   }
 
-  getRef() {
-    return firebaseApp.database().ref();
-  }
+  onMessageCreatedEdited = message => {
+    this.addMessages([message]);
+  };
 
-  listenForItems(firebaseRef) {
-    firebaseRef.limitToLast(25).on("value", snap => {
-      var items = [];
-      snap.forEach(child => {
-        var item = child.val();
-        item["key"] = child.key;
-        items.push(item);
-      });
-
-      this.setState({
-        items: items.reverse(),
-        isLoading: false
-      });
+  onMessageDeleted = message => {
+    this.setState(prevState => {
+      let { messages } = prevState;
+      delete messages[message.id];
+      return { messages: messages };
     });
-  }
+  };
 
   componentDidMount() {
-    this.listenForItems(this.firebaseRef);
+    this.props.dispatch(fetchChatMessages());
+
+    if (this.chat) {
+      this.chat.unsubscribe();
+      this.chat = null;
+    }
+
+    AsyncStorage.getItem("id_token").then(token => {
+      console.warn("CREATING CHAT", token);
+      this.chat = new The100Chat(token, 1);
+      this.chat.on("new_message", this.onMessageCreatedEdited);
+      this.chat.on("edit_message", this.onMessageCreatedEdited);
+      this.chat.on("delete_message", this.onMessageDeleted);
+    });
   }
 
   componentWillUnmount() {
-    this.firebaseRef.off();
-  }
-
-  createImg(text) {
-    var imgPattern = /(https?:\/\/.*\.(?:png|jpg|gif|gifv|jpeg))/i;
-    var imgurPattern = /((http(s?):\/\/)?(imgur|i.imgur)\.com\/[a-zA-Z0-9]{6,8})(?!\.jpg|\.gif|\.gifv|\.png)(?:[^a-zA-Z0-9]|$)/;
-    if (text.match(imgPattern)) {
-      console.log(text.match(imgPattern));
-      return text.match(imgPattern)[0];
-    } else if (text.match(imgurPattern)) {
-      console.log(text.match(imgurPattern));
-      return text.match(imgurPattern)[0] + ".jpg";
-    } else {
-      return "";
+    if (this.chat) {
+      this.chat.unsubscribe();
+      this.chat = null;
     }
   }
 
   onSubmit = text => {
     if (text && text.trim().length !== 0) {
+      /*
       var imgSrc = this.createImg(text);
       this.firebaseRef.push({
         text: text,
@@ -170,18 +106,12 @@ class Chat extends Component {
         createdAt: firebase.database.ServerValue.TIMESTAMP
       });
       this.setState({ editing: null });
-      // var pattern = /\B@[a-z0-9_-]+/gi;
-      // if (text.match(pattern)) {
-      //   api.postUsernameMention(this.props.url, this.state.username, text.match(pattern), text)
-      //     .then(function (response) {
-      //       console.log(response)
-      //     })
-      // }
+      */
     }
   };
 
   render() {
-    if (this.state.isLoading) {
+    if (this.props.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
@@ -199,11 +129,11 @@ class Chat extends Component {
           ref={ref => {
             this.flatListRef = ref;
           }}
-          data={this.state.items}
+          data={this.props.chatMessages}
           renderItem={({ item }) => <ListItem item={item} />}
           // duplicates due to multiple instances of same chat in app
           keyExtractor={(item, index) => index}
-          extraData={this.state.items}
+          extraData={this.props.chatMessages}
         />
         <MessageInput
           permission="RW"
@@ -379,13 +309,12 @@ const mapStateToProps = state => {
   const user = state.authentication.user;
   const dataSource = state.users.user;
   const userLoading = state.users.userLoading;
-  const firebaseToken = state.authentication.firebaseToken;
   return {
     user,
     dataSource,
     userLoading,
-    firebaseToken,
-    userError: state.users.error
+    userError: state.users.error,
+    chatMessages: state.chat_messages.chat_messages
 
     // authenticationError: state.authentication.error
   };

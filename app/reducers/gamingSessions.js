@@ -26,7 +26,7 @@ import {
 } from "../actions/gamingSessions";
 
 const initialState = {
-  endpoint: "https://pwntastic.herokuapp.com/api/v2/gaming_sessions",
+  endpoint: "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions",
   refreshing: false,
   isCreating: false,
   gameCreated: false,

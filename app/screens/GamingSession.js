@@ -50,7 +50,7 @@ class GamingSession extends React.Component {
   fetchData() {
     var userIds = [];
     return fetch(
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
         gamingSessionId
     )
       .then(response => response.json())
@@ -89,7 +89,7 @@ class GamingSession extends React.Component {
     AsyncStorage.getItem("id_token").then(token => {
       console.log("token: " + token);
       fetch(
-        "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
+        "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
           gamingSessionId +
           action,
         {
