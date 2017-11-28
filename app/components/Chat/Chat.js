@@ -95,19 +95,7 @@ class Chat extends Component {
 
   onSubmit = text => {
     if (text && text.trim().length !== 0) {
-      /*
-      var imgSrc = this.createImg(text);
-      this.firebaseRef.push({
-        text: text,
-        imgSrc: imgSrc,
-        username: this.state.username,
-        avatarUrl: this.state.avatarUrl,
-        uid: firebase.auth().currentUser.uid,
-        role: this.state.role,
-        createdAt: firebase.database.ServerValue.TIMESTAMP
-      });
-      this.setState({ editing: null });
-      */
+      this.chat.createMessage(text);
     }
   };
 
@@ -141,13 +129,15 @@ class Chat extends Component {
           keyExtractor={(message, index) => message.id}
           extraData={messages}
         />
-        <MessageInput
-          permission="RW"
-          room="help_chatroom"
-          url="chat/help_chatroom"
-          onSubmit={this.onSubmit}
-          onChange={this.onChange}
-        />
+        {!this.chat ? null : (
+          <MessageInput
+            permission="RW"
+            room="help_chatroom"
+            url="chat/help_chatroom"
+            onSubmit={this.onSubmit}
+            onChange={this.onChange}
+          />
+        )}
       </KeyboardAvoidingView>
     );
   }
