@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -36,7 +36,6 @@ const { height, width } = Dimensions.get("window");
 import { Font } from "expo";
 
 class Login extends React.Component {
-  static propTypes = {};
   constructor(props) {
     super(props);
 

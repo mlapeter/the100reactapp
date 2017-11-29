@@ -1,4 +1,4 @@
-import React, { PropTypes, PureComponent, Component } from "react";
+import React, { PureComponent, Component } from "react";
 import {
   Alert,
   Image,

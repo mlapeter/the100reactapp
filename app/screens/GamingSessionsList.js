@@ -1,4 +1,5 @@
-import React, { Component, PropTypes, PureComponent } from "react";
+import React, { Component, PureComponent } from "react";
+import PropTypes from 'prop-types';
 import {
   ActivityIndicator,
   Alert,

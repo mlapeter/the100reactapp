@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from "react";
+import React, { Component } from "react";
+import PropTypes from 'prop-types';
 import hoistNonReactStatic from "hoist-non-react-statics";
 
 const connectAlert = WrappedComponent => {

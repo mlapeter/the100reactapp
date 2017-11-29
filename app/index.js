@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 // import EStylesheet from "react-native-extended-stylesheet";
 import Login from "./screens/Login/";
 import { AlertProvider } from "./components/Alert";
