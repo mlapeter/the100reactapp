@@ -44,7 +44,7 @@ export default class PreSplash extends React.Component {
       <View style={styles.container}>
         <Animated.Image
           style={[styles.image, this.getTransform()]}
-          source={require('../../images/logo.png')} />
+          source={require('../../assets/images/logo.png')} />
       </View>
     )
   }

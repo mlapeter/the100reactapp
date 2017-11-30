@@ -50,7 +50,7 @@ export default function GamingSessionItem(props) {
             style={styles.avatarMini}
             source={
               props.data.game_avatar_url === "img/default-avatar.png"
-                ? require("../../images/default-avatar.png")
+                ? require("../../assets/images/default-avatar.png")
                 : { uri: props.data.game_avatar_url }
             }
           />

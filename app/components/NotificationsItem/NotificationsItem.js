@@ -21,7 +21,7 @@ export default class NotificationsItem extends PureComponent {
             style={styles.avatarMini}
             source={
               this.props.item.avatar_url === null
-                ? require("../../images/default-avatar.png")
+                ? require("../../assets/images/default-avatar.png")
                 : { uri: this.props.item.avatar_url }
             }
           />

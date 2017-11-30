@@ -10,7 +10,8 @@ export const colors = {
   mediumGrey: "rgba(79,84,92,.9)",
   lightGrey: "#737f8d",
   lightestGrey: "#99aab5",
-  searchbar: "#ededed"
+  searchbar: "#ededed",
+  strongBlack: "#18191b"
 };
 
 export const fontSizes = {

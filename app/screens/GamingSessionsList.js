@@ -251,7 +251,7 @@ class GamingSessionsList extends React.PureComponent {
                 source={
                   this.props.user.computed_avatar_api ===
                   "img/default-avatar.png"
-                    ? require("../../app/images/default-avatar.png")
+                    ? require("../../app/assets/images/default-avatar.png")
                     : { uri: this.props.user.computed_avatar_api }
                 }
               />

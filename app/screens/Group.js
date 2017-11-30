@@ -126,7 +126,7 @@ class Group extends React.Component {
           source={
             this.props.dataSource.header_background_image_api ===
             "img/default-group-header.jpg"
-              ? require("../images/destiny-wallpaper-1.jpg")
+              ? require("../assets/images/destiny-wallpaper-1.jpg")
               : { uri: this.props.dataSource.header_background_image_api }
           }
         >
