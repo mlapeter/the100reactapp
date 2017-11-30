@@ -18,7 +18,7 @@ import {
   View
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
-import Chat from "../components/Chat/Chat";
+import Chat, { HELP_CHAT_ID } from "../components/Chat/Chat";
 import Panel from "../components/Panel/Panel";
 
 import { connect } from "react-redux";
@@ -213,7 +213,7 @@ export class User extends React.Component {
             playSchedule={this.props.dataSource.play_schedule}
           />
         </View>
-        <Chat chatroom={"help_chatroom"} room="help_chatroom" />
+        <Chat chatId={HELP_CHAT_ID} />
       </View>
     );
   }

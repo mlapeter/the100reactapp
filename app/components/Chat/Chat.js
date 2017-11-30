@@ -24,54 +24,45 @@ import { StackNavigator } from "react-navigation";
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
 
-import { fetchChatMessages } from "../../actions/chat_messages";
+import {
+  fetchChatMessages,
+  addChatMessage,
+  editChatMessage,
+  removeChatMessage
+} from "../../actions/chat_messages";
 
 import The100Chat from "./the100chat";
 
+export const HELP_CHAT_ID = -1;
+
 class Chat extends Component {
   static propTypes = {
-    // chatroom: PropTypes.string.isRequired
+    chatId: PropTypes.number.isRequired
   };
 
   constructor(props) {
     super(props);
     this.state = {
-      editing: null,
-      messages: this.props.messages.reduce((a, m) => {
-        a[m.id] = m;
-        return a;
-      }, {})
+      editing: null
     };
 
     this.chat = null;
   }
 
-  addMessages(newMessages) {
-    this.setState(prevState => {
-      let { messages } = prevState;
-      newMessages.forEach(message => {
-        messages[message.id] = message;
-      });
-      return {
-        messages: messages
-      };
-    });
-  }
+  onMessageCreated = message => {
+    this.props.dispatch(addChatMessage(this.props.chatId, message));
+  };
 
-  onMessageCreatedEdited = message => {
-    this.addMessages([message]);
+  onMessageEdited = message => {
+    this.props.dispatch(editChatMessage(this.props.chatId, message));
   };
 
   onMessageDeleted = message => {
-    this.setState(prevState => {
-      let { messages } = prevState;
-      delete messages[message.id];
-      return { messages: messages };
-    });
+    this.props.dispatch(removeChatMessage(this.props.chatId, message));
   };
 
   componentDidMount() {
-    this.props.dispatch(fetchChatMessages());
+    this.props.dispatch(fetchChatMessages(this.props.chatId));
 
     if (this.chat) {
       this.chat.unsubscribe();
@@ -79,9 +70,9 @@ class Chat extends Component {
     }
 
     if (this.props.userToken) {
-      this.chat = new The100Chat(this.props.userToken, 1);
-      this.chat.on("new_message", this.onMessageCreatedEdited);
-      this.chat.on("edit_message", this.onMessageCreatedEdited);
+      this.chat = new The100Chat(this.props.userToken, this.props.chatId);
+      this.chat.on("new_message", this.onMessageCreated);
+      this.chat.on("edit_message", this.onMessageEdited);
       this.chat.on("delete_message", this.onMessageDeleted);
     }
   }
@@ -108,7 +99,7 @@ class Chat extends Component {
       );
     }
 
-    let messages = Object.values(this.state.messages);
+    let messages = Object.values(this.props.messages[this.props.chatId] || {});
     messages.sort((messageA, messageB) => {
       return messageB.createdAt - messageA.createdAt;
     });
@@ -132,8 +123,6 @@ class Chat extends Component {
         {!this.chat ? null : (
           <MessageInput
             permission="RW"
-            room="help_chatroom"
-            url="chat/help_chatroom"
             onSubmit={this.onSubmit}
             onChange={this.onChange}
           />
@@ -192,7 +181,6 @@ class MessageInput extends React.Component {
 
   render() {
     if (
-      !this.props.room.includes("group") ||
       this.props.permission == "RW" ||
       this.props.permission == "RWE" ||
       this.props.permission == "A"

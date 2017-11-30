@@ -279,20 +279,31 @@ function* fetchNotifications() {
   }
 }
 
-function* fetchChatMessages() {
+function* fetchChatMessages(action) {
   try {
-    let chatId = 1; // Hard-coded pwn-staging HelpChat id
-
+    let { chatId, firstCreatedAt = null } = action;
     let endpoint = `https://pwn-staging.herokuapp.com/api/v2/chats/${
       chatId
     }/chat_messages?`;
-    yield call(
-      fetchData,
-      endpoint,
-      1,
-      FETCH_CHAT_MESSAGES_RESULT,
-      FETCH_CHAT_MESSAGES_ERROR
-    );
+    if (firstCreatedAt) {
+      endpoint += `first_created_at=${firstCreatedAt}`;
+    }
+
+    let token = yield select(state => state.authentication.token);
+    const response = yield fetch(endpoint, {
+      method: "GET",
+      headers: { Authorization: "Bearer " + token }
+    });
+    const result = yield response.json();
+    if (result.error) {
+      yield put({ type: FETCH_CHAT_MESSAGES_ERROR, error: result.error });
+    } else {
+      let messages = result.reduce((a, m) => {
+        a[m.id] = m;
+        return a;
+      }, {});
+      yield put({ type: FETCH_CHAT_MESSAGES_RESULT, result: messages, chatId });
+    }
   } catch (e) {
     yield put({ type: FETCH_CHAT_MESSAGES_ERROR, error: e.message });
   }

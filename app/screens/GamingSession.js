@@ -13,7 +13,7 @@ import {
   View
 } from "react-native";
 
-import Chat from "../components/Chat/Chat";
+import Chat, { HELP_CHAT_ID } from "../components/Chat/Chat";
 
 import PlayersList from "../components/PlayersList/PlayersList";
 import { colors, fontSizes, fontStyles } from "../styles";
@@ -155,11 +155,7 @@ class GamingSession extends React.Component {
           confirmedSessions={this.state.dataSource.confirmed_sessions}
           navigation={this.props.navigation}
         />
-        <Chat
-          chatroom={"help_chatroom"}
-          room="help_chatroom"
-          style={{ flex: 5 }}
-        />
+        <Chat chatId={HELP_CHAT_ID} style={{ flex: 5 }} />
       </View>
     );
   }

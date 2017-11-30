@@ -13,7 +13,7 @@ import {
   View
 } from "react-native";
 
-import Chat from "../components/Chat/Chat";
+import Chat, { HELP_CHAT_ID } from "../components/Chat/Chat";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -24,7 +24,7 @@ export default class HelpChat extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Chat chatroom={"help_chatroom"} room="help_chatroom" />
+        <Chat chatId={HELP_CHAT_ID} />
       </View>
     );
   }
