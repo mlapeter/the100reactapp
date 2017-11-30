@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import EStylesheet from "react-native-extended-stylesheet";
-import Login from "./screens/Login/";
+import MainPage from "./screens/MainPage"
 import { AlertProvider } from "./components/Alert";
 import Navigator from "./config/routes";
 
@@ -12,7 +12,7 @@ export default function App(props) {
   return (
     <Provider store={store}>
       <AlertProvider>
-        <Login />
+        <Navigator />
       </AlertProvider>
     </Provider>
   );
