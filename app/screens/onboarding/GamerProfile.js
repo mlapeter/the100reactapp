@@ -8,7 +8,6 @@ import {
   Image,
   TextInput
 } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { FontAwesome } from "@expo/vector-icons"
 import ListPopover from "../../components/ListPopover";
 
@@ -31,11 +30,7 @@ class GamerProfile extends Component {
   }
   render() {
     return (
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.container}
-        extraHeight={100}
-        keyboardOpeningTime={10}
-      >
+      <View style={styles.container}>
         <Text style={styles.title}>Getting to know you...</Text>
         <Text style={styles.contentText}>
           Just a few more things to match you with the perfect group...
@@ -87,10 +82,11 @@ class GamerProfile extends Component {
         </View>
         <TouchableOpacity
           style={styles.continueBtn}
+          onPress={() => this.props.navigation.navigate('CreateCredential')}
         >
           <Text style={styles.btnText}>CONTINUE</Text>
         </TouchableOpacity>
-      </KeyboardAwareScrollView>
+      </View>
     );
   }
 }

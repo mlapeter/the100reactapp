@@ -5,6 +5,7 @@ import { StackNavigator } from "react-navigation";
 import ChoosePlatform from "../screens/onboarding/ChoosePlatform";
 import CreateGamer from "../screens/onboarding/CreateGamer";
 import GamerProfile from "../screens/onboarding/GamerProfile";
+import CreateCredential from "../screens/onboarding/CreatCredential";
 
 import { colors } from "../styles";
 
@@ -33,10 +34,10 @@ const BackButton = ({ onPress, title }) => (
 );
 
 const OnboardingFlowStack = StackNavigator({
-  GamerProfile: { screen: GamerProfile },
   ChoosePlatform: { screen: ChoosePlatform },
   CreateGamer: { screen: CreateGamer },
-  // GamerProfile: { screen: GamerProfile }
+  GamerProfile: { screen: GamerProfile },
+  CreateCredential: { screen: CreateCredential }
 });
 
 ChoosePlatform.navigationOptions = ({navigation}) => ({
@@ -69,7 +70,15 @@ GamerProfile.navigationOptions = ({navigation}) => ({
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
-
-
+CreateCredential.navigationOptions = ({navigation}) => ({
+  headerLeft: (<BackButton
+    title="BACK"
+    onPress={() => { navigation.goBack() }
+  }/>
+  ),
+  headerTitle: 'SIGN UP',
+  headerStyle: styles.headerStyle,
+  headerTitleStyle: styles.headerTitleStyle
+});
 
 export default OnboardingFlowStack;
