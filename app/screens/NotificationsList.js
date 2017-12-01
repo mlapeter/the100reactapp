@@ -73,12 +73,6 @@ class Notifications extends PureComponent {
   }
 
   render() {
-    const resetAction = NavigationActions.reset({
-      index: 0,
-      actions: [
-          NavigationActions.navigate({ routeName: 'Home' })
-      ]
-    });
     if (this.props.isLoading) {
       return (
         <View style={styles.container}>

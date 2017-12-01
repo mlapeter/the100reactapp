@@ -2,7 +2,7 @@ import React, { Component } from "react";
 // import EStylesheet from "react-native-extended-stylesheet";
 import MainPage from "./screens/MainPage"
 import { AlertProvider } from "./components/Alert";
-import Navigator from "./config/routes";
+import Navigator from "./router";
 
 import { Provider } from "react-redux";
 import { connect } from "react-redux";

@@ -10,11 +10,10 @@ import {
 } from "react-native";
 
 import { TabNavigator, StackNavigator, DrawerNavigator } from "react-navigation";
+
+import OnboardingFlowStack from "./onboarding-flow";
 import Login from "../screens/Login/";
 import MainPage from "../screens/MainPage/";
-/**Onboarding flow pages -- start --*/
-import ChoosePlatform from "../screens/onboarding/ChoosePlatform"
-/**Onboarding flow pages -- end --*/
 
 import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
@@ -93,10 +92,6 @@ const FriendsStack = StackNavigator({
   FriendsList: { screen: FriendsList },
   Friend: { screen: User }
 });
-const OnboardingFlowStack = StackNavigator({
-  ChoosePlatform: { screen: ChoosePlatform}
-})
-
 const MainTab = TabNavigator(
   {
     MenuDrawer: { screen: MenuDrawer },

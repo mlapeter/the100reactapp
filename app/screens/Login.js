@@ -27,8 +27,6 @@ import { fetchToken } from "../actions/authentication";
 import { decodeToken } from "../actions/authentication";
 import { setFirebaseToken } from "../actions/authentication";
 
-import Navigator from "../config/routes";
-
 import { colors, fontSizes, fontStyles } from "../styles";
 const { height, width } = Dimensions.get("window");
 

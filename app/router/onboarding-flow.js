@@ -1,0 +1,46 @@
+import React from "react";
+import { TouchableOpacity, Text } from "react-native"
+import { StackNavigator } from "react-navigation"
+
+import ChoosePlatform from "../screens/onboarding/ChoosePlatform"
+
+import { colors } from "../styles"
+
+const styles = {
+  headerStyle: {
+    backgroundColor: colors.strongBlack,
+    height: 80,
+    paddingHorizontal: 20
+  },
+  headerTitleStyle: {
+    color: "#fff",
+  },
+  backButtonStyle: {
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    backgroundColor: "#27282b"
+  },
+  backTitle: {
+    color: '#fff'
+  }
+};
+const BackButton = ({ onPress, title }) => (
+  <TouchableOpacity onPress={onPress} style={styles.backButtonStyle}>
+    <Text style={styles.backTitle}>{title}</Text>
+  </TouchableOpacity>
+)
+const OnboardingFlowStack = StackNavigator({
+  ChoosePlatform: { screen: ChoosePlatform}
+});
+ChoosePlatform.navigationOptions = ({navigation}) => ({
+  headerLeft: (<BackButton
+    title="BACK"
+    onPress={() => { navigation.navigate("MainPage") }
+  }/>
+  ),
+  headerTitle: 'SIGN UP',
+  headerStyle: styles.headerStyle,
+  headerTitleStyle: styles.headerTitleStyle
+});
+
+export default OnboardingFlowStack;
