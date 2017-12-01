@@ -4,19 +4,15 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  Image,
   TextInput
 } from "react-native";
 
 import { colors, fontSizes, fontStyles } from "../../styles";
 
-import ICPlaystation from "../../assets/images/ic-playstation.png";
-import ICSbox from "../../assets/images/ic-sbox.png";
-import ICWindows from "../../assets/images/ic-windows.png";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const { width, height } = Dimensions.get("window");
-class ChooseGamer extends Component {
+class CreateGamer extends Component {
   constructor (props) {
     super(props);
 
@@ -46,11 +42,12 @@ class ChooseGamer extends Component {
             onChangeText={(text) => this.setState({ gamertag: text})}
             placeholder="Enter your tag"
             style={styles.inputGamer}
-            placeholderStyle={{color: '#525458'}}
+            placeholderStyle={{color: '#606060'}}
           />
         </View>
         { this.state.gamertag ? <TouchableOpacity
           style={styles.continueBtn}
+          onPress={() => this.props.navigation.navigate("GamerProfile")}
         >
           <Text style={styles.btnText}>CONTINUE</Text>
         </TouchableOpacity>: null}
@@ -97,7 +94,7 @@ const styles = {
   },
   inputGamer: {
     borderWidth: 1,
-    borderColor: "#27292d",
+    borderColor: "#606060",
     color: "#9fa0a4",
     flex: 1,
     height: 40,
@@ -106,4 +103,4 @@ const styles = {
     backgroundColor: '#27292d'
   }
 };
-export default ChooseGamer;
+export default CreateGamer;
