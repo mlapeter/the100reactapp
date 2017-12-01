@@ -11,7 +11,7 @@ import { colors, fontSizes, fontStyles } from "../../styles";
 
 import ICPlaystation from "../../assets/images/ic-playstation.png";
 import ICSbox from "../../assets/images/ic-sbox.png";
-import ICWindows from "../../assets/images/ic-windows.png"
+import ICWindows from "../../assets/images/ic-windows.png";
 
 const { width, height } = Dimensions.get("window");
 class ChoosePlatform extends Component {
@@ -26,13 +26,13 @@ class ChoosePlatform extends Component {
           First, choose the platform you most frequently will be gaming on
         </Text>
         <View style={styles.osButtonGroup}>
-          <TouchableOpacity style={styles.psBtn}>
+          <TouchableOpacity style={styles.psBtn} onPress={() => this.props.navigation.navigate('CreateGamer', { platform: 'PlayStation'})}>
             <Image source={ICPlaystation} style={styles.btnImage}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.sboxBtn}>
+          <TouchableOpacity style={styles.sboxBtn} onPress={() => this.props.navigation.navigate('CreateGamer', { platform: 'SBox'})}>
             <Image source={ICSbox} style={styles.btnImage}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.windowsBtn}>
+          <TouchableOpacity style={styles.windowsBtn} onPress={() => this.props.navigation.navigate('CreateGamer', { platform: 'Windows'})} >
             <Image source={ICWindows} style={styles.btnImage}/>
           </TouchableOpacity>
         </View>
@@ -45,7 +45,7 @@ const styles = {
     flex: 1,
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    paddingHorizontal: width * 0.1,
+    paddingHorizontal: 20,
     backgroundColor: colors.strongBlack,
     paddingTop: 40
   },
