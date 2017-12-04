@@ -12,7 +12,7 @@ export default function App(props) {
   return (
     <Provider store={store}>
       <AlertProvider>
-        <Navigator />
+        <Navigator onNavigationStateChange={null}/>
       </AlertProvider>
     </Provider>
   );

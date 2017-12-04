@@ -78,7 +78,7 @@ class Login extends React.Component {
 
   render() {
     if (this.props.authentication.isAuthed === true) {
-      this.props.navigation.navigate('Main')
+      this.props.navigation.navigate("Main")
     }
     return (
       <KeyboardAwareScrollView
