@@ -95,7 +95,9 @@ class Notifications extends PureComponent {
 
         <FlatList
           data={this.props.items}
-          renderItem={({ item }) => <NotificationsItem item={item} />}
+          renderItem={({ item }) => (
+            <NotificationsItem item={item} navigation={this.props.navigation} />
+          )}
           keyExtractor={(item, index) => index}
           refreshing={this.props.isLoading}
           onRefresh={this.handleRefresh}

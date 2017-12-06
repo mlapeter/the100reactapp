@@ -15,29 +15,43 @@ import { StackNavigator } from "react-navigation";
 export default class NotificationsItem extends PureComponent {
   render() {
     return (
-      <View style={styles.box}>
-        <View style={styles.leftBox}>
-          <Image
-            style={styles.avatarMini}
-            source={
-              this.props.item.avatar_url === null
-                ? require("../../images/default-avatar.png")
-                : { uri: this.props.item.avatar_url }
-            }
-          />
-        </View>
-        <View style={styles.middleBox}>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.time}>
-              {this.props.item.notification_type} -
-            </Text>
-            <Text style={styles.time}>
-              <TimeAgo time={this.props.item.created_at} minPeriod="60" />
-            </Text>
+      <TouchableHighlight
+        onPress={() =>
+          this.props.item.notification_type === "karma-received" ||
+          this.props.item.notification_type === "username-mentioned" ||
+          this.props.item.notification_type === "new-private-message"
+            ? this.props.navigation.navigate("Friend", {
+                userId: this.props.item.avatar_user_id
+              })
+            : this.props.navigation.navigate("GamingSession", {
+                gamingSessionId: this.props.item.notification_object_id
+              })}
+        underlayColor="white"
+      >
+        <View style={styles.box}>
+          <View style={styles.leftBox}>
+            <Image
+              style={styles.avatarMini}
+              source={
+                this.props.item.avatar_url === null
+                  ? require("../../images/default-avatar.png")
+                  : { uri: this.props.item.avatar_url }
+              }
+            />
           </View>
-          <Text style={styles.username}>{this.props.item.message}</Text>
+          <View style={styles.middleBox}>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.time}>
+                {this.props.item.notification_type} -
+              </Text>
+              <Text style={styles.time}>
+                <TimeAgo time={this.props.item.created_at} minPeriod="60" />
+              </Text>
+            </View>
+            <Text style={styles.username}>{this.props.item.message}</Text>
+          </View>
         </View>
-      </View>
+      </TouchableHighlight>
     );
   }
 }
