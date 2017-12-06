@@ -24,30 +24,30 @@ export default (state = initialState, action) => {
       return {
         ...state,
         platform: action.platform
-      }
+      };
       break;
     case SET_GAMERTAG:
       return {
         ...state,
-        gamertag: action.gamertag,
-      }
+        gamertag: action.gamertag
+      };
       break;
     case SET_PROFILE_INFO:
       return {
         ...state,
         timezone: action.timezone,
-        playStyle: action.PlayStyle,
+        play_style: action.playStyle,
         age: action.age,
-        playSchedule: action.playSchedule,
+        play_schedule: action.playSchedule,
         group: action.group
-      }
+      };
       break;
     case SET_CREDENTIAL:
       return {
         ...state,
         email: action.email,
         password: action.password
-      }
+      };
       break;
     case SET_USERINFO_ERROR:
       return {
@@ -56,14 +56,14 @@ export default (state = initialState, action) => {
         platform: "",
         gamertag: "",
         timezone: "",
-        playStyle: "",
+        play_style: "",
         age: "",
-        playSchedule: "",
+        play_schedule: "",
         group: "",
         email: "",
         password: ""
-      }
+      };
     default:
       return state;
   }
-}
+};

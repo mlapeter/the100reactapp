@@ -16,50 +16,51 @@ import { setProfileInfo } from "../../actions/onboarding";
 import ListPopover from "../../components/ListPopover";
 
 import { colors, fontSizes, fontStyles } from "../../styles";
-import jstz from 'jstz';
+import jstz from "jstz";
 
 const { width, height } = Dimensions.get("window");
 
 let items = [];
 var ageOptions = _.range(13, 99);
 var playStyleOptions = [
-  'Casual / having fun is priority',
-  'Serious / getting it done is priority'
+  "Casual / having fun is priority",
+  "Serious / getting it done is priority"
 ];
 var playScheduleOptions = [
-  'Weekday Mornings and Weekends',
-  'Weekday Afternoons and Weekends',
-  'Weekday Evenings and Weekends',
-  'Weekdays Latenight and Weekends'
+  "Weekday Mornings and Weekends",
+  "Weekday Afternoons and Weekends",
+  "Weekday Evenings and Weekends",
+  "Weekdays Latenight and Weekends"
 ];
 let groupOptions = [
-  'No Preference',
-  'Parents',
-  'College Students',,
-  'No Profanity',
-  'PvP Only'
+  "No Preference",
+  "Parents",
+  "College Students",
+  ,
+  "No Profanity",
+  "PvP Only"
 ];
 
 class GamerProfile extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
       timezone: "EST",
-      playStyle: "DESTINY",
-      age: 13,
-      playSchedule: "WEEKDAYS AND LAST NIGHT",
+      playStyle: "Casual / having fun is priority",
+      age: 25,
+      playSchedule: "Weekday Evenings and Weekends",
       group: "NO PREFERENCE",
       isVisible: false,
-      option: ''
-    }
+      option: ""
+    };
   }
   componentDidMount() {
     const time = jstz.determine();
-    this.setState({ timezone: time.name()});
+    this.setState({ timezone: time.name() });
   }
-  showPopover = (option) => {
-    this.setState({option: option});
+  showPopover = option => {
+    this.setState({ option: option });
     switch (option) {
       case "playStyle":
         items = playStyleOptions;
@@ -77,21 +78,29 @@ class GamerProfile extends Component {
         items = [];
         break;
     }
-    this.setState({isVisible: true});
-  }
-  setItem = (item) => {
+    this.setState({ isVisible: true });
+  };
+  setItem = item => {
     const key = this.state.option;
     var Obj = {};
     Obj[key] = item;
     this.setState(Obj);
-  }
+  };
   closePopover = () => {
-    this.setState({isVisible: false});
-  }
+    this.setState({ isVisible: false });
+  };
   setProfileInfo = () => {
-    this.props.dispatch(setProfileInfo(this.state.timezone, this.state.playStyle, this.state.age, this.state.playSchedule, this.props.group));
-    this.props.navigation.navigate('CreateCredential');
-  }
+    this.props.dispatch(
+      setProfileInfo(
+        this.state.timezone,
+        this.state.playStyle,
+        this.state.age,
+        this.state.playSchedule,
+        this.props.group
+      )
+    );
+    this.props.navigation.navigate("CreateCredential");
+  };
   render() {
     return (
       <View style={styles.container}>
@@ -99,7 +108,8 @@ class GamerProfile extends Component {
         <Text style={styles.contentText}>
           Just a few more things to match you with the perfect group...
         </Text>
-        <View style={styles.inputRow}>
+        {/* Timezone not needed in form, should just be set automatically */}
+        {/* <View style={styles.inputRow}>
           <Text style={styles.gamerLabel}>TIMEZONE</Text>
           <TouchableOpacity style={styles.selectBox}>
             <Text style={styles.boxContent}>{this.state.timezone}</Text>
@@ -107,10 +117,13 @@ class GamerProfile extends Component {
               <FontAwesome size={20} name="caret-down" color="#888888" />
             </View>
           </TouchableOpacity>
-        </View>
+        </View> */}
         <View style={styles.inputRow}>
-          <Text style={styles.gamerLabel}>I MOSTLY PLAY</Text>
-          <TouchableOpacity style={styles.selectBox} onPress={() => this.showPopover('playStyle')}>
+          <Text style={styles.gamerLabel}>PlAY STYLE</Text>
+          <TouchableOpacity
+            style={styles.selectBox}
+            onPress={() => this.showPopover("playStyle")}
+          >
             <Text style={styles.boxContent}>{this.state.playStyle}</Text>
             <View style={styles.iconView}>
               <FontAwesome size={20} name="caret-down" color="#888888" />
@@ -119,7 +132,10 @@ class GamerProfile extends Component {
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.gamerLabel}>AGE</Text>
-          <TouchableOpacity style={[styles.selectBox, {width: width * 0.35}]} onPress={() => this.showPopover('age')}>
+          <TouchableOpacity
+            style={[styles.selectBox, { width: width * 0.35 }]}
+            onPress={() => this.showPopover("age")}
+          >
             <Text style={styles.boxContent}>{this.state.age}</Text>
             <View style={styles.iconView}>
               <FontAwesome size={20} name="caret-down" color="#888888" />
@@ -128,7 +144,10 @@ class GamerProfile extends Component {
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.gamerLabel}>I USUALLY PLAY</Text>
-          <TouchableOpacity style={[styles.selectBox, {width: width * 0.55}]} onPress={() => this.showPopover('playSchedule')}>
+          <TouchableOpacity
+            style={[styles.selectBox, { width: width * 0.55 }]}
+            onPress={() => this.showPopover("playSchedule")}
+          >
             <Text style={styles.boxContent}>{this.state.playSchedule}</Text>
             <View style={styles.iconView}>
               <FontAwesome size={20} name="caret-down" color="#888888" />
@@ -137,7 +156,10 @@ class GamerProfile extends Component {
         </View>
         <View style={styles.inputRow}>
           <Text style={styles.gamerLabel}>GROUP PREFERENCE</Text>
-          <TouchableOpacity style={[styles.selectBox, { width: width * 0.45}]}  onPress={() => this.showPopover('group')}>
+          <TouchableOpacity
+            style={[styles.selectBox, { width: width * 0.45 }]}
+            onPress={() => this.showPopover("group")}
+          >
             <Text style={styles.boxContent}>{this.state.group}</Text>
             <View style={styles.iconView}>
               <FontAwesome size={20} name="caret-down" color="#888888" />
@@ -154,7 +176,8 @@ class GamerProfile extends Component {
           list={items}
           isVisible={this.state.isVisible}
           onClick={this.setItem}
-          onClose={this.closePopover}/>
+          onClose={this.closePopover}
+        />
       </View>
     );
   }
@@ -182,8 +205,8 @@ const styles = {
     flexDirection: "row",
     alignSelf: "stretch",
     paddingVertical: 10,
-    alignItems: 'center',
-    justifyContent: 'space-between'
+    alignItems: "center",
+    justifyContent: "space-between"
   },
   continueBtn: {
     backgroundColor: "#6ba1fc",
@@ -195,7 +218,7 @@ const styles = {
   },
   gamerLabel: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.onboardingText
   },
   selectBox: {
     flexDirection: "row",
@@ -204,18 +227,18 @@ const styles = {
     height: 40,
     width: width * 0.4,
     justifyContent: "space-between",
-    alignItems: 'center',
+    alignItems: "center",
     paddingLeft: 15,
-    backgroundColor: "#27292d",
+    backgroundColor: "#27292d"
   },
   boxContent: {
     color: "#9fa0a4"
   },
   iconView: {
-    position: 'absolute',
+    position: "absolute",
     top: 0,
     bottom: 0,
-    right:0,
+    right: 0,
     width: 40,
     alignSelf: "stretch",
     backgroundColor: "#3f3f3f",
@@ -225,5 +248,5 @@ const styles = {
 };
 const mapStateToProps = state => ({
   onboarding: state.onboarding
-})
+});
 export default connect(mapStateToProps)(connectAlert(GamerProfile));

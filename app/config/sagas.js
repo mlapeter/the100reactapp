@@ -612,31 +612,44 @@ function* setCredential() {
   try {
     let userInfo = yield select(state => state.onboarding);
     const response = yield fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/users/",
+      "https://pwntastic.herokuapp.com/api/v2/users/",
       {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
-        // body: JSON.stringify({
-        //   ...userInfo
-        // })
         body: JSON.stringify({
           user: {
-            gamertag: "testing00217",
-            email: "testing00217@example.com",
-            password: "test123",
-            platform: "ps4",
-            play_style: "casual",
-            play_schedule: "Weekday Evenings and Weekends",
-            age: "20",
-            group_preference: "parents"
+            ...userInfo
           }
         })
+
+        // WORKING HARDCODED PARAMS, USERNAME AND GAMERTAG MUST BE UNIQUE EACH TIME:
+        // body: JSON.stringify({
+        //   user: {
+        //     gamertag: "testing002173",
+        //     email: "testing002173@example.com",
+        //     password: "test123",
+        //     platform: "ps4",
+        //     play_style: "casual",
+        //     play_schedule: "Weekday Evenings and Weekends",
+        //     age: "20",
+        //     group_preference: "parents"
+        //   }
+        // })
       }
     );
     const result = yield response.json();
+    if (result.error) {
+      // ERROR
+    } else {
+      token = result.token;
+      firebaseToken = result.firebase_token;
+      AsyncStorage.setItem("id_token", token);
+      AsyncStorage.setItem("fb_token", firebaseToken);
+      yield put({ type: FETCH_TOKEN_RESULT, token, firebaseToken });
+    }
   } catch (e) {
     yield put({ type: SET_USERINFO_ERROR, error: e.message });
   }
