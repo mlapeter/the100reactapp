@@ -156,7 +156,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
     });
     const result = yield response.json();
     if (result.error) {
-      yield   ({ type: failure, error: result.error });
+      yield { type: failure, error: result.error };
     } else if (result.length === 0) {
       yield put({ type: noData, result });
     } else {
@@ -612,21 +612,33 @@ function* setCredential() {
   try {
     let userInfo = yield select(state => state.onboarding);
     const response = yield fetch(
-      "https://pwntastic.herokuapp.com/api/v2/users/",
+      "https://pwn-staging.herokuapp.com/api/v2/users/",
       {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json"
         },
+        // body: JSON.stringify({
+        //   ...userInfo
+        // })
         body: JSON.stringify({
-          ...userInfo
+          user: {
+            gamertag: "testing00217",
+            email: "testing00217@example.com",
+            password: "test123",
+            platform: "ps4",
+            play_style: "casual",
+            play_schedule: "Weekday Evenings and Weekends",
+            age: "20",
+            group_preference: "parents"
+          }
         })
       }
     );
     const result = yield response.json();
   } catch (e) {
-    yield put({type: SET_USERINFO_ERROR, error: e.message});
+    yield put({ type: SET_USERINFO_ERROR, error: e.message });
   }
 }
 
