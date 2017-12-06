@@ -6,6 +6,10 @@ import {
   TouchableOpacity,
   Image
 } from "react-native";
+import { connect } from "react-redux";
+import { connectAlert } from "../../components/Alert";
+
+import { setPlatform } from "../../actions/onboarding";
 
 import { colors, fontSizes, fontStyles } from "../../styles";
 
@@ -15,6 +19,10 @@ import ICWindows from "../../assets/images/ic-windows.png";
 
 const { width, height } = Dimensions.get("window");
 class ChoosePlatform extends Component {
+  selectPlatform(platform) {
+    this.props.dispatch(setPlatform(platform));
+    this.props.navigation.navigate('CreateGamer', { platform: platform})
+  }
   render() {
     return (
       <View style={styles.container}>
@@ -26,13 +34,13 @@ class ChoosePlatform extends Component {
           First, choose the platform you most frequently will be gaming on
         </Text>
         <View style={styles.osButtonGroup}>
-          <TouchableOpacity style={styles.psBtn} onPress={() => this.props.navigation.navigate('CreateGamer', { platform: 'PlayStation'})}>
+          <TouchableOpacity style={styles.psBtn} onPress={() => this.selectPlatform("PlayStation")}>
             <Image source={ICPlaystation} style={styles.btnImage}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.sboxBtn} onPress={() => this.props.navigation.navigate('CreateGamer', { platform: 'SBox'})}>
+          <TouchableOpacity style={styles.sboxBtn} onPress={() => this.selectPlatform("SBox")}>
             <Image source={ICSbox} style={styles.btnImage}/>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.windowsBtn} onPress={() => this.props.navigation.navigate('CreateGamer', { platform: 'Windows'})} >
+          <TouchableOpacity style={styles.windowsBtn} onPress={() => this.selectPlatform("Windows")} >
             <Image source={ICWindows} style={styles.btnImage}/>
           </TouchableOpacity>
         </View>
@@ -94,4 +102,8 @@ const styles = {
     height: 60
   }
 };
-export default ChoosePlatform;
+const mapStateToProps = state => ({
+  onboarding: state.onboarding
+})
+
+export default connect(mapStateToProps)(connectAlert(ChoosePlatform));

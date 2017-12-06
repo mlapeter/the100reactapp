@@ -6,6 +6,10 @@ import {
   TouchableOpacity,
   TextInput
 } from "react-native";
+import { connect } from "react-redux";
+import { connectAlert } from "../../components/Alert";
+
+import { setGammerTag, setGamertag } from "../../actions/onboarding";
 
 import { colors, fontSizes, fontStyles } from "../../styles";
 
@@ -20,8 +24,12 @@ class CreateGamer extends Component {
       gamertag: ""
     }
   }
+  setGammerTag = () => {
+    this.props.dispatch(setGamertag(this.state.gamertag));
+    this.props.navigation.navigate("GamerProfile");
+  }
   render() {
-    const { params } = this.props.navigation.state;
+    const { platform } = this.props.onboarding;
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
@@ -30,7 +38,7 @@ class CreateGamer extends Component {
       >
         <Text style={styles.title}>Great!</Text>
         <Text style={styles.contentText}>
-          What is you gamertag in <Text style={{fontWeight: "bold"}}>{params.platform}</Text>
+          What is you gamertag in <Text style={{fontWeight: "bold"}}>{platform}</Text>
         </Text>
         <Text style={styles.contentText}>
           Your gamertag will be used in your gamertag.
@@ -47,7 +55,7 @@ class CreateGamer extends Component {
         </View>
         { this.state.gamertag ? <TouchableOpacity
           style={styles.continueBtn}
-          onPress={() => this.props.navigation.navigate("GamerProfile")}
+          onPress={this.setGammerTag}
         >
           <Text style={styles.btnText}>CONTINUE</Text>
         </TouchableOpacity>: null}
@@ -103,4 +111,7 @@ const styles = {
     backgroundColor: '#27292d'
   }
 };
-export default CreateGamer;
+const mapStateToProps = state => ({
+  onboarding: state.onboarding
+})
+export default connect(mapStateToProps)(connectAlert(CreateGamer));

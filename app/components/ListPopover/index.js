@@ -74,11 +74,9 @@ export default class ListPopover extends Component {
 
     if (this.props.isVisible) {
       return (
-        <TouchableOpacity onPress={this.props.onClose}>
-          <View style={containerStyle}>
-            <View style={popoverStyle}>
-              {this.renderList()}
-            </View>
+        <TouchableOpacity onPress={this.props.onClose} style={containerStyle}>
+          <View style={popoverStyle}>
+            {this.renderList()}
           </View>
         </TouchableOpacity>
       );
@@ -102,9 +100,10 @@ ListPopover.defaultProps = {
 const DefaultStyles = StyleSheet.create({
   container: {
     top: 0,
+    right: 0,
     bottom: 0,
     left: 0,
-    right: 0,
+    alignSelf: 'stretch',
     position: 'absolute',
     justifyContent: 'center',
     backgroundColor: 'transparent',

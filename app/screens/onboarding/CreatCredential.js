@@ -6,6 +6,10 @@ import {
   TouchableOpacity,
   TextInput
 } from "react-native";
+import { connect } from "react-redux";
+import { connectAlert } from "../../components/Alert";
+import { setCredential } from "../../actions/onboarding";
+
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CheckBox from "react-native-check-box";
 
@@ -21,6 +25,9 @@ class CreateCredential extends Component {
       password: "",
       sendNotification: false
     }
+  }
+  sendUserInfo = () => {
+    this.props.dispatch(setCredential(this.state.email, this.state.password, this.state.sendNotification))
   }
   render() {
     const { params } = this.props.navigation.state;
@@ -66,6 +73,7 @@ class CreateCredential extends Component {
         </View>
         { this.state.email && this.state.password ? <TouchableOpacity
           style={styles.continueBtn}
+          onPress={this.sendUserInfo}
         >
           <Text style={styles.btnText}>CONTINUE</Text>
         </TouchableOpacity>: null}
@@ -126,4 +134,7 @@ const styles = {
     backgroundColor: '#27292d'
   }
 };
-export default CreateCredential;
+const mapStateToProps = state => ({
+  onboarding: state.onboarding
+})
+export default connect(mapStateToProps)(connectAlert(CreateCredential));

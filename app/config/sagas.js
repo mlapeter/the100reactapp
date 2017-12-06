@@ -87,6 +87,7 @@ import {
   LOAD_MORE_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
+import { SET_CREDENTIAL } from "../actions/onboarding";
 
 function* fetchToken() {
   try {
@@ -108,7 +109,7 @@ function* fetchToken() {
       }
     );
     const result = yield response.json();
-    console.log(result);
+    // console.log(result);
     if (result.error) {
       yield put({ type: FETCH_TOKEN_ERROR, error: result.error });
     } else if (result.message === "Invalid credentials") {
@@ -155,7 +156,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
     });
     const result = yield response.json();
     if (result.error) {
-      yield put({ type: failure, error: result.error });
+      yield   ({ type: failure, error: result.error });
     } else if (result.length === 0) {
       yield put({ type: noData, result });
     } else {
@@ -607,6 +608,29 @@ function* loadMoreGroupGamingSessions() {
     yield put({ type: FETCH_GROUP_GAMING_SESSIONS_ERROR, error: e.message });
   }
 }
+function* setCredential() {
+  try {
+    let userInfo = yield select(state => state.onboarding);
+    console.log('postdata--------', userInfo)
+    const response = yield fetch(
+      "https://pwntastic.herokuapp.com/api/v2/users/",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ...userInfo
+        })
+      }
+    );
+    const result = yield response.json();
+    console.log('response------', result);
+  } catch (e) {
+    yield put({type: SET_USERINFO_ERROR, error: e.message});
+  }
+}
 
 export default function* rootSaga() {
   yield takeEvery(FETCH_TOKEN, fetchToken);
@@ -642,4 +666,6 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
   yield takeEvery(REFRESH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
   yield takeEvery(LOAD_MORE_GROUP_GAMING_SESSIONS, loadMoreGroupGamingSessions);
+
+  yield takeEvery(SET_CREDENTIAL, setCredential);
 }
