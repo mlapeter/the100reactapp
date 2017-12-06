@@ -31,7 +31,6 @@
     "moment-timezone": "^0.5.13",
     "npm": "^5.4.2",
     "prop-types": "^15.6.0",
-    "rails-timezone": "^1.0.0",
     "react": "^16.0.0-alpha.12",
     "react-moment": "^0.6.5",
     "react-native": "^0.46.4",

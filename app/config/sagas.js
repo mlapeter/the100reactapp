@@ -611,7 +611,6 @@ function* loadMoreGroupGamingSessions() {
 function* setCredential() {
   try {
     let userInfo = yield select(state => state.onboarding);
-    console.log('postdata--------', userInfo)
     const response = yield fetch(
       "https://pwntastic.herokuapp.com/api/v2/users/",
       {
@@ -626,7 +625,6 @@ function* setCredential() {
       }
     );
     const result = yield response.json();
-    console.log('response------', result);
   } catch (e) {
     yield put({type: SET_USERINFO_ERROR, error: e.message});
   }
