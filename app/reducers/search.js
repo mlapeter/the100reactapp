@@ -11,6 +11,8 @@ import {
   FETCH_ACTIVITIES_RESULT
 } from "../actions/search";
 
+// NOTE: CHANGE gameID to 13 for staging and 23 for production
+
 const initialState = {
   activity: "",
   gameId: "23",

@@ -1,4 +1,5 @@
-import React, { PropTypes } from "react";
+import React from "react";
+import PropTypes from 'prop-types';
 import {
   Image,
   View,
@@ -29,7 +30,7 @@ export default function PlayersItem(props) {
             style={styles.profileAvatar}
             source={
               props.user.computed_avatar_api === "img/default-avatar.png"
-                ? require("../../images/default-avatar.png")
+                ? require("../../assets/images/default-avatar.png")
                 : { uri: props.user.computed_avatar_api }
             }
           />

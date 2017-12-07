@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import {Animated, View, StyleSheet, Text } from 'react-native';
 import { colors } from '../../styles'
 
@@ -8,8 +8,6 @@ export default class PreSplash extends React.Component {
       title: 'PreSplash',
     };
 
-
-  static propTypes = {}
   state = {
     rotation: new Animated.Value(0)
   }
@@ -46,7 +44,7 @@ export default class PreSplash extends React.Component {
       <View style={styles.container}>
         <Animated.Image
           style={[styles.image, this.getTransform()]}
-          source={require('../../images/logo.png')} />
+          source={require('../../assets/images/logo.png')} />
       </View>
     )
   }

@@ -1,4 +1,5 @@
-import React, { PropTypes, PureComponent, Component } from "react";
+import React, { PureComponent, Component } from "react";
+import PropTypes from 'prop-types';
 import {
   ActivityIndicator,
   Alert,
@@ -11,6 +12,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { NavigationActions } from "react-navigation";
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { removeToken } from "../actions/authentication";
@@ -20,6 +22,8 @@ import NotificationsItem from "../components/NotificationsItem/NotificationsItem
 import { colors, fontSizes, fontStyles } from "../../app/styles";
 // import Moment from "../../node_modules/react-moment";
 // import TimeAgo from "../../node_modules/react-native-timeago";
+
+
 
 class Notifications extends PureComponent {
   static propTypes = {
@@ -61,6 +65,11 @@ class Notifications extends PureComponent {
       console.log("AsyncStorage error: " + error.message);
     }
     this.props.dispatch(removeToken());
+    this.props.navigation.dispatch({
+      key: 'MainPage',
+      type: 'ReplaceCurrentScreen',
+      routeName: 'MainPage'
+    });
   }
 
   render() {

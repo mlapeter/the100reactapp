@@ -87,6 +87,7 @@ import {
   LOAD_MORE_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
+import { SET_CREDENTIAL } from "../actions/onboarding";
 
 function* fetchToken() {
   try {
@@ -108,7 +109,7 @@ function* fetchToken() {
       }
     );
     const result = yield response.json();
-    console.log(result);
+    // console.log(result);
     if (result.error) {
       yield put({ type: FETCH_TOKEN_ERROR, error: result.error });
     } else if (result.message === "Invalid credentials") {
@@ -155,7 +156,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
     });
     const result = yield response.json();
     if (result.error) {
-      yield put({ type: failure, error: result.error });
+      yield { type: failure, error: result.error };
     } else if (result.length === 0) {
       yield put({ type: noData, result });
     } else {
@@ -607,6 +608,52 @@ function* loadMoreGroupGamingSessions() {
     yield put({ type: FETCH_GROUP_GAMING_SESSIONS_ERROR, error: e.message });
   }
 }
+function* setCredential() {
+  try {
+    let userInfo = yield select(state => state.onboarding);
+    const response = yield fetch(
+      "https://pwntastic.herokuapp.com/api/v2/users/",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          user: {
+            ...userInfo
+          }
+        })
+
+        // WORKING HARDCODED PARAMS, USERNAME AND GAMERTAG MUST BE UNIQUE EACH TIME:
+        // body: JSON.stringify({
+        //   user: {
+        //     gamertag: "testing002173",
+        //     email: "testing002173@example.com",
+        //     password: "test123",
+        //     platform: "ps4",
+        //     play_style: "casual",
+        //     play_schedule: "Weekday Evenings and Weekends",
+        //     age: "20",
+        //     group_preference: "parents"
+        //   }
+        // })
+      }
+    );
+    const result = yield response.json();
+    if (result.error) {
+      // ERROR
+    } else {
+      token = result.token;
+      firebaseToken = result.firebase_token;
+      AsyncStorage.setItem("id_token", token);
+      AsyncStorage.setItem("fb_token", firebaseToken);
+      yield put({ type: FETCH_TOKEN_RESULT, token, firebaseToken });
+    }
+  } catch (e) {
+    yield put({ type: FETCH_TOKEN_ERROR, error: e.message });
+  }
+}
 
 export default function* rootSaga() {
   yield takeEvery(FETCH_TOKEN, fetchToken);
@@ -642,4 +689,6 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
   yield takeEvery(REFRESH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
   yield takeEvery(LOAD_MORE_GROUP_GAMING_SESSIONS, loadMoreGroupGamingSessions);
+
+  yield takeEvery(SET_CREDENTIAL, setCredential);
 }

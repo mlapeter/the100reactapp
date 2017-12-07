@@ -1,4 +1,4 @@
-import React, { PropTypes, PureComponent } from "react";
+import React, { PureComponent } from "react";
 import {
   Image,
   View,
@@ -15,6 +15,25 @@ import { StackNavigator } from "react-navigation";
 export default class NotificationsItem extends PureComponent {
   render() {
     return (
+      <View style={styles.box}>
+        <View style={styles.leftBox}>
+          <Image
+            style={styles.avatarMini}
+            source={
+              this.props.item.avatar_url === null
+                ? require("../../assets/images/default-avatar.png")
+                : { uri: this.props.item.avatar_url }
+            }
+          />
+        </View>
+        <View style={styles.middleBox}>
+          <View style={{ flexDirection: "row" }}>
+            <Text style={styles.time}>
+              {this.props.item.notification_type} -
+            </Text>
+            <Text style={styles.time}>
+              <TimeAgo time={this.props.item.created_at} minPeriod="60" />
+            </Text>
       <TouchableHighlight
         onPress={() =>
           this.props.item.notification_type === "karma-received" ||

@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -177,7 +177,7 @@ export class User extends React.Component {
             source={
               this.props.dataSource.computed_avatar_api ===
               "img/default-avatar.png"
-                ? require("../images/default-avatar.png")
+                ? require("../assets/images/default-avatar.png")
                 : { uri: this.props.dataSource.computed_avatar_api }
             }
           />

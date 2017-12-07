@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import {
   AsyncStorage,
   Button,
@@ -9,11 +9,12 @@ import {
   View
 } from "react-native";
 
-import { TabNavigator } from "react-navigation";
-import { StackNavigator } from "react-navigation";
-import { DrawerNavigator } from "react-navigation";
+import { TabNavigator, StackNavigator, DrawerNavigator } from "react-navigation";
 
+import OnboardingFlowStack from "./onboarding-flow";
 import Login from "../screens/Login/";
+import MainPage from "../screens/MainPage/";
+
 import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
 import GamingSessionCreate from "../screens/GamingSessionCreate";
@@ -91,8 +92,7 @@ const FriendsStack = StackNavigator({
   FriendsList: { screen: FriendsList },
   Friend: { screen: User }
 });
-
-export default TabNavigator(
+const MainTab = TabNavigator(
   {
     MenuDrawer: { screen: MenuDrawer },
     Group: { screen: Group },
@@ -234,6 +234,29 @@ GamingSession.navigationOptions = {
   )
 };
 
+const rootNavigator =  StackNavigator({
+  MainPage: { screen: MainPage },
+  LoginPage: { screen: Login},
+  Main: { screen: MainTab },
+  Onboarding: { screen: OnboardingFlowStack }
+}, {
+  headerMode: 'none'
+});
+const prevGetStateForActionHomeStack = rootNavigator.router.getStateForAction;
+rootNavigator.router.getStateForAction = (action, state) => {
+  if (state && action.type === 'ReplaceCurrentScreen') {
+    console.log('routes===>', state.routes);
+    const routes = state.routes.slice(0, state.routes.length - 1);
+    routes.push(action);
+    return {
+      ...state,
+      routes,
+      index: routes.length - 1,
+    };
+  }
+  return prevGetStateForActionHomeStack(action, state);
+}
+
 const styles = StyleSheet.create({
   container: {
     flex: 1
@@ -255,3 +278,4 @@ const styles = StyleSheet.create({
     // textAlign: "center"
   }
 });
+export default rootNavigator;

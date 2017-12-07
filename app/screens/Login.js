@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -16,8 +16,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback
 } from "react-native";
-import { StackNavigator } from "react-navigation";
-import { TabNavigator } from "react-navigation";
 import PreSplash from "../components/PreSplash/PreSplash";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -29,22 +27,16 @@ import { fetchToken } from "../actions/authentication";
 import { decodeToken } from "../actions/authentication";
 import { setFirebaseToken } from "../actions/authentication";
 
-import Navigator from "../config/routes";
-
 import { colors, fontSizes, fontStyles } from "../styles";
 const { height, width } = Dimensions.get("window");
-import { Font } from "expo";
 
 class Login extends React.Component {
-  static propTypes = {};
   constructor(props) {
     super(props);
 
     this.state = {
       username: null,
       password: null,
-      isLoaded: false,
-      fontLoaded: false
     };
   }
 
@@ -65,54 +57,29 @@ class Login extends React.Component {
     }
   }
 
-  componentDidMount() {
-    AsyncStorage.getItem("id_token").then(token => {
-      this.props.dispatch(decodeToken(token));
-      this.setState({ isLoaded: true });
-    });
-    AsyncStorage.getItem("fb_token").then(token => {
-      this.props.dispatch(setFirebaseToken(token));
-    });
-
-    Font.loadAsync({
-      Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
-    }).then(result => {
-      this.setState({ fontLoaded: true });
-    });
-  }
-
   userLogin() {
     if (!this.state.username || !this.state.password) return;
     this.props.dispatch(fetchToken(this.state.username, this.state.password));
     this.setState({ password: "" });
   }
 
-  userLogout() {
-    try {
-      AsyncStorage.removeItem("id_token");
-    } catch (error) {
-      console.log("AsyncStorage error: " + error.message);
-    }
-    this.props.dispatch(removeToken());
-  }
+  // userLogout() {
+  //   try {
+  //     AsyncStorage.removeItem("id_token");
+  //   } catch (error) {
+  //     console.log("AsyncStorage error: " + error.message);
+  //   }
+  //   this.props.dispatch(removeToken());
+  // }
 
   static navigationOptions = {
     title: "Welcome"
   };
 
   render() {
-    if (
-      !this.state.isLoaded ||
-      !this.state.fontLoaded ||
-      this.props.authentication.isLoading
-    ) {
-      return <PreSplash />;
-    }
-
     if (this.props.authentication.isAuthed === true) {
-      return <Navigator onNavigationStateChange={null} />;
+      this.props.navigation.navigate("Main")
     }
-
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
@@ -120,7 +87,7 @@ class Login extends React.Component {
         keyboardOpeningTime={10}
       >
         <View style={styles.container}>
-          <Image style={styles.image} source={require("../images/logo.png")} />
+          <Image style={styles.image} source={require("../assets/images/logo.png")} />
 
           <TextInput
             onChangeText={username => this.setState({ username })}

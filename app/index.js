@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from "react";
+import React, { Component } from "react";
 // import EStylesheet from "react-native-extended-stylesheet";
-import Login from "./screens/Login/";
+import MainPage from "./screens/MainPage"
 import { AlertProvider } from "./components/Alert";
-import Navigator from "./config/routes";
+import Navigator from "./router";
 
 import { Provider } from "react-redux";
 import { connect } from "react-redux";
@@ -12,7 +12,7 @@ export default function App(props) {
   return (
     <Provider store={store}>
       <AlertProvider>
-        <Login />
+        <Navigator onNavigationStateChange={null}/>
       </AlertProvider>
     </Provider>
   );
