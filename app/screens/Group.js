@@ -39,11 +39,11 @@ class Group extends React.Component {
 
   constructor(props) {
     super(props);
-    this.fetchData = this.fetchData.bind(this);
+    this.fetchGroupData = this.fetchGroupData.bind(this);
   }
 
   componentWillMount() {
-    this.fetchData();
+    this.fetchGroupData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,7 +55,7 @@ class Group extends React.Component {
     }
   }
 
-  fetchData() {
+  fetchGroupData() {
     console.log("Fetching Group");
     this.props.dispatch(fetchGroup());
   }
@@ -76,7 +76,7 @@ class Group extends React.Component {
   //   });
   //   AsyncStorage.getItem("id_token").then(token => {
   //     console.log("token: " + token);
-  //     fetch("https://pwntastic.herokuapp.com/api/v2/groups/" + action, {
+  //     fetch("https://pwn-staging.herokuapp.com/api/v2/groups/" + action, {
   //       method: "POST",
   //       headers: {
   //         "Content-Type": "application/json",
@@ -85,7 +85,7 @@ class Group extends React.Component {
   //     })
   //       .then(response => response.json())
   //       .then(responseJson => {
-  //         this.fetchData();
+  //         this.fetchGroupData();
   //         console.log("ACTION POSTED");
   //         console.log(responseJson);
   //       })
@@ -110,7 +110,7 @@ class Group extends React.Component {
           <View style={styles.container}>
             <TouchableOpacity
               style={styles.buttonWrapper}
-              onPress={this.fetchData}
+              onPress={this.fetchGroupData}
             >
               <Text style={styles.buttonText}>Get Group</Text>
             </TouchableOpacity>
@@ -158,7 +158,7 @@ class Group extends React.Component {
               playSchedule={this.props.dataSource.play_schedule}
             />
           </View>
-          <Chat chatroom={"help_chatroom"} room="help_chatroom" />
+          {/* <Chat chatroom={"help_chatroom"} room="help_chatroom" /> */}
         </View>
       </View>
     );

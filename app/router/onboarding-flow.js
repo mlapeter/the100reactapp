@@ -16,7 +16,7 @@ const styles = {
     paddingHorizontal: 20
   },
   headerTitleStyle: {
-    color: "#fff",
+    color: "#fff"
   },
   backButtonStyle: {
     paddingVertical: 15,
@@ -24,7 +24,7 @@ const styles = {
     backgroundColor: "#27282b"
   },
   backTitle: {
-    color: '#fff'
+    color: "#fff"
   }
 };
 const BackButton = ({ onPress, title }) => (
@@ -40,43 +40,55 @@ const OnboardingFlowStack = StackNavigator({
   CreateCredential: { screen: CreateCredential }
 });
 
-ChoosePlatform.navigationOptions = ({navigation}) => ({
-  headerLeft: (<BackButton
-    title="BACK"
-    onPress={() => { navigation.navigate("MainPage") }
-  }/>
+ChoosePlatform.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.navigate("MainPage");
+      }}
+    />
   ),
-  headerTitle: 'SIGN UP',
+  headerTitle: "SIGN UP",
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
-CreateGamer.navigationOptions = ({navigation}) => ({
-  headerLeft: (<BackButton
-    title="BACK"
-    onPress={() => { navigation.goBack() }
-  }/>
+CreateGamer.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
   ),
-  headerTitle: 'SIGN UP',
+  headerTitle: "SIGN UP",
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
-GamerProfile.navigationOptions = ({navigation}) => ({
-  headerLeft: (<BackButton
-    title="BACK"
-    onPress={() => { navigation.goBack() }
-  }/>
+GamerProfile.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
   ),
-  headerTitle: 'SIGN UP',
+  headerTitle: "SIGN UP",
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
-CreateCredential.navigationOptions = ({navigation}) => ({
-  headerLeft: (<BackButton
-    title="BACK"
-    onPress={() => { navigation.goBack() }
-  }/>
+CreateCredential.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
   ),
-  headerTitle: 'SIGN UP',
+  headerTitle: "SIGN UP",
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });

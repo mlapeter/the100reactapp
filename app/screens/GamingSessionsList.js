@@ -17,7 +17,6 @@ import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
 import GamingSessionsFilter from "../components/GamingSessionsFilter/GamingSessionsFilter";
-import MyGamingSessionsList from "../components/MyGamingSessionsList/MyGamingSessionsList";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -67,7 +66,7 @@ class GamingSessionsList extends React.PureComponent {
 
   componentDidMount() {
     this.fetchGamesData();
-    this.fetchData();
+    this.fetchGamingSessionsData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -90,7 +89,7 @@ class GamingSessionsList extends React.PureComponent {
 
   searchUrl() {
     return encodeURI(
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions" +
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions" +
         // this.props.gamingSessionsPage +
         "?q[game_id_eq]=" +
         this.props.gameId +
@@ -103,7 +102,7 @@ class GamingSessionsList extends React.PureComponent {
     );
   }
 
-  fetchData() {
+  fetchGamingSessionsData() {
     this.props.dispatch(fetchGamingSessions(this.searchUrl()));
     this.props.dispatch(fetchMyGamingSessions());
     this.props.dispatch(fetchGroupGamingSessions());

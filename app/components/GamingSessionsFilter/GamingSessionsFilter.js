@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Button,
   StyleSheet,
@@ -46,8 +46,8 @@ class GamingSessionsFilter extends Component {
   }
 
   updateFilter() {
-    this.fetchData();
-
+    // Off for debugging
+    // this.fetchData();
     // this.setState(
     //   {
     //     data: [],
@@ -150,7 +150,7 @@ class GamingSessionsFilter extends Component {
                 }}
               >
                 <Picker.Item label="Destiny" value="1" />
-                <Picker.Item label="Destiny 2" value="23" />
+                <Picker.Item label="Destiny 2" value="13" />
               </Picker>
               <View style={styles.modalButtonStyle}>
                 <Button

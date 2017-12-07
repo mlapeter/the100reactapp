@@ -9,9 +9,9 @@ import {
 } from "react-native";
 import PropTypes from "prop-types";
 
-var SCREEN_HEIGHT = Dimensions.get('window').height;
+var SCREEN_HEIGHT = Dimensions.get("window").height;
 var noop = () => {};
-var ds = new ListView.DataSource({rowHasChanged: (r1,r2)=>(r1!==r2)});
+var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 export default class ListPopover extends Component {
   constructor(props) {
@@ -19,27 +19,27 @@ export default class ListPopover extends Component {
 
     this.state = {
       dataSource: ds.cloneWithRows(this.props.list)
-    }
+    };
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.list !== this.props.list) {
-      this.setState({dataSource: ds.cloneWithRows(nextProps.list)});
+      this.setState({ dataSource: ds.cloneWithRows(nextProps.list) });
     }
   }
-  handleClick = (data) => {
+  handleClick = data => {
     this.props.onClick(data);
     this.props.onClose();
-  }
-  renderRow = (rowData) => {
+  };
+  renderRow = rowData => {
     var separatorStyle = this.props.separatorStyle || DefaultStyles.separator;
     var rowTextStyle = this.props.rowText || DefaultStyles.rowText;
 
-    var separator = <View style={separatorStyle}/>;
+    var separator = <View style={separatorStyle} />;
     if (rowData === this.props.list[0]) {
       separator = null;
     }
 
-    var row = <Text style={rowTextStyle}>{rowData}</Text>
+    var row = <Text style={rowTextStyle}>{rowData}</Text>;
     if (this.props.renderRow) {
       row = this.props.renderRow(rowData);
     }
@@ -52,22 +52,22 @@ export default class ListPopover extends Component {
         </TouchableOpacity>
       </View>
     );
-  }
+  };
   renderList = () => {
     var styles = this.props.style || DefaultStyles;
     var maxHeight = {};
     if (this.props.list.length > 12) {
-      maxHeight = {height: SCREEN_HEIGHT * 3/4};
+      maxHeight = { height: SCREEN_HEIGHT * 3 / 4 };
     }
     return (
       <ListView
         style={maxHeight}
         dataSource={this.state.dataSource}
-        renderRow={(rowData) => this.renderRow(rowData)}
+        renderRow={rowData => this.renderRow(rowData)}
         automaticallyAdjustContentInsets={false}
       />
     );
-  }
+  };
   render() {
     var containerStyle = this.props.containerStyle || DefaultStyles.container;
     var popoverStyle = this.props.popoverStyle || DefaultStyles.popover;
@@ -75,13 +75,11 @@ export default class ListPopover extends Component {
     if (this.props.isVisible) {
       return (
         <TouchableOpacity onPress={this.props.onClose} style={containerStyle}>
-          <View style={popoverStyle}>
-            {this.renderList()}
-          </View>
+          <View style={popoverStyle}>{this.renderList()}</View>
         </TouchableOpacity>
       );
     } else {
-      return (<View/>);
+      return <View />;
     }
   }
 }
@@ -89,7 +87,7 @@ ListPopover.propTypes = {
   list: PropTypes.array.isRequired,
   isVisible: PropTypes.bool,
   onClick: PropTypes.func,
-  onClose: PropTypes.func,
+  onClose: PropTypes.func
 };
 ListPopover.defaultProps = {
   list: [""],
@@ -103,25 +101,24 @@ const DefaultStyles = StyleSheet.create({
     right: 0,
     bottom: 0,
     left: 0,
-    alignSelf: 'stretch',
-    position: 'absolute',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
+    alignSelf: "stretch",
+    position: "absolute",
+    justifyContent: "center",
+    backgroundColor: "transparent"
   },
   popover: {
     margin: 10,
     borderRadius: 3,
     padding: 3,
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff"
   },
   rowText: {
-    padding: 10,
+    padding: 10
   },
   separator: {
     height: 0.5,
     marginLeft: 8,
     marginRight: 8,
-    backgroundColor: '#CCC',
-  },
+    backgroundColor: "#CCC"
+  }
 });
-

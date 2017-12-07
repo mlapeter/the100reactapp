@@ -1,5 +1,5 @@
 import React, { PureComponent, Component } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
@@ -23,8 +23,6 @@ import { colors, fontSizes, fontStyles } from "../../app/styles";
 // import Moment from "../../node_modules/react-moment";
 // import TimeAgo from "../../node_modules/react-native-timeago";
 
-
-
 class Notifications extends PureComponent {
   static propTypes = {
     navigation: PropTypes.object,
@@ -34,7 +32,7 @@ class Notifications extends PureComponent {
   };
   constructor(props) {
     super(props);
-    this.fetchData = this.fetchData.bind(this);
+    this.fetchNotificationsData = this.fetchNotificationsData.bind(this);
   }
 
   componentWillMount() {
@@ -50,12 +48,12 @@ class Notifications extends PureComponent {
     }
   }
 
-  fetchData() {
+  fetchNotificationsData() {
     this.props.dispatch(fetchNotifications());
   }
 
   handleRefresh = () => {
-    this.fetchData();
+    this.fetchNotificationsData();
   };
 
   userLogout() {
@@ -66,9 +64,9 @@ class Notifications extends PureComponent {
     }
     this.props.dispatch(removeToken());
     this.props.navigation.dispatch({
-      key: 'MainPage',
-      type: 'ReplaceCurrentScreen',
-      routeName: 'MainPage'
+      key: "MainPage",
+      type: "ReplaceCurrentScreen",
+      routeName: "MainPage"
     });
   }
 
@@ -85,7 +83,7 @@ class Notifications extends PureComponent {
           <View style={styles.container}>
             <TouchableOpacity
               style={styles.buttonWrapper}
-              onPress={this.fetchData}
+              onPress={this.fetchNotificationsData}
             >
               <Text style={styles.buttonText}>Get Notifications</Text>
             </TouchableOpacity>
