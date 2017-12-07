@@ -1,7 +1,8 @@
 import {
   FETCH_NOTIFICATIONS,
   FETCH_NOTIFICATIONS_RESULT,
-  FETCH_NOTIFICATIONS_ERROR
+  FETCH_NOTIFICATIONS_ERROR,
+  FETCH_NOTIFICATIONS_NO_DATA
 } from "../actions/notifications";
 
 const initialState = {
@@ -25,7 +26,12 @@ export default (state = initialState, action) => {
     case FETCH_NOTIFICATIONS_ERROR:
       return {
         ...state,
-        // error: action.error,
+        error: action.error,
+        isLoading: false
+      };
+    case FETCH_NOTIFICATIONS_NO_DATA:
+      return {
+        ...state,
         isLoading: false
       };
     default:

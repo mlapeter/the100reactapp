@@ -16,7 +16,8 @@ import {
 import {
   FETCH_NOTIFICATIONS,
   FETCH_NOTIFICATIONS_RESULT,
-  FETCH_NOTIFICATIONS_ERROR
+  FETCH_NOTIFICATIONS_ERROR,
+  FETCH_NOTIFICATIONS_NO_DATA
 } from "../actions/notifications";
 
 import {
@@ -267,7 +268,8 @@ function* fetchNotifications() {
       endpoint,
       1,
       FETCH_NOTIFICATIONS_RESULT,
-      FETCH_NOTIFICATIONS_ERROR
+      FETCH_NOTIFICATIONS_ERROR,
+      FETCH_NOTIFICATIONS_NO_DATA
     );
   } catch (e) {
     yield put({ type: FETCH_NOTIFICATIONS_ERROR, error: e.message });

@@ -158,7 +158,7 @@ class Group extends React.Component {
               playSchedule={this.props.dataSource.play_schedule}
             />
           </View>
-          <Chat chatroom={"help_chatroom"} room="help_chatroom" />
+          {/* <Chat chatroom={"help_chatroom"} room="help_chatroom" /> */}
         </View>
       </View>
     );
