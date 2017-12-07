@@ -43,7 +43,7 @@ class UserEdit extends React.Component {
   }
 
   componentWillMount() {
-    this.fetchData();
+    this.fetchUserEditData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -59,7 +59,7 @@ class UserEdit extends React.Component {
     }
   }
 
-  fetchData() {
+  fetchUserEditData() {
     console.log("Fetching User");
     this.props.dispatch(fetchUser(this.props.authedUser.user_id));
   }

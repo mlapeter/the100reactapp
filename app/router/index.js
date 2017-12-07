@@ -9,7 +9,11 @@ import {
   View
 } from "react-native";
 
-import { TabNavigator, StackNavigator, DrawerNavigator } from "react-navigation";
+import {
+  TabNavigator,
+  StackNavigator,
+  DrawerNavigator
+} from "react-navigation";
 
 import OnboardingFlowStack from "./onboarding-flow";
 import Login from "../screens/Login/";
@@ -234,28 +238,31 @@ GamingSession.navigationOptions = {
   )
 };
 
-const rootNavigator =  StackNavigator({
-  MainPage: { screen: MainPage },
-  LoginPage: { screen: Login},
-  Main: { screen: MainTab },
-  Onboarding: { screen: OnboardingFlowStack }
-}, {
-  headerMode: 'none'
-});
+const rootNavigator = StackNavigator(
+  {
+    MainPage: { screen: MainPage },
+    LoginPage: { screen: Login },
+    Main: { screen: MainTab },
+    Onboarding: { screen: OnboardingFlowStack }
+  },
+  {
+    headerMode: "none"
+  }
+);
 const prevGetStateForActionHomeStack = rootNavigator.router.getStateForAction;
 rootNavigator.router.getStateForAction = (action, state) => {
-  if (state && action.type === 'ReplaceCurrentScreen') {
-    console.log('routes===>', state.routes);
+  if (state && action.type === "ReplaceCurrentScreen") {
+    console.log("routes===>", state.routes);
     const routes = state.routes.slice(0, state.routes.length - 1);
     routes.push(action);
     return {
       ...state,
       routes,
-      index: routes.length - 1,
+      index: routes.length - 1
     };
   }
   return prevGetStateForActionHomeStack(action, state);
-}
+};
 
 const styles = StyleSheet.create({
   container: {

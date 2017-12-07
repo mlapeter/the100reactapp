@@ -25,7 +25,7 @@ export default (state = initialState, action) => {
     case FETCH_NOTIFICATIONS_ERROR:
       return {
         ...state,
-        error: action.error,
+        // error: action.error,
         isLoading: false
       };
     default:

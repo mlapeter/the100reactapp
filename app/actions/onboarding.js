@@ -4,15 +4,21 @@ export const SET_PROFILE_INFO = "SET_PROFILE_INFO";
 export const SET_CREDENTIAL = "SET_CREDENTIAL";
 export const SET_USERINFO_ERROR = "SET_USERINFO_ERROR";
 
-export const setPlatform = (platform) => ({
+export const setPlatform = platform => ({
   type: SET_PLATFORM,
   platform
 });
-export const setGamertag = (gamertag) => ({
+export const setGamertag = gamertag => ({
   type: SET_GAMERTAG,
   gamertag
-})
-export const setProfileInfo = (timezone, playStyle, age, playSchedule, group) => ({
+});
+export const setProfileInfo = (
+  timezone,
+  playStyle,
+  age,
+  playSchedule,
+  group
+) => ({
   type: SET_PROFILE_INFO,
   timezone,
   playStyle,
