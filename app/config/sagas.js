@@ -651,7 +651,7 @@ function* setCredential() {
       yield put({ type: FETCH_TOKEN_RESULT, token, firebaseToken });
     }
   } catch (e) {
-    yield put({ type: SET_USERINFO_ERROR, error: e.message });
+    yield put({ type: FETCH_TOKEN_ERROR, error: e.message });
   }
 }
 

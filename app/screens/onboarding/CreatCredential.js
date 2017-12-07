@@ -26,11 +26,21 @@ class CreateCredential extends Component {
       sendNotification: false
     }
   }
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.authenticationError
+      // && nextProps.authenticationError !== this.props.authenticationError
+    ) {
+      this.props.alertWithType("error", "Error", nextProps.authenticationError);
+    }
+  }
   sendUserInfo = () => {
     this.props.dispatch(setCredential(this.state.email, this.state.password, this.state.sendNotification))
   }
   render() {
-    const { params } = this.props.navigation.state;
+    if (nextProps.authentication.isAuthed === true) {
+      this.props.navigation.navigate("Main");
+    }
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
@@ -135,6 +145,8 @@ const styles = {
   }
 };
 const mapStateToProps = state => ({
-  onboarding: state.onboarding
+  onboarding: state.onboarding,
+  authentication: state.authentication,
+  authenticationError: state.authentication.error
 })
 export default connect(mapStateToProps)(connectAlert(CreateCredential));
