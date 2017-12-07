@@ -33,14 +33,15 @@ class CreateCredential extends Component {
     ) {
       this.props.alertWithType("error", "Error", nextProps.authenticationError);
     }
+    if (nextProps.authentication.isAuthed === true) {
+      this.props.navigation.navigate("Main");
+    }
   }
   sendUserInfo = () => {
     this.props.dispatch(setCredential(this.state.email, this.state.password, this.state.sendNotification))
   }
   render() {
-    if (nextProps.authentication.isAuthed === true) {
-      this.props.navigation.navigate("Main");
-    }
+    
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
