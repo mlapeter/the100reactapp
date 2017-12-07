@@ -155,11 +155,11 @@ class GamingSession extends React.Component {
           confirmedSessions={this.state.dataSource.confirmed_sessions}
           navigation={this.props.navigation}
         />
-        <Chat
+        {/* <Chat
           chatroom={"help_chatroom"}
           room="help_chatroom"
           style={{ flex: 5 }}
-        />
+        /> */}
       </View>
     );
   }

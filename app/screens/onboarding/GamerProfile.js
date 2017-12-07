@@ -22,10 +22,7 @@ const { width, height } = Dimensions.get("window");
 
 let items = [];
 var ageOptions = _.range(13, 99);
-var playStyleOptions = [
-  "Casual / having fun is priority",
-  "Serious / getting it done is priority"
-];
+var playStyleOptions = ["casual", "serious"];
 var playScheduleOptions = [
   "Weekday Mornings and Weekends",
   "Weekday Afternoons and Weekends",
