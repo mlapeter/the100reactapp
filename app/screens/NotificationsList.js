@@ -63,11 +63,7 @@ class Notifications extends PureComponent {
       console.log("AsyncStorage error: " + error.message);
     }
     this.props.dispatch(removeToken());
-    this.props.navigation.dispatch({
-      key: "MainPage",
-      type: "ReplaceCurrentScreen",
-      routeName: "MainPage"
-    });
+    this.props.navigation.navigate("MainPage");
   }
 
   render() {

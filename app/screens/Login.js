@@ -49,9 +49,9 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.authentication.isAuthed === true) {
-      this.props.navigation.navigate("Main");
-    }
+    // if (this.props.authentication.isAuthed === true) {
+    //   this.props.navigation.navigate("Main");
+    // }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -83,6 +83,10 @@ class Login extends React.Component {
   };
 
   render() {
+    if (this.props.authentication.isAuthed === true) {
+      this.props.navigation.navigate("Main");
+    }
+
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
