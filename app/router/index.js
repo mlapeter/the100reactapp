@@ -58,9 +58,32 @@ const HelpChatStack = StackNavigator({
   HelpChat: { screen: HelpChat }
 });
 
+const FriendsStack = StackNavigator({
+  FriendsList: { screen: FriendsList },
+  Friend: { screen: User }
+});
+
+const HomeTabs = TabNavigator(
+  {
+    Games: { screen: GamingSessionsStack },
+    Group: { screen: Group },
+    NotificationsList: { screen: NotificationsList },
+    FriendsList: { screen: FriendsStack }
+  },
+  {
+    // headerMode: "none"
+  }
+);
+
 const MenuDrawer = DrawerNavigator(
   {
-    Back: { screen: GamingSessionsStack },
+    Home: {
+      screen: HomeTabs,
+      navigationOptions: ({ navigation }) => ({
+        headerTitle: "Home",
+        drawerLabel: "Home"
+      })
+    },
     "Edit Profile": { screen: UserEditStack },
     "Help Chat": { screen: HelpChatStack }
   },
@@ -94,28 +117,9 @@ const MenuDrawer = DrawerNavigator(
   }
 );
 
-const FriendsStack = StackNavigator({
-  FriendsList: { screen: FriendsList },
-  Friend: { screen: User }
-});
-const MainTab = TabNavigator(
-  {
-    MenuDrawer: { screen: MenuDrawer },
-    Group: { screen: Group },
-    NotificationsList: { screen: NotificationsList },
-    FriendsList: { screen: FriendsStack }
-  },
-  {
-    // headerMode: "none"
-  }
-);
-
 UserEdit.navigationOptions = ({ navigation }) => ({
   headerLeft: (
-    <Button
-      title="Cancel"
-      onPress={() => navigation.navigate("GamingSessionsList")}
-    />
+    <Button title="Cancel" onPress={() => navigation.navigate("Home")} />
   ),
   headerTitle: "Edit Profile",
   drawerLabel: "Edit Profile",
@@ -130,10 +134,7 @@ UserEdit.navigationOptions = ({ navigation }) => ({
 
 HelpChat.navigationOptions = ({ navigation }) => ({
   headerLeft: (
-    <Button
-      title="Back"
-      onPress={() => navigation.navigate("GamingSessionsList")}
-    />
+    <Button title="Back" onPress={() => navigation.navigate("Home")} />
   ),
   headerTitle: "Help Chat",
   drawerLabel: "Help Chat",
@@ -244,7 +245,7 @@ const rootNavigator = StackNavigator(
   {
     MainPage: { screen: MainPage },
     LoginPage: { screen: Login },
-    Main: { screen: MainTab },
+    Main: { screen: MenuDrawer },
     Onboarding: { screen: OnboardingFlowStack }
   },
   {
