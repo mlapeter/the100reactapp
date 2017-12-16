@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
@@ -16,7 +16,7 @@ import {
 import PreSplash from "../../components/PreSplash/PreSplash";
 import { colors, fontSizes, fontStyles } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
-import TimeAgo from "../../../node_modules/react-native-timeago";
+import TimeAgo from "../../components/TimeAgo";
 
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -234,7 +234,7 @@ class ListItem extends Component {
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.username}>{this.props.item.username}</Text>
             <Text style={styles.time}>
-              <TimeAgo time={this.props.item.createdAt} minPeriod="60" />
+              <TimeAgo date={this.props.item.createdAt} />
             </Text>
           </View>
           <Text style={styles.text}>{this.props.item.text}</Text>
