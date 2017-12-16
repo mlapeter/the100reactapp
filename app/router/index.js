@@ -18,8 +18,8 @@ import {
 } from "react-navigation";
 
 import OnboardingFlowStack from "./onboarding-flow";
-import Login from "../screens/Login/";
-import MainPage from "../screens/MainPage/";
+import Login from "../screens/Login";
+import MainPage from "../screens/MainPage";
 
 import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
@@ -39,7 +39,7 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { colors, fontSizes } from "../styles";
-import { DrawerItems } from "react-navigation";
+import { HeaderBackButton, DrawerItems } from "react-navigation";
 import { connect } from "react-redux";
 import { userLogout } from "../screens/NotificationsList";
 
@@ -51,11 +51,37 @@ const GamingSessionsStack = StackNavigator({
 });
 
 const UserEditStack = StackNavigator({
-  UserEdit: { screen: UserEdit }
+  UserEdit: {
+    screen: UserEdit,
+    navigationOptions: ({ navigation }) => ({
+      title: "Edit Profile",
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
+      drawerIcon: () => (
+        <MaterialCommunityIcons
+          name="account-settings-variant"
+          size={24}
+          // style={{ color: colors.grey }}
+        />
+      )
+    })
+  }
 });
 
 const HelpChatStack = StackNavigator({
-  HelpChat: { screen: HelpChat }
+  HelpChat: {
+    screen: HelpChat,
+    navigationOptions: ({ navigation }) => ({
+      title: "Help Chat",
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
+      drawerIcon: () => (
+        <MaterialCommunityIcons
+          name="help-circle"
+          size={24}
+          // style={{ color: colors.grey }}
+        />
+      )
+    })
+  }
 });
 
 const FriendsStack = StackNavigator({
@@ -80,8 +106,14 @@ const MenuDrawer = DrawerNavigator(
     Home: {
       screen: HomeTabs,
       navigationOptions: ({ navigation }) => ({
-        headerTitle: "Home",
-        drawerLabel: "Home"
+        title: "Home",
+        drawerIcon: () => (
+          <MaterialCommunityIcons
+            name="home"
+            size={24}
+            // style={{ color: colors.grey }}
+          />
+        )
       })
     },
     "Edit Profile": { screen: UserEditStack },
@@ -117,62 +149,9 @@ const MenuDrawer = DrawerNavigator(
   }
 );
 
-UserEdit.navigationOptions = ({ navigation }) => ({
-  headerLeft: (
-    <Button title="Cancel" onPress={() => navigation.navigate("Home")} />
-  ),
-  headerTitle: "Edit Profile",
-  drawerLabel: "Edit Profile",
-  drawerIcon: () => (
-    <MaterialCommunityIcons
-      name="account-settings-variant"
-      size={24}
-      // style={{ color: colors.grey }}
-    />
-  )
-});
-
-HelpChat.navigationOptions = ({ navigation }) => ({
-  headerLeft: (
-    <Button title="Back" onPress={() => navigation.navigate("Home")} />
-  ),
-  headerTitle: "Help Chat",
-  drawerLabel: "Help Chat",
-  drawerIcon: () => (
-    <MaterialCommunityIcons
-      name="help-circle"
-      size={24}
-      // style={{ color: colors.grey }}
-    />
-  )
-});
-
-GamingSessionsStack.navigationOptions = {
-  drawerLabel: "",
-  drawerIcon: () => (
-    <MaterialCommunityIcons
-      name="arrow-left"
-      size={24}
-      // style={{ color: colors.grey }}
-    />
-  )
-};
-
 GamingSessionCreate.navigationOptions = {
   // headerRight: <Button title="Join Game" />,
   headerTitle: "New Gaming Session"
-};
-
-MenuDrawer.navigationOptions = {
-  tabBarLabel: "Games",
-  // header: false,
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Ionicons
-      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
-      size={26}
-      style={{ color: tintColor }}
-    />
-  )
 };
 
 GamingSessionsList.navigationOptions = {
@@ -186,6 +165,7 @@ GamingSessionsList.navigationOptions = {
     />
   )
 };
+
 Group.navigationOptions = {
   tabBarLabel: "Group",
   tabBarIcon: ({ tintColor, focused }) => (
@@ -196,6 +176,7 @@ Group.navigationOptions = {
     />
   )
 };
+
 NotificationsList.navigationOptions = {
   tabBarLabel: "Notifications",
   tabBarIcon: ({ tintColor, focused }) => (
@@ -206,6 +187,7 @@ NotificationsList.navigationOptions = {
     />
   )
 };
+
 FriendsList.navigationOptions = {
   tabBarLabel: "Friends",
   header: false,
@@ -217,6 +199,7 @@ FriendsList.navigationOptions = {
     />
   )
 };
+
 User.navigationOptions = {
   tabBarLabel: "User",
   // headerRight: <Button title="Add Friend" />,
@@ -228,6 +211,7 @@ User.navigationOptions = {
     />
   )
 };
+
 GamingSession.navigationOptions = {
   tabBarLabel: "Games",
   // headerRight: <Button title="Join Game" />,
@@ -256,6 +240,7 @@ const rootNavigator = StackNavigator(
     }
   }
 );
+
 // const prevGetStateForActionHomeStack = rootNavigator.router.getStateForAction;
 // rootNavigator.router.getStateForAction = (action, state) => {
 //   if (state && action.type === "ReplaceCurrentScreen") {
@@ -292,4 +277,5 @@ const styles = StyleSheet.create({
     // textAlign: "center"
   }
 });
+
 export default rootNavigator;
