@@ -71,7 +71,7 @@ class MainPage extends Component {
     }
     return (
       <View style={styles.container}>
-        <StatusBar hidden/>
+        <StatusBar/>
         <Image
           source={ImgLogo}
           style={styles.logoImage}

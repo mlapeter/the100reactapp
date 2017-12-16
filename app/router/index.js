@@ -2,7 +2,9 @@ import React, { Component } from "react";
 import {
   AsyncStorage,
   Button,
+  Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -246,7 +248,11 @@ const rootNavigator = StackNavigator(
     Onboarding: { screen: OnboardingFlowStack }
   },
   {
-    headerMode: "none"
+    headerMode: "none",
+    cardStyle: {
+      // See https://github.com/react-community/react-navigation/issues/1478#issuecomment-301220017
+      paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight
+    }
   }
 );
 // const prevGetStateForActionHomeStack = rootNavigator.router.getStateForAction;
