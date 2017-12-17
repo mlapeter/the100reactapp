@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { Text } from "react-native";
+import { Image, Text, View } from "react-native";
 //import { Tweet } from "react-twitter-widgets";
 
 import reactStringReplace from "react-string-replace-recursively";
@@ -93,7 +93,7 @@ const config = {
   userMentionBracketed: {
     pattern: /\B@\[([a-z0-9_\-# ]+?)\]\B/gim,
     matcherFn: usernameMentionMatcherFn
-  }
+  },
   /*
   gifv: {
     pattern: /(https?:\/\/\S+?\.gifv)/gim,
@@ -102,14 +102,12 @@ const config = {
     }
   },
   */
-  /*
   image: {
     pattern: /(https?:\/\/\S+?\.(?:png|jpg|gif|jpeg))/gim,
     matcherFn: (rawText, processed, key) => {
       return <MessageImage key={key} source={rawText} />;
     }
-  },
-  */
+  }
   /*
   tweet: {
     pattern: /\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/gim,
@@ -152,7 +150,30 @@ export default class MessageBody extends PureComponent {
     let { text } = this.props;
 
     try {
-      return <Text>{parseMessageText(text)}</Text>;
+      let parsedText = parseMessageText(text);
+      let children = [];
+      let id = 0;
+      let currentText = [];
+      React.Children.forEach(parsedText, child => {
+        if (typeof child === "string") {
+          currentText.push(<Text key={"text-" + id}>{child}</Text>);
+          id++;
+        } else if (child.type === Text || child.type == Spoiler) {
+          currentText.push(child);
+        } else {
+          if (currentText) {
+            children.push(<Text key={"text-" + id}>{currentText}</Text>);
+            id++;
+            currentText = [];
+          }
+          children.push(child);
+        }
+      });
+      if (currentText) {
+        children.push(<Text key={"text-" + id}>{currentText}</Text>);
+        id++;
+      }
+      return <View>{children}</View>;
     } catch (e) {
       console.error("Error parsing message text: " + e);
     }
@@ -193,7 +214,7 @@ class Spoiler extends PureComponent {
   }
 }
 
-class MessageImage extends React.Component {
+class MessageImage extends PureComponent {
   static propTypes = {
     source: PropTypes.string.isRequired
   };
@@ -202,28 +223,67 @@ class MessageImage extends React.Component {
     super(props);
 
     this.state = {
+      loaded: false,
+      imageWidth: 0,
+      imageHeight: 0,
+      layoutWidth: 0,
       error: false
     };
   }
+
+  onLayout = event => {
+    this.setState({
+      layoutWidth: event.nativeEvent.layout.width
+    });
+  };
 
   onError = e => {
     this.setState({ error: true });
   };
 
+  componentDidMount() {
+    Image.getSize(
+      this.props.source,
+      (width, height) => {
+        this.setState({
+          imageWidth: width,
+          imageHeight: height,
+          loaded: true
+        });
+      },
+      error => {
+        this.setState({ error: true });
+      }
+    );
+  }
+
   render() {
     let { source } = this.props;
 
-    if (this.state.error) {
-      return source;
+    if (this.state.error || !this.state.loaded || this.state.imageWidth === 0) {
+      return <Text>{source}</Text>;
     } else {
+      let imageWidth = Math.min(this.state.imageWidth, this.state.layoutWidth);
+      let imageHeight =
+        imageWidth / this.state.imageWidth * this.state.imageHeight;
       return (
-        <img
-          styleName="block-item"
-          src={source}
-          alt={source}
-          title={source}
-          onError={this.onError}
-        />
+        <View
+          onLayout={this.onLayout}
+          style={{
+            flex: 1,
+            flexDirection: "row"
+          }}
+        >
+          <Image
+            source={{ uri: source }}
+            onError={this.onError}
+            style={{
+              width: imageWidth,
+              height: imageHeight,
+              resizeMode: "contain"
+            }}
+          />
+        </View>
       );
     }
   }
