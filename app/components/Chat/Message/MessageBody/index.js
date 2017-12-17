@@ -19,6 +19,25 @@ function usernameMentionMatcherFn(rawText, processed, key) {
 }
 
 const config = {
+  gifv: {
+    pattern: /(\bhttps?:\/\/\S+?\.gifv\b)/gim,
+    matcherFn: (rawText, processed, key) => {
+      return <MessageImage key={key} source={rawText.slice(0, -1)} />;
+    }
+  },
+  image: {
+    pattern: /(\bhttps?:\/\/\S+?\.(?:png|jpg|gif|jpeg)\b)/gim,
+    matcherFn: (rawText, processed, key) => {
+      return <MessageImage key={key} source={rawText} />;
+    }
+  },
+  youtube: {
+    pattern: /(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?/gim,
+    matcherFn: (rawText, processed, key) => {
+      let videoId = rawText;
+      return <Youtube key={key} videoId={videoId} />;
+    }
+  },
   spoiler: {
     pattern: /\B~~(.+?)~~\B/gim,
     matcherFn: (rawText, processed, key) => {
@@ -97,18 +116,6 @@ const config = {
     pattern: /\B@\[([a-z0-9_\-# ]+?)\]\B/gim,
     matcherFn: usernameMentionMatcherFn
   },
-  gifv: {
-    pattern: /(\bhttps?:\/\/\S+?\.gifv\b)/gim,
-    matcherFn: (rawText, processed, key) => {
-      return <MessageImage key={key} source={rawText.slice(0, -1)} />;
-    }
-  },
-  image: {
-    pattern: /(\bhttps?:\/\/\S+?\.(?:png|jpg|gif|jpeg)\b)/gim,
-    matcherFn: (rawText, processed, key) => {
-      return <MessageImage key={key} source={rawText} />;
-    }
-  },
   tweet: {
     pattern: /\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/gim,
     matcherFn: (rawText, processed, key) => {
@@ -119,13 +126,6 @@ const config = {
           link={"https://twitter.com/i/web/status/" + tweetId}
         />
       );
-    }
-  },
-  youtube: {
-    pattern: /(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?/gim,
-    matcherFn: (rawText, processed, key) => {
-      let videoId = rawText;
-      return <Youtube key={key} videoId={videoId} />;
     }
   }
 };
