@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import PropTypes from "prop-types";
 
@@ -8,7 +8,7 @@ import { colors, fontSizes, fontStyles } from "../../../styles";
 
 import { ChatMessagePropType } from "../types";
 
-export default class Message extends Component {
+export default class Message extends PureComponent {
   static propTypes = {
     message: PropTypes.shape(ChatMessagePropType).isRequired
   };
