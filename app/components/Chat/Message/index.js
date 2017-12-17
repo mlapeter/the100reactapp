@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import PropTypes from "prop-types";
 
 import TimeAgo from "../../TimeAgo";
+import MessageBody from "./MessageBody";
 
 import { colors, fontSizes, fontStyles } from "../../../styles";
 
@@ -50,7 +51,7 @@ export default class Message extends PureComponent {
             <Text style={styles.username}>{this.props.message.username}</Text>
             <TimeAgo style={styles.time} date={this.props.message.createdAt} />
           </View>
-          <Text style={styles.text}>{this.props.message.text}</Text>
+          <MessageBody text={this.props.message.text} />
         </View>
       </View>
     );
