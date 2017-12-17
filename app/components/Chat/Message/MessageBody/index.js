@@ -1,7 +1,9 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { Image, Text, View } from "react-native";
+import { Image, Linking, Text, View } from "react-native";
 //import { Tweet } from "react-twitter-widgets";
+
+import TouchableItem from "../../../TouchableItem";
 
 import reactStringReplace from "react-string-replace-recursively";
 import emoji from "node-emoji";
@@ -94,16 +96,14 @@ const config = {
     pattern: /\B@\[([a-z0-9_\-# ]+?)\]\B/gim,
     matcherFn: usernameMentionMatcherFn
   },
-  /*
   gifv: {
-    pattern: /(https?:\/\/\S+?\.gifv)/gim,
+    pattern: /(\bhttps?:\/\/\S+?\.gifv\b)/gim,
     matcherFn: (rawText, processed, key) => {
-      return <MessageGifv key={key} source={rawText} />;
+      return <MessageImage key={key} source={rawText.slice(0, -1)} />;
     }
   },
-  */
   image: {
-    pattern: /(https?:\/\/\S+?\.(?:png|jpg|gif|jpeg))/gim,
+    pattern: /(\bhttps?:\/\/\S+?\.(?:png|jpg|gif|jpeg)\b)/gim,
     matcherFn: (rawText, processed, key) => {
       return <MessageImage key={key} source={rawText} />;
     }
@@ -257,6 +257,12 @@ class MessageImage extends PureComponent {
     );
   }
 
+  onLongPress = () => {
+    Linking.openURL(this.props.source).catch(e => {
+      console.error("Failed to open MessageImage url: " + e);
+    });
+  };
+
   render() {
     let { source } = this.props;
 
@@ -274,64 +280,18 @@ class MessageImage extends PureComponent {
             flexDirection: "row"
           }}
         >
-          <Image
-            source={{ uri: source }}
-            onError={this.onError}
-            style={{
-              width: imageWidth,
-              height: imageHeight,
-              resizeMode: "contain"
-            }}
-          />
+          <TouchableItem useForeground={true} onLongPress={this.onLongPress}>
+            <Image
+              source={{ uri: source }}
+              onError={this.onError}
+              style={{
+                width: imageWidth,
+                height: imageHeight,
+                resizeMode: "contain"
+              }}
+            />
+          </TouchableItem>
         </View>
-      );
-    }
-  }
-}
-
-class MessageGifv extends React.Component {
-  static propTypes = {
-    source: PropTypes.string.isRequired
-  };
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      error: false
-    };
-  }
-
-  onError = e => {
-    this.setState({ error: true });
-  };
-
-  render() {
-    let { source } = this.props;
-
-    if (this.state.error) {
-      return source;
-    } else {
-      let sourceNoExt = source.replace(/\.gifv$/i, "");
-      return (
-        <video
-          styleName="block-item"
-          poster={sourceNoExt + ".jpg"}
-          autoPlay={true}
-          loop={true}
-          preload="auto"
-          muted={true}
-          playsInline={true}
-          alt={source}
-          title={source}
-          onError={this.onError}
-        >
-          <source
-            src={sourceNoExt + ".mp4"}
-            type="video/mp4"
-            onError={this.onError}
-          />
-        </video>
       );
     }
   }

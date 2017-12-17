@@ -1,33 +1,31 @@
-import React, { Component, Children } from "react";
-import {
-  Platform,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  View
-} from "react-native";
+import React, { Children, PureComponent } from "react";
+import PropTypes from "prop-types";
+import { View } from "react-native";
+import Touchable from "react-native-platform-touchable";
 
-import * as android from "android-versions";
+export default class TouchableItem extends PureComponent {
+  static propTypes = {
+    children: PropTypes.element.isRequired
+  };
 
-const TouchableItem = ({ children, style, ...rest }) => {
-  if (Platform.OS == "android" && Platform.Version >= android.LOLLIPOP.api) {
+  static defaultProps = {
+    useForeground: false
+  };
+
+  render() {
+    let { children, useForeground, ...rest } = this.props;
+
+    let foreground = null;
+    let background = Touchable.Ripple("rgba( 0, 0, 0, 0.32 )", true);
+    if (useForeground) {
+      foreground = background;
+      background = null;
+    }
+
     return (
-      <TouchableNativeFeedback
-        {...rest}
-        background={TouchableNativeFeedback.Ripple(
-          "rgba( 0, 0, 0, 0.32 )",
-          true
-        )}
-      >
-        <View style={style}>{Children.only(children)}</View>
-      </TouchableNativeFeedback>
-    );
-  } else {
-    return (
-      <TouchableOpacity {...rest} style={style}>
+      <Touchable {...rest} background={background} foreground={foreground}>
         {Children.only(children)}
-      </TouchableOpacity>
+      </Touchable>
     );
   }
-};
-
-export default TouchableItem;
+}
