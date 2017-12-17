@@ -13,7 +13,7 @@ import {
   View
 } from "react-native";
 
-import Chat from "../components/Chat/Chat";
+import Chat from "../components/Chat";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";

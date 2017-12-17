@@ -18,7 +18,7 @@ import {
   View
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
-import Chat from "../components/Chat/Chat";
+import Chat from "../components/Chat";
 import Panel from "../components/Panel/Panel";
 
 import { connect } from "react-redux";
@@ -137,7 +137,8 @@ export class User extends React.Component {
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.dataSource.destiny_status_link)}
+                Linking.openURL(this.props.dataSource.destiny_status_link)
+              }
               underlayColor="white"
             >
               <Text>Destiny Status</Text>
@@ -146,7 +147,8 @@ export class User extends React.Component {
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.dataSource.destiny_tracker_link)}
+                Linking.openURL(this.props.dataSource.destiny_tracker_link)
+              }
               underlayColor="white"
             >
               <Text>Destiny Tracker</Text>
