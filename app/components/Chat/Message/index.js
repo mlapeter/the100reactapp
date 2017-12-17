@@ -8,9 +8,31 @@ import { colors, fontSizes, fontStyles } from "../../../styles";
 
 import { ChatMessagePropType } from "../types";
 
+const DEFAULT_AVATAR_IMG = "https://www.the100.io/default-avatar.png";
+
 export default class Message extends PureComponent {
   static propTypes = {
     message: PropTypes.shape(ChatMessagePropType).isRequired
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      avatarUrl: this.props.message.avatarUrl
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.avatarUrl !== this.props.avatarUrl) {
+      this.setState({ avatarUrl: nextProps.avatarUrl });
+    }
+  }
+
+  onAvatarImgError = () => {
+    if (this.state.avatarUrl !== DEFAULT_AVATAR_IMG) {
+      this.setState({ avatarUrl: DEFAULT_AVATAR_IMG });
+    }
   };
 
   render() {
@@ -19,9 +41,8 @@ export default class Message extends PureComponent {
         <View style={styles.leftBox}>
           <Image
             style={styles.avatarMini}
-            source={{
-              uri: this.props.message.avatarUrl
-            }}
+            source={{ uri: this.props.message.avatarUrl }}
+            onError={this.onAvatarImgError}
           />
         </View>
         <View style={styles.middleBox}>
