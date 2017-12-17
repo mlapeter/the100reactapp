@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Image, Linking, Text, View } from "react-native";
-//import { Tweet } from "react-twitter-widgets";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 import Hyperlink from "../../../Hyperlink";
 import TouchableItem from "../../../TouchableItem";
@@ -125,12 +125,7 @@ const config = {
     pattern: /(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?/gim,
     matcherFn: (rawText, processed, key) => {
       let videoId = rawText;
-      return (
-        <Hyperlink
-          key={key}
-          link={"https://www.youtube.com/watch?v=" + videoId}
-        />
-      );
+      return <Youtube key={key} videoId={videoId} />;
     }
   }
 };
@@ -210,9 +205,12 @@ class Spoiler extends PureComponent {
   }
 }
 
-class MessageImage extends PureComponent {
+class AutosizeImage extends PureComponent {
   static propTypes = {
-    source: PropTypes.string.isRequired
+    source: PropTypes.string.isRequired,
+    onPress: PropTypes.func,
+    onLongPress: PropTypes.func,
+    placeholderRender: PropTypes.func
   };
 
   constructor(props) {
@@ -253,17 +251,13 @@ class MessageImage extends PureComponent {
     );
   }
 
-  onLongPress = () => {
-    Linking.openURL(this.props.source).catch(e => {
-      console.error("Failed to open MessageImage url: " + e);
-    });
-  };
-
   render() {
-    let { source } = this.props;
-
     if (this.state.error || !this.state.loaded || this.state.imageWidth === 0) {
-      return <Text>{source}</Text>;
+      if (this.props.placeholderRender) {
+        return this.props.placeholderRender();
+      } else {
+        return <Text>{this.props.source}</Text>;
+      }
     } else {
       let imageWidth = Math.min(this.state.imageWidth, this.state.layoutWidth);
       let imageHeight =
@@ -276,19 +270,87 @@ class MessageImage extends PureComponent {
             flexDirection: "row"
           }}
         >
-          <TouchableItem useForeground={true} onLongPress={this.onLongPress}>
+          <TouchableItem
+            useForeground={true}
+            onPress={this.props.onPress}
+            onLongPress={this.props.onLongPress}
+          >
             <Image
-              source={{ uri: source }}
+              source={{ uri: this.props.source }}
               onError={this.onError}
               style={{
                 width: imageWidth,
                 height: imageHeight,
-                resizeMode: "contain"
+                resizeMode: "contain",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center"
               }}
-            />
+            >
+              {this.props.children}
+            </Image>
           </TouchableItem>
         </View>
       );
     }
+  }
+}
+
+class MessageImage extends PureComponent {
+  static propTypes = {
+    source: PropTypes.string.isRequired
+  };
+
+  onLongPress = () => {
+    Linking.openURL(this.props.source).catch(e => {
+      console.error("Failed to open MessageImage url: " + e);
+    });
+  };
+
+  render() {
+    return (
+      <AutosizeImage
+        source={this.props.source}
+        onLongPress={this.onLongPress}
+      />
+    );
+  }
+}
+
+class Youtube extends PureComponent {
+  static propTypes = {
+    videoId: PropTypes.string.isRequired
+  };
+
+  onPress = () => {
+    Linking.openURL(
+      "https://www.youtube.com/watch?v=" + this.props.videoId
+    ).catch(e => {
+      console.error("Failed to open Youtube URL: " + e);
+    });
+  };
+
+  placeholderRender = () => {
+    return (
+      <Hyperlink
+        link={"https://www.youtube.com/watch?v=" + this.props.videoId}
+      />
+    );
+  };
+
+  render() {
+    return (
+      <View>
+        <AutosizeImage
+          source={`https://img.youtube.com/vi/${
+            this.props.videoId
+          }/mqdefault.jpg`}
+          onPress={this.onPress}
+          placeholderRender={this.placeholderRender}
+        >
+          <Icon name="youtube-play" size={72} style={{ color: "red" }} />
+        </AutosizeImage>
+      </View>
+    );
   }
 }
