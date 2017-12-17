@@ -122,7 +122,7 @@ class Chat extends Component {
         this.retrieveMessages();
       })
       .catch(error => {
-        console.error("An error occurred during sign in:", error);
+        console.error("An error occurred during sign in: " + error);
       });
   }
 
@@ -164,12 +164,12 @@ class Chat extends Component {
           //       text
           //     )
           //     .catch(error => {
-          //       console.error("Failed to post username mention:", error);
+          //       console.error("Failed to post username mention: " + error);
           //     });
           // }
         })
         .catch(error => {
-          console.error("Failed to send message:", error);
+          console.error("Failed to send message: " + error);
         });
     }
   };
@@ -188,7 +188,7 @@ class Chat extends Component {
           editedAt: firebase.database.ServerValue.TIMESTAMP
         })
         .catch(error => {
-          console.error("Failed to edit message:", error);
+          console.error("Failed to edit message: " + error);
         });
       this.setState({ editingKey: null });
     }
@@ -199,7 +199,7 @@ class Chat extends Component {
       .child(key)
       .remove()
       .catch(error => {
-        console.error("Failed to remove message:", error);
+        console.error("Failed to remove message: " + error);
       });
 
     if (key === this.state.editingKey) {
