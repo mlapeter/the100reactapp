@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { Image, Linking, Text, View } from "react-native";
 //import { Tweet } from "react-twitter-widgets";
 
+import Hyperlink from "../../../Hyperlink";
 import TouchableItem from "../../../TouchableItem";
 
 import reactStringReplace from "react-string-replace-recursively";
@@ -107,36 +108,31 @@ const config = {
     matcherFn: (rawText, processed, key) => {
       return <MessageImage key={key} source={rawText} />;
     }
-  }
-  /*
+  },
   tweet: {
     pattern: /\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/gim,
     matcherFn: (rawText, processed, key) => {
+      let tweetId = rawText;
       return (
-        <div key={key} styleName="block-item">
-          <Tweet tweetId={rawText} />
-        </div>
+        <Hyperlink
+          key={key}
+          link={"https://twitter.com/i/web/status/" + tweetId}
+        />
       );
     }
   },
-  */
-  /*
   youtube: {
     pattern: /(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((?:\w|-){11})(?:\S+)?/gim,
     matcherFn: (rawText, processed, key) => {
       let videoId = rawText;
       return (
-        <iframe
+        <Hyperlink
           key={key}
-          styleName="block-item"
-          src={`https://www.youtube-nocookie.com/embed/${videoId}?rel=0`}
-          frameBorder={0}
-          allowFullScreen={false}
+          link={"https://www.youtube.com/watch?v=" + videoId}
         />
       );
     }
   }
-  */
 };
 
 const parseMessageText = reactStringReplace(config);
