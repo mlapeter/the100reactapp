@@ -233,6 +233,10 @@ class Chat extends Component {
       }
     );
 
+    let createAllowed =
+      this.props.room.startsWith("game-") ||
+      this.state.permission.includes("W");
+
     return (
       <KeyboardAvoidingView
         style={styles.keyboardView}
@@ -250,9 +254,7 @@ class Chat extends Component {
           ListFooterComponent={this.renderLoadMoreMessages}
         />
         <MessageInput
-          permission={this.state.permission}
-          room={this.props.room}
-          url={this.props.url}
+          createAllowed={createAllowed}
           onSubmit={this.onMessageCreate}
         />
       </KeyboardAvoidingView>
@@ -261,6 +263,11 @@ class Chat extends Component {
 }
 
 class MessageInput extends React.Component {
+  static propTypes = {
+    createAllowed: PropTypes.bool.isRequired,
+    onSubmit: PropTypes.func.isRequired
+  };
+
   constructor(props) {
     super(props);
 
@@ -275,18 +282,12 @@ class MessageInput extends React.Component {
 
   onSubmit = () => {
     this.props.onSubmit(this.state.text);
-    this.setState({
-      text: ""
-    });
+
+    this.setState({ text: "" });
   };
 
   render() {
-    if (
-      !this.props.room.includes("group") ||
-      this.props.permission == "RW" ||
-      this.props.permission == "RWE" ||
-      this.props.permission == "A"
-    ) {
+    if (this.props.createAllowed) {
       return (
         <View style={styles.input}>
           <TextInput
