@@ -44,9 +44,7 @@ export default class NotificationsItem extends PureComponent {
               <Text style={styles.time}>
                 {this.props.item.notification_type} -
               </Text>
-              <Text style={styles.time}>
-                <TimeAgo date={this.props.item.created_at} />
-              </Text>
+              <TimeAgo style={styles.time} date={this.props.item.created_at} />
             </View>
             <Text style={styles.username}>{this.props.item.message}</Text>
           </View>

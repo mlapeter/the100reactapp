@@ -233,9 +233,7 @@ class ListItem extends Component {
         <View style={styles.middleBox}>
           <View style={{ flexDirection: "row" }}>
             <Text style={styles.username}>{this.props.item.username}</Text>
-            <Text style={styles.time}>
-              <TimeAgo date={this.props.item.createdAt} />
-            </Text>
+            <TimeAgo style={styles.time} date={this.props.item.createdAt} />
           </View>
           <Text style={styles.text}>{this.props.item.text}</Text>
         </View>
