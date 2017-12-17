@@ -309,7 +309,11 @@ class MessageInput extends React.Component {
         </View>
       );
     } else {
-      return <Text>Login first to chat.</Text>;
+      return (
+        <View style={styles.input}>
+          <Text>Login first to chat.</Text>
+        </View>
+      );
     }
   }
 }
