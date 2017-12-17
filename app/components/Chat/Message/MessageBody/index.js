@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Text } from "react-native";
 //import { Tweet } from "react-twitter-widgets";
@@ -16,18 +16,12 @@ function usernameMentionMatcherFn(rawText, processed, key) {
 }
 
 const config = {
-  /*
   spoiler: {
     pattern: /\B~~(.+?)~~\B/gim,
     matcherFn: (rawText, processed, key) => {
-      return (
-        <span key={key} styleName="spoiler">
-          {processed}
-        </span>
-      );
+      return <Spoiler key={key}>{processed}</Spoiler>;
     }
   },
-  */
   bold: {
     pattern: /\B\*\*(.+?)\*\*\B/gim,
     matcherFn: (rawText, processed, key) => {
@@ -149,7 +143,7 @@ const config = {
 
 const parseMessageText = reactStringReplace(config);
 
-export default class MessageBody extends React.Component {
+export default class MessageBody extends PureComponent {
   static propTypes = {
     text: PropTypes.string.isRequired
   };
@@ -164,6 +158,38 @@ export default class MessageBody extends React.Component {
     }
 
     return <Text>{text}</Text>;
+  }
+}
+
+class Spoiler extends PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      show: false
+    };
+  }
+
+  onPress = () => {
+    this.setState(prevState => {
+      return { show: !prevState.show };
+    });
+  };
+
+  render() {
+    return (
+      <Text
+        style={
+          !this.state.show && {
+            color: "transparent",
+            backgroundColor: "black"
+          }
+        }
+        onPress={this.onPress}
+      >
+        {this.props.children}
+      </Text>
+    );
   }
 }
 
