@@ -28,42 +28,36 @@ const config = {
     }
   },
   */
-  /*
   bold: {
     pattern: /\B\*\*(.+?)\*\*\B/gim,
     matcherFn: (rawText, processed, key) => {
       return (
-        <span key={key} styleName="bold">
+        <Text key={key} style={{ fontWeight: "bold" }}>
           {processed}
-        </span>
+        </Text>
       );
     }
   },
-  */
-  /*
   italics: {
     pattern: /\B\*(.+?)\*\B/gim,
     matcherFn: (rawText, processed, key) => {
       return (
-        <span key={key} styleName="italics">
+        <Text key={key} style={{ fontStyle: "italic" }}>
           {processed}
-        </span>
+        </Text>
       );
     }
   },
-  */
-  /*
   underline: {
     pattern: /\b_(.+?)_\b/gim,
     matcherFn: (rawText, processed, key) => {
       return (
-        <span key={key} styleName="underline">
+        <Text key={key} style={{ textDecorationLine: "underline" }}>
           {processed}
-        </span>
+        </Text>
       );
     }
   },
-  */
   /*
   superscript: {
     pattern: /\B\^(.+?)\^\B/gim,
@@ -72,36 +66,32 @@ const config = {
     }
   },
   */
-  /*
   strikeThrough: {
     pattern: /\B-(.+?)-\B/gim,
     matcherFn: (rawText, processed, key) => {
       return (
-        <span key={key} styleName="strike-through">
+        <Text key={key} style={{ textDecorationLine: "line-through" }}>
           {processed}
-        </span>
+        </Text>
       );
     }
   },
-  */
-  /*
   code: {
     pattern: /\B`(.+?)`\B/gim,
     matcherFn: (rawText, processed, key) => {
       return (
-        <code key={key} styleName="code">
+        <Text key={key} style={{ fontFamily: "monospace" }}>
           {processed}
-        </code>
+        </Text>
       );
     }
   },
-  */
-  /*
   emoji: {
     pattern: /(:\w+?:)/gim,
-    matcherFn: usernameMentionMatcherFn
-  },
-  */
+    matcherFn: (rawText, processed, key) => {
+      return <Text key={key}>{emoji.get(rawText)}</Text>;
+    }
+  }
   /*
   userMention: {
     pattern: /\B@([a-z0-9_\-#]+?)\b/gim,
