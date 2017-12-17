@@ -296,6 +296,8 @@ class MessageInput extends React.Component {
             onChangeText={this.onChange}
             onSubmitEditing={this.onSubmit}
             value={this.state.text}
+            autoCapitalize="sentences"
+            autoCorrect={true}
           />
           <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
             <MaterialCommunityIcons
