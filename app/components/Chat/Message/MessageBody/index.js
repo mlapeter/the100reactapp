@@ -9,9 +9,9 @@ import emoji from "node-emoji";
 function usernameMentionMatcherFn(rawText, processed, key) {
   let username = rawText;
   return (
-    <a key={key} href={"/users/" + window.encodeURIComponent(username)}>
+    <Text key={key} style={{ color: "#007fff" }}>
       @{username}
-    </a>
+    </Text>
   );
 }
 
@@ -91,19 +91,15 @@ const config = {
     matcherFn: (rawText, processed, key) => {
       return <Text key={key}>{emoji.get(rawText)}</Text>;
     }
-  }
-  /*
+  },
   userMention: {
     pattern: /\B@([a-z0-9_\-#]+?)\b/gim,
     matcherFn: usernameMentionMatcherFn
   },
-  */
-  /*
   userMentionBracketed: {
     pattern: /\B@\[([a-z0-9_\-# ]+?)\]\B/gim,
-    matcherFn: (rawText, processed, key) => {}
-  },
-  */
+    matcherFn: usernameMentionMatcherFn
+  }
   /*
   gifv: {
     pattern: /(https?:\/\/\S+?\.gifv)/gim,
