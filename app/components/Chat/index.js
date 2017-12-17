@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
+  Button,
   FlatList,
   KeyboardAvoidingView,
   Image,
@@ -208,11 +209,21 @@ class Chat extends Component {
     }
   };
 
-  onLoadMoreMessages = e => {
+  onLoadMoreMessages = () => {
     this.setState(prevState => {
       let messageCount = prevState.messageCount + 25;
       return { messageCount: messageCount };
     });
+  };
+
+  renderLoadMoreMessages = () => {
+    if (Object.keys(this.state.messages).length < this.state.messageCount) {
+      return null;
+    }
+
+    return (
+      <Button title="Load More Messages" onPress={this.onLoadMoreMessages} />
+    );
   };
 
   render() {
@@ -236,6 +247,7 @@ class Chat extends Component {
           )}
           keyExtractor={([key, message], index) => key}
           extraData={messages}
+          ListFooterComponent={this.renderLoadMoreMessages}
         />
         <MessageInput
           permission={this.state.permission}
