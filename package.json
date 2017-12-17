@@ -21,6 +21,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "android-versions": "^1.2.1",
     "expo": "^19.0.1",
     "firebase": "^4.4.0",
     "install": "^0.10.1",

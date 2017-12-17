@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
-  Button,
   FlatList,
   KeyboardAvoidingView,
   Image,
@@ -15,8 +14,6 @@ import {
 } from "react-native";
 import PreSplash from "../../components/PreSplash/PreSplash";
 import { colors, fontSizes, fontStyles } from "../../styles";
-import Moment from "../../../node_modules/react-moment";
-import TimeAgo from "../../components/TimeAgo";
 
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -32,9 +29,12 @@ import {
   getUserChatRole
 } from "../../utils/user";
 
+import TouchableItem from "../TouchableItem";
+import Message from "./Message";
+
 class Chat extends Component {
   static propTypes = {
-    token: PropTypes.string,
+    firebaseToken: PropTypes.string,
     room: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired
   };
@@ -107,7 +107,7 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    firebaseSignIn(this.props.token, true)
+    firebaseSignIn(this.props.firebaseToken, true)
       .then(user => {
         this.setState({
           uid: user.uid,
@@ -226,12 +226,14 @@ class Chat extends Component {
       <KeyboardAvoidingView
         style={styles.keyboardView}
         contentContainerStyle={styles.keyboardView}
-        behavior="position"
-        keyboardVerticalOffset={60}
+        behavior="padding"
+        keyboardVerticalOffset={110}
       >
         <FlatList
           data={messages}
-          renderItem={({ item: [key, message] }) => <ListItem item={message} />}
+          renderItem={({ item: [key, message] }) => (
+            <Message message={message} />
+          )}
           keyExtractor={([key, message], index) => key}
           extraData={messages}
         />
@@ -246,30 +248,6 @@ class Chat extends Component {
   }
 }
 
-class ListItem extends Component {
-  render() {
-    return (
-      <View style={styles.box}>
-        <View style={styles.leftBox}>
-          <Image
-            style={styles.avatarMini}
-            source={{
-              uri: this.props.item.avatarUrl
-            }}
-          />
-        </View>
-        <View style={styles.middleBox}>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.username}>{this.props.item.username}</Text>
-            <TimeAgo style={styles.time} date={this.props.item.createdAt} />
-          </View>
-          <Text style={styles.text}>{this.props.item.text}</Text>
-        </View>
-      </View>
-    );
-  }
-}
-
 class MessageInput extends React.Component {
   constructor(props) {
     super(props);
@@ -277,16 +255,18 @@ class MessageInput extends React.Component {
     this.state = {
       text: ""
     };
-
-    // this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(text) {
+  onChange = text => {
+    this.setState({ text: text });
+  };
+
+  onSubmit = () => {
     this.props.onSubmit(this.state.text);
     this.setState({
       text: ""
     });
-  }
+  };
 
   render() {
     if (
@@ -298,21 +278,19 @@ class MessageInput extends React.Component {
       return (
         <View style={styles.input}>
           <TextInput
-            style={{ flex: 5 }}
+            style={styles.inputText}
             placeholder="Enter your message..."
-            onChangeText={text => this.setState({ text })}
-            onSubmitEditing={text => {
-              this.handleSubmit(text);
-            }}
+            onChangeText={this.onChange}
+            onSubmitEditing={this.onSubmit}
             value={this.state.text}
           />
-          <Button
-            style={styles.button}
-            title="Chat"
-            onPress={text => {
-              this.handleSubmit(text);
-            }}
-          />
+          <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
+            <MaterialCommunityIcons
+              name="send"
+              size={28}
+              style={{ color: colors.grey }}
+            />
+          </TouchableItem>
         </View>
       );
     } else {
@@ -322,83 +300,30 @@ class MessageInput extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  defaultText: {
-    color: colors.white
-  },
   keyboardView: {
     flex: 1,
-    height: 900,
-    width: 400,
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: colors.white
-  },
-  container: {
-    padding: 5,
-    margin: 3,
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    backgroundColor: colors.white
-  },
-  loading: {
-    alignItems: "center",
-    justifyContent: "center",
-    margin: 10
-  },
-  box: {
-    flexDirection: "row",
-    margin: 5,
-    padding: 5
   },
   input: {
     flexDirection: "row",
     alignItems: "stretch",
+    justifyContent: "center",
     margin: 5,
     padding: 5,
     borderTopWidth: 0.5,
     borderTopColor: "#d6d7da"
   },
-  button: {
-    margin: 5,
-    padding: 5
+  inputText: {
+    flex: 5,
+    height: 40
   },
-  leftBox: {
-    flex: 1,
-    padding: 2,
-    margin: 2,
-    backgroundColor: colors.white
-  },
-  middleBox: {
-    flex: 7,
-    padding: 2,
-    margin: 2,
-    backgroundColor: colors.white
-  },
-  rightBox: {
-    flex: 1.1
-  },
-  avatarMini: {
-    height: 40,
-    width: 40,
-    borderRadius: 20
-  },
-  username: {
-    color: colors.grey,
-    fontFamily: fontStyles.primaryFont,
-    fontSize: fontSizes.secondary
-  },
-  time: {
-    padding: 3,
-    color: colors.lightestGrey,
-    fontSize: fontSizes.small
-  },
-  text: {
-    color: colors.mediumGrey
-  },
-  iconText: {
-    fontSize: fontSizes.small,
-    color: colors.mediumGrey
+  inputButton: {
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    marginLeft: 5
   }
 });
 
@@ -413,8 +338,6 @@ const mapStateToProps = state => {
     userLoading,
     firebaseToken,
     userError: state.users.error
-
-    // authenticationError: state.authentication.error
   };
 };
 
