@@ -149,7 +149,11 @@ export default class MessageBody extends PureComponent {
         if (typeof child === "string") {
           currentText.push(<Text key={"text-" + id}>{child}</Text>);
           id++;
-        } else if (child.type === Text || child.type == Spoiler) {
+        } else if (
+          child.type === Text ||
+          child.type == Spoiler ||
+          child.type === Hyperlink
+        ) {
           currentText.push(child);
         } else {
           if (currentText) {
