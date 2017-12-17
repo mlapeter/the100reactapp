@@ -223,6 +223,8 @@ class AutosizeImage extends PureComponent {
       layoutWidth: 0,
       error: false
     };
+
+    this.mounted = false;
   }
 
   onLayout = event => {
@@ -236,19 +238,28 @@ class AutosizeImage extends PureComponent {
   };
 
   componentDidMount() {
+    this.mounted = true;
+
     Image.getSize(
       this.props.source,
       (width, height) => {
-        this.setState({
-          imageWidth: width,
-          imageHeight: height,
-          loaded: true
-        });
+        if (this.mounted) {
+          this.setState({
+            imageWidth: width,
+            imageHeight: height,
+            loaded: true
+          });
+        }
       },
       error => {
+        console.error("Failed to get size of image: " + error);
         this.setState({ error: true });
       }
     );
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render() {
