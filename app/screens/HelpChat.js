@@ -24,7 +24,7 @@ export default class HelpChat extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Chat chatroom={"help_chatroom"} room="help_chatroom" />
+        <Chat url="chat/help_chatroom" room="help_chatroom" />
       </View>
     );
   }

@@ -25,170 +25,203 @@ import { StackNavigator } from "react-navigation";
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
 
-import * as firebase from "firebase";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyDTZp0K0KXe7Xt-vGNeYEBDBq-PeJyUTKw",
-  authDomain: "the100-staging-42536.firebaseapp.com",
-  databaseURL: "https://the100-staging-42536.firebaseio.com/",
-  storageBucket: "the100-staging-42536.appspot.com"
-};
-const firebaseApp = firebase.initializeApp(firebaseConfig);
+import firebase from "../../utils/firebase";
+import {
+  firebaseSignIn,
+  getUserChatPermission,
+  getUserChatRole
+} from "../../utils/user";
 
 class Chat extends Component {
   static propTypes = {
-    // chatroom: PropTypes.string.isRequired
+    token: PropTypes.string,
+    room: PropTypes.string.isRequired,
+    url: PropTypes.string.isRequired
   };
 
   constructor(props) {
     super(props);
+
     this.state = {
-      isLoading: true,
-      items: [],
+      messages: {},
       text: "",
+      uid: null,
       username: "guest",
       pwnmaster: false,
       role: "user",
       permission: "",
       avatarUrl: "/default-avatar.png",
-      editing: null,
-      room: this.props.room
+      users: new Set(),
+      editingKey: null,
+      messageCount: 25
     };
-    this.firebaseRef = this.getRef().child("/chat/help_chatroom/");
+
+    this.messagesRef = firebase.database().ref(this.props.url);
+    this.messagesQuery = null;
   }
 
-  componentWillMount() {
-    if (this.props.firebaseToken) {
-      firebase
-        .auth()
-        .signInWithCustomToken(this.props.firebaseToken)
-        .then(
-          function() {
-            console.log("SIGNED IN TO FIREBASE!");
-            // writeUserData(firebase.auth().currentUser.uid);
-            firebase
-              .database()
-              .ref("/users/" + firebase.auth().currentUser.uid)
-              .on("value", snapshot => {
-                console.log(snapshot);
-                this.setState({ username: snapshot.val().username });
-                this.setState({ pwnmaster: snapshot.val().pwnmaster });
-                if (snapshot.val().pwnmaster == "true") {
-                  this.setState({ role: "developer" });
-                } else {
-                  this.setState({
-                    role: snapshot.val().groups[this.props.room]["role"]
-                  });
-                }
-                this.setState({
-                  permission: snapshot.val().groups[this.props.room][
-                    "permission"
-                  ]
-                });
-                this.setState({ avatarUrl: snapshot.val().avatar });
-                console.log("USER FOUND");
-              });
-          }.bind(this)
-        )
-        .catch(function(error) {
-          console.log("ERROR WITH TOKEN: " + error.code + ":" + error.message);
-        });
-    } else {
-      console.log("STARTING ANON SIGNIN");
-      firebase
-        .auth()
-        .signInAnonymously()
-        .catch(function(error) {
-          console.log(
-            "ANON SIGNIN ERROR WITH TOKEN " + error.code + ":" + error.message
-          );
-        });
+  addMessage(dataSnapshot) {
+    let key = dataSnapshot.key;
+    let message = dataSnapshot.val();
+    message.key = key;
+
+    this.setState(prevState => {
+      let { messages, users } = prevState;
+      messages[key] = message;
+      users.add(message.username);
+      return {
+        messages: messages,
+        users: users
+      };
+    });
+  }
+
+  onMessageAdded = dataSnapshot => {
+    this.addMessage(dataSnapshot);
+  };
+
+  onMessageChanged = dataSnapshot => {
+    this.addMessage(dataSnapshot);
+  };
+
+  onMessageRemoved = dataSnapshot => {
+    let key = dataSnapshot.key;
+    this.setState(prevState => {
+      let { messages } = prevState;
+      delete messages[key];
+      return { message: messages };
+    });
+  };
+
+  retrieveMessages() {
+    if (this.messagesQuery) {
+      this.messagesQuery.off();
     }
+    this.messagesQuery = this.messagesRef
+      .orderByChild("createdAt")
+      .limitToLast(this.state.messageCount);
 
-    firebase.auth().onAuthStateChanged(function(user) {
-      if (user) {
-        // User is signed in.
-        console.log("CURRENT USER: " + firebase.auth().currentUser.uid);
-        this.user = firebase.auth().currentUser;
-      } else {
-        // User is signed out.
-      }
-    });
-  }
-
-  getRef() {
-    return firebaseApp.database().ref();
-  }
-
-  listenForItems(firebaseRef) {
-    firebaseRef.limitToLast(25).on("value", snap => {
-      var items = [];
-      snap.forEach(child => {
-        var item = child.val();
-        item["key"] = child.key;
-        items.push(item);
-      });
-
-      this.setState({
-        items: items.reverse(),
-        isLoading: false
-      });
-    });
+    this.messagesQuery.on("child_added", this.onMessageAdded);
+    this.messagesQuery.on("child_changed", this.onMessageChanged);
+    this.messagesQuery.on("child_removed", this.onMessageRemoved);
   }
 
   componentDidMount() {
-    this.listenForItems(this.firebaseRef);
+    firebaseSignIn(this.props.token, true)
+      .then(user => {
+        this.setState({
+          uid: user.uid,
+          username: user.username,
+          pwnmaster: user.pwnmaster,
+          role: getUserChatRole(user, this.props.room, "user"),
+          permission: getUserChatPermission(user, this.props.room, "RW"),
+          avatarUrl: user.avatar
+        });
+
+        this.retrieveMessages();
+      })
+      .catch(error => {
+        console.error("An error occurred during sign in:", error);
+      });
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.messageCount !== prevState.messageCount) {
+      this.retrieveMessages();
+    }
   }
 
   componentWillUnmount() {
-    this.firebaseRef.off();
-  }
-
-  createImg(text) {
-    var imgPattern = /(https?:\/\/.*\.(?:png|jpg|gif|gifv|jpeg))/i;
-    var imgurPattern = /((http(s?):\/\/)?(imgur|i.imgur)\.com\/[a-zA-Z0-9]{6,8})(?!\.jpg|\.gif|\.gifv|\.png)(?:[^a-zA-Z0-9]|$)/;
-    if (text.match(imgPattern)) {
-      console.log(text.match(imgPattern));
-      return text.match(imgPattern)[0];
-    } else if (text.match(imgurPattern)) {
-      console.log(text.match(imgurPattern));
-      return text.match(imgurPattern)[0] + ".jpg";
-    } else {
-      return "";
+    if (this.messagesQuery) {
+      this.messagesQuery.off();
     }
   }
 
-  onSubmit = text => {
+  onMessageCreate = text => {
     if (text && text.trim().length !== 0) {
-      var imgSrc = this.createImg(text);
-      this.firebaseRef.push({
+      let newMessage = {
         text: text,
-        imgSrc: imgSrc,
         username: this.state.username,
         avatarUrl: this.state.avatarUrl,
-        uid: firebase.auth().currentUser.uid,
+        uid: this.state.uid,
         role: this.state.role,
         createdAt: firebase.database.ServerValue.TIMESTAMP
-      });
-      this.setState({ editing: null });
-      // var pattern = /\B@[a-z0-9_-]+/gi;
-      // if (text.match(pattern)) {
-      //   api.postUsernameMention(this.props.url, this.state.username, text.match(pattern), text)
-      //     .then(function (response) {
-      //       console.log(response)
-      //     })
-      // }
+      };
+      this.messagesRef
+        .push(newMessage)
+        .then(() => {
+          // let match = text.match(
+          //   /\B@([a-z0-9_\-#]+?\b|\[[a-z0-9_\-# ]+?\]\B)/gim
+          // );
+          // if (match) {
+          //   let recipientUsername = match[0].replace(/[@\[\]]/gim, "");
+          //   api
+          //     .postUsernameMention(
+          //       this.props.url,
+          //       this.state.username,
+          //       recipientUsername,
+          //       text
+          //     )
+          //     .catch(error => {
+          //       console.error("Failed to post username mention:", error);
+          //     });
+          // }
+        })
+        .catch(error => {
+          console.error("Failed to send message:", error);
+        });
     }
   };
 
-  render() {
-    if (this.state.isLoading) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-        </View>
-      );
+  onStartEditMessage = key => {
+    this.setState({ editingKey: key });
+  };
+
+  onEditMessage = (key, text) => {
+    if (text && text.trim().length !== 0) {
+      this.messagesRef
+        .child(key)
+        .update({
+          text: text,
+          edited: true,
+          editedAt: firebase.database.ServerValue.TIMESTAMP
+        })
+        .catch(error => {
+          console.error("Failed to edit message:", error);
+        });
+      this.setState({ editingKey: null });
     }
+  };
+
+  onRemoveMessage = key => {
+    this.messagesRef
+      .child(key)
+      .remove()
+      .catch(error => {
+        console.error("Failed to remove message:", error);
+      });
+
+    if (key === this.state.editingKey) {
+      this.setState({ editingKey: null });
+
+      this.requestNotificationPermission();
+    }
+  };
+
+  onLoadMoreMessages = e => {
+    this.setState(prevState => {
+      let messageCount = prevState.messageCount + 25;
+      return { messageCount: messageCount };
+    });
+  };
+
+  render() {
+    let messages = Object.entries(this.state.messages).sort(
+      ([keyA, messageA], [keyB, messageB]) => {
+        return messageB.createdAt - messageA.createdAt;
+      }
+    );
+
     return (
       <KeyboardAvoidingView
         style={styles.keyboardView}
@@ -197,21 +230,16 @@ class Chat extends Component {
         keyboardVerticalOffset={60}
       >
         <FlatList
-          ref={ref => {
-            this.flatListRef = ref;
-          }}
-          data={this.state.items}
-          renderItem={({ item }) => <ListItem item={item} />}
-          // duplicates due to multiple instances of same chat in app
-          keyExtractor={(item, index) => index}
-          extraData={this.state.items}
+          data={messages}
+          renderItem={({ item: [key, message] }) => <ListItem item={message} />}
+          keyExtractor={([key, message], index) => key}
+          extraData={messages}
         />
         <MessageInput
-          permission="RW"
-          room="help_chatroom"
-          url="chat/help_chatroom"
-          onSubmit={this.onSubmit}
-          onChange={this.onChange}
+          permission={this.state.permission}
+          room={this.props.room}
+          url={this.props.url}
+          onSubmit={this.onMessageCreate}
         />
       </KeyboardAvoidingView>
     );

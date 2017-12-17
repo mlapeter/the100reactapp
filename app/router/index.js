@@ -34,7 +34,6 @@ import HelpChat from "../screens/HelpChat/";
 
 import Menu from "../screens/Menu";
 
-import Chat from "../components/Chat/Chat";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
