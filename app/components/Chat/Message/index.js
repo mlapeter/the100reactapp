@@ -3,6 +3,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import PropTypes from "prop-types";
 
 import TimeAgo from "../../TimeAgo";
+import TouchableItem from "../../TouchableItem";
 import MessageBody from "./MessageBody";
 
 import { colors, fontSizes, fontStyles } from "../../../styles";
@@ -13,7 +14,8 @@ const DEFAULT_AVATAR_IMG = "https://www.the100.io/default-avatar.png";
 
 export default class Message extends PureComponent {
   static propTypes = {
-    message: PropTypes.shape(ChatMessagePropType).isRequired
+    message: PropTypes.shape(ChatMessagePropType).isRequired,
+    onLongPress: PropTypes.func
   };
 
   constructor(props) {
@@ -30,6 +32,12 @@ export default class Message extends PureComponent {
     }
   }
 
+  onLongPress = () => {
+    if (this.props.onLongPress) {
+      this.props.onLongPress(this.props.message.key);
+    }
+  };
+
   onAvatarImgError = () => {
     if (this.state.avatarUrl !== DEFAULT_AVATAR_IMG) {
       this.setState({ avatarUrl: DEFAULT_AVATAR_IMG });
@@ -38,22 +46,31 @@ export default class Message extends PureComponent {
 
   render() {
     return (
-      <View style={styles.box}>
-        <View style={styles.leftBox}>
-          <Image
-            style={styles.avatarMini}
-            source={{ uri: this.props.message.avatarUrl }}
-            onError={this.onAvatarImgError}
-          />
-        </View>
-        <View style={styles.middleBox}>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.username}>{this.props.message.username}</Text>
-            <TimeAgo style={styles.time} date={this.props.message.createdAt} />
+      <TouchableItem
+        noVisualFeedback={true}
+        vibrate={true}
+        onLongPress={this.onLongPress}
+      >
+        <View style={styles.box}>
+          <View style={styles.leftBox}>
+            <Image
+              style={styles.avatarMini}
+              source={{ uri: this.props.message.avatarUrl }}
+              onError={this.onAvatarImgError}
+            />
           </View>
-          <MessageBody text={this.props.message.text} />
+          <View style={styles.middleBox}>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.username}>{this.props.message.username}</Text>
+              <TimeAgo
+                style={styles.time}
+                date={this.props.message.createdAt}
+              />
+            </View>
+            <MessageBody text={this.props.message.text} />
+          </View>
         </View>
-      </View>
+      </TouchableItem>
     );
   }
 }

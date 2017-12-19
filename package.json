@@ -42,6 +42,7 @@
     "react-native-dropdownalert": "^2.11.0",
     "react-native-elements": "^0.17.0",
     "react-native-keyboard-aware-scroll-view": "^0.3.0",
+    "react-native-modal": "^4.1.1",
     "react-native-modalbox": "^1.4.2",
     "react-native-platform-touchable": "^1.1.1",
     "react-native-searchbar": "^1.12.1",

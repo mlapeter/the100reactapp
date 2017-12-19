@@ -13,15 +13,13 @@ import {
   TextInput,
   View
 } from "react-native";
-import PreSplash from "../../components/PreSplash/PreSplash";
-import { colors, fontSizes, fontStyles } from "../../styles";
-
-import { FontAwesome } from "@expo/vector-icons";
+import Modal from "react-native-modal";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { StackNavigator } from "react-navigation";
 
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
+
+import { colors, fontSizes, fontStyles } from "../../styles";
 
 import firebase from "../../utils/firebase";
 import {
@@ -53,6 +51,7 @@ class Chat extends Component {
       permission: "",
       avatarUrl: "/default-avatar.png",
       users: new Set(),
+      selectedKey: null,
       editingKey: null,
       messageCount: 25
     };
@@ -174,8 +173,23 @@ class Chat extends Component {
     }
   };
 
+  onMessageLongPress = key => {
+    this.setState({ selectedKey: key });
+  };
+
+  closeSelectedModal = () => {
+    this.setState({ selectedKey: null });
+  };
+
   onStartEditMessage = key => {
-    this.setState({ editingKey: key });
+    this.setState(prevState => {
+      if (prevState.selectedKey) {
+        return {
+          selectedKey: null,
+          editingKey: prevState.selectedKey
+        };
+      }
+    });
   };
 
   onEditMessage = (key, text) => {
@@ -194,19 +208,19 @@ class Chat extends Component {
     }
   };
 
-  onRemoveMessage = key => {
-    this.messagesRef
-      .child(key)
-      .remove()
-      .catch(error => {
-        console.error("Failed to remove message: " + error);
-      });
+  onRemoveMessage = () => {
+    this.setState(prevState => {
+      if (prevState.selectedKey) {
+        this.messagesRef
+          .child(prevState.selectedKey)
+          .remove()
+          .catch(error => {
+            console.error("Failed to remove message: " + error);
+          });
 
-    if (key === this.state.editingKey) {
-      this.setState({ editingKey: null });
-
-      this.requestNotificationPermission();
-    }
+        return { selectedKey: null, editingKey: null };
+      }
+    });
   };
 
   onLoadMoreMessages = () => {
@@ -247,7 +261,7 @@ class Chat extends Component {
         <FlatList
           data={messages}
           renderItem={({ item: [key, message] }) => (
-            <Message message={message} />
+            <Message message={message} onLongPress={this.onMessageLongPress} />
           )}
           keyExtractor={([key, message], index) => key}
           extraData={messages}
@@ -257,6 +271,33 @@ class Chat extends Component {
           createAllowed={createAllowed}
           onSubmit={this.onMessageCreate}
         />
+        <Modal
+          isVisible={!!this.state.selectedKey}
+          style={styles.selectedModal}
+          onBackButtonPress={this.closeSelectedModal}
+          onBackdropPress={this.closeSelectedModal}
+          backdropOpacity={0.3}
+        >
+          <View style={styles.selectedModalBackground}>
+            <TouchableItem
+              style={[
+                styles.selectedModalOption,
+                styles.selectedModalOptionSeparator
+              ]}
+              useForeground={true}
+              onPress={this.onStartEditMessage}
+            >
+              <Text style={styles.selectedModalOptionText}>Edit</Text>
+            </TouchableItem>
+            <TouchableItem
+              style={styles.selectedModalOption}
+              useForeground={true}
+              onPress={this.onRemoveMessage}
+            >
+              <Text style={styles.selectedModalOptionText}>Delete</Text>
+            </TouchableItem>
+          </View>
+        </Modal>
       </KeyboardAvoidingView>
     );
   }
@@ -324,6 +365,24 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: colors.white
+  },
+  selectedModal: {
+    justifyContent: "flex-end",
+    margin: 0
+  },
+  selectedModalBackground: {
+    backgroundColor: colors.white
+  },
+  selectedModalOption: {
+    padding: 12,
+    alignItems: "center"
+  },
+  selectedModalOptionSeparator: {
+    borderBottomWidth: 0.5,
+    borderBottomColor: "#d6d7da"
+  },
+  selectedModalOptionText: {
+    fontSize: 22
   },
   input: {
     flexDirection: "row",
