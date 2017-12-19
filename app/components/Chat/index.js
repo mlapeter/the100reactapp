@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import PropTypes from "prop-types";
 import {
   ActivityIndicator,
@@ -30,6 +30,7 @@ import {
 
 import TouchableItem from "../TouchableItem";
 import Message from "./Message";
+import { ChatMessagePropType } from "./types";
 
 class Chat extends Component {
   static propTypes = {
@@ -145,7 +146,8 @@ class Chat extends Component {
   }
 
   onMessageCreate = text => {
-    if (text && text.trim().length !== 0) {
+    text = text && text.trim();
+    if (text) {
       let newMessage = {
         text: text,
         username: this.state.username,
@@ -206,8 +208,17 @@ class Chat extends Component {
     }
   };
 
+  onCancelEditing = () => {
+    this.setState({ editingKey: null });
+  };
+
   onEditMessage = (key, text) => {
-    if (text && text.trim().length !== 0) {
+    if (!this.canEdit(key)) {
+      this.setState({ editingKey: null });
+      return;
+    }
+    text = text && text.trim();
+    if (text) {
       this.messagesRef
         .child(key)
         .update({
@@ -279,10 +290,18 @@ class Chat extends Component {
           extraData={messages}
           ListFooterComponent={this.renderLoadMoreMessages}
         />
-        <MessageInput
-          createAllowed={createAllowed}
-          onSubmit={this.onMessageCreate}
-        />
+        {!this.state.editingKey ? (
+          <MessageCreateInput
+            createAllowed={createAllowed}
+            onSubmit={this.onMessageCreate}
+          />
+        ) : (
+          <MessageEditInput
+            onSubmit={this.onEditMessage}
+            onCancel={this.onCancelEditing}
+            message={this.state.messages[this.state.editingKey]}
+          />
+        )}
         <Modal
           isVisible={!!this.state.selectedKey}
           style={styles.selectedModal}
@@ -322,7 +341,7 @@ class Chat extends Component {
   }
 }
 
-class MessageInput extends React.Component {
+class MessageCreateInput extends PureComponent {
   static propTypes = {
     createAllowed: PropTypes.bool.isRequired,
     onSubmit: PropTypes.func.isRequired
@@ -375,6 +394,59 @@ class MessageInput extends React.Component {
         </View>
       );
     }
+  }
+}
+
+class MessageEditInput extends PureComponent {
+  static propTypes = {
+    onSubmit: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired,
+    message: PropTypes.shape(ChatMessagePropType).isRequired
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      text: this.props.message.text
+    };
+  }
+
+  onChange = text => {
+    this.setState({ text: text });
+  };
+
+  onSubmit = () => {
+    this.props.onSubmit(this.props.message.key, this.state.text);
+
+    this.setState({ text: "" });
+  };
+
+  render() {
+    return (
+      <View style={styles.input}>
+        <View style={{ marginRight: 8 }}>
+          <Button title="Cancel" onPress={this.props.onCancel} />
+        </View>
+        <TextInput
+          style={[styles.inputText, { paddingHorizontal: 10 }]}
+          placeholder="Enter your message..."
+          onChangeText={this.onChange}
+          onSubmitEditing={this.onSubmit}
+          value={this.state.text}
+          autoCapitalize="sentences"
+          autoCorrect={true}
+          autoFocus={true}
+        />
+        <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
+          <MaterialCommunityIcons
+            name="check"
+            size={28}
+            style={{ color: colors.grey }}
+          />
+        </TouchableItem>
+      </View>
+    );
   }
 }
 
