@@ -87,9 +87,16 @@ class Chat extends Component {
   onMessageRemoved = dataSnapshot => {
     let key = dataSnapshot.key;
     this.setState(prevState => {
-      let { messages } = prevState;
+      let { messages, selectedKey, editingKey } = prevState;
       delete messages[key];
-      return { message: messages };
+      let newState = { messages: messages };
+      if (key === selectedKey) {
+        newState.selectedKey = null;
+      }
+      if (key === editingKey) {
+        newState.editingKey = null;
+      }
+      return newState;
     });
   };
 
@@ -173,8 +180,20 @@ class Chat extends Component {
     }
   };
 
+  canEdit(key) {
+    let message = this.state.messages[key];
+    return (
+      message &&
+      (this.state.uid === message.uid ||
+        this.state.permission.includes("E") ||
+        this.state.pwnmaster === true)
+    );
+  }
+
   onMessageLongPress = key => {
-    this.setState({ selectedKey: key });
+    if (this.canEdit(key)) {
+      this.setState({ selectedKey: key, editingKey: null });
+    }
   };
 
   closeSelectedModal = () => {
@@ -182,14 +201,9 @@ class Chat extends Component {
   };
 
   onStartEditMessage = key => {
-    this.setState(prevState => {
-      if (prevState.selectedKey) {
-        return {
-          selectedKey: null,
-          editingKey: prevState.selectedKey
-        };
-      }
-    });
+    if (this.state.selectedKey && this.canEdit(this.state.selectedKey)) {
+      this.setState({ selectedKey: null, editingKey: this.state.selectedKey });
+    }
   };
 
   onEditMessage = (key, text) => {
@@ -209,18 +223,16 @@ class Chat extends Component {
   };
 
   onRemoveMessage = () => {
-    this.setState(prevState => {
-      if (prevState.selectedKey) {
-        this.messagesRef
-          .child(prevState.selectedKey)
-          .remove()
-          .catch(error => {
-            console.error("Failed to remove message: " + error);
-          });
+    if (this.state.selectedKey && this.canEdit(this.state.selectedKey)) {
+      this.messagesRef
+        .child(this.state.selectedKey)
+        .remove()
+        .catch(error => {
+          console.error("Failed to remove message: " + error);
+        });
 
-        return { selectedKey: null, editingKey: null };
-      }
-    });
+      this.setState({ selectedKey: null, editingKey: null });
+    }
   };
 
   onLoadMoreMessages = () => {
@@ -290,11 +302,18 @@ class Chat extends Component {
               <Text style={styles.selectedModalOptionText}>Edit</Text>
             </TouchableItem>
             <TouchableItem
-              style={styles.selectedModalOption}
+              style={[styles.selectedModalOption, styles.removeOption]}
               useForeground={true}
               onPress={this.onRemoveMessage}
             >
-              <Text style={styles.selectedModalOptionText}>Delete</Text>
+              <Text
+                style={[
+                  styles.selectedModalOptionText,
+                  styles.removeOptionText
+                ]}
+              >
+                Remove
+              </Text>
             </TouchableItem>
           </View>
         </Modal>
@@ -374,12 +393,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white
   },
   selectedModalOption: {
-    padding: 12,
+    padding: 20,
     alignItems: "center"
   },
   selectedModalOptionSeparator: {
     borderBottomWidth: 0.5,
     borderBottomColor: "#d6d7da"
+  },
+  removeOption: {
+    backgroundColor: "#fc4c46"
+  },
+  removeOptionText: {
+    color: "white"
   },
   selectedModalOptionText: {
     fontSize: 22
