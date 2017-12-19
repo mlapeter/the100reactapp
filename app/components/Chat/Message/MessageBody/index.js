@@ -170,7 +170,7 @@ export default class MessageBody extends PureComponent {
       }
       return <View>{children}</View>;
     } catch (e) {
-      console.error("Error parsing message text: " + e);
+      console.warn("Error parsing message text: " + e);
     }
 
     return <Text>{text}</Text>;
@@ -228,6 +228,7 @@ class AutosizeImage extends PureComponent {
       error: false
     };
 
+    this.loading = false;
     this.mounted = false;
   }
 
@@ -241,25 +242,46 @@ class AutosizeImage extends PureComponent {
     this.setState({ error: true });
   };
 
+  componentWillReceiveProps(nextProps) {
+    if (this.props.source !== nextProps.source) {
+      this.loading = false;
+      this.setState({
+        loaded: false,
+        imageWidth: 0,
+        imageHeight: 0,
+        layoutWidth: 0,
+        error: false
+      });
+    }
+  }
+
   componentDidMount() {
     this.mounted = true;
 
-    Image.getSize(
-      this.props.source,
-      (width, height) => {
-        if (this.mounted) {
-          this.setState({
-            imageWidth: width,
-            imageHeight: height,
-            loaded: true
-          });
+    if (!this.loading && !this.state.error && !this.state.loaded) {
+      this.loading = true;
+
+      Image.getSize(
+        this.props.source,
+        (width, height) => {
+          this.loading = false;
+          if (this.mounted) {
+            this.setState({
+              imageWidth: width,
+              imageHeight: height,
+              loaded: true
+            });
+          }
+        },
+        error => {
+          console.log("Failed to get size of image: " + error);
+          this.loading = false;
+          if (this.mounted) {
+            this.setState({ error: true });
+          }
         }
-      },
-      error => {
-        console.error("Failed to get size of image: " + error);
-        this.setState({ error: true });
-      }
-    );
+      );
+    }
   }
 
   componentWillUnmount() {
