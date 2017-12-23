@@ -26,6 +26,8 @@ import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { fetchGroup } from "../actions/group";
 
+import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
+
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
@@ -34,13 +36,8 @@ class Group extends React.Component {
     navigation: PropTypes.object,
     alertWithType: PropTypes.func,
     groupError: PropTypes.string,
-    dataSource: PropTypes.object
+    group: PropTypes.object
   };
-
-  constructor(props) {
-    super(props);
-    this.fetchGroupData = this.fetchGroupData.bind(this);
-  }
 
   componentWillMount() {
     this.fetchGroupData();
@@ -55,10 +52,10 @@ class Group extends React.Component {
     }
   }
 
-  fetchGroupData() {
+  fetchGroupData = () => {
     console.log("Fetching Group");
     this.props.dispatch(fetchGroup());
-  }
+  };
 
   // giveKarma() {
   //   this.postData("/give_karma");
@@ -96,27 +93,23 @@ class Group extends React.Component {
   // }
 
   render() {
-    const { params } = this.props.navigation.state;
-
     if (this.props.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
         </View>
       );
-    } else {
-      if (this.props.dataSource === undefined) {
-        return (
-          <View style={styles.container}>
-            <TouchableOpacity
-              style={styles.buttonWrapper}
-              onPress={this.fetchGroupData}
-            >
-              <Text style={styles.buttonText}>Get Group</Text>
-            </TouchableOpacity>
-          </View>
-        );
-      }
+    } else if (!this.props.group) {
+      return (
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.buttonWrapper}
+            onPress={this.fetchGroupData}
+          >
+            <Text style={styles.buttonText}>Get Group</Text>
+          </TouchableOpacity>
+        </View>
+      );
     }
 
     return (
@@ -124,28 +117,28 @@ class Group extends React.Component {
         <Image
           style={styles.backgroundImage}
           source={
-            this.props.dataSource.header_background_image_api ===
+            this.props.group.header_background_image_api ===
             "img/default-group-header.jpg"
-              ? require("../assets/images/destiny-wallpaper-1.jpg")
-              : { uri: this.props.dataSource.header_background_image_api }
+              ? defaultGroupHeaderBackground
+              : { uri: this.props.group.header_background_image_api }
           }
         >
-          <Text style={styles.title}>{this.props.dataSource.name}</Text>
+          <Text style={styles.title}>{this.props.group.name}</Text>
         </Image>
         <View style={styles.innerContainer}>
           <Text style={styles.description} numberOfLines={3}>
-            {this.props.dataSource.description != null
-              ? this.props.dataSource.description
+            {this.props.group.description != null
+              ? this.props.group.description
               : ""}
           </Text>
           <Text style={styles.description} numberOfLines={2}>
-            {this.props.dataSource.latest_news != null
-              ? this.props.dataSource.latest_news
+            {this.props.group.latest_news != null
+              ? this.props.group.latest_news
               : ""}
           </Text>
           <View style={styles.iconBar}>
-            <PlatformIcon platform={this.props.dataSource.platform} />
-            <PlayerIcon usersCount={this.props.dataSource.users_count} />
+            <PlatformIcon platform={this.props.group.platform} />
+            <PlayerIcon usersCount={this.props.group.users_count} />
             <Text style={styles.icon}>
               <MaterialCommunityIcons
                 name="human-greeting"
@@ -154,9 +147,7 @@ class Group extends React.Component {
               />
               <Text style={styles.icon}>Casual</Text>
             </Text>
-            <PlayScheduleIcon
-              playSchedule={this.props.dataSource.play_schedule}
-            />
+            <PlayScheduleIcon playSchedule={this.props.group.play_schedule} />
           </View>
           {/* <Chat chatroom={"help_chatroom"} room="help_chatroom" /> */}
         </View>
@@ -289,14 +280,15 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   innerContainer: {
-    padding: 5,
     flex: 1,
     justifyContent: "flex-start",
     backgroundColor: colors.white
   },
   backgroundImage: {
     resizeMode: "cover", // or 'stretch'
-    height: 150
+    height: 150,
+    justifyContent: "flex-end",
+    alignItems: "center"
   },
   actionButtons: {
     flexDirection: "column",
@@ -327,18 +319,13 @@ const styles = StyleSheet.create({
     height: 100,
     flex: 1
   },
-  titleBar: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "stretch",
-    padding: 5
-  },
-
   title: {
-    backgroundColor: "transparent",
-    textAlign: "center",
-    padding: 40,
-    paddingTop: 100,
+    backgroundColor: "rgba( 0, 0, 0, 0.5 )",
+    marginBottom: 40,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    textAlignVertical: "center",
+    includeFontPadding: false,
     color: colors.white,
     fontFamily: fontStyles.primaryFont,
     fontSize: fontSizes.primary
@@ -361,12 +348,9 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const dataSource = state.group.group;
-  const isLoading = state.group.isLoading;
-
   return {
-    dataSource,
-    isLoading,
+    group: state.group.group,
+    isLoading: state.group.isLoading,
     groupError: state.group.error
   };
 };
