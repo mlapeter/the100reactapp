@@ -61,9 +61,9 @@ class GamingSession extends React.Component {
         this.setState({
           isLoading: false,
           hasJoined: userIds.includes(this.props.user.user_id),
-          dataSource: responseJson
+          gamingSession: responseJson
         });
-        console.log(responseJson);
+        // console.log(responseJson);
         return responseJson;
       })
       .catch(error => {
@@ -122,12 +122,14 @@ class GamingSession extends React.Component {
       );
     }
 
+    let room = `game-${this.state.gamingSession.id}`;
+
     return (
       <View style={styles.container}>
         <View style={styles.titleBar}>
           <Text style={styles.title}>
-            {this.state.dataSource.category != null
-              ? this.state.dataSource.category.toString()
+            {this.state.gamingSession.category != null
+              ? this.state.gamingSession.category.toString()
               : ""}
           </Text>
           <JoinLeaveButton
@@ -137,29 +139,27 @@ class GamingSession extends React.Component {
           />
         </View>
         <Text style={styles.description} numberOfLines={2}>
-          {this.state.dataSource.name != null
-            ? this.state.dataSource.name.toString()
+          {this.state.gamingSession.name != null
+            ? this.state.gamingSession.name.toString()
             : ""}
         </Text>
         <View style={styles.iconBar}>
-          <TimeIcon startTime={this.state.dataSource.start_time} />
-          <PlatformIcon platform={this.state.dataSource.platform} />
+          <TimeIcon startTime={this.state.gamingSession.start_time} />
+          <PlatformIcon platform={this.state.gamingSession.platform} />
           <PlayerIcon
-            primaryUsersCount={this.state.dataSource.primary_users_count}
-            teamSize={this.state.dataSource.team_size}
+            primaryUsersCount={this.state.gamingSession.primary_users_count}
+            teamSize={this.state.gamingSession.team_size}
           />
-          <PowerIcon lightLevel={this.state.dataSource.light_level} />
-          <SherpaIcon sherpaLed={this.state.dataSource.sherpa_led} />
+          <PowerIcon lightLevel={this.state.gamingSession.light_level} />
+          <SherpaIcon sherpaLed={this.state.gamingSession.sherpa_led} />
         </View>
+        <Text style={styles.sectionHeader}>Players:</Text>
         <PlayersList
-          confirmedSessions={this.state.dataSource.confirmed_sessions}
+          confirmedSessions={this.state.gamingSession.confirmed_sessions}
           navigation={this.props.navigation}
         />
-        {/* <Chat
-          chatroom={"help_chatroom"}
-          room="help_chatroom"
-          style={{ flex: 5 }}
-        /> */}
+        <Text style={styles.sectionHeader}>Chat:</Text>
+        <Chat room={room} url={`chat/gaming_sessions/${room}`} />
       </View>
     );
   }
@@ -332,6 +332,11 @@ const styles = StyleSheet.create({
     padding: 5,
     color: colors.lightGrey,
     fontSize: fontSizes.secondary
+  },
+  sectionHeader: {
+    marginTop: 8,
+    marginHorizontal: 8,
+    fontWeight: "bold"
   }
 });
 
