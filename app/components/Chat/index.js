@@ -5,12 +5,15 @@ import {
   Alert,
   Button,
   FlatList,
-  KeyboardAvoidingView,
   Image,
+  Keyboard,
+  LayoutAnimation,
   ListView,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
+  UIManager,
   View
 } from "react-native";
 import Modal from "react-native-modal";
@@ -54,11 +57,20 @@ class Chat extends Component {
       users: new Set(),
       selectedKey: null,
       editingKey: null,
-      messageCount: 25
+      messageCount: 25,
+
+      keyboardOffset: 0
     };
 
     this.messagesRef = firebase.database().ref(this.props.url);
     this.messagesQuery = null;
+
+    if (
+      Platform.OS === "android" &&
+      UIManager.setLayoutAnimationEnabledExperimental
+    ) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
   }
 
   addMessage(dataSnapshot) {
@@ -78,6 +90,7 @@ class Chat extends Component {
   }
 
   onMessageAdded = dataSnapshot => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.addMessage(dataSnapshot);
   };
 
@@ -112,6 +125,24 @@ class Chat extends Component {
     this.messagesQuery.on("child_added", this.onMessageAdded);
     this.messagesQuery.on("child_changed", this.onMessageChanged);
     this.messagesQuery.on("child_removed", this.onMessageRemoved);
+  }
+
+  onKeyboardShown = event => {
+    this.setState({ keyboardOffset: event.endCoordinates.height });
+  };
+
+  onKeyboardHidden = event => {
+    this.setState({ keyboardOffset: 0 });
+  };
+
+  componentWillMount() {
+    Keyboard.addListener("keyboardDidShow", this.onKeyboardShown);
+    Keyboard.addListener("keyboardDidHide", this.onKeyboardHidden);
+  }
+
+  componentWillUnmount() {
+    Keyboard.removeListener("keyboardDidShow", this.onKeyboardShown);
+    Keyboard.removeListener("keyboardDidHide", this.onKeyboardHidden);
   }
 
   componentDidMount() {
@@ -275,11 +306,8 @@ class Chat extends Component {
       this.state.permission.includes("W");
 
     return (
-      <KeyboardAvoidingView
-        style={styles.keyboardView}
-        contentContainerStyle={styles.keyboardView}
-        behavior="padding"
-        keyboardVerticalOffset={110}
+      <View
+        style={[styles.container, { paddingBottom: this.state.keyboardOffset }]}
       >
         <FlatList
           data={messages}
@@ -336,7 +364,7 @@ class Chat extends Component {
             </TouchableItem>
           </View>
         </Modal>
-      </KeyboardAvoidingView>
+      </View>
     );
   }
 }
@@ -451,7 +479,7 @@ class MessageEditInput extends PureComponent {
 }
 
 const styles = StyleSheet.create({
-  keyboardView: {
+  container: {
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
@@ -503,16 +531,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const user = state.authentication.user;
-  const dataSource = state.users.user;
-  const userLoading = state.users.userLoading;
-  const firebaseToken = state.authentication.firebaseToken;
   return {
-    user,
-    dataSource,
-    userLoading,
-    firebaseToken,
-    userError: state.users.error
+    firebaseToken: state.authentication.firebaseToken
   };
 };
 
