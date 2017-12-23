@@ -112,6 +112,8 @@ class Group extends React.Component {
       );
     }
 
+    let room = `group-${this.props.group.id}`;
+
     return (
       <View style={styles.container}>
         <Image
@@ -149,7 +151,7 @@ class Group extends React.Component {
             </Text>
             <PlayScheduleIcon playSchedule={this.props.group.play_schedule} />
           </View>
-          {/* <Chat chatroom={"help_chatroom"} room="help_chatroom" /> */}
+          <Chat room={room} url={`chat/groups/${room}`} />
         </View>
       </View>
     );
@@ -269,39 +271,43 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
-    marginTop: 30,
     flex: 1,
+    flexDirection: "column",
     backgroundColor: colors.white,
     borderTopWidth: 0.5,
     borderTopColor: "#d6d7da",
     borderBottomWidth: 0.5,
     borderBottomColor: "#d6d7da",
     justifyContent: "center",
-    alignItems: "center"
-  },
-  innerContainer: {
-    flex: 1,
-    justifyContent: "flex-start",
-    backgroundColor: colors.white
+    alignItems: "stretch"
   },
   backgroundImage: {
     resizeMode: "cover", // or 'stretch'
     height: 150,
-    justifyContent: "flex-end",
-    alignItems: "center"
-  },
-  actionButtons: {
-    flexDirection: "column",
-    margin: 5,
-    flex: 1.4
-  },
-  loading: {
+    width: "100%",
     alignItems: "center",
     justifyContent: "center"
   },
+  title: {
+    backgroundColor: "rgba( 0, 0, 0, 0.5 )",
+    borderRadius: 3,
+    color: colors.white,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    textAlign: "center",
+    textAlignVertical: "center",
+    includeFontPadding: false,
+    fontFamily: fontStyles.primaryFont,
+    fontSize: fontSizes.primary
+  },
+  innerContainer: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: colors.white
+  },
   iconBar: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "stretch",
     padding: 5,
     borderTopWidth: 0.5,
@@ -314,21 +320,6 @@ const styles = StyleSheet.create({
     padding: 2,
     margin: 2,
     backgroundColor: colors.white
-  },
-  groupImage: {
-    height: 100,
-    flex: 1
-  },
-  title: {
-    backgroundColor: "rgba( 0, 0, 0, 0.5 )",
-    marginBottom: 40,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    textAlignVertical: "center",
-    includeFontPadding: false,
-    color: colors.white,
-    fontFamily: fontStyles.primaryFont,
-    fontSize: fontSizes.primary
   },
   description: {
     color: colors.lightGrey,

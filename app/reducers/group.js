@@ -6,7 +6,7 @@ import {
 
 const initialState = {
   isLoading: false,
-  group: {}
+  group: null
 };
 
 export default (state = initialState, action) => {
