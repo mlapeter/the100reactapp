@@ -405,6 +405,7 @@ class MessageCreateInput extends PureComponent {
             value={this.state.text}
             autoCapitalize="sentences"
             autoCorrect={true}
+            returnKeyType="send"
           />
           <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
             <MaterialCommunityIcons
@@ -465,6 +466,7 @@ class MessageEditInput extends PureComponent {
           autoCapitalize="sentences"
           autoCorrect={true}
           autoFocus={true}
+          returnKeyType="done"
         />
         <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
           <MaterialCommunityIcons
