@@ -6,7 +6,8 @@ import notifications from "./notifications";
 import users from "./users";
 import group from "./group";
 import gamingSessions from "./gamingSessions";
-import onboarding from './onboarding'
+import onboarding from "./onboarding";
+import conversations from "./conversations";
 
 export default combineReducers({
   authentication,
@@ -15,5 +16,6 @@ export default combineReducers({
   users,
   group,
   gamingSessions,
-  onboarding
+  onboarding,
+  conversations
 });

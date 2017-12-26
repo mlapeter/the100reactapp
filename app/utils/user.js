@@ -1,39 +1,43 @@
 import firebase from "./firebase";
 
-export function firebaseSignIn(token, allowAnon = false) {
-  if (token) {
-    return firebase
-      .auth()
-      .signInWithCustomToken(token)
-      .then(({ uid }) => {
-        return firebase
-          .database()
-          .ref("/users/" + uid)
-          .once("value")
-          .then(snapshot => {
-            let user = snapshot.val();
-            user.uid = uid;
-            user.anon = false;
-            return user;
-          });
-      });
+export async function firebaseSignIn(token, allowAnon = false) {
+  let uid = null;
+  let anon = false;
+
+  let currentUser = firebase.auth().currentUser;
+  if (currentUser && (!currentUser.isAnonymous || (allowAnon && !token))) {
+    uid = currentUser.uid;
+    anon = currentUser.isAnonymous;
+  } else if (token) {
+    let authUser = await firebase.auth().signInWithCustomToken(token);
+    uid = authUser.uid;
+    anon = false;
   } else if (allowAnon) {
-    return firebase
-      .auth()
-      .signInAnonymously()
-      .then(user => {
-        return {
-          uid: user.uid,
-          avatar: "/default-avatar.png",
-          groups: {},
-          pwnmaster: false,
-          supporter: false,
-          username: "guest",
-          anon: true
-        };
-      });
+    let authUser = await firebase.auth().signInAnonymously();
+    uid = authUser.uid;
+    anon = true;
   } else {
-    return Promise.reject(new Error("Tried to sign-in without Token."));
+    throw new Error("Tried to sign-in without Token.");
+  }
+
+  if (anon) {
+    return {
+      uid: uid,
+      avatar: "/default-avatar.png",
+      groups: {},
+      pwnmaster: false,
+      supporter: false,
+      username: "guest",
+      anon: true
+    };
+  } else {
+    let userData = (await firebase
+      .database()
+      .ref(`/users/${uid}`)
+      .once("value")).val();
+    userData.uid = uid;
+    userData.anon = false;
+    return userData;
   }
 }
 

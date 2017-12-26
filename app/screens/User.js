@@ -24,6 +24,7 @@ import Panel from "../components/Panel/Panel";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { fetchUser } from "../actions/users";
+import { fetchConversations } from "../actions/conversations";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -41,7 +42,7 @@ export class User extends React.Component {
     super(props);
     this.state = {
       hasJoined: false,
-      // isLoading: true,
+      isLoading: false,
       refreshing: false,
       gameData: "",
       viewStats: false
@@ -52,6 +53,8 @@ export class User extends React.Component {
 
   componentDidMount() {
     this.fetchUserData();
+
+    this.props.dispatch(fetchConversations());
   }
 
   componentWillReceiveProps(nextProps) {
@@ -87,7 +90,7 @@ export class User extends React.Component {
   }
 
   destinyStatusLink() {
-    Linking.openURL(this.props.dataSource.destiny_status_link);
+    Linking.openURL(this.props.user.destiny_status_link);
   }
 
   checkFriendStatus() {
@@ -124,20 +127,21 @@ export class User extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
 
-    if (this.props.userLoading) {
+    if (this.props.userLoading || this.state.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
         </View>
       );
     }
+
     if (this.state.viewStats) {
       stats = (
         <View style={styles.statsContainer}>
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.dataSource.destiny_status_link)
+                Linking.openURL(this.props.user.destiny_status_link)
               }
               underlayColor="white"
             >
@@ -147,7 +151,7 @@ export class User extends React.Component {
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.dataSource.destiny_tracker_link)
+                Linking.openURL(this.props.user.destiny_tracker_link)
               }
               underlayColor="white"
             >
@@ -160,12 +164,12 @@ export class User extends React.Component {
       stats = null;
     }
 
-    if (this.props.dataSource.tag_list.length > 0) {
+    if (this.props.user.tag_list.length > 0) {
       tags = (
         <View style={styles.tagList}>
           <MaterialCommunityIcons name="tag" size={14} color={colors.grey} />
           <Panel
-            text={this.props.dataSource.tag_list.map(tag => tag + " ")}
+            text={this.props.user.tag_list.map(tag => tag + " ")}
             numberOfLines={1}
           />
         </View>
@@ -174,31 +178,41 @@ export class User extends React.Component {
       tags = null;
     }
 
+    let conversation = null;
+    if (
+      !this.props.conversationsLoading &&
+      this.props.conversations &&
+      this.props.conversations.length > 0
+    ) {
+      conversation = this.props.conversations.find(
+        convo => convo.other_user.id === this.props.user.id
+      );
+    }
+
     return (
       <View style={styles.container}>
         <View style={styles.titleBar}>
           <Image
             style={styles.profileAvatar}
             source={
-              this.props.dataSource.computed_avatar_api ===
-              "img/default-avatar.png"
+              this.props.user.computed_avatar_api === "img/default-avatar.png"
                 ? require("../assets/images/default-avatar.png")
-                : { uri: this.props.dataSource.computed_avatar_api }
+                : { uri: this.props.user.computed_avatar_api }
             }
           />
           <View style={styles.titleAndTags}>
-            <Text style={styles.title}>{this.props.dataSource.gamertag}</Text>
-            <SupporterBadge supporter={this.props.dataSource.supporter} />
+            <Text style={styles.title}>{this.props.user.gamertag}</Text>
+            <SupporterBadge supporter={this.props.user.supporter} />
           </View>
           <View style={styles.actionButtons}>
             <FriendButton
-              friendshipStatus={this.props.dataSource.friendship_status}
+              friendshipStatus={this.props.user.friendship_status}
               addFriend={() => this.addFriend()}
             />
             <KarmaButton
-              karmaStatus={this.props.dataSource.karma_status}
-              karmaReceivedFrom={this.props.dataSource.karma_received_from}
-              currentUser={this.props.user}
+              karmaStatus={this.props.user.karma_status}
+              karmaReceivedFrom={this.props.user.karma_received_from}
+              currentUser={this.props.currentUser}
               giveKarma={() => this.giveKarma()}
             />
             <StatsButton
@@ -209,16 +223,19 @@ export class User extends React.Component {
         </View>
         <View>{stats}</View>
         <View style={{ marginRight: 4, paddingRight: 4 }}>{tags}</View>
-        <Panel text={this.props.dataSource.description} numberOfLines={3} />
+        <Panel text={this.props.user.description} numberOfLines={3} />
         <View style={styles.iconBar}>
-          <PlatformIcon platform={this.props.dataSource.platform} />
-          <PowerIcon lightLevel={this.props.dataSource.light_level} />
-          <KarmaIcon karmasCount={this.props.dataSource.karmas_count} />
-          <PlayScheduleIcon
-            playSchedule={this.props.dataSource.play_schedule}
-          />
+          <PlatformIcon platform={this.props.user.platform} />
+          <PowerIcon lightLevel={this.props.user.light_level} />
+          <KarmaIcon karmasCount={this.props.user.karmas_count} />
+          <PlayScheduleIcon playSchedule={this.props.user.play_schedule} />
         </View>
-        {/* <Chat chatroom={"help_chatroom"} room="help_chatroom" /> */}
+        {conversation && (
+          <Chat
+            url={`chat/conversations/conversation-${conversation.id}`}
+            room={`conversation-${conversation.id}`}
+          />
+        )}
       </View>
     );
   }
@@ -517,17 +534,13 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const user = state.authentication.user;
-  const dataSource = state.users.user;
-  const userLoading = state.users.userLoading;
-
   return {
-    user,
-    dataSource,
-    userLoading,
-    userError: state.users.error
-
-    // authenticationError: state.authentication.error
+    currentUser: state.authentication.user,
+    user: state.users.user,
+    userLoading: state.users.userLoading,
+    userError: state.users.error,
+    conversationsLoading: state.conversations.isLoading,
+    conversations: state.conversations.conversations
   };
 };
 

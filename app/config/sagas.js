@@ -90,6 +90,12 @@ import {
 } from "../actions/gamingSessions";
 import { SET_CREDENTIAL } from "../actions/onboarding";
 
+import {
+  FETCH_CONVERSATIONS,
+  FETCH_CONVERSATIONS_RESULT,
+  FETCH_CONVERSATIONS_ERROR
+} from "../actions/conversations";
+
 function* fetchToken() {
   try {
     let username = yield select(state => state.authentication.username);
@@ -458,8 +464,6 @@ function* fetchGroup() {
 
     let user = yield select(state => state.users.user);
 
-    console.log("USER IS:", user);
-
     let endpoint =
       "https://pwn-staging.herokuapp.com/api/v2/groups/" +
       user.memberships[0]["group_id"];
@@ -657,6 +661,30 @@ function* setCredential() {
   }
 }
 
+function* fetchConversations() {
+  try {
+    let token = yield select(state => state.authentication.token);
+
+    let response = yield fetch(
+      "https://pwn-staging.herokuapp.com/api/v2/conversations/",
+      {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token }
+      }
+    );
+
+    let result = yield response.json();
+
+    if (result.error) {
+      yield put({ type: FETCH_CONVERSATIONS_ERROR, error: result.error });
+    } else {
+      yield put({ type: FETCH_CONVERSATIONS_RESULT, conversations: result });
+    }
+  } catch (e) {
+    yield put({ type: FETCH_CONVERSATIONS_ERROR, error: e.message });
+  }
+}
+
 export default function* rootSaga() {
   yield takeEvery(FETCH_TOKEN, fetchToken);
   yield takeEvery(FETCH_TOKEN_RESULT, decodeToken);
@@ -693,4 +721,6 @@ export default function* rootSaga() {
   yield takeEvery(LOAD_MORE_GROUP_GAMING_SESSIONS, loadMoreGroupGamingSessions);
 
   yield takeEvery(SET_CREDENTIAL, setCredential);
+
+  yield takeEvery(FETCH_CONVERSATIONS, fetchConversations);
 }
