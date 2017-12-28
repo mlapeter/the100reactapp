@@ -61,7 +61,14 @@ export default class Message extends PureComponent {
           </View>
           <View style={styles.middleBox}>
             <View style={{ flexDirection: "row" }}>
-              <Text style={styles.username}>{this.props.message.username}</Text>
+              <Text
+                style={[
+                  styles.username,
+                  usernameStyles[this.props.message.role] || usernameStyles.user
+                ]}
+              >
+                {this.props.message.username}
+              </Text>
               <TimeAgo
                 style={styles.time}
                 date={this.props.message.createdAt}
@@ -113,5 +120,23 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.mediumGrey
+  }
+});
+
+const usernameStyles = StyleSheet.create({
+  developer: {
+    color: "#fbb829"
+  },
+  moderators: {
+    color: "#9c92e7"
+  },
+  supporter: {
+    color: "#51aeff"
+  },
+  system: {
+    color: "#999"
+  },
+  user: {
+    color: "#337ab7"
   }
 });
