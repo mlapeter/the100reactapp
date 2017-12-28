@@ -234,6 +234,7 @@ export class User extends React.Component {
           <Chat
             url={`chat/conversations/conversation-${conversation.id}`}
             room={`conversation-${conversation.id}`}
+            allowAnon={false}
           />
         )}
       </View>

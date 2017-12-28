@@ -159,7 +159,11 @@ class GamingSession extends React.Component {
           navigation={this.props.navigation}
         />
         <Text style={styles.sectionHeader}>Chat:</Text>
-        <Chat room={room} url={`chat/gaming_sessions/${room}`} />
+        <Chat
+          room={room}
+          url={`chat/gaming_sessions/${room}`}
+          allowAnon={true}
+        />
       </View>
     );
   }

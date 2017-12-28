@@ -39,7 +39,8 @@ class Chat extends Component {
   static propTypes = {
     firebaseToken: PropTypes.string,
     room: PropTypes.string.isRequired,
-    url: PropTypes.string.isRequired
+    url: PropTypes.string.isRequired,
+    allowAnon: PropTypes.bool.isRequired
   };
 
   constructor(props) {
@@ -143,10 +144,14 @@ class Chat extends Component {
   componentWillUnmount() {
     Keyboard.removeListener("keyboardDidShow", this.onKeyboardShown);
     Keyboard.removeListener("keyboardDidHide", this.onKeyboardHidden);
+
+    if (this.messagesQuery) {
+      this.messagesQuery.off();
+    }
   }
 
   componentDidMount() {
-    firebaseSignIn(this.props.firebaseToken, true)
+    firebaseSignIn(this.props.firebaseToken, this.props.allowAnon)
       .then(user => {
         this.setState({
           uid: user.uid,
@@ -167,12 +172,6 @@ class Chat extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (this.state.messageCount !== prevState.messageCount) {
       this.retrieveMessages();
-    }
-  }
-
-  componentWillUnmount() {
-    if (this.messagesQuery) {
-      this.messagesQuery.off();
     }
   }
 

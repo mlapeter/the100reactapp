@@ -151,7 +151,7 @@ class Group extends React.Component {
             </Text>
             <PlayScheduleIcon playSchedule={this.props.group.play_schedule} />
           </View>
-          <Chat room={room} url={`chat/groups/${room}`} />
+          <Chat room={room} url={`chat/groups/${room}`} allowAnon={true} />
         </View>
       </View>
     );
