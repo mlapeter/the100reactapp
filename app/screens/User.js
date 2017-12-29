@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
+import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
@@ -38,15 +39,24 @@ Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
 export class User extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.object,
+    conversationsLoading: PropTypes.bool.isRequired,
+    conversations: PropTypes.arrayOf(PropTypes.object.isRequired)
+  };
+
   constructor(props) {
     super(props);
+
     this.state = {
       hasJoined: false,
       isLoading: false,
       refreshing: false,
       gameData: "",
-      viewStats: false
+      viewStats: false,
+      conversation: this.findConversation(this.props)
     };
+
     userId = this.props.navigation.state.params.userId;
     console.log("USER ID:", userId);
   }
@@ -64,6 +74,27 @@ export class User extends React.Component {
         "Error",
         "User ID:" + userId + nextProps.userError
       );
+    }
+
+    let conversation = this.findConversation(nextProps);
+    this.setState(prevState => {
+      if (prevState.conversation !== conversation) {
+        return { conversation: conversation };
+      }
+    });
+  }
+
+  findConversation(props) {
+    if (
+      !props.conversationsLoading &&
+      props.conversations &&
+      props.conversations.length > 0
+    ) {
+      return props.conversations.find(
+        convo => convo.other_user.id === props.user.id
+      );
+    } else {
+      return null;
     }
   }
 
@@ -97,6 +128,14 @@ export class User extends React.Component {
     this.postData("/add_friend");
     this.props.alertWithType("success", "Success", "Friend Request Sent!");
   }
+
+  openChat = () => {
+    if (this.state.conversation) {
+      this.props.navigation.navigate("Conversation", {
+        conversation: this.state.conversation
+      });
+    }
+  };
 
   postData(action) {
     this.setState({
@@ -178,17 +217,6 @@ export class User extends React.Component {
       tags = null;
     }
 
-    let conversation = null;
-    if (
-      !this.props.conversationsLoading &&
-      this.props.conversations &&
-      this.props.conversations.length > 0
-    ) {
-      conversation = this.props.conversations.find(
-        convo => convo.other_user.id === this.props.user.id
-      );
-    }
-
     return (
       <View style={styles.container}>
         <View style={styles.titleBar}>
@@ -219,6 +247,7 @@ export class User extends React.Component {
               toggleStats={() => this.toggleStats()}
               destinyStatusLink={() => this.destinyStatusLink()}
             />
+            {this.state.conversation && <ChatButton onPress={this.openChat} />}
           </View>
         </View>
         <View>{stats}</View>
@@ -230,10 +259,12 @@ export class User extends React.Component {
           <KarmaIcon karmasCount={this.props.user.karmas_count} />
           <PlayScheduleIcon playSchedule={this.props.user.play_schedule} />
         </View>
-        {conversation && (
+        {this.state.conversation && (
           <Chat
-            url={`chat/conversations/conversation-${conversation.id}`}
-            room={`conversation-${conversation.id}`}
+            url={`chat/conversations/conversation-${
+              this.state.conversation.id
+            }`}
+            room={`conversation-${this.state.conversation.id}`}
             allowAnon={false}
           />
         )}
@@ -328,6 +359,29 @@ function StatsButton(props) {
       </TouchableHighlight>
     </View>
   );
+}
+
+class ChatButton extends PureComponent {
+  static propTypes = {
+    onPress: PropTypes.func.isRequired
+  };
+
+  render() {
+    return (
+      <View style={styles.icon}>
+        <TouchableHighlight onPress={this.props.onPress} underlayColor="white">
+          <Text style={styles.iconText}>
+            <MaterialCommunityIcons
+              name="forum"
+              size={18}
+              color={colors.mediumGrey}
+            />{" "}
+            Message
+          </Text>
+        </TouchableHighlight>
+      </View>
+    );
+  }
 }
 
 function PlatformIcon(props) {

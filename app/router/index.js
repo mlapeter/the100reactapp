@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-
+import hoistNonReactStatics from "hoist-non-react-statics";
 import {
   TabNavigator,
   StackNavigator,
@@ -30,7 +30,8 @@ import NotificationsList from "../screens/NotificationsList";
 import FriendsList from "../screens/FriendsList";
 import User from "../screens/User";
 import UserEdit from "../screens/UserEdit";
-import HelpChat from "../screens/HelpChat/";
+import HelpChat from "../screens/HelpChat";
+import Conversation from "../screens/Conversation";
 
 import Menu from "../screens/Menu";
 
@@ -41,6 +42,21 @@ import { colors, fontSizes } from "../styles";
 import { HeaderBackButton, DrawerItems } from "react-navigation";
 import { connect } from "react-redux";
 import { userLogout } from "../screens/NotificationsList";
+
+const mapNavigationStateToProps = WrappedComponent => {
+  class WithNavStateComponent extends Component {
+    static displayName = `WithNavState(${WrappedComponent.displayName ||
+      WrappedComponent.name ||
+      "Component"})`;
+
+    render() {
+      console.log("NAVIGATION:", this.props.navigation);
+      let { state: { params } } = this.props.navigation;
+      return <WrappedComponent {...params} {...this.props} />;
+    }
+  }
+  return hoistNonReactStatics(WithNavStateComponent, WrappedComponent);
+};
 
 const GamingSessionsStack = StackNavigator({
   GamingSessionsList: { screen: GamingSessionsList },
@@ -85,7 +101,13 @@ const HelpChatStack = StackNavigator({
 
 const FriendsStack = StackNavigator({
   FriendsList: { screen: FriendsList },
-  Friend: { screen: User }
+  Friend: { screen: User },
+  Conversation: {
+    screen: mapNavigationStateToProps(Conversation),
+    navigationOptions: {
+      tabBarLabel: "User"
+    }
+  }
 });
 
 const HomeTabs = TabNavigator(
