@@ -8,7 +8,9 @@ export default class TouchableItem extends PureComponent {
     children: PropTypes.element.isRequired,
     useForeground: PropTypes.bool,
     noVisualFeedback: PropTypes.bool,
-    vibrate: PropTypes.bool
+    vibrate: PropTypes.bool,
+    onPress: PropTypes.func,
+    onLongPress: PropTypes.func
   };
 
   static defaultProps = {
