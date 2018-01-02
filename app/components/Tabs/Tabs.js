@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   // Tab text
   tabText: {
     color: colors.lightGrey,
-    fontFamily: "Avenir",
+    fontFamily: "Nunito",
     fontWeight: "bold",
     textAlign: "center"
   },

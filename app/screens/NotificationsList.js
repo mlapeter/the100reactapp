@@ -20,8 +20,6 @@ import { fetchNotifications } from "../actions/notifications";
 import NotificationsItem from "../components/NotificationsItem/NotificationsItem";
 
 import { colors, fontSizes, fontStyles } from "../../app/styles";
-// import Moment from "../../node_modules/react-moment";
-// import TimeAgo from "../../node_modules/react-native-timeago";
 
 class Notifications extends PureComponent {
   static propTypes = {

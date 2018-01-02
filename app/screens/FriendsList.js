@@ -16,7 +16,6 @@ import {
 import { connect } from "react-redux";
 import { colors, fontSizes } from "../styles";
 import Moment from "../../node_modules/react-moment";
-import TimeAgo from "../../node_modules/react-native-timeago";
 import Friend from "../components/Friend/Friend";
 import Tabs from "../components/Tabs/Tabs";
 import TopNav from "../components/TopNav/TopNav";

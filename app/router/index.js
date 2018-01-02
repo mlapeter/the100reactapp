@@ -2,13 +2,15 @@ import React, { Component } from "react";
 import {
   AsyncStorage,
   Button,
+  Platform,
   ScrollView,
+  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
   View
 } from "react-native";
-
+import hoistNonReactStatics from "hoist-non-react-statics";
 import {
   TabNavigator,
   StackNavigator,
@@ -16,8 +18,8 @@ import {
 } from "react-navigation";
 
 import OnboardingFlowStack from "./onboarding-flow";
-import Login from "../screens/Login/";
-import MainPage from "../screens/MainPage/";
+import Login from "../screens/Login";
+import MainPage from "../screens/MainPage";
 
 import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
@@ -28,18 +30,33 @@ import NotificationsList from "../screens/NotificationsList";
 import FriendsList from "../screens/FriendsList";
 import User from "../screens/User";
 import UserEdit from "../screens/UserEdit";
-import HelpChat from "../screens/HelpChat/";
+import HelpChat from "../screens/HelpChat";
+import Conversation from "../screens/Conversation";
 
 import Menu from "../screens/Menu";
 
-import Chat from "../components/Chat/Chat";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { colors, fontSizes } from "../styles";
-import { DrawerItems } from "react-navigation";
+import { HeaderBackButton, DrawerItems } from "react-navigation";
 import { connect } from "react-redux";
 import { userLogout } from "../screens/NotificationsList";
+
+const mapNavigationStateToProps = WrappedComponent => {
+  class WithNavStateComponent extends Component {
+    static displayName = `WithNavState(${WrappedComponent.displayName ||
+      WrappedComponent.name ||
+      "Component"})`;
+
+    render() {
+      console.log("NAVIGATION:", this.props.navigation);
+      let { state: { params } } = this.props.navigation;
+      return <WrappedComponent {...params} {...this.props} />;
+    }
+  }
+  return hoistNonReactStatics(WithNavStateComponent, WrappedComponent);
+};
 
 const GamingSessionsStack = StackNavigator({
   GamingSessionsList: { screen: GamingSessionsList },
@@ -49,16 +66,77 @@ const GamingSessionsStack = StackNavigator({
 });
 
 const UserEditStack = StackNavigator({
-  UserEdit: { screen: UserEdit }
+  UserEdit: {
+    screen: UserEdit,
+    navigationOptions: ({ navigation }) => ({
+      title: "Edit Profile",
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
+      drawerIcon: () => (
+        <MaterialCommunityIcons
+          name="account-settings-variant"
+          size={24}
+          // style={{ color: colors.grey }}
+        />
+      )
+    })
+  }
 });
 
 const HelpChatStack = StackNavigator({
-  HelpChat: { screen: HelpChat }
+  HelpChat: {
+    screen: HelpChat,
+    navigationOptions: ({ navigation }) => ({
+      title: "Help Chat",
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
+      drawerIcon: () => (
+        <MaterialCommunityIcons
+          name="help-circle"
+          size={24}
+          // style={{ color: colors.grey }}
+        />
+      )
+    })
+  }
 });
+
+const FriendsStack = StackNavigator({
+  FriendsList: { screen: FriendsList },
+  Friend: { screen: User },
+  Conversation: {
+    screen: mapNavigationStateToProps(Conversation),
+    navigationOptions: {
+      tabBarLabel: "User"
+    }
+  }
+});
+
+const HomeTabs = TabNavigator(
+  {
+    Games: { screen: GamingSessionsStack },
+    Group: { screen: Group },
+    NotificationsList: { screen: NotificationsList },
+    FriendsList: { screen: FriendsStack }
+  },
+  {
+    // headerMode: "none"
+  }
+);
 
 const MenuDrawer = DrawerNavigator(
   {
-    Back: { screen: GamingSessionsStack },
+    Home: {
+      screen: HomeTabs,
+      navigationOptions: ({ navigation }) => ({
+        title: "Home",
+        drawerIcon: () => (
+          <MaterialCommunityIcons
+            name="home"
+            size={24}
+            // style={{ color: colors.grey }}
+          />
+        )
+      })
+    },
     "Edit Profile": { screen: UserEditStack },
     "Help Chat": { screen: HelpChatStack }
   },
@@ -92,84 +170,9 @@ const MenuDrawer = DrawerNavigator(
   }
 );
 
-const FriendsStack = StackNavigator({
-  FriendsList: { screen: FriendsList },
-  Friend: { screen: User }
-});
-const MainTab = TabNavigator(
-  {
-    MenuDrawer: { screen: MenuDrawer },
-    Group: { screen: Group },
-    NotificationsList: { screen: NotificationsList },
-    FriendsList: { screen: FriendsStack }
-  },
-  {
-    // headerMode: "none"
-  }
-);
-
-UserEdit.navigationOptions = ({ navigation }) => ({
-  headerLeft: (
-    <Button
-      title="Cancel"
-      onPress={() => navigation.navigate("GamingSessionsList")}
-    />
-  ),
-  headerTitle: "Edit Profile",
-  drawerLabel: "Edit Profile",
-  drawerIcon: () => (
-    <MaterialCommunityIcons
-      name="account-settings-variant"
-      size={24}
-      // style={{ color: colors.grey }}
-    />
-  )
-});
-
-HelpChat.navigationOptions = ({ navigation }) => ({
-  headerLeft: (
-    <Button
-      title="Back"
-      onPress={() => navigation.navigate("GamingSessionsList")}
-    />
-  ),
-  headerTitle: "Help Chat",
-  drawerLabel: "Help Chat",
-  drawerIcon: () => (
-    <MaterialCommunityIcons
-      name="help-circle"
-      size={24}
-      // style={{ color: colors.grey }}
-    />
-  )
-});
-
-GamingSessionsStack.navigationOptions = {
-  drawerLabel: "",
-  drawerIcon: () => (
-    <MaterialCommunityIcons
-      name="arrow-left"
-      size={24}
-      // style={{ color: colors.grey }}
-    />
-  )
-};
-
 GamingSessionCreate.navigationOptions = {
   // headerRight: <Button title="Join Game" />,
   headerTitle: "New Gaming Session"
-};
-
-MenuDrawer.navigationOptions = {
-  tabBarLabel: "Games",
-  // header: false,
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Ionicons
-      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
-      size={26}
-      style={{ color: tintColor }}
-    />
-  )
 };
 
 GamingSessionsList.navigationOptions = {
@@ -183,6 +186,7 @@ GamingSessionsList.navigationOptions = {
     />
   )
 };
+
 Group.navigationOptions = {
   tabBarLabel: "Group",
   tabBarIcon: ({ tintColor, focused }) => (
@@ -193,6 +197,7 @@ Group.navigationOptions = {
     />
   )
 };
+
 NotificationsList.navigationOptions = {
   tabBarLabel: "Notifications",
   tabBarIcon: ({ tintColor, focused }) => (
@@ -203,6 +208,7 @@ NotificationsList.navigationOptions = {
     />
   )
 };
+
 FriendsList.navigationOptions = {
   tabBarLabel: "Friends",
   header: false,
@@ -214,6 +220,7 @@ FriendsList.navigationOptions = {
     />
   )
 };
+
 User.navigationOptions = {
   tabBarLabel: "User",
   // headerRight: <Button title="Add Friend" />,
@@ -225,6 +232,7 @@ User.navigationOptions = {
     />
   )
 };
+
 GamingSession.navigationOptions = {
   tabBarLabel: "Games",
   // headerRight: <Button title="Join Game" />,
@@ -242,13 +250,18 @@ const rootNavigator = StackNavigator(
   {
     MainPage: { screen: MainPage },
     LoginPage: { screen: Login },
-    Main: { screen: MainTab },
+    Main: { screen: MenuDrawer },
     Onboarding: { screen: OnboardingFlowStack }
   },
   {
-    headerMode: "none"
+    headerMode: "none",
+    cardStyle: {
+      // See https://github.com/react-community/react-navigation/issues/1478#issuecomment-301220017
+      paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight
+    }
   }
 );
+
 // const prevGetStateForActionHomeStack = rootNavigator.router.getStateForAction;
 // rootNavigator.router.getStateForAction = (action, state) => {
 //   if (state && action.type === "ReplaceCurrentScreen") {
@@ -285,4 +298,5 @@ const styles = StyleSheet.create({
     // textAlign: "center"
   }
 });
+
 export default rootNavigator;

@@ -1,4 +1,5 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
+import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
@@ -18,12 +19,13 @@ import {
   View
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
-import Chat from "../components/Chat/Chat";
+import Chat from "../components/Chat";
 import Panel from "../components/Panel/Panel";
 
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { fetchUser } from "../actions/users";
+import { fetchConversations } from "../actions/conversations";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -37,21 +39,32 @@ Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
 export class User extends React.Component {
+  static propTypes = {
+    navigation: PropTypes.object,
+    conversationsLoading: PropTypes.bool.isRequired,
+    conversations: PropTypes.arrayOf(PropTypes.object.isRequired)
+  };
+
   constructor(props) {
     super(props);
+
     this.state = {
       hasJoined: false,
-      // isLoading: true,
+      isLoading: false,
       refreshing: false,
       gameData: "",
-      viewStats: false
+      viewStats: false,
+      conversation: this.findConversation(this.props)
     };
+
     userId = this.props.navigation.state.params.userId;
     console.log("USER ID:", userId);
   }
 
   componentDidMount() {
     this.fetchUserData();
+
+    this.props.dispatch(fetchConversations());
   }
 
   componentWillReceiveProps(nextProps) {
@@ -61,6 +74,27 @@ export class User extends React.Component {
         "Error",
         "User ID:" + userId + nextProps.userError
       );
+    }
+
+    let conversation = this.findConversation(nextProps);
+    this.setState(prevState => {
+      if (prevState.conversation !== conversation) {
+        return { conversation: conversation };
+      }
+    });
+  }
+
+  findConversation(props) {
+    if (
+      !props.conversationsLoading &&
+      props.conversations &&
+      props.conversations.length > 0
+    ) {
+      return props.conversations.find(
+        convo => convo.other_user.id === props.user.id
+      );
+    } else {
+      return null;
     }
   }
 
@@ -87,13 +121,21 @@ export class User extends React.Component {
   }
 
   destinyStatusLink() {
-    Linking.openURL(this.props.dataSource.destiny_status_link);
+    Linking.openURL(this.props.user.destiny_status_link);
   }
 
   checkFriendStatus() {
     this.postData("/add_friend");
     this.props.alertWithType("success", "Success", "Friend Request Sent!");
   }
+
+  openChat = () => {
+    if (this.state.conversation) {
+      this.props.navigation.navigate("Conversation", {
+        conversation: this.state.conversation
+      });
+    }
+  };
 
   postData(action) {
     this.setState({
@@ -124,20 +166,22 @@ export class User extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
 
-    if (this.props.userLoading) {
+    if (this.props.userLoading || this.state.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
         </View>
       );
     }
+
     if (this.state.viewStats) {
       stats = (
         <View style={styles.statsContainer}>
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.dataSource.destiny_status_link)}
+                Linking.openURL(this.props.user.destiny_status_link)
+              }
               underlayColor="white"
             >
               <Text>Destiny Status</Text>
@@ -146,7 +190,8 @@ export class User extends React.Component {
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.dataSource.destiny_tracker_link)}
+                Linking.openURL(this.props.user.destiny_tracker_link)
+              }
               underlayColor="white"
             >
               <Text>Destiny Tracker</Text>
@@ -158,12 +203,12 @@ export class User extends React.Component {
       stats = null;
     }
 
-    if (this.props.dataSource.tag_list.length > 0) {
+    if (this.props.user.tag_list.length > 0) {
       tags = (
         <View style={styles.tagList}>
           <MaterialCommunityIcons name="tag" size={14} color={colors.grey} />
           <Panel
-            text={this.props.dataSource.tag_list.map(tag => tag + " ")}
+            text={this.props.user.tag_list.map(tag => tag + " ")}
             numberOfLines={1}
           />
         </View>
@@ -178,45 +223,51 @@ export class User extends React.Component {
           <Image
             style={styles.profileAvatar}
             source={
-              this.props.dataSource.computed_avatar_api ===
-              "img/default-avatar.png"
+              this.props.user.computed_avatar_api === "img/default-avatar.png"
                 ? require("../assets/images/default-avatar.png")
-                : { uri: this.props.dataSource.computed_avatar_api }
+                : { uri: this.props.user.computed_avatar_api }
             }
           />
           <View style={styles.titleAndTags}>
-            <Text style={styles.title}>{this.props.dataSource.gamertag}</Text>
-            <SupporterBadge supporter={this.props.dataSource.supporter} />
+            <Text style={styles.title}>{this.props.user.gamertag}</Text>
+            <SupporterBadge supporter={this.props.user.supporter} />
           </View>
           <View style={styles.actionButtons}>
             <FriendButton
-              friendshipStatus={this.props.dataSource.friendship_status}
+              friendshipStatus={this.props.user.friendship_status}
               addFriend={() => this.addFriend()}
             />
             <KarmaButton
-              karmaStatus={this.props.dataSource.karma_status}
-              karmaReceivedFrom={this.props.dataSource.karma_received_from}
-              currentUser={this.props.user}
+              karmaStatus={this.props.user.karma_status}
+              karmaReceivedFrom={this.props.user.karma_received_from}
+              currentUser={this.props.currentUser}
               giveKarma={() => this.giveKarma()}
             />
             <StatsButton
               toggleStats={() => this.toggleStats()}
               destinyStatusLink={() => this.destinyStatusLink()}
             />
+            {this.state.conversation && <ChatButton onPress={this.openChat} />}
           </View>
         </View>
         <View>{stats}</View>
         <View style={{ marginRight: 4, paddingRight: 4 }}>{tags}</View>
-        <Panel text={this.props.dataSource.description} numberOfLines={3} />
+        <Panel text={this.props.user.description} numberOfLines={3} />
         <View style={styles.iconBar}>
-          <PlatformIcon platform={this.props.dataSource.platform} />
-          <PowerIcon lightLevel={this.props.dataSource.light_level} />
-          <KarmaIcon karmasCount={this.props.dataSource.karmas_count} />
-          <PlayScheduleIcon
-            playSchedule={this.props.dataSource.play_schedule}
-          />
+          <PlatformIcon platform={this.props.user.platform} />
+          <PowerIcon lightLevel={this.props.user.light_level} />
+          <KarmaIcon karmasCount={this.props.user.karmas_count} />
+          <PlayScheduleIcon playSchedule={this.props.user.play_schedule} />
         </View>
-        {/* <Chat chatroom={"help_chatroom"} room="help_chatroom" /> */}
+        {this.state.conversation && (
+          <Chat
+            url={`chat/conversations/conversation-${
+              this.state.conversation.id
+            }`}
+            room={`conversation-${this.state.conversation.id}`}
+            allowAnon={false}
+          />
+        )}
       </View>
     );
   }
@@ -308,6 +359,29 @@ function StatsButton(props) {
       </TouchableHighlight>
     </View>
   );
+}
+
+class ChatButton extends PureComponent {
+  static propTypes = {
+    onPress: PropTypes.func.isRequired
+  };
+
+  render() {
+    return (
+      <View style={styles.icon}>
+        <TouchableHighlight onPress={this.props.onPress} underlayColor="white">
+          <Text style={styles.iconText}>
+            <MaterialCommunityIcons
+              name="forum"
+              size={18}
+              color={colors.mediumGrey}
+            />{" "}
+            Message
+          </Text>
+        </TouchableHighlight>
+      </View>
+    );
+  }
 }
 
 function PlatformIcon(props) {
@@ -515,17 +589,13 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const user = state.authentication.user;
-  const dataSource = state.users.user;
-  const userLoading = state.users.userLoading;
-
   return {
-    user,
-    dataSource,
-    userLoading,
-    userError: state.users.error
-
-    // authenticationError: state.authentication.error
+    currentUser: state.authentication.user,
+    user: state.users.user,
+    userLoading: state.users.userLoading,
+    userError: state.users.error,
+    conversationsLoading: state.conversations.isLoading,
+    conversations: state.conversations.conversations
   };
 };
 

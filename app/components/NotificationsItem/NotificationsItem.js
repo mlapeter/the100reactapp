@@ -8,8 +8,7 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors, fontSizes, fontStyles } from "../../styles";
-import Moment from "../../../node_modules/react-moment";
-import TimeAgo from "../../../node_modules/react-native-timeago";
+import TimeAgo from "../TimeAgo";
 import { StackNavigator } from "react-navigation";
 
 export default class NotificationsItem extends PureComponent {
@@ -25,7 +24,8 @@ export default class NotificationsItem extends PureComponent {
               })
             : this.props.navigation.navigate("GamingSession", {
                 gamingSessionId: this.props.item.notification_object_id
-              })}
+              })
+        }
         underlayColor="white"
       >
         <View style={styles.box}>
@@ -44,9 +44,7 @@ export default class NotificationsItem extends PureComponent {
               <Text style={styles.time}>
                 {this.props.item.notification_type} -
               </Text>
-              <Text style={styles.time}>
-                <TimeAgo time={this.props.item.created_at} minPeriod="60" />
-              </Text>
+              <TimeAgo style={styles.time} date={this.props.item.created_at} />
             </View>
             <Text style={styles.username}>{this.props.item.message}</Text>
           </View>

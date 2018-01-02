@@ -14,7 +14,7 @@ import {
   View
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
-import Chat from "../components/Chat/Chat";
+import Chat from "../components/Chat";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -26,6 +26,8 @@ import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { fetchGroup } from "../actions/group";
 
+import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
+
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
@@ -34,13 +36,8 @@ class Group extends React.Component {
     navigation: PropTypes.object,
     alertWithType: PropTypes.func,
     groupError: PropTypes.string,
-    dataSource: PropTypes.object
+    group: PropTypes.object
   };
-
-  constructor(props) {
-    super(props);
-    this.fetchGroupData = this.fetchGroupData.bind(this);
-  }
 
   componentWillMount() {
     this.fetchGroupData();
@@ -55,10 +52,10 @@ class Group extends React.Component {
     }
   }
 
-  fetchGroupData() {
+  fetchGroupData = () => {
     console.log("Fetching Group");
     this.props.dispatch(fetchGroup());
-  }
+  };
 
   // giveKarma() {
   //   this.postData("/give_karma");
@@ -96,56 +93,54 @@ class Group extends React.Component {
   // }
 
   render() {
-    const { params } = this.props.navigation.state;
-
     if (this.props.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
         </View>
       );
-    } else {
-      if (this.props.dataSource === undefined) {
-        return (
-          <View style={styles.container}>
-            <TouchableOpacity
-              style={styles.buttonWrapper}
-              onPress={this.fetchGroupData}
-            >
-              <Text style={styles.buttonText}>Get Group</Text>
-            </TouchableOpacity>
-          </View>
-        );
-      }
+    } else if (!this.props.group) {
+      return (
+        <View style={styles.container}>
+          <TouchableOpacity
+            style={styles.buttonWrapper}
+            onPress={this.fetchGroupData}
+          >
+            <Text style={styles.buttonText}>Get Group</Text>
+          </TouchableOpacity>
+        </View>
+      );
     }
+
+    let room = `group-${this.props.group.id}`;
 
     return (
       <View style={styles.container}>
         <Image
           style={styles.backgroundImage}
           source={
-            this.props.dataSource.header_background_image_api ===
+            this.props.group.header_background_image_api ===
             "img/default-group-header.jpg"
-              ? require("../assets/images/destiny-wallpaper-1.jpg")
-              : { uri: this.props.dataSource.header_background_image_api }
+              ? defaultGroupHeaderBackground
+              : { uri: this.props.group.header_background_image_api }
           }
         >
-          <Text style={styles.title}>{this.props.dataSource.name}</Text>
+          <Text style={styles.title}>{this.props.group.name}</Text>
         </Image>
         <View style={styles.innerContainer}>
           <Text style={styles.description} numberOfLines={3}>
-            {this.props.dataSource.description != null
-              ? this.props.dataSource.description
+            {this.props.group.description != null
+              ? this.props.group.description
               : ""}
           </Text>
           <Text style={styles.description} numberOfLines={2}>
-            {this.props.dataSource.latest_news != null
-              ? this.props.dataSource.latest_news
+            {this.props.group.latest_news != null
+              ? this.props.group.latest_news
               : ""}
           </Text>
           <View style={styles.iconBar}>
-            <PlatformIcon platform={this.props.dataSource.platform} />
-            <PlayerIcon usersCount={this.props.dataSource.users_count} />
+            <PlatformIcon platform={this.props.group.platform} />
+            <PlayerIcon usersCount={this.props.group.users_count} />
             <Text style={styles.icon}>
               <MaterialCommunityIcons
                 name="human-greeting"
@@ -154,11 +149,9 @@ class Group extends React.Component {
               />
               <Text style={styles.icon}>Casual</Text>
             </Text>
-            <PlayScheduleIcon
-              playSchedule={this.props.dataSource.play_schedule}
-            />
+            <PlayScheduleIcon playSchedule={this.props.group.play_schedule} />
           </View>
-          {/* <Chat chatroom={"help_chatroom"} room="help_chatroom" /> */}
+          <Chat room={room} url={`chat/groups/${room}`} allowAnon={true} />
         </View>
       </View>
     );
@@ -278,38 +271,43 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
-    marginTop: 30,
     flex: 1,
+    flexDirection: "column",
     backgroundColor: colors.white,
     borderTopWidth: 0.5,
     borderTopColor: "#d6d7da",
     borderBottomWidth: 0.5,
     borderBottomColor: "#d6d7da",
     justifyContent: "center",
-    alignItems: "center"
-  },
-  innerContainer: {
-    padding: 5,
-    flex: 1,
-    justifyContent: "flex-start",
-    backgroundColor: colors.white
+    alignItems: "stretch"
   },
   backgroundImage: {
     resizeMode: "cover", // or 'stretch'
-    height: 150
-  },
-  actionButtons: {
-    flexDirection: "column",
-    margin: 5,
-    flex: 1.4
-  },
-  loading: {
+    height: 150,
+    width: "100%",
     alignItems: "center",
     justifyContent: "center"
   },
+  title: {
+    backgroundColor: "rgba( 0, 0, 0, 0.5 )",
+    borderRadius: 3,
+    color: colors.white,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    textAlign: "center",
+    textAlignVertical: "center",
+    includeFontPadding: false,
+    fontFamily: fontStyles.primaryFont,
+    fontSize: fontSizes.primary
+  },
+  innerContainer: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: colors.white
+  },
   iconBar: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "stretch",
     padding: 5,
     borderTopWidth: 0.5,
@@ -322,26 +320,6 @@ const styles = StyleSheet.create({
     padding: 2,
     margin: 2,
     backgroundColor: colors.white
-  },
-  groupImage: {
-    height: 100,
-    flex: 1
-  },
-  titleBar: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "stretch",
-    padding: 5
-  },
-
-  title: {
-    backgroundColor: "transparent",
-    textAlign: "center",
-    padding: 40,
-    paddingTop: 100,
-    color: colors.white,
-    fontFamily: fontStyles.primaryFont,
-    fontSize: fontSizes.primary
   },
   description: {
     color: colors.lightGrey,
@@ -361,12 +339,9 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const dataSource = state.group.group;
-  const isLoading = state.group.isLoading;
-
   return {
-    dataSource,
-    isLoading,
+    group: state.group.group,
+    isLoading: state.group.isLoading,
     groupError: state.group.error
   };
 };

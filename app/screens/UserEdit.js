@@ -55,7 +55,7 @@ class UserEdit extends React.Component {
       nextProps.userUpdated !== this.props.userUpdated
     ) {
       this.props.alertWithType("success", "Success", "Profile Updated");
-      this.props.navigation.navigate("GamingSessionsList");
+      this.props.navigation.navigate("Home");
     }
   }
 
