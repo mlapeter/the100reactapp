@@ -22,6 +22,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
+import { fetchGamingSession } from "../actions/gamingSessions";
 
 // Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
@@ -48,27 +49,7 @@ class GamingSession extends React.Component {
   }
 
   fetchGamingSessionData() {
-    var userIds = [];
-    return fetch(
-      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
-        gamingSessionId
-    )
-      .then(response => response.json())
-      .then(responseJson => {
-        responseJson.confirmed_sessions.map(confirmedSession =>
-          userIds.push(confirmedSession.user_id)
-        );
-        this.setState({
-          isLoading: false,
-          hasJoined: userIds.includes(this.props.user.user_id),
-          gamingSession: responseJson
-        });
-        // console.log(responseJson);
-        return responseJson;
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    this.props.dispatch(fetchGamingSession(gamingSessionId));
   }
 
   joinGame = () => {
@@ -78,8 +59,8 @@ class GamingSession extends React.Component {
 
   leaveGame = () => {
     console.log("LEAVE CLICKED");
-
     this.postData("/leave");
+    this.props.navigation.navigate("GamingSessionsList");
   };
 
   postData(action) {
@@ -114,7 +95,7 @@ class GamingSession extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
 
-    if (this.state.isLoading) {
+    if (this.props.gamingSessionLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
@@ -122,40 +103,44 @@ class GamingSession extends React.Component {
       );
     }
 
-    let room = `game-${this.state.gamingSession.id}`;
+    let room = `game-${this.props.gamingSession.id}`;
 
+    var userIds = [];
+    this.props.gamingSession.confirmed_sessions.map(confirmedSession =>
+      userIds.push(confirmedSession.user_id)
+    );
     return (
       <View style={styles.container}>
         <View style={styles.titleBar}>
           <Text style={styles.title}>
-            {this.state.gamingSession.category != null
-              ? this.state.gamingSession.category.toString()
+            {this.props.gamingSession.category != null
+              ? this.props.gamingSession.category.toString()
               : ""}
           </Text>
           <JoinLeaveButton
-            hasJoined={this.state.hasJoined}
+            hasJoined={userIds.includes(this.props.user.user_id)}
             leaveGame={this.leaveGame.bind(this)}
             joinGame={this.joinGame}
           />
         </View>
         <Text style={styles.description} numberOfLines={2}>
-          {this.state.gamingSession.name != null
-            ? this.state.gamingSession.name.toString()
+          {this.props.gamingSession.name != null
+            ? this.props.gamingSession.name.toString()
             : ""}
         </Text>
         <View style={styles.iconBar}>
-          <TimeIcon startTime={this.state.gamingSession.start_time} />
-          <PlatformIcon platform={this.state.gamingSession.platform} />
+          <TimeIcon startTime={this.props.gamingSession.start_time} />
+          <PlatformIcon platform={this.props.gamingSession.platform} />
           <PlayerIcon
-            primaryUsersCount={this.state.gamingSession.primary_users_count}
-            teamSize={this.state.gamingSession.team_size}
+            primaryUsersCount={this.props.gamingSession.primary_users_count}
+            teamSize={this.props.gamingSession.team_size}
           />
-          <PowerIcon lightLevel={this.state.gamingSession.light_level} />
-          <SherpaIcon sherpaLed={this.state.gamingSession.sherpa_led} />
+          <PowerIcon lightLevel={this.props.gamingSession.light_level} />
+          <SherpaIcon sherpaLed={this.props.gamingSession.sherpa_led} />
         </View>
         <Text style={styles.sectionHeader}>Players:</Text>
         <PlayersList
-          confirmedSessions={this.state.gamingSession.confirmed_sessions}
+          confirmedSessions={this.props.gamingSession.confirmed_sessions}
           navigation={this.props.navigation}
         />
         <Text style={styles.sectionHeader}>Chat:</Text>
@@ -346,9 +331,13 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   const user = state.authentication.user;
+  const gamingSessionLoading = state.gamingSessions.gamingSessionLoading;
+  const gamingSession = state.gamingSessions.gamingSession;
 
   return {
-    user
+    user,
+    gamingSessionLoading,
+    gamingSession
   };
 };
 

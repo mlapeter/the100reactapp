@@ -66,6 +66,9 @@ import {
   CREATE_GAMING_SESSION,
   CREATE_GAMING_SESSION_RESULT,
   CREATE_GAMING_SESSION_ERROR,
+  FETCH_GAMING_SESSION,
+  FETCH_GAMING_SESSION_RESULT,
+  FETCH_GAMING_SESSION_ERROR,
   FETCH_GAMING_SESSIONS,
   FETCH_GAMING_SESSIONS_RESULT,
   FETCH_GAMING_SESSIONS_ERROR,
@@ -88,6 +91,7 @@ import {
   LOAD_MORE_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
+
 import { SET_CREDENTIAL } from "../actions/onboarding";
 
 import {
@@ -473,6 +477,28 @@ function* fetchGroup() {
   }
 }
 
+function* fetchGamingSession() {
+  try {
+    let gamingSessionId = yield select(
+      state => state.gamingSessions.gamingSessionId
+    );
+
+    let endpoint =
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+      gamingSessionId;
+    yield call(
+      fetchData,
+      endpoint,
+      1,
+      FETCH_GAMING_SESSION_RESULT,
+      FETCH_GAMING_SESSION_ERROR,
+      FETCH_GAMING_SESSION_RESULT
+    );
+  } catch (e) {
+    yield put({ type: FETCH_GAMING_SESSION_ERROR, error: e.message });
+  }
+}
+
 function* fetchGamingSessions() {
   try {
     yield put({ type: CHANGE_GAMING_SESSIONS_PAGE, page: 1 });
@@ -709,6 +735,8 @@ export default function* rootSaga() {
 
   yield takeEvery(FETCH_GAMES, fetchGames);
   yield takeEvery(CHANGE_GAME, fetchActivities);
+
+  yield takeEvery(FETCH_GAMING_SESSION, fetchGamingSession);
 
   yield takeEvery(FETCH_GAMING_SESSIONS, fetchGamingSessions);
   yield takeEvery(REFRESH_GAMING_SESSIONS, fetchGamingSessions);

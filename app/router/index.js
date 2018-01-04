@@ -171,8 +171,14 @@ const MenuDrawer = DrawerNavigator(
 );
 
 GamingSessionCreate.navigationOptions = {
-  // headerRight: <Button title="Join Game" />,
-  headerTitle: "New Gaming Session"
+  headerTitle: "New Gaming Session",
+  tabBarIcon: ({ tintColor, focused }) => (
+    <Ionicons
+      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
+      size={26}
+      style={{ color: tintColor }}
+    />
+  )
 };
 
 GamingSessionsList.navigationOptions = {

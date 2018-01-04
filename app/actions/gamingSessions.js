@@ -3,6 +3,10 @@ export const CREATE_GAMING_SESSION_RESULT =
   "CREATE_GAMING_SESSION_ERROR_RESULT";
 export const CREATE_GAMING_SESSION_ERROR = "CREATE_GAMING_SESSION_ERROR";
 
+export const FETCH_GAMING_SESSION = "FETCH_GAMING_SESSION";
+export const FETCH_GAMING_SESSION_RESULT = "FETCH_GAMING_SESSION_RESULT";
+export const FETCH_GAMING_SESSION_ERROR = "FETCH_GAMING_SESSION_ERROR";
+
 export const FETCH_GAMING_SESSIONS = "FETCH_GAMING_SESSIONS";
 export const FETCH_GAMING_SESSIONS_RESULT = "FETCH_GAMING_SESSIONS_RESULT";
 export const FETCH_GAMING_SESSIONS_ERROR = "FETCH_GAMING_SESSIONS_ERROR";
@@ -39,6 +43,11 @@ export const LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT =
 export const createGamingSession = gamingSession => ({
   type: CREATE_GAMING_SESSION,
   gamingSession
+});
+
+export const fetchGamingSession = gamingSessionId => ({
+  type: FETCH_GAMING_SESSION,
+  gamingSessionId
 });
 
 export const fetchGamingSessions = endpoint => ({
