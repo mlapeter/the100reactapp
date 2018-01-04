@@ -17,6 +17,7 @@ import {
   TouchableWithoutFeedback
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
+import MenuDrawer from "../router/index";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -49,9 +50,9 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    // if (this.props.authentication.isAuthed === true) {
-    //   this.props.navigation.navigate("Main");
-    // }
+    if (this.props.authentication.isAuthed === true) {
+      this.props.navigation.navigate("Main");
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -83,10 +84,9 @@ class Login extends React.Component {
   };
 
   render() {
-    if (this.props.authentication.isAuthed === true) {
-      this.props.navigation.navigate("Main");
+    if (this.props.authentication.isAuthed) {
+      return <MenuDrawer />;
     }
-
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
@@ -116,21 +116,26 @@ class Login extends React.Component {
             style={styles.input}
             value={this.state.password}
           />
-          <TouchableOpacity style={{}} onPress={this.userLogin.bind(this)}>
-            <Text
-              style={{
-                textAlign: "center",
-                padding: 15,
-                fontFamily: fontStyles.primaryFont,
-                fontSize: fontSizes.primary,
-                height: 50,
-                width: 300,
-                marginBottom: 15
-              }}
-            >
-              Login
-            </Text>
-          </TouchableOpacity>
+
+          {this.props.authentication.isLoading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <TouchableOpacity style={{}} onPress={this.userLogin.bind(this)}>
+              <Text
+                style={{
+                  textAlign: "center",
+                  padding: 15,
+                  fontFamily: fontStyles.primaryFont,
+                  fontSize: fontSizes.primary,
+                  height: 50,
+                  width: 300,
+                  marginBottom: 15
+                }}
+              >
+                Login
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
       </KeyboardAwareScrollView>
     );

@@ -17,69 +17,52 @@ import PreSplash from "../components/PreSplash/PreSplash";
 import { colors } from "../styles";
 import ImgLogo from "../assets/images/logo.png";
 
-const { width, height } = Dimensions.get('window');
+const { width, height } = Dimensions.get("window");
 
 class MainPage extends Component {
-  static navigationOptions = {
-    header: null,
-    fontLoaded: false
-  }
   constructor(props) {
     super(props);
-
     this.state = {
-      isLoaded: false,
-      fontLoaded: false
-    }
+      isLoaded: false
+    };
   }
-  componentDidMount() {
+
+  componentWillMount() {
     Font.loadAsync({
       Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
     }).then(result => {
-      this.setState({ fontLoaded: true });
-    });
-    AsyncStorage.getItem("id_token").then(token => {
-      this.props.dispatch(decodeToken(token));
-      this.setState({ isLoaded: true });
-    });
-    AsyncStorage.getItem("fb_token").then(token => {
-      this.props.dispatch(setFirebaseToken(token));
+      AsyncStorage.getItem("id_token").then(token => {
+        this.props.dispatch(decodeToken(token));
+        if (this.props.authentication.isAuthed === true) {
+          this.props.navigation.navigate("Main");
+        }
+        this.setState({ isLoaded: true });
+      });
+      AsyncStorage.getItem("fb_token").then(token => {
+        this.props.dispatch(setFirebaseToken(token));
+      });
     });
   }
-  componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.authenticationError
-      // && nextProps.authenticationError !== this.props.authenticationError
-    ) {
-      this.props.alertWithType("error", "Error", nextProps.authenticationError);
-    }
-  }
-  async saveItem(item, selectedValue) {
-    try {
-      await AsyncStorage.setItem(item, selectedValue);
-    } catch (error) {
-      console.error("AsyncStorage error: " + error.message);
-    }
-  }
+
   render() {
-    if (
-      !this.state.isLoaded ||
-      !this.state.fontLoaded ||
-      this.props.authentication.isLoading
-    ) {
+    if (!this.state.isLoaded || this.props.authentication.isLoading) {
       return <PreSplash />;
     }
+
     return (
       <View style={styles.container}>
-        <StatusBar/>
-        <Image
-          source={ImgLogo}
-          style={styles.logoImage}
-        />
-        <TouchableOpacity style={styles.loginButton} onPress={() => this.props.navigation.navigate('LoginPage')}>
+        <StatusBar />
+        <Image source={ImgLogo} style={styles.logoImage} />
+        <TouchableOpacity
+          style={styles.loginButton}
+          onPress={() => this.props.navigation.navigate("LoginPage")}
+        >
           <Text style={styles.buttonText}>LOG IN</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.signupButton} onPress={() => this.props.navigation.navigate('ChoosePlatform')}>
+        <TouchableOpacity
+          style={styles.signupButton}
+          onPress={() => this.props.navigation.navigate("ChoosePlatform")}
+        >
           <Text style={styles.buttonText}>NEW USER? SIGN UP!</Text>
         </TouchableOpacity>
       </View>
@@ -101,20 +84,20 @@ const styles = {
   },
   loginButton: {
     paddingVertical: 20,
-    backgroundColor: '#25262a',
-    alignSelf: 'stretch',
+    backgroundColor: "#25262a",
+    alignSelf: "stretch",
     borderRadius: 3
   },
   signupButton: {
     marginTop: 20,
     paddingVertical: 20,
-    backgroundColor: '#5a8cf0',
-    alignSelf: 'stretch',
+    backgroundColor: "#5a8cf0",
+    alignSelf: "stretch",
     borderRadius: 3
   },
   buttonText: {
     color: colors.white,
-    textAlign: 'center'
+    textAlign: "center"
   }
 };
 
