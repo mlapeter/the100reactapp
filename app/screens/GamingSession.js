@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
   title: {
     padding: 5,
     color: colors.grey,
-    fontFamily: fontStyles.primaryFont,
+    fontFamily: fontStyles.gameHeaderFont,
     fontSize: fontSizes.primary
   },
   description: {

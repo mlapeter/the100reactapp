@@ -6,7 +6,7 @@ export const colors = {
   border: "#E4E4E4",
   tabPrimary: "#F7F9F9",
   white: "#fff",
-  grey: "#2f3136",
+  grey: "#43454a",
   mediumGrey: "rgba(79,84,92,.9)",
   lightGrey: "#737f8d",
   lightestGrey: "#99aab5",
@@ -31,5 +31,6 @@ export const fontSizes = {
 };
 
 export const fontStyles = {
-  primaryFont: "Nunito"
+  primaryFont: "Nunito",
+  gameHeaderFont: "Lato"
 };

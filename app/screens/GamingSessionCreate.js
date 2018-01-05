@@ -43,7 +43,9 @@ class GamingSessionCreate extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    console.log("GROUPS:", this.props.groups);
+  }
 
   componentWillReceiveProps(nextProps) {
     if (
@@ -56,15 +58,15 @@ class GamingSessionCreate extends React.Component {
       nextProps.gameCreated &&
       nextProps.gameCreated !== this.props.gameCreated
     ) {
-      // this.props.navigation.navigate("GamingSessionsList");
+      this.props.navigation.navigate("GamingSessionsList");
       this.props.alertWithType("success", "Success", "Gaming Session Created!");
     }
   }
 
   handlePress() {
     var value = this.refs.form.getValue();
+    console.log(value);
     if (value) {
-      // if validation fails, value will be null
       this.props.dispatch(createGamingSession(value));
     }
   }
@@ -74,7 +76,7 @@ class GamingSessionCreate extends React.Component {
       return (
         <View style={styles.outerContainer}>
           <View style={styles.container}>
-            <PreSplash />
+            <ActivityIndicator />
           </View>
         </View>
       );
@@ -82,6 +84,9 @@ class GamingSessionCreate extends React.Component {
 
     const newActivities = toObject(this.props.activities);
     const finalActivities = t.enums(newActivities);
+
+    const newGroups = toObject(this.props.groups);
+    const finalGroups = t.enums(newGroups);
 
     function toObject(arr) {
       var rv = {};
@@ -94,6 +99,7 @@ class GamingSessionCreate extends React.Component {
       activity: finalActivities,
       description: t.maybe(t.String),
       start_time: t.Date,
+      group: t.maybe(finalGroups),
       friends_only: t.Boolean,
       group_only: t.Boolean
     });
@@ -202,6 +208,7 @@ const mapStateToProps = state => {
   const games = state.search.games;
   const activities = state.search.activities;
   const activity = state.search.activity;
+  const groups = state.users.user.groups_for_api;
   const isCreating = state.gamingSessions.isCreating;
 
   return {
@@ -210,6 +217,7 @@ const mapStateToProps = state => {
     games,
     activities,
     activity,
+    groups,
     isCreating,
     gameCreated: state.gamingSessions.gameCreated,
     gamingSessionError: state.gamingSessions.error

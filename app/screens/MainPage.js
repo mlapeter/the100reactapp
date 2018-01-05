@@ -29,6 +29,9 @@ class MainPage extends Component {
 
   componentWillMount() {
     Font.loadAsync({
+      Lato: require("../../app/assets/fonts/Lato-Bold.ttf")
+    });
+    Font.loadAsync({
       Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
     }).then(result => {
       AsyncStorage.getItem("id_token").then(token => {

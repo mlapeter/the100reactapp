@@ -153,6 +153,7 @@ function* decodeToken() {
 function* removeToken() {
   try {
     AsyncStorage.removeItem("id_token");
+    AsyncStorage.removeItem("fb_token");
   } catch (e) {
     yield put({ type: REMOVE_TOKEN_ERROR, error: e.message });
   }
@@ -248,6 +249,7 @@ function* createGamingSession() {
           activity: gamingSession.activity,
           platform: platform,
           start_time: gamingSession.start_time,
+          group_name: gamingSession.group,
           friends_only: gamingSession.friends_only,
           group_only: gamingSession.group_only
         })
