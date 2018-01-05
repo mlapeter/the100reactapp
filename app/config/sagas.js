@@ -66,6 +66,9 @@ import {
   CREATE_GAMING_SESSION,
   CREATE_GAMING_SESSION_RESULT,
   CREATE_GAMING_SESSION_ERROR,
+  FETCH_GAMING_SESSION,
+  FETCH_GAMING_SESSION_RESULT,
+  FETCH_GAMING_SESSION_ERROR,
   FETCH_GAMING_SESSIONS,
   FETCH_GAMING_SESSIONS_RESULT,
   FETCH_GAMING_SESSIONS_ERROR,
@@ -88,6 +91,7 @@ import {
   LOAD_MORE_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
+
 import { SET_CREDENTIAL } from "../actions/onboarding";
 
 import {
@@ -149,6 +153,7 @@ function* decodeToken() {
 function* removeToken() {
   try {
     AsyncStorage.removeItem("id_token");
+    AsyncStorage.removeItem("fb_token");
   } catch (e) {
     yield put({ type: REMOVE_TOKEN_ERROR, error: e.message });
   }
@@ -244,6 +249,7 @@ function* createGamingSession() {
           activity: gamingSession.activity,
           platform: platform,
           start_time: gamingSession.start_time,
+          group_name: gamingSession.group,
           friends_only: gamingSession.friends_only,
           group_only: gamingSession.group_only
         })
@@ -470,6 +476,28 @@ function* fetchGroup() {
     yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
   } catch (e) {
     yield put({ type: FETCH_GROUP_ERROR, error: e.message });
+  }
+}
+
+function* fetchGamingSession() {
+  try {
+    let gamingSessionId = yield select(
+      state => state.gamingSessions.gamingSessionId
+    );
+
+    let endpoint =
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+      gamingSessionId;
+    yield call(
+      fetchData,
+      endpoint,
+      1,
+      FETCH_GAMING_SESSION_RESULT,
+      FETCH_GAMING_SESSION_ERROR,
+      FETCH_GAMING_SESSION_RESULT
+    );
+  } catch (e) {
+    yield put({ type: FETCH_GAMING_SESSION_ERROR, error: e.message });
   }
 }
 
@@ -709,6 +737,8 @@ export default function* rootSaga() {
 
   yield takeEvery(FETCH_GAMES, fetchGames);
   yield takeEvery(CHANGE_GAME, fetchActivities);
+
+  yield takeEvery(FETCH_GAMING_SESSION, fetchGamingSession);
 
   yield takeEvery(FETCH_GAMING_SESSIONS, fetchGamingSessions);
   yield takeEvery(REFRESH_GAMING_SESSIONS, fetchGamingSessions);

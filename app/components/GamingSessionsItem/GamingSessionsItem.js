@@ -150,8 +150,9 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   gamingSessionTitle: {
+    fontSize: 15,
     color: colors.grey,
-    fontFamily: fontStyles.primaryFont
+    fontFamily: fontStyles.gameHeaderFont
   },
   gamingSessionDescription: {
     color: colors.lightGrey
