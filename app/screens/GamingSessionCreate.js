@@ -43,9 +43,7 @@ class GamingSessionCreate extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {
-    console.log("GROUPS:", this.props.groups);
-  }
+  componentDidMount() {}
 
   componentWillReceiveProps(nextProps) {
     if (
@@ -65,7 +63,6 @@ class GamingSessionCreate extends React.Component {
 
   handlePress() {
     var value = this.refs.form.getValue();
-    console.log(value);
     if (value) {
       this.props.dispatch(createGamingSession(value));
     }

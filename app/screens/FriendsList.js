@@ -187,6 +187,7 @@ class FriendsList extends Component {
       >
         <View style={styles.container}>
           <TopNav
+            showSearch={true}
             setSearchText={text => this.setSearchText(text)}
             searchText={this.state.searchText}
             user={this.props.user}

@@ -1,15 +1,7 @@
 import React, { PureComponent } from "react";
-import {
-  Image,
-  View,
-  StyleSheet,
-  Text,
-  TouchableHighlight
-} from "react-native";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { colors, fontSizes, fontStyles } from "../../styles";
+import { Image, View, Text, TouchableHighlight } from "react-native";
 import TimeAgo from "../TimeAgo";
-import { StackNavigator } from "react-navigation";
+import styles from "./styles";
 
 export default class NotificationsItem extends PureComponent {
   render() {
@@ -24,8 +16,7 @@ export default class NotificationsItem extends PureComponent {
               })
             : this.props.navigation.navigate("GamingSession", {
                 gamingSessionId: this.props.item.notification_object_id
-              })
-        }
+              })}
         underlayColor="white"
       >
         <View style={styles.box}>
@@ -33,7 +24,8 @@ export default class NotificationsItem extends PureComponent {
             <Image
               style={styles.avatarMini}
               source={
-                this.props.item.avatar_url === null
+                this.props.item.avatar_url === null ||
+                this.props.item.avatar_url === "img/default-avatar.png"
                   ? require("../../assets/images/default-avatar.png")
                   : { uri: this.props.item.avatar_url }
               }
@@ -46,82 +38,10 @@ export default class NotificationsItem extends PureComponent {
               </Text>
               <TimeAgo style={styles.time} date={this.props.item.created_at} />
             </View>
-            <Text style={styles.username}>{this.props.item.message}</Text>
+            <Text style={styles.message}>{this.props.item.message}</Text>
           </View>
         </View>
       </TouchableHighlight>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  defaultText: {
-    color: colors.white
-  },
-  container: {
-    padding: 5,
-    margin: 3,
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    backgroundColor: colors.white
-  },
-  loading: {
-    alignItems: "center",
-    justifyContent: "center",
-    margin: 10
-  },
-  box: {
-    flexDirection: "row",
-    margin: 5,
-    padding: 5
-  },
-  input: {
-    flexDirection: "row",
-    alignItems: "stretch",
-    margin: 5,
-    padding: 5,
-    borderTopWidth: 0.5,
-    borderTopColor: "#d6d7da"
-  },
-  buttonWrapper: {
-    padding: 10
-  },
-  leftBox: {
-    flex: 1,
-    padding: 2,
-    margin: 2,
-    backgroundColor: colors.white
-  },
-  middleBox: {
-    flex: 7,
-    padding: 2,
-    margin: 2,
-    backgroundColor: colors.white
-  },
-  rightBox: {
-    flex: 1.1
-  },
-  avatarMini: {
-    height: 40,
-    width: 40,
-    borderRadius: 20
-  },
-  username: {
-    color: colors.grey,
-    fontFamily: fontStyles.primaryFont,
-    fontSize: fontSizes.secondary
-  },
-  time: {
-    padding: 3,
-    color: colors.lightestGrey,
-    fontSize: fontSizes.small
-  },
-  text: {
-    color: colors.mediumGrey
-  },
-  iconText: {
-    fontSize: fontSizes.small,
-    color: colors.mediumGrey
-  }
-});
