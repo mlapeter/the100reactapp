@@ -161,10 +161,10 @@ class GamingSessionsList extends React.PureComponent {
 
   renderFooter = () => {
     if (!this.props.moreGamingSessionsAvailable) {
-      console.log(
-        "In Footer moreGamingSessionsAvailable: " +
-          this.props.moreGamingSessionsAvailable
-      );
+      // console.log(
+      //   "In Footer moreGamingSessionsAvailable: " +
+      //     this.props.moreGamingSessionsAvailable
+      // );
       return (
         <View style={styles.alertView}>
           <MaterialCommunityIcons

@@ -18,6 +18,7 @@ import { connect } from "react-redux";
 import { removeToken } from "../actions/authentication";
 import { fetchNotifications } from "../actions/notifications";
 import NotificationsItem from "../components/NotificationsItem/NotificationsItem";
+import TopNav from "../components/TopNav/TopNav";
 
 import { colors, fontSizes, fontStyles } from "../../app/styles";
 
@@ -30,11 +31,10 @@ class Notifications extends PureComponent {
   };
   constructor(props) {
     super(props);
-    this.fetchNotificationsData = this.fetchNotificationsData.bind(this);
   }
 
   componentWillMount() {
-    this.props.dispatch(fetchNotifications());
+    this.fetchNotificationsData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -46,23 +46,13 @@ class Notifications extends PureComponent {
     }
   }
 
-  fetchNotificationsData() {
+  fetchNotificationsData = () => {
     this.props.dispatch(fetchNotifications());
-  }
+  };
 
   handleRefresh = () => {
     this.fetchNotificationsData();
   };
-
-  userLogout() {
-    try {
-      AsyncStorage.removeItem("id_token");
-    } catch (error) {
-      console.log("AsyncStorage error: " + error.message);
-    }
-    this.props.dispatch(removeToken());
-    this.props.navigation.navigate("MainPage");
-  }
 
   render() {
     if (this.props.isLoading) {
@@ -87,13 +77,11 @@ class Notifications extends PureComponent {
     }
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-          style={styles.buttonWrapper}
-          onPress={this.userLogout.bind(this)}
-        >
-          <Text style={styles.buttonText}> Log out </Text>
-        </TouchableOpacity>
-
+        <TopNav
+          title="NOTIFICATIONS"
+          user={this.props.user}
+          navigation={this.props.navigation}
+        />
         <FlatList
           data={this.props.items}
           renderItem={({ item }) => (
@@ -113,6 +101,7 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
+    paddingTop: 35,
     padding: 5,
     margin: 3,
     flex: 1,
@@ -131,17 +120,15 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const isAuthenticating = state.authentication.isAuthenticating;
-  const isAuthed = state.authentication.isAuthed;
   const items = state.notifications.notifications;
   const isLoading = state.notifications.isLoading;
+  const user = state.authentication.user;
 
   return {
-    isAuthenticating,
-    isAuthed,
     items,
     isLoading,
-    notificationsError: state.notifications.error
+    notificationsError: state.notifications.error,
+    user
   };
 };
 

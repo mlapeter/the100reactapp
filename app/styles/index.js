@@ -32,5 +32,7 @@ export const fontSizes = {
 
 export const fontStyles = {
   primaryFont: "Nunito",
-  gameHeaderFont: "Lato"
+  gameHeaderFont: "Lato",
+  nunito: "Nunito",
+  lato: "Lato"
 };

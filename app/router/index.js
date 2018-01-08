@@ -50,7 +50,6 @@ const mapNavigationStateToProps = WrappedComponent => {
       "Component"})`;
 
     render() {
-      console.log("NAVIGATION:", this.props.navigation);
       let { state: { params } } = this.props.navigation;
       return <WrappedComponent {...params} {...this.props} />;
     }
