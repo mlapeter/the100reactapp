@@ -68,7 +68,6 @@ class GamingSession extends React.Component {
       isLoading: true
     });
     AsyncStorage.getItem("id_token").then(token => {
-      console.log("token: " + token);
       fetch(
         "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
           gamingSessionId +
@@ -117,11 +116,23 @@ class GamingSession extends React.Component {
               ? this.props.gamingSession.category.toString()
               : ""}
           </Text>
-          <JoinLeaveButton
-            hasJoined={userIds.includes(this.props.user.user_id)}
-            leaveGame={this.leaveGame.bind(this)}
-            joinGame={this.joinGame}
-          />
+          <View style={styles.buttonsContainer}>
+            <Button
+              style={{
+                height: 30,
+                width: 180,
+                marginBottom: 15
+              }}
+              onPress={() =>
+                this.props.navigation.navigate("GamingSessionEdit")}
+              title="Edit"
+            />
+            <JoinLeaveButton
+              hasJoined={userIds.includes(this.props.user.user_id)}
+              leaveGame={this.leaveGame.bind(this)}
+              joinGame={this.joinGame}
+            />
+          </View>
         </View>
         <Text style={styles.description} numberOfLines={2}>
           {this.props.gamingSession.name != null
@@ -326,6 +337,9 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginHorizontal: 8,
     fontWeight: "bold"
+  },
+  buttonsContainer: {
+    flexDirection: "column"
   }
 });
 

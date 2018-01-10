@@ -34,7 +34,7 @@ export default (styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    marginTop: 30,
+    marginTop: 25,
     padding: 5,
     margin: 3,
     flex: 1,
@@ -51,13 +51,13 @@ export default (styles = StyleSheet.create({
     padding: 10
   },
   icon: {
-    paddingTop: 10,
-    margin: 3,
+    marginBottom: 5,
     justifyContent: "center",
     alignItems: "center"
   },
   iconText: {
     marginRight: 3,
-    fontSize: fontSizes.h5
+    fontSize: fontSizes.h5,
+    fontWeight: "bold"
   }
 }));

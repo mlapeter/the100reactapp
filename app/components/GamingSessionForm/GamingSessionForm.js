@@ -58,9 +58,20 @@ export default class GamingSessionForm extends React.Component {
       group_only: t.Boolean
     });
 
-    var value = {
-      created_by: "mobile-app"
-    };
+    if (this.props.gamingSession) {
+      var value = {
+        activity: this.props.gamingSession.category,
+        description: this.props.gamingSession.name,
+        start_time: new Date(this.props.gamingSession.start_time),
+        group: this.props.gamingSession.group_name,
+        friends_only: this.props.gamingSession.friends_only,
+        group_only: this.props.gamingSession.group_only
+      };
+    } else {
+      var value = {
+        created_by: "mobile-app"
+      };
+    }
 
     var options = {
       fields: {
@@ -110,34 +121,44 @@ export default class GamingSessionForm extends React.Component {
     return (
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <Toggle
-            title={this.props.game.name}
-            toggle={() => this.toggleGames()}
-          />
-
-          {this.state.viewGames ? (
-            <Picker
-              selectedValue={this.props.gameId}
-              onValueChange={gameId => {
-                this.props.changeGame(gameId);
-              }}
-            >
-              {this.props.games.map(game => (
-                <Picker.Item
-                  key={game.id}
-                  label={game.name.toString()}
-                  value={game.id}
-                />
-              ))}
-            </Picker>
-          ) : null}
           <TouchableWithoutFeedback
             onPress={() => {
               Keyboard.dismiss();
             }}
           >
             <View style={styles.container}>
-              <Form ref="form" type={GamingSession} options={options} />
+              <Toggle
+                title={this.props.game.name}
+                toggle={() => this.toggleGames()}
+              />
+
+              {this.state.viewGames ? (
+                <Picker
+                  selectedValue={
+                    this.props.gamingSession
+                      ? this.props.gamingSession.game_id
+                      : this.props.gameId
+                  }
+                  onValueChange={gameId => {
+                    this.props.changeGame(gameId);
+                  }}
+                >
+                  {this.props.games.map(game => (
+                    <Picker.Item
+                      key={game.id}
+                      label={game.name.toString()}
+                      value={game.id}
+                    />
+                  ))}
+                </Picker>
+              ) : null}
+
+              <Form
+                ref="form"
+                type={GamingSession}
+                options={options}
+                value={value}
+              />
               <TouchableHighlight
                 style={styles.button}
                 onPress={() =>
