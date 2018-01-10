@@ -35,6 +35,13 @@ import {
   LOAD_MORE_FRIENDS_RESULT,
   CHANGE_FRIENDS_PAGE,
   REFRESH_FRIENDS,
+  FETCH_PENDING_FRIENDS,
+  FETCH_PENDING_FRIENDS_RESULT,
+  FETCH_PENDING_FRIENDS_ERROR,
+  FETCH_PENDING_FRIENDS_NO_DATA,
+  LOAD_MORE_PENDING_FRIENDS,
+  LOAD_MORE_PENDING_FRIENDS_RESULT,
+  REFRESH_PENDING_FRIENDS,
   FETCH_GROUP_MEMBERS,
   FETCH_GROUP_MEMBERS_RESULT,
   FETCH_GROUP_MEMBERS_ERROR,
@@ -335,17 +342,17 @@ function* fetchUser() {
 function* fetchFriends() {
   try {
     let userId = yield select(state => state.authentication.user.user_id);
-    let current_page = yield select(state => state.users.friendsPage);
+    // let current_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
       "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + "/friends?";
     yield call(
       fetchData,
       endpoint,
-      current_page,
+      1,
       FETCH_FRIENDS_RESULT,
       FETCH_FRIENDS_ERROR,
-      FETCH_FRIENDS_NO_DATA
+      FETCH_FRIENDS_RESULT
     );
   } catch (e) {
     yield put({ type: FETCH_FRIENDS_ERROR, error: e.message });
@@ -374,24 +381,70 @@ function* loadMoreFriends() {
   }
 }
 
-function* refreshFriends() {
+// function* refreshFriends() {
+//   try {
+//     let userId = yield select(state => state.authentication.user.user_id);
+//     yield put({ type: CHANGE_FRIENDS_PAGE, page: 1 });
+//     let new_page = yield select(state => state.users.friendsPage);
+//
+//     let endpoint =
+//       "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + "/friends?";
+//     yield call(
+//       fetchData,
+//       endpoint,
+//       new_page,
+//       FETCH_FRIENDS_RESULT,
+//       FETCH_FRIENDS_ERROR,
+//       FETCH_FRIENDS_NO_DATA
+//     );
+//   } catch (e) {
+//     yield put({ type: FETCH_FRIENDS_ERROR, error: e.message });
+//   }
+// }
+
+function* fetchPendingFriends() {
   try {
     let userId = yield select(state => state.authentication.user.user_id);
-    yield put({ type: CHANGE_FRIENDS_PAGE, page: 1 });
+    // let current_page = yield select(state => state.users.friendsPage);
+
+    let endpoint =
+      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      userId +
+      "/pending_friends?";
+    yield call(
+      fetchData,
+      endpoint,
+      1,
+      FETCH_PENDING_FRIENDS_RESULT,
+      FETCH_PENDING_FRIENDS_ERROR,
+      FETCH_PENDING_FRIENDS_RESULT
+    );
+  } catch (e) {
+    yield put({ type: FETCH_PENDING_FRIENDS_ERROR, error: e.message });
+  }
+}
+
+function* loadMorePendingFriends() {
+  try {
+    let userId = yield select(state => state.authentication.user.user_id);
+    let current_page = yield select(state => state.users.friendsPage);
+    yield put({ type: CHANGE_FRIENDS_PAGE, page: current_page + 1 });
     let new_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + "/friends?";
+      "https://pwn-staging.herokuapp.com/api/v2/users/" +
+      userId +
+      "/pending_friends?";
     yield call(
       fetchData,
       endpoint,
       new_page,
-      FETCH_FRIENDS_RESULT,
-      FETCH_FRIENDS_ERROR,
-      FETCH_FRIENDS_NO_DATA
+      LOAD_MORE_PENDING_FRIENDS_RESULT,
+      FETCH_PENDING_FRIENDS_ERROR,
+      FETCH_PENDING_FRIENDS_NO_DATA
     );
   } catch (e) {
-    yield put({ type: FETCH_FRIENDS_ERROR, error: e.message });
+    yield put({ type: FETCH_PENDING_FRIENDS_ERROR, error: e.message });
   }
 }
 
@@ -724,11 +777,15 @@ export default function* rootSaga() {
 
   yield takeEvery(FETCH_FRIENDS, fetchFriends);
   yield takeEvery(LOAD_MORE_FRIENDS, loadMoreFriends);
-  yield takeEvery(REFRESH_FRIENDS, refreshFriends);
+  yield takeEvery(REFRESH_FRIENDS, fetchFriends);
 
   yield takeEvery(FETCH_GROUP_MEMBERS, fetchGroupMembers);
   yield takeEvery(LOAD_MORE_GROUP_MEMBERS, loadMoreGroupMembers);
   yield takeEvery(REFRESH_GROUP_MEMBERS, refreshGroupMembers);
+
+  yield takeEvery(FETCH_PENDING_FRIENDS, fetchPendingFriends);
+  yield takeEvery(LOAD_MORE_PENDING_FRIENDS, loadMorePendingFriends);
+  yield takeEvery(REFRESH_PENDING_FRIENDS, fetchPendingFriends);
 
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
   yield takeEvery(FETCH_GROUP, fetchGroup);

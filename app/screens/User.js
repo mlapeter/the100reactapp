@@ -110,6 +110,7 @@ export class User extends React.Component {
 
   addFriend() {
     this.postData("/add_friend");
+    this.props.navigation.navigate("FriendsList");
     this.props.alertWithType("success", "Success", "Friend Request Sent!");
   }
 
@@ -180,8 +181,7 @@ export class User extends React.Component {
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.user.destiny_status_link)
-              }
+                Linking.openURL(this.props.user.destiny_status_link)}
               underlayColor="white"
             >
               <Text>Destiny Status</Text>
@@ -190,8 +190,7 @@ export class User extends React.Component {
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.user.destiny_tracker_link)
-              }
+                Linking.openURL(this.props.user.destiny_tracker_link)}
               underlayColor="white"
             >
               <Text>Destiny Tracker</Text>
@@ -261,9 +260,8 @@ export class User extends React.Component {
         </View>
         {this.state.conversation && (
           <Chat
-            url={`chat/conversations/conversation-${
-              this.state.conversation.id
-            }`}
+            url={`chat/conversations/conversation-${this.state.conversation
+              .id}`}
             room={`conversation-${this.state.conversation.id}`}
             allowAnon={false}
           />
