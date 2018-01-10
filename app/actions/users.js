@@ -15,6 +15,13 @@ export const LOAD_MORE_FRIENDS_RESULT = "LOAD_MORE_FRIENDS_RESULT";
 export const CHANGE_FRIENDS_PAGE = "CHANGE_FRIENDS_PAGE";
 export const REFRESH_FRIENDS = "REFRESH_FRIENDS";
 
+export const FETCH_PENDING_FRIENDS = "FETCH_PENDING_FRIENDS";
+export const FETCH_PENDING_FRIENDS_RESULT = "FETCH_PENDING_FRIENDS_RESULT";
+export const FETCH_PENDING_FRIENDS_ERROR = "FETCH_PENDING_FRIENDS_ERROR";
+export const FETCH_PENDING_FRIENDS_NO_DATA = "FETCH_PENDING_FRIENDS_NO_DATA";
+export const LOAD_MORE_PENDING_FRIENDS = "LOAD_MORE_PENDING_FRIENDS";
+export const REFRESH_PENDING_FRIENDS = "REFRESH_PENDING_FRIENDS";
+
 export const FETCH_GROUP_MEMBERS = "FETCH_GROUP_MEMBERS";
 export const FETCH_GROUP_MEMBERS_RESULT = "FETCH_GROUP_MEMBERS_RESULT";
 export const FETCH_GROUP_MEMBERS_ERROR = "FETCH_GROUP_MEMBERS_ERROR";
@@ -48,6 +55,18 @@ export const changeFriendsPage = () => ({
 
 export const refreshFriends = () => ({
   type: REFRESH_FRIENDS
+});
+
+export const fetchPendingFriends = () => ({
+  type: FETCH_PENDING_FRIENDS
+});
+
+export const loadMorePendingFriends = () => ({
+  type: LOAD_MORE_PENDING_FRIENDS
+});
+
+export const refreshPendingFriends = () => ({
+  type: REFRESH_PENDING_FRIENDS
 });
 
 export const fetchGroupMembers = () => ({

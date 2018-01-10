@@ -30,6 +30,10 @@ import { fetchGroupMembers } from "../actions/users";
 import { loadMoreGroupMembers } from "../actions/users";
 import { refreshGroupMembers } from "../actions/users";
 
+import { fetchPendingFriends } from "../actions/users";
+import { loadMorePendingFriends } from "../actions/users";
+import { refreshPendingFriends } from "../actions/users";
+
 import { connectAlert } from "../components/Alert";
 
 class FriendsList extends Component {
@@ -57,7 +61,6 @@ class FriendsList extends Component {
   };
   constructor(props) {
     super(props);
-    this.fetchUsersData = this.fetchUsersData.bind(this);
   }
 
   componentWillMount() {
@@ -100,13 +103,15 @@ class FriendsList extends Component {
     return result;
   }
 
-  fetchUsersData() {
+  fetchUsersData = () => {
     this.props.dispatch(fetchFriends());
     this.props.dispatch(fetchGroupMembers());
-  }
+    this.props.dispatch(fetchPendingFriends());
+  };
 
   refreshFriends = () => {
     this.props.dispatch(refreshFriends());
+    this.props.dispatch(refreshPendingFriends());
   };
 
   loadMoreFriends = () => {
@@ -180,12 +185,12 @@ class FriendsList extends Component {
       );
     }
     return (
-      <TouchableWithoutFeedback
-        onPress={() => {
-          Keyboard.dismiss();
-        }}
-      >
-        <View style={styles.container}>
+      <View style={styles.container}>
+        <TouchableWithoutFeedback
+          onPress={() => {
+            Keyboard.dismiss();
+          }}
+        >
           <TopNav
             showSearch={true}
             setSearchText={text => this.setSearchText(text)}
@@ -194,54 +199,67 @@ class FriendsList extends Component {
             navigation={this.props.navigation}
             style={{ flex: 1 }}
           />
-          <View Style={styles.searchResults}>
+        </TouchableWithoutFeedback>
+
+        <View Style={styles.searchResults}>
+          <FlatList
+            data={this.state.searchResults}
+            renderItem={({ item }) => (
+              <Friend user={item} navigation={this.props.navigation} />
+            )}
+            keyExtractor={(item, index) => index}
+            extraData={this.props}
+            onEndReachedThreshold={0}
+          />
+        </View>
+        <Tabs>
+          <View title="MY FRIENDS" style={styles.content}>
             <FlatList
-              data={this.state.searchResults}
+              data={this.props.friends}
               renderItem={({ item }) => (
                 <Friend user={item} navigation={this.props.navigation} />
               )}
               keyExtractor={(item, index) => index}
               extraData={this.props}
+              ListFooterComponent={this.renderFooter}
+              refreshing={this.props.isLoading}
+              onRefresh={this.refreshFriends}
+              onEndReached={this.loadMoreFriends}
               onEndReachedThreshold={0}
             />
           </View>
-          <Tabs>
-            <View title="MY FRIENDS" style={styles.content}>
-              <FlatList
-                data={this.props.friends}
-                renderItem={({ item }) => (
-                  <Friend user={item} navigation={this.props.navigation} />
-                )}
-                keyExtractor={(item, index) => index}
-                extraData={this.props}
-                ListFooterComponent={this.renderFooter}
-                refreshing={this.props.isLoading}
-                onRefresh={this.refreshFriends}
-                onEndReached={this.loadMoreFriends}
-                onEndReachedThreshold={0}
-              />
-            </View>
-            <View title="MY GROUP" style={styles.content}>
-              <FlatList
-                data={this.props.groupMembers}
-                renderItem={({ item }) => (
-                  <Friend user={item} navigation={this.props.navigation} />
-                )}
-                keyExtractor={(item, index) => index}
-                extraData={this.props}
-                ListFooterComponent={this.renderGroupFooter}
-                refreshing={this.props.isLoading}
-                onRefresh={this.refreshGroupMembers}
-                onEndReached={this.loadMoreGroupMembers}
-                onEndReachedThreshold={0}
-              />
-            </View>
-            <View title="RECENT" style={styles.content}>
-              <Text>Coming Soon</Text>
-            </View>
-          </Tabs>
-        </View>
-      </TouchableWithoutFeedback>
+          <View title="MY GROUP" style={styles.content}>
+            <FlatList
+              data={this.props.groupMembers}
+              renderItem={({ item }) => (
+                <Friend user={item} navigation={this.props.navigation} />
+              )}
+              keyExtractor={(item, index) => index}
+              extraData={this.props}
+              ListFooterComponent={this.renderGroupFooter}
+              refreshing={this.props.isLoading}
+              onRefresh={this.refreshGroupMembers}
+              onEndReached={this.loadMoreGroupMembers}
+              onEndReachedThreshold={0}
+            />
+          </View>
+          <View title="PENDING" style={styles.content}>
+            <FlatList
+              data={this.props.pendingFriends}
+              renderItem={({ item }) => (
+                <Friend user={item} navigation={this.props.navigation} />
+              )}
+              keyExtractor={(item, index) => index}
+              extraData={this.props}
+              ListFooterComponent={this.renderFooter}
+              refreshing={this.props.isLoading}
+              onRefresh={this.refreshFriends}
+              onEndReached={this.loadMoreFriends}
+              onEndReachedThreshold={0}
+            />
+          </View>
+        </Tabs>
+      </View>
     );
   }
 }
@@ -288,6 +306,9 @@ const mapStateToProps = state => {
   const groupMembers = state.users.groupMembers;
   const moreGroupMembersAvailable = state.users.moreGroupMembersAvailable;
 
+  const pendingFriends = state.users.pendingFriends;
+  const morePendingFriendsAvailable = state.users.morePendingFriendsAvailable;
+
   const isLoading = state.users.isLoading;
   const user = state.authentication.user;
 
@@ -295,6 +316,8 @@ const mapStateToProps = state => {
     refreshing,
     friends,
     moreFriendsAvailable,
+    pendingFriends,
+    morePendingFriendsAvailable,
     groupMembers,
     moreGroupMembersAvailable,
     isLoading,
