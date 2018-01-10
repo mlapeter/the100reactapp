@@ -41,6 +41,10 @@ class GamingSessionCreate extends React.Component {
       <View style={{ flex: 1 }}>
         <GamingSessionForm
           handlePress={this.handlePress}
+          changeGame={gameId => this.props.dispatch(changeGame(gameId))}
+          gameId={this.props.gameId}
+          game={this.props.game}
+          games={this.props.games}
           activities={this.props.activities}
           groups={this.props.groups}
           isCreating={this.props.isCreating}
@@ -51,12 +55,16 @@ class GamingSessionCreate extends React.Component {
 }
 
 const mapStateToProps = state => {
+  const gameId = state.search.gameId;
+  const game = state.search.game;
   const games = state.search.games;
   const activities = state.search.activities;
   const groups = state.users.user.groups_for_api;
   const isCreating = state.gamingSessions.isCreating;
 
   return {
+    gameId,
+    game,
     games,
     activities,
     groups,

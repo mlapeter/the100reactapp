@@ -48,7 +48,7 @@ class GamingSessionsList extends React.PureComponent {
   static propTypes = {
     activity: PropTypes.string,
     game: PropTypes.object,
-    gameId: PropTypes.string,
+    gameId: PropTypes.number,
     notFull: PropTypes.number,
     page: PropTypes.number,
     platform: PropTypes.string,

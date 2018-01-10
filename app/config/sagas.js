@@ -297,7 +297,7 @@ function* fetchNotifications() {
 
 function* fetchGames() {
   try {
-    let endpoint = "https://pwn-staging.herokuapp.com/api/v1/games?";
+    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/games?";
     yield call(fetchData, endpoint, 1, FETCH_GAMES_RESULT, FETCH_GAMES_ERROR);
     yield call(fetchActivities);
   } catch (e) {
@@ -308,11 +308,12 @@ function* fetchGames() {
 function* fetchActivities() {
   try {
     let gameId = yield select(state => state.search.gameId);
-
     let games = yield select(state => state.search.games);
-    let game = games.filter(function(obj) {
-      return obj.id == gameId;
-    })[0];
+
+    let game = games.find(function(game) {
+      return game.id === gameId;
+    });
+
     yield put({ type: FETCH_ACTIVITIES_RESULT, game });
   } catch (e) {
     yield put({ type: FETCH_GAMES_ERROR, error: e.message });
@@ -793,6 +794,7 @@ export default function* rootSaga() {
   yield takeEvery(CREATE_GAMING_SESSION, createGamingSession);
 
   yield takeEvery(FETCH_GAMES, fetchGames);
+
   yield takeEvery(CHANGE_GAME, fetchActivities);
 
   yield takeEvery(FETCH_GAMING_SESSION, fetchGamingSession);

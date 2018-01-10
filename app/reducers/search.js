@@ -15,7 +15,7 @@ import {
 
 const initialState = {
   activity: "",
-  gameId: "13",
+  gameId: 13,
   games: [],
   game: {},
   activities: [],

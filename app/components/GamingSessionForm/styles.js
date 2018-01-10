@@ -49,5 +49,15 @@ export default (styles = StyleSheet.create({
   },
   buttonWrapper: {
     padding: 10
+  },
+  icon: {
+    paddingTop: 10,
+    margin: 3,
+    justifyContent: "center",
+    alignItems: "center"
+  },
+  iconText: {
+    marginRight: 3,
+    fontSize: fontSizes.h5
   }
 }));

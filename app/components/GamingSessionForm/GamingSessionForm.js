@@ -3,6 +3,8 @@ import {
   ActivityIndicator,
   Button,
   Keyboard,
+  LayoutAnimation,
+  Picker,
   ScrollView,
   Text,
   TextInput,
@@ -10,6 +12,8 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback
 } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import { colors, fontSizes, fontStyles } from "../../styles";
 
 import styles from "./styles";
 import moment from "../../../node_modules/moment";
@@ -20,7 +24,16 @@ var Form = t.form.Form;
 export default class GamingSessionForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      viewGames: false
+    };
+  }
+
+  toggleGames() {
+    this.setState({
+      viewGames: !this.state.viewGames
+    });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
 
   render() {
@@ -67,6 +80,23 @@ export default class GamingSessionForm extends React.Component {
       }
     };
 
+    function Toggle(props) {
+      return (
+        <View style={styles.icon}>
+          <TouchableHighlight onPress={props.toggle} underlayColor="white">
+            <Text style={styles.iconText}>
+              {props.title}{" "}
+              <MaterialCommunityIcons
+                name="settings"
+                size={15}
+                color={colors.mediumGrey}
+              />
+            </Text>
+          </TouchableHighlight>
+        </View>
+      );
+    }
+
     if (this.props.isCreating) {
       return (
         <View style={styles.outerContainer}>
@@ -80,6 +110,27 @@ export default class GamingSessionForm extends React.Component {
     return (
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <Toggle
+            title={this.props.game.name}
+            toggle={() => this.toggleGames()}
+          />
+
+          {this.state.viewGames ? (
+            <Picker
+              selectedValue={this.props.gameId}
+              onValueChange={gameId => {
+                this.props.changeGame(gameId);
+              }}
+            >
+              {this.props.games.map(game => (
+                <Picker.Item
+                  key={game.id}
+                  label={game.name.toString()}
+                  value={game.id}
+                />
+              ))}
+            </Picker>
+          ) : null}
           <TouchableWithoutFeedback
             onPress={() => {
               Keyboard.dismiss();
