@@ -94,7 +94,10 @@ class GamingSession extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
 
-    if (this.props.gamingSessionLoading) {
+    if (
+      this.props.gamingSessionLoading ||
+      !this.props.gamingSession.confirmed_sessions
+    ) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
@@ -117,16 +120,18 @@ class GamingSession extends React.Component {
               : ""}
           </Text>
           <View style={styles.buttonsContainer}>
-            <Button
-              style={{
-                height: 30,
-                width: 180,
-                marginBottom: 15
-              }}
-              onPress={() =>
-                this.props.navigation.navigate("GamingSessionEdit")}
-              title="Edit"
-            />
+            {this.props.user.user_id === this.props.gamingSession.creator_id ? (
+              <Button
+                style={{
+                  height: 30,
+                  width: 180,
+                  marginBottom: 15
+                }}
+                onPress={() =>
+                  this.props.navigation.navigate("GamingSessionEdit")}
+                title="Edit"
+              />
+            ) : null}
             <JoinLeaveButton
               hasJoined={userIds.includes(this.props.user.user_id)}
               leaveGame={this.leaveGame.bind(this)}

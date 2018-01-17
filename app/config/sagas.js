@@ -289,22 +289,22 @@ function* editGamingSession() {
     );
     let platform = yield select(state => state.search.platform);
     console.log(
-      "https://pwn-staging.herokuapp.com/api/v1/gaming_sessions/" +
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
         gamingSessionId
     );
     const response = yield fetch(
-      "https://pwn-staging.herokuapp.com/api/v1/gaming_sessions/" +
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
         gamingSessionId,
       {
-        method: "POST",
+        method: "PATCH",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
           Authorization: "Bearer " + token
         },
         body: JSON.stringify({
-          description: gamingSession.description,
-          activity: gamingSession.activity,
+          name: gamingSession.description,
+          category: gamingSession.activity,
           platform: platform,
           start_time: gamingSession.start_time,
           group_name: gamingSession.group,

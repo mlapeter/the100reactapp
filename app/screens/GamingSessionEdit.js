@@ -28,6 +28,13 @@ class GamingSessionEdit extends React.Component {
       this.props.navigation.navigate("GamingSessionsList");
       this.props.alertWithType("success", "Success", "Gaming Session Created!");
     }
+    if (
+      nextProps.gameEdited &&
+      nextProps.gameEdited !== this.props.gameEdited
+    ) {
+      this.props.navigation.navigate("GamingSessionsList");
+      this.props.alertWithType("success", "Success", "Gaming Session Updated!");
+    }
   }
 
   handlePress = formValue => {
@@ -72,6 +79,7 @@ const mapStateToProps = state => {
     groups,
     isCreating,
     gameCreated: state.gamingSessions.gameCreated,
+    gameEdited: state.gamingSessions.gameEdited,
     gamingSessionError: state.gamingSessions.error,
     gamingSession
   };
