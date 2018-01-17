@@ -25,7 +25,7 @@ class GamingSessionsFilter extends Component {
     activities: PropTypes.array,
     activity: PropTypes.string,
     game: PropTypes.object,
-    gameId: PropTypes.string,
+    gameId: PropTypes.number,
     platform: PropTypes.string
   };
 
@@ -144,13 +144,18 @@ class GamingSessionsFilter extends Component {
               </Picker>
               <Picker
                 style={styles.pickerStyle}
-                selectedValue={this.props.gameId.toString()}
+                selectedValue={this.props.gameId}
                 onValueChange={gameId => {
                   this.props.dispatch(changeGame(gameId));
                 }}
               >
-                <Picker.Item label="Destiny" value="1" />
-                <Picker.Item label="Destiny 2" value="13" />
+                {this.props.games.map(game => (
+                  <Picker.Item
+                    key={game.id}
+                    label={game.name.toString()}
+                    value={game.id}
+                  />
+                ))}
               </Picker>
               <View style={styles.modalButtonStyle}>
                 <Button

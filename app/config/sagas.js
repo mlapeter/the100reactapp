@@ -73,6 +73,9 @@ import {
   CREATE_GAMING_SESSION,
   CREATE_GAMING_SESSION_RESULT,
   CREATE_GAMING_SESSION_ERROR,
+  EDIT_GAMING_SESSION,
+  EDIT_GAMING_SESSION_RESULT,
+  EDIT_GAMING_SESSION_ERROR,
   FETCH_GAMING_SESSION,
   FETCH_GAMING_SESSION_RESULT,
   FETCH_GAMING_SESSION_ERROR,
@@ -275,6 +278,54 @@ function* createGamingSession() {
   }
 }
 
+function* editGamingSession() {
+  try {
+    let token = yield select(state => state.authentication.token);
+    let gamingSession = yield select(
+      state => state.gamingSessions.gamingSession
+    );
+    let gamingSessionId = yield select(
+      state => state.gamingSessions.gamingSessionId
+    );
+    let platform = yield select(state => state.search.platform);
+    console.log(
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+        gamingSessionId
+    );
+    const response = yield fetch(
+      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+        gamingSessionId,
+      {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({
+          name: gamingSession.description,
+          category: gamingSession.activity,
+          platform: platform,
+          start_time: gamingSession.start_time,
+          group_name: gamingSession.group,
+          friends_only: gamingSession.friends_only,
+          group_only: gamingSession.group_only
+        })
+      }
+    );
+    const result = yield response.json();
+    if (result.error) {
+      yield put({ type: EDIT_GAMING_SESSION_ERROR, error: result.error });
+    } else if (result.message === "Invalid credentials") {
+      yield put({ type: EDIT_GAMING_SESSION_ERROR, error: result.message });
+    } else {
+      yield put({ type: EDIT_GAMING_SESSION_RESULT, result });
+    }
+  } catch (e) {
+    yield put({ type: EDIT_GAMING_SESSION_ERROR, error: e.message });
+  }
+}
+
 function* fetchNotifications() {
   try {
     let userId = yield select(state => state.authentication.user.user_id);
@@ -297,7 +348,7 @@ function* fetchNotifications() {
 
 function* fetchGames() {
   try {
-    let endpoint = "https://pwn-staging.herokuapp.com/api/v1/games?";
+    let endpoint = "https://pwn-staging.herokuapp.com/api/v2/games?";
     yield call(fetchData, endpoint, 1, FETCH_GAMES_RESULT, FETCH_GAMES_ERROR);
     yield call(fetchActivities);
   } catch (e) {
@@ -308,11 +359,12 @@ function* fetchGames() {
 function* fetchActivities() {
   try {
     let gameId = yield select(state => state.search.gameId);
-
     let games = yield select(state => state.search.games);
-    let game = games.filter(function(obj) {
-      return obj.id == gameId;
-    })[0];
+
+    let game = games.find(function(game) {
+      return game.id === gameId;
+    });
+
     yield put({ type: FETCH_ACTIVITIES_RESULT, game });
   } catch (e) {
     yield put({ type: FETCH_GAMES_ERROR, error: e.message });
@@ -791,8 +843,10 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_GROUP, fetchGroup);
 
   yield takeEvery(CREATE_GAMING_SESSION, createGamingSession);
+  yield takeEvery(EDIT_GAMING_SESSION, editGamingSession);
 
   yield takeEvery(FETCH_GAMES, fetchGames);
+
   yield takeEvery(CHANGE_GAME, fetchActivities);
 
   yield takeEvery(FETCH_GAMING_SESSION, fetchGamingSession);

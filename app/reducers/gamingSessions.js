@@ -2,6 +2,9 @@ import {
   CREATE_GAMING_SESSION,
   CREATE_GAMING_SESSION_RESULT,
   CREATE_GAMING_SESSION_ERROR,
+  EDIT_GAMING_SESSION,
+  EDIT_GAMING_SESSION_RESULT,
+  EDIT_GAMING_SESSION_ERROR,
   FETCH_GAMING_SESSION,
   FETCH_GAMING_SESSION_RESULT,
   FETCH_GAMING_SESSION_ERROR,
@@ -33,6 +36,8 @@ const initialState = {
   refreshing: false,
   isCreating: false,
   gameCreated: false,
+  isEditing: false,
+  gameEdited: false,
   moreGamingSessionsAvailable: true,
   moreGroupGamingSessionsAvailable: true,
   moreMyGamingSessionsAvailable: true,
@@ -75,6 +80,26 @@ export default (state = initialState, action) => {
         ...state,
         isCreating: false,
         gameCreated: false,
+        error: action.error
+      };
+    case EDIT_GAMING_SESSION:
+      return {
+        ...state,
+        isEditing: true,
+        gamingSession: action.gamingSession
+      };
+    case EDIT_GAMING_SESSION_RESULT:
+      return {
+        ...state,
+        isEditing: false,
+        gameEdited: true,
+        gamingSession: action.result
+      };
+    case EDIT_GAMING_SESSION_ERROR:
+      return {
+        ...state,
+        isEditing: false,
+        gameEdited: false,
         error: action.error
       };
     case FETCH_GAMING_SESSION:

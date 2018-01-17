@@ -3,10 +3,10 @@ import { View } from "react-native";
 import GamingSessionForm from "../components/GamingSessionForm/GamingSessionForm";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
-import { createGamingSession } from "../actions/gamingSessions";
+import { editGamingSession } from "../actions/gamingSessions";
 import { changeGame } from "../actions/search";
 
-class GamingSessionCreate extends React.Component {
+class GamingSessionEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
@@ -28,11 +28,18 @@ class GamingSessionCreate extends React.Component {
       this.props.navigation.navigate("GamingSessionsList");
       this.props.alertWithType("success", "Success", "Gaming Session Created!");
     }
+    if (
+      nextProps.gameEdited &&
+      nextProps.gameEdited !== this.props.gameEdited
+    ) {
+      this.props.navigation.navigate("GamingSessionsList");
+      this.props.alertWithType("success", "Success", "Gaming Session Updated!");
+    }
   }
 
   handlePress = formValue => {
     if (formValue) {
-      this.props.dispatch(createGamingSession(formValue));
+      this.props.dispatch(editGamingSession(formValue));
     }
   };
 
@@ -48,6 +55,7 @@ class GamingSessionCreate extends React.Component {
           activities={this.props.activities}
           groups={this.props.groups}
           isCreating={this.props.isCreating}
+          gamingSession={this.props.gamingSession}
         />
       </View>
     );
@@ -61,6 +69,7 @@ const mapStateToProps = state => {
   const activities = state.search.activities;
   const groups = state.users.user.groups_for_api;
   const isCreating = state.gamingSessions.isCreating;
+  const gamingSession = state.gamingSessions.gamingSession;
 
   return {
     gameId,
@@ -70,8 +79,10 @@ const mapStateToProps = state => {
     groups,
     isCreating,
     gameCreated: state.gamingSessions.gameCreated,
-    gamingSessionError: state.gamingSessions.error
+    gameEdited: state.gamingSessions.gameEdited,
+    gamingSessionError: state.gamingSessions.error,
+    gamingSession
   };
 };
 
-export default connect(mapStateToProps)(connectAlert(GamingSessionCreate));
+export default connect(mapStateToProps)(connectAlert(GamingSessionEdit));

@@ -24,6 +24,7 @@ import MainPage from "../screens/MainPage";
 import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
 import GamingSessionCreate from "../screens/GamingSessionCreate";
+import GamingSessionEdit from "../screens/GamingSessionEdit";
 
 import Group from "../screens/Group/";
 import NotificationsList from "../screens/NotificationsList";
@@ -61,7 +62,8 @@ const GamingSessionsStack = StackNavigator({
   GamingSessionsList: { screen: GamingSessionsList },
   GamingSession: { screen: GamingSession },
   Player: { screen: User },
-  GamingSessionCreate: { screen: GamingSessionCreate }
+  GamingSessionCreate: { screen: GamingSessionCreate },
+  GamingSessionEdit: { screen: GamingSessionEdit }
 });
 
 const UserEditStack = StackNavigator({
@@ -171,6 +173,17 @@ const MenuDrawer = DrawerNavigator(
 
 GamingSessionCreate.navigationOptions = {
   headerTitle: "New Gaming Session",
+  tabBarIcon: ({ tintColor, focused }) => (
+    <Ionicons
+      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
+      size={26}
+      style={{ color: tintColor }}
+    />
+  )
+};
+
+GamingSessionEdit.navigationOptions = {
+  headerTitle: "Edit Gaming Session",
   tabBarIcon: ({ tintColor, focused }) => (
     <Ionicons
       name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
