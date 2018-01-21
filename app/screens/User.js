@@ -132,8 +132,13 @@ export class User extends React.Component {
 
   openChat = () => {
     if (this.state.conversation) {
+      let room = `conversation-${this.state.conversation.id}`;
+      let url = `chat/conversations/${room}`;
       this.props.navigation.navigate("Conversation", {
-        conversation: this.state.conversation
+        title: `Conversation with ${this.props.user.gamertag}`,
+        url: url,
+        room: room,
+        allowAnon: false
       });
     }
   };
@@ -216,13 +221,6 @@ export class User extends React.Component {
       tags = null;
     }
 
-    let room = null;
-    let url = null;
-    if (this.state.conversation) {
-      room = `conversation-${this.state.conversation.id}`;
-      url = `chat/conversations/${room}`;
-    }
-
     return (
       <View style={styles.container}>
         <View style={styles.titleBar}>
@@ -267,17 +265,12 @@ export class User extends React.Component {
         </View>
         {this.state.conversation && (
           <ChatPreview
-            room={room}
-            url={url}
+            room={`conversation-${this.state.conversation.id}`}
+            url={`chat/conversations/conversation-${
+              this.state.conversation.id
+            }`}
             allowAnon={true}
-            onOpenChat={() =>
-              this.props.navigation.navigate("Chatroom", {
-                title: "User Chat",
-                room: room,
-                url: url,
-                allowAnon: true
-              })
-            }
+            onOpenChat={this.openChat}
           />
         )}
       </View>

@@ -18,20 +18,16 @@ export default class Chatroom extends Component {
     }).isRequired
   };
 
-  static navigationOptions = ({ navigation }) => (
-    console.log("Chatroom Navigation:", navigation),
-    {
-      title: navigation.state.params
-        ? navigation.state.params.title
-        : "Chatroom",
-      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />
-    }
-  );
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.state.params ? navigation.state.params.title : "Chatroom",
+    headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />
+  });
 
   render() {
     let { url, room, allowAnon } = this.props.navigation.state.params;
 
-    console.log("Chatroom:", this.props);
-    return <Chat url={url} room={room} allowAnon={allowAnon} />;
+    return (
+      <Chat url={url} room={room} allowAnon={allowAnon} style={{ flex: 1 }} />
+    );
   }
 }

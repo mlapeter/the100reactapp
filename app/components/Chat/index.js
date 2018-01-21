@@ -63,7 +63,7 @@ class Chat extends Component {
       users: new Set(),
       selectedKey: null,
       editingKey: null,
-      messageCount: this.props.preview ? 4 : 25,
+      messageCount: this.props.preview ? 3 : 25,
 
       keyboardOffset: 0
     };

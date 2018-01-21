@@ -157,8 +157,8 @@ class Group extends React.Component {
             url={url}
             allowAnon={true}
             onOpenChat={() =>
-              this.props.navigation.navigate("Chatroom", {
-                title: "Group Chat",
+              this.props.navigation.navigate("GroupChat", {
+                title: `${this.props.group.name} Chat`,
                 room: room,
                 url: url,
                 allowAnon: true

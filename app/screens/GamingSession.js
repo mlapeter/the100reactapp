@@ -160,12 +160,13 @@ class GamingSession extends React.Component {
           confirmedSessions={this.props.gamingSession.confirmed_sessions}
           navigation={this.props.navigation}
         />
+        <Text style={styles.sectionHeader}>Chat:</Text>
         <ChatPreview
           room={room}
           url={url}
           allowAnon={true}
           onOpenChat={() =>
-            this.props.navigation.navigate("Chatroom", {
+            this.props.navigation.navigate("GamingSessionChat", {
               title: "Gaming Session Chat",
               room: room,
               url: url,
