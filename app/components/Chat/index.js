@@ -53,6 +53,7 @@ class Chat extends Component {
 
     this.state = {
       messages: {},
+      loading: true,
       text: "",
       uid: null,
       username: "guest",
@@ -124,6 +125,8 @@ class Chat extends Component {
     if (this.messagesQuery) {
       this.messagesQuery.off();
     }
+    this.setState({ loading: true });
+
     this.messagesQuery = this.messagesRef
       .orderByChild("createdAt")
       .limitToLast(this.state.messageCount);
@@ -131,6 +134,10 @@ class Chat extends Component {
     this.messagesQuery.on("child_added", this.onMessageAdded);
     this.messagesQuery.on("child_changed", this.onMessageChanged);
     this.messagesQuery.on("child_removed", this.onMessageRemoved);
+
+    this.messagesQuery.once("value", () => {
+      this.setState({ loading: false });
+    });
   }
 
   onKeyboardShown = event => {
@@ -293,6 +300,10 @@ class Chat extends Component {
       return null;
     }
 
+    if (this.state.loading) {
+      return null;
+    }
+
     if (Object.keys(this.state.messages).length < this.state.messageCount) {
       return null;
     }
@@ -300,6 +311,24 @@ class Chat extends Component {
     return (
       <Button title="Load More Messages" onPress={this.onLoadMoreMessages} />
     );
+  };
+
+  renderListEmpty = () => {
+    if (this.state.loading || this.props.preview) {
+      return null;
+    } else {
+      return (
+        <Text
+          style={{
+            textAlign: "center",
+            fontSize: fontSizes.primary,
+            marginTop: 12
+          }}
+        >
+          No messages
+        </Text>
+      );
+    }
   };
 
   render() {
@@ -332,6 +361,7 @@ class Chat extends Component {
           keyExtractor={([key, message], index) => key}
           extraData={messages}
           ListFooterComponent={this.renderLoadMoreMessages}
+          ListEmptyComponent={this.renderListEmpty}
         />
         {!this.props.preview &&
           (!this.state.editingKey ? (
