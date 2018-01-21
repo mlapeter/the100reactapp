@@ -43,6 +43,7 @@ import { colors, fontSizes } from "../styles";
 import { HeaderBackButton, DrawerItems } from "react-navigation";
 import { connect } from "react-redux";
 import { userLogout } from "../screens/NotificationsList";
+import Chatroom from "../screens/Chatroom";
 
 const mapNavigationStateToProps = WrappedComponent => {
   class WithNavStateComponent extends Component {
@@ -139,7 +140,8 @@ const MenuDrawer = DrawerNavigator(
       })
     },
     "Edit Profile": { screen: UserEditStack },
-    "Help Chat": { screen: HelpChatStack }
+    "Help Chat": { screen: HelpChatStack },
+    Chatroom: { screen: Chatroom, drawerLabel: () => null }
   },
   {
     contentComponent: props => (

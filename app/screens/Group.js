@@ -14,7 +14,7 @@ import {
   View
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
-import Chat from "../components/Chat";
+import ChatPreview from "../components/ChatPreview";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -113,6 +113,7 @@ class Group extends React.Component {
     }
 
     let room = `group-${this.props.group.id}`;
+    let url = `chat/groups/${room}`;
 
     return (
       <View style={styles.container}>
@@ -151,7 +152,19 @@ class Group extends React.Component {
             </Text>
             <PlayScheduleIcon playSchedule={this.props.group.play_schedule} />
           </View>
-          <Chat room={room} url={`chat/groups/${room}`} allowAnon={true} />
+          <ChatPreview
+            room={room}
+            url={url}
+            allowAnon={true}
+            onOpenChat={() =>
+              this.props.navigation.navigate("Chatroom", {
+                title: "Group Chat",
+                room: room,
+                url: url,
+                allowAnon: true
+              })
+            }
+          />
         </View>
       </View>
     );
