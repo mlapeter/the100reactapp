@@ -32,7 +32,6 @@ import FriendsList from "../screens/FriendsList";
 import User from "../screens/User";
 import UserEdit from "../screens/UserEdit";
 import HelpChat from "../screens/HelpChat";
-import Conversation from "../screens/Conversation";
 
 import Menu from "../screens/Menu";
 
@@ -43,27 +42,33 @@ import { colors, fontSizes } from "../styles";
 import { HeaderBackButton, DrawerItems } from "react-navigation";
 import { connect } from "react-redux";
 import { userLogout } from "../screens/NotificationsList";
-
-const mapNavigationStateToProps = WrappedComponent => {
-  class WithNavStateComponent extends Component {
-    static displayName = `WithNavState(${WrappedComponent.displayName ||
-      WrappedComponent.name ||
-      "Component"})`;
-
-    render() {
-      let { state: { params } } = this.props.navigation;
-      return <WrappedComponent {...params} {...this.props} />;
-    }
-  }
-  return hoistNonReactStatics(WithNavStateComponent, WrappedComponent);
-};
+import Chatroom from "../screens/Chatroom";
 
 const GamingSessionsStack = StackNavigator({
   GamingSessionsList: { screen: GamingSessionsList },
   GamingSession: { screen: GamingSession },
   Player: { screen: User },
+  GamingSessionChat: {
+    screen: Chatroom,
+    navigationOptions: {
+      tabBarLabel: "Games"
+    }
+  },
   GamingSessionCreate: { screen: GamingSessionCreate },
   GamingSessionEdit: { screen: GamingSessionEdit }
+});
+
+const GroupStack = StackNavigator({
+  Group: {
+    screen: Group,
+    navigationOptions: { header: null }
+  },
+  GroupChat: {
+    screen: Chatroom,
+    navigationOptions: {
+      tabBarLabel: "Group"
+    }
+  }
 });
 
 const UserEditStack = StackNavigator({
@@ -104,7 +109,7 @@ const FriendsStack = StackNavigator({
   FriendsList: { screen: FriendsList },
   Friend: { screen: User },
   Conversation: {
-    screen: mapNavigationStateToProps(Conversation),
+    screen: Chatroom,
     navigationOptions: {
       tabBarLabel: "User"
     }
@@ -114,7 +119,7 @@ const FriendsStack = StackNavigator({
 const HomeTabs = TabNavigator(
   {
     Games: { screen: GamingSessionsStack },
-    Group: { screen: Group },
+    Group: { screen: GroupStack },
     NotificationsList: { screen: NotificationsList },
     FriendsList: { screen: FriendsStack }
   },

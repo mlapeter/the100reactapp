@@ -13,7 +13,7 @@ import {
   View
 } from "react-native";
 
-import Chat from "../components/Chat";
+import ChatPreview from "../components/ChatPreview";
 
 import PlayersList from "../components/PlayersList/PlayersList";
 import { colors, fontSizes, fontStyles } from "../styles";
@@ -106,6 +106,7 @@ class GamingSession extends React.Component {
     }
 
     let room = `game-${this.props.gamingSession.id}`;
+    let url = `chat/gaming_sessions/${room}`;
 
     var userIds = [];
     this.props.gamingSession.confirmed_sessions.map(confirmedSession =>
@@ -160,10 +161,18 @@ class GamingSession extends React.Component {
           navigation={this.props.navigation}
         />
         <Text style={styles.sectionHeader}>Chat:</Text>
-        <Chat
+        <ChatPreview
           room={room}
-          url={`chat/gaming_sessions/${room}`}
+          url={url}
           allowAnon={true}
+          onOpenChat={() =>
+            this.props.navigation.navigate("GamingSessionChat", {
+              title: "Gaming Session Chat",
+              room: room,
+              url: url,
+              allowAnon: true
+            })
+          }
         />
       </View>
     );

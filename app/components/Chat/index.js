@@ -40,7 +40,12 @@ class Chat extends Component {
     firebaseToken: PropTypes.string,
     room: PropTypes.string.isRequired,
     url: PropTypes.string.isRequired,
-    allowAnon: PropTypes.bool.isRequired
+    allowAnon: PropTypes.bool.isRequired,
+    preview: PropTypes.bool
+  };
+
+  static defaultProps = {
+    preview: false
   };
 
   constructor(props) {
@@ -48,6 +53,7 @@ class Chat extends Component {
 
     this.state = {
       messages: {},
+      loading: true,
       text: "",
       uid: null,
       username: "guest",
@@ -58,7 +64,7 @@ class Chat extends Component {
       users: new Set(),
       selectedKey: null,
       editingKey: null,
-      messageCount: 25,
+      messageCount: this.props.preview ? 3 : 25,
 
       keyboardOffset: 0
     };
@@ -119,6 +125,8 @@ class Chat extends Component {
     if (this.messagesQuery) {
       this.messagesQuery.off();
     }
+    this.setState({ loading: true });
+
     this.messagesQuery = this.messagesRef
       .orderByChild("createdAt")
       .limitToLast(this.state.messageCount);
@@ -126,6 +134,10 @@ class Chat extends Component {
     this.messagesQuery.on("child_added", this.onMessageAdded);
     this.messagesQuery.on("child_changed", this.onMessageChanged);
     this.messagesQuery.on("child_removed", this.onMessageRemoved);
+
+    this.messagesQuery.once("value", () => {
+      this.setState({ loading: false });
+    });
   }
 
   onKeyboardShown = event => {
@@ -284,6 +296,14 @@ class Chat extends Component {
   };
 
   renderLoadMoreMessages = () => {
+    if (this.props.preview) {
+      return null;
+    }
+
+    if (this.state.loading) {
+      return null;
+    }
+
     if (Object.keys(this.state.messages).length < this.state.messageCount) {
       return null;
     }
@@ -291,6 +311,24 @@ class Chat extends Component {
     return (
       <Button title="Load More Messages" onPress={this.onLoadMoreMessages} />
     );
+  };
+
+  renderListEmpty = () => {
+    if (this.state.loading || this.props.preview) {
+      return null;
+    } else {
+      return (
+        <Text
+          style={{
+            textAlign: "center",
+            fontSize: fontSizes.primary,
+            marginTop: 12
+          }}
+        >
+          No messages
+        </Text>
+      );
+    }
   };
 
   render() {
@@ -306,63 +344,74 @@ class Chat extends Component {
 
     return (
       <View
-        style={[styles.container, { paddingBottom: this.state.keyboardOffset }]}
+        style={[
+          styles.container,
+          { paddingBottom: this.state.keyboardOffset },
+          this.props.style
+        ]}
       >
         <FlatList
           data={messages}
           renderItem={({ item: [key, message] }) => (
-            <Message message={message} onLongPress={this.onMessageLongPress} />
+            <Message
+              message={message}
+              onLongPress={this.props.preview ? null : this.onMessageLongPress}
+            />
           )}
           keyExtractor={([key, message], index) => key}
           extraData={messages}
           ListFooterComponent={this.renderLoadMoreMessages}
+          ListEmptyComponent={this.renderListEmpty}
         />
-        {!this.state.editingKey ? (
-          <MessageCreateInput
-            createAllowed={createAllowed}
-            onSubmit={this.onMessageCreate}
-          />
-        ) : (
-          <MessageEditInput
-            onSubmit={this.onEditMessage}
-            onCancel={this.onCancelEditing}
-            message={this.state.messages[this.state.editingKey]}
-          />
-        )}
-        <Modal
-          isVisible={!!this.state.selectedKey}
-          style={styles.selectedModal}
-          onBackButtonPress={this.closeSelectedModal}
-          onBackdropPress={this.closeSelectedModal}
-          backdropOpacity={0.3}
-        >
-          <View style={styles.selectedModalBackground}>
-            <TouchableItem
-              style={[
-                styles.selectedModalOption,
-                styles.selectedModalOptionSeparator
-              ]}
-              useForeground={true}
-              onPress={this.onStartEditMessage}
-            >
-              <Text style={styles.selectedModalOptionText}>Edit</Text>
-            </TouchableItem>
-            <TouchableItem
-              style={[styles.selectedModalOption, styles.removeOption]}
-              useForeground={true}
-              onPress={this.onRemoveMessage}
-            >
-              <Text
+        {!this.props.preview &&
+          (!this.state.editingKey ? (
+            <MessageCreateInput
+              createAllowed={createAllowed}
+              onSubmit={this.onMessageCreate}
+            />
+          ) : (
+            <MessageEditInput
+              onSubmit={this.onEditMessage}
+              onCancel={this.onCancelEditing}
+              message={this.state.messages[this.state.editingKey]}
+            />
+          ))}
+        {!this.props.preview && (
+          <Modal
+            isVisible={!!this.state.selectedKey}
+            style={styles.selectedModal}
+            onBackButtonPress={this.closeSelectedModal}
+            onBackdropPress={this.closeSelectedModal}
+            backdropOpacity={0.3}
+          >
+            <View style={styles.selectedModalBackground}>
+              <TouchableItem
                 style={[
-                  styles.selectedModalOptionText,
-                  styles.removeOptionText
+                  styles.selectedModalOption,
+                  styles.selectedModalOptionSeparator
                 ]}
+                useForeground={true}
+                onPress={this.onStartEditMessage}
               >
-                Remove
-              </Text>
-            </TouchableItem>
-          </View>
-        </Modal>
+                <Text style={styles.selectedModalOptionText}>Edit</Text>
+              </TouchableItem>
+              <TouchableItem
+                style={[styles.selectedModalOption, styles.removeOption]}
+                useForeground={true}
+                onPress={this.onRemoveMessage}
+              >
+                <Text
+                  style={[
+                    styles.selectedModalOptionText,
+                    styles.removeOptionText
+                  ]}
+                >
+                  Remove
+                </Text>
+              </TouchableItem>
+            </View>
+          </Modal>
+        )}
       </View>
     );
   }
@@ -481,7 +530,6 @@ class MessageEditInput extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: colors.white

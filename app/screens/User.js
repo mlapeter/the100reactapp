@@ -19,7 +19,7 @@ import {
   View
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
-import Chat from "../components/Chat";
+import ChatPreview from "../components/ChatPreview";
 import Panel from "../components/Panel/Panel";
 
 import { connect } from "react-redux";
@@ -132,8 +132,13 @@ export class User extends React.Component {
 
   openChat = () => {
     if (this.state.conversation) {
+      let room = `conversation-${this.state.conversation.id}`;
+      let url = `chat/conversations/${room}`;
       this.props.navigation.navigate("Conversation", {
-        conversation: this.state.conversation
+        title: `Conversation with ${this.props.user.gamertag}`,
+        url: url,
+        room: room,
+        allowAnon: false
       });
     }
   };
@@ -259,11 +264,13 @@ export class User extends React.Component {
           <PlayScheduleIcon playSchedule={this.props.user.play_schedule} />
         </View>
         {this.state.conversation && (
-          <Chat
-            url={`chat/conversations/conversation-${this.state.conversation
-              .id}`}
+          <ChatPreview
             room={`conversation-${this.state.conversation.id}`}
-            allowAnon={false}
+            url={`chat/conversations/conversation-${
+              this.state.conversation.id
+            }`}
+            allowAnon={true}
+            onOpenChat={this.openChat}
           />
         )}
       </View>
