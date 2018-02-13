@@ -51,7 +51,8 @@ export default (styles = StyleSheet.create({
     padding: 10
   },
   icon: {
-    marginBottom: 5,
+    marginVertical: 10,
+    paddingBottom: 15,
     justifyContent: "center",
     alignItems: "center"
   },

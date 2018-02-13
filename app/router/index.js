@@ -133,7 +133,7 @@ const MenuDrawer = DrawerNavigator(
     Home: {
       screen: HomeTabs,
       navigationOptions: ({ navigation }) => ({
-        title: "Home",
+        title: "Back",
         drawerIcon: () => (
           <MaterialCommunityIcons
             name="home"
@@ -287,7 +287,8 @@ const rootNavigator = StackNavigator(
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    paddingTop: 20
   },
   menuItem: {
     padding: 15,

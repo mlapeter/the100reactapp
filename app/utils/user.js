@@ -7,13 +7,14 @@ export async function firebaseSignIn(token, allowAnon = false) {
   let currentUser = firebase.auth().currentUser;
   console.log("currentUser1");
   console.log(currentUser);
-  // if (currentUser && (!currentUser.isAnonymous || (allowAnon && !token))) {
-  //   uid = currentUser.uid;
-  //   anon = currentUser.isAnonymous;
-  //   console.log("currentUser");
-  //   console.log(currentUser);
-  // } else if (token) {
-  if (token) {
+  // Causes error first time user tries to login to app
+  if (currentUser && (!currentUser.isAnonymous || (allowAnon && !token))) {
+    uid = currentUser.uid;
+    anon = currentUser.isAnonymous;
+    console.log("currentUser");
+    console.log(currentUser);
+  } else if (token) {
+    // if (token) {
     let authUser = await firebase.auth().signInWithCustomToken(token);
     uid = authUser.uid;
     anon = false;

@@ -25,7 +25,8 @@ export default class GamingSessionForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewGames: false
+      viewGames: false,
+      advancedOptions: false
     };
   }
 
@@ -36,11 +37,18 @@ export default class GamingSessionForm extends React.Component {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
 
+  toggleAdvancedOptions() {
+    this.setState({
+      advancedOptions: !this.state.advancedOptions
+    });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+  }
+
   render() {
-    const newActivities = toObject(this.props.activities);
-    const finalActivities = t.enums(newActivities);
-    const newGroups = toObject(this.props.groups);
-    const finalGroups = t.enums(newGroups);
+    let newActivities = toObject(this.props.activities);
+    let finalActivities = t.enums(newActivities);
+    let newGroups = toObject(this.props.groups);
+    let finalGroups = t.enums(newGroups);
 
     function toObject(arr) {
       var rv = {};
@@ -49,18 +57,31 @@ export default class GamingSessionForm extends React.Component {
       return rv;
     }
 
-    var GamingSession = t.struct({
-      activity: finalActivities,
-      description: t.maybe(t.String),
-      start_time: t.Date,
-      group: t.maybe(finalGroups),
-      friends_only: t.Boolean,
-      group_only: t.Boolean
-    });
-
+    if (this.state.advancedOptions) {
+      var GamingSession = t.struct({
+        // activity: finalActivities,
+        description: t.maybe(t.String),
+        start_time: t.Date,
+        group: t.maybe(finalGroups),
+        friends_only: t.Boolean,
+        group_only: t.Boolean,
+        team_size: t.maybe(t.Number)
+      });
+    } else {
+      var GamingSession = t.struct({
+        // activity: finalActivities,
+        description: t.maybe(t.String),
+        start_time: t.Date,
+        group: t.maybe(finalGroups),
+        friends_only: t.Boolean,
+        group_only: t.Boolean
+      });
+    }
+    console.log("PROPS: ");
+    console.log(this.props);
     if (this.props.gamingSession) {
       var value = {
-        activity: this.props.gamingSession.category,
+        // activity: this.props.gamingSession.category,
         description: this.props.gamingSession.name,
         start_time: new Date(this.props.gamingSession.start_time),
         group: this.props.gamingSession.group_name,
@@ -133,6 +154,28 @@ export default class GamingSessionForm extends React.Component {
               />
 
               {this.state.viewGames ? (
+                //   <View>
+                //     <Picker
+                //       style={styles.pickerStyle}
+                //       selectedValue={
+                //         this.props.gamingSession
+                //           ? this.props.gamingSession.game_id
+                //           : this.props.gameId
+                //       }
+                //       onValueChange={gameId => {
+                //         this.props.changeGame(gameId);
+                //       }}
+                //     >
+                //       {this.props.games.map(game => (
+                //         <Picker.Item
+                //           key={game.id}
+                //           label={game.name.toString()}
+                //           value={game.id}
+                //         />
+                //       ))}
+                //     </Picker>
+                //   </View>
+                // ) :
                 <Picker
                   selectedValue={
                     this.props.gamingSession
@@ -158,6 +201,11 @@ export default class GamingSessionForm extends React.Component {
                 type={GamingSession}
                 options={options}
                 value={value}
+                advancedOptions={this.state.advancedOptions}
+              />
+              <Toggle
+                title="Advanced Options"
+                toggle={() => this.toggleAdvancedOptions()}
               />
               <TouchableHighlight
                 style={styles.button}
