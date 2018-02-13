@@ -153,7 +153,8 @@ function* decodeToken() {
     let token = yield select(state => state.authentication.token);
     let result = jwtDecode(token);
     let userId = yield select(state => state.authentication.user.user_id);
-
+    console.log("DECODED TOKEN:");
+    console.log(result);
     yield put({ type: DECODE_TOKEN_RESULT, result });
   } catch (e) {
     yield put({ type: DECODE_TOKEN_ERROR, error: e.message });

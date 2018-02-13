@@ -5,13 +5,20 @@ export async function firebaseSignIn(token, allowAnon = false) {
   let anon = false;
 
   let currentUser = firebase.auth().currentUser;
-  if (currentUser && (!currentUser.isAnonymous || (allowAnon && !token))) {
-    uid = currentUser.uid;
-    anon = currentUser.isAnonymous;
-  } else if (token) {
+  console.log("currentUser1");
+  console.log(currentUser);
+  // if (currentUser && (!currentUser.isAnonymous || (allowAnon && !token))) {
+  //   uid = currentUser.uid;
+  //   anon = currentUser.isAnonymous;
+  //   console.log("currentUser");
+  //   console.log(currentUser);
+  // } else if (token) {
+  if (token) {
     let authUser = await firebase.auth().signInWithCustomToken(token);
     uid = authUser.uid;
     anon = false;
+    console.log("authuser");
+    console.log(authUser);
   } else if (allowAnon) {
     let authUser = await firebase.auth().signInAnonymously();
     uid = authUser.uid;
@@ -60,6 +67,7 @@ export function getUserChatPermission(user, roomName, anonPermission = "") {
     return "RWE";
   }
   let room = user.groups[roomName];
+  console.log("Room: ", room);
   if (room) {
     return room.permission;
   } else if (user.anon) {

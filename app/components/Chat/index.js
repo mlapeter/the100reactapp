@@ -173,7 +173,12 @@ class Chat extends Component {
           permission: getUserChatPermission(user, this.props.room, "RW"),
           avatarUrl: user.avatar
         });
-
+        console.log("Signed Into Firebase: ", user.uid);
+        console.log(user);
+        console.log(
+          "getUserChatPermission: ",
+          getUserChatPermission(user, this.props.room, "RW")
+        );
         this.retrieveMessages();
       })
       .catch(error => {
@@ -332,15 +337,18 @@ class Chat extends Component {
   };
 
   render() {
-    let messages = Object.entries(this.state.messages).sort(
-      ([keyA, messageA], [keyB, messageB]) => {
-        return messageB.createdAt - messageA.createdAt;
-      }
-    );
+    let messages = Object.entries(
+      this.state.messages
+    ).sort(([keyA, messageA], [keyB, messageB]) => {
+      return messageB.createdAt - messageA.createdAt;
+    });
 
     let createAllowed =
       this.props.room.startsWith("game-") ||
       this.state.permission.includes("W");
+
+    console.log("createAllowed: ", createAllowed);
+    console.log("Permissions: ", this.state.permission);
 
     return (
       <View
