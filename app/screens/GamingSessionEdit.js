@@ -56,6 +56,7 @@ class GamingSessionEdit extends React.Component {
           groups={this.props.groups}
           isCreating={this.props.isCreating}
           gamingSession={this.props.gamingSession}
+          editGameForm={true}
         />
       </View>
     );

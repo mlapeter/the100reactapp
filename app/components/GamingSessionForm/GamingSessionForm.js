@@ -48,7 +48,7 @@ export default class GamingSessionForm extends React.Component {
     let newActivities = toObject(this.props.activities);
     let finalActivities = t.enums(newActivities);
     let newGroups = toObject(this.props.groups);
-    let finalGroups = t.enums(newGroups);
+    const finalGroups = t.enums(newGroups);
 
     function toObject(arr) {
       var rv = {};
@@ -59,7 +59,7 @@ export default class GamingSessionForm extends React.Component {
 
     if (this.state.advancedOptions) {
       var GamingSession = t.struct({
-        // activity: finalActivities,
+        activity: finalActivities,
         description: t.maybe(t.String),
         start_time: t.Date,
         group: t.maybe(finalGroups),
@@ -69,7 +69,7 @@ export default class GamingSessionForm extends React.Component {
       });
     } else {
       var GamingSession = t.struct({
-        // activity: finalActivities,
+        activity: finalActivities,
         description: t.maybe(t.String),
         start_time: t.Date,
         group: t.maybe(finalGroups),
@@ -81,7 +81,7 @@ export default class GamingSessionForm extends React.Component {
     console.log(this.props);
     if (this.props.gamingSession) {
       var value = {
-        // activity: this.props.gamingSession.category,
+        activity: this.props.gamingSession.category,
         description: this.props.gamingSession.name,
         start_time: new Date(this.props.gamingSession.start_time),
         group: this.props.gamingSession.group_name,
@@ -148,53 +148,54 @@ export default class GamingSessionForm extends React.Component {
             }}
           >
             <View style={styles.container}>
-              <Toggle
-                title={this.props.game.name}
-                toggle={() => this.toggleGames()}
-              />
+              {this.props.editGameForm === true ? null : (
+                <Toggle
+                  title={this.props.game.name}
+                  toggle={() => this.toggleGames()}
+                />
+              )}
 
               {this.state.viewGames ? (
-                //   <View>
-                //     <Picker
-                //       style={styles.pickerStyle}
-                //       selectedValue={
-                //         this.props.gamingSession
-                //           ? this.props.gamingSession.game_id
-                //           : this.props.gameId
-                //       }
-                //       onValueChange={gameId => {
-                //         this.props.changeGame(gameId);
-                //       }}
-                //     >
-                //       {this.props.games.map(game => (
-                //         <Picker.Item
-                //           key={game.id}
-                //           label={game.name.toString()}
-                //           value={game.id}
-                //         />
-                //       ))}
-                //     </Picker>
-                //   </View>
-                // ) :
-                <Picker
-                  selectedValue={
-                    this.props.gamingSession
-                      ? this.props.gamingSession.game_id
-                      : this.props.gameId
-                  }
-                  onValueChange={gameId => {
-                    this.props.changeGame(gameId);
-                  }}
-                >
-                  {this.props.games.map(game => (
-                    <Picker.Item
-                      key={game.id}
-                      label={game.name.toString()}
-                      value={game.id}
-                    />
-                  ))}
-                </Picker>
-              ) : null}
+                <View>
+                  <Picker
+                    style={styles.pickerStyle}
+                    selectedValue={
+                      this.props.gamingSession
+                        ? this.props.gamingSession.game_id
+                        : this.props.gameId
+                    }
+                    onValueChange={gameId => {
+                      this.props.changeGame(gameId);
+                    }}
+                  >
+                    {this.props.games.map(game => (
+                      <Picker.Item
+                        key={game.id}
+                        label={game.name.toString()}
+                        value={game.id}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+              ) : // <Picker
+              //   selectedValue={
+              //     this.props.gamingSession
+              //       ? this.props.gamingSession.game_id
+              //       : this.props.gameId
+              //   }
+              //   onValueChange={gameId => {
+              //     this.props.changeGame(gameId);
+              //   }}
+              // >
+              //   {this.props.games.map(game => (
+              //     <Picker.Item
+              //       key={game.id}
+              //       label={game.name.toString()}
+              //       value={game.id}
+              //     />
+              //   ))}
+              // </Picker>
+              null}
 
               <Form
                 ref="form"
