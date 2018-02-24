@@ -6,11 +6,14 @@ import {
   AsyncStorage,
   Button,
   Image,
+  LayoutAnimation,
   ListView,
+  Picker,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
+  TouchableHighlight,
   View
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
@@ -24,7 +27,7 @@ import { StackNavigator } from "react-navigation";
 
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
-import { fetchGroup } from "../actions/group";
+import { fetchGroup, changeSelectedGroupId } from "../actions/group";
 
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 
@@ -38,6 +41,12 @@ class Group extends React.Component {
     groupError: PropTypes.string,
     group: PropTypes.object
   };
+  constructor(props) {
+    super(props);
+    this.state = {
+      viewGroups: false
+    };
+  }
 
   componentWillMount() {
     this.fetchGroupData();
@@ -56,6 +65,13 @@ class Group extends React.Component {
     console.log("Fetching Group");
     this.props.dispatch(fetchGroup());
   };
+
+  toggleGroups() {
+    this.setState({
+      viewGroups: !this.state.viewGroups
+    });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+  }
 
   // giveKarma() {
   //   this.postData("/give_karma");
@@ -126,9 +142,35 @@ class Group extends React.Component {
               : { uri: this.props.group.header_background_image_api }
           }
         >
-          <Text style={styles.title}>{this.props.group.name}</Text>
+          {/* <Text style={styles.title}>{this.props.group.name}</Text> */}
+
+          <View>
+            <Toggle
+              title={this.props.group.name}
+              toggle={() => this.toggleGroups()}
+            />
+          </View>
         </Image>
         <View style={styles.innerContainer}>
+          {this.state.viewGroups ? (
+            <View>
+              <Picker
+                style={styles.pickerStyle}
+                selectedValue={this.props.selectedGroupId}
+                onValueChange={groupId => {
+                  this.props.dispatch(changeSelectedGroupId(groupId));
+                }}
+              >
+                {this.props.groups.map(group => (
+                  <Picker.Item
+                    key={group.id}
+                    label={group.name}
+                    value={group.id}
+                  />
+                ))}
+              </Picker>
+            </View>
+          ) : null}
           <Text style={styles.description} numberOfLines={3}>
             {this.props.group.description != null
               ? this.props.group.description
@@ -152,6 +194,7 @@ class Group extends React.Component {
             </Text>
             <PlayScheduleIcon playSchedule={this.props.group.play_schedule} />
           </View>
+
           <ChatPreview
             room={room}
             url={url}
@@ -162,13 +205,29 @@ class Group extends React.Component {
                 room: room,
                 url: url,
                 allowAnon: true
-              })
-            }
+              })}
           />
         </View>
       </View>
     );
   }
+}
+
+function Toggle(props) {
+  return (
+    <View>
+      <TouchableHighlight onPress={props.toggle} underlayColor="white">
+        <Text style={styles.title}>
+          {props.title}{" "}
+          <MaterialCommunityIcons
+            name="settings"
+            size={15}
+            color={colors.white}
+          />
+        </Text>
+      </TouchableHighlight>
+    </View>
+  );
 }
 
 function KarmaButton(props) {
@@ -355,7 +414,9 @@ const mapStateToProps = state => {
   return {
     group: state.group.group,
     isLoading: state.group.isLoading,
-    groupError: state.group.error
+    groupError: state.group.error,
+    groups: state.users.user.groups,
+    selectedGroupId: state.group.selectedGroupId
   };
 };
 

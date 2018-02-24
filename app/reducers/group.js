@@ -1,12 +1,14 @@
 import {
   FETCH_GROUP,
   FETCH_GROUP_RESULT,
-  FETCH_GROUP_ERROR
+  FETCH_GROUP_ERROR,
+  CHANGE_GROUP
 } from "../actions/group";
 
 const initialState = {
   isLoading: false,
-  group: null
+  group: null,
+  selectedGroupId: null
 };
 
 export default (state = initialState, action) => {
@@ -27,6 +29,11 @@ export default (state = initialState, action) => {
         ...state,
         error: action.error,
         isLoading: false
+      };
+    case CHANGE_GROUP:
+      return {
+        ...state,
+        selectedGroupId: action.groupId
       };
     default:
       return state;

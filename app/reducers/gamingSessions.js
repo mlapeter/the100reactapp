@@ -85,6 +85,7 @@ export default (state = initialState, action) => {
     case EDIT_GAMING_SESSION:
       return {
         ...state,
+        gameEdited: false,
         isEditing: true,
         gamingSession: action.gamingSession
       };

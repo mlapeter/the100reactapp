@@ -45,6 +45,12 @@ export default class GamingSessionForm extends React.Component {
   }
 
   render() {
+    var Platform = t.enums({
+      ps4: "PS4",
+      "xbox-one": "XBOX ONE",
+      pc: "PC"
+    });
+
     let newActivities = toObject(this.props.activities);
     let finalActivities = t.enums(newActivities);
     let newGroups = toObject(this.props.groups);
@@ -65,7 +71,12 @@ export default class GamingSessionForm extends React.Component {
         group: t.maybe(finalGroups),
         friends_only: t.Boolean,
         group_only: t.Boolean,
-        team_size: t.maybe(t.Number)
+        make_auto_public: t.maybe(t.Boolean),
+        beginners_welcome: t.maybe(t.Boolean),
+        sherpa_requested: t.maybe(t.Boolean),
+        mic_required: t.maybe(t.Boolean),
+        party_size: t.maybe(t.Number),
+        platform: Platform
       });
     } else {
       var GamingSession = t.struct({
@@ -77,8 +88,7 @@ export default class GamingSessionForm extends React.Component {
         group_only: t.Boolean
       });
     }
-    console.log("PROPS: ");
-    console.log(this.props);
+
     if (this.props.gamingSession) {
       var value = {
         activity: this.props.gamingSession.category,
@@ -86,7 +96,13 @@ export default class GamingSessionForm extends React.Component {
         start_time: new Date(this.props.gamingSession.start_time),
         group: this.props.gamingSession.group_name,
         friends_only: this.props.gamingSession.friends_only,
-        group_only: this.props.gamingSession.group_only
+        group_only: this.props.gamingSession.group_only,
+        make_auto_public: this.props.gamingSession.make_auto_public,
+        beginners_welcome: this.props.gamingSession.beginners_welcome,
+        sherpa_requested: this.props.gamingSession.sherpa_requested,
+        mic_required: this.props.gamingSession.mic_required,
+        party_size: this.props.gamingSession.party_size,
+        platform: this.props.gamingSession.platform
       };
     } else {
       var value = {
@@ -129,7 +145,7 @@ export default class GamingSessionForm extends React.Component {
       );
     }
 
-    if (this.props.isCreating) {
+    if (this.props.isCreating || this.props.isEditing) {
       return (
         <View style={styles.outerContainer}>
           <View style={styles.container}>
@@ -177,25 +193,7 @@ export default class GamingSessionForm extends React.Component {
                     ))}
                   </Picker>
                 </View>
-              ) : // <Picker
-              //   selectedValue={
-              //     this.props.gamingSession
-              //       ? this.props.gamingSession.game_id
-              //       : this.props.gameId
-              //   }
-              //   onValueChange={gameId => {
-              //     this.props.changeGame(gameId);
-              //   }}
-              // >
-              //   {this.props.games.map(game => (
-              //     <Picker.Item
-              //       key={game.id}
-              //       label={game.name.toString()}
-              //       value={game.id}
-              //     />
-              //   ))}
-              // </Picker>
-              null}
+              ) : null}
 
               <Form
                 ref="form"
