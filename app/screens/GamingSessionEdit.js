@@ -22,11 +22,11 @@ class GamingSessionEdit extends React.Component {
       this.props.alertWithType("error", "Error", nextProps.gamingSessionError);
     }
     if (
-      nextProps.gameCreated &&
-      nextProps.gameCreated !== this.props.gameCreated
+      nextProps.gameEdited &&
+      nextProps.gameEdited !== this.props.gameEdited
     ) {
       this.props.navigation.navigate("GamingSessionsList");
-      this.props.alertWithType("success", "Success", "Gaming Session Created!");
+      this.props.alertWithType("success", "Success", "Gaming Session Edited!");
     }
     if (
       nextProps.gameEdited &&
@@ -54,8 +54,9 @@ class GamingSessionEdit extends React.Component {
           games={this.props.games}
           activities={this.props.activities}
           groups={this.props.groups}
-          isCreating={this.props.isCreating}
+          isEditing={this.props.isEditing}
           gamingSession={this.props.gamingSession}
+          editGameForm={true}
         />
       </View>
     );
@@ -68,7 +69,8 @@ const mapStateToProps = state => {
   const games = state.search.games;
   const activities = state.search.activities;
   const groups = state.users.user.groups_for_api;
-  const isCreating = state.gamingSessions.isCreating;
+  const isEditing = state.gamingSessions.isEditing;
+
   const gamingSession = state.gamingSessions.gamingSession;
 
   return {
@@ -77,7 +79,7 @@ const mapStateToProps = state => {
     games,
     activities,
     groups,
-    isCreating,
+    isEditing,
     gameCreated: state.gamingSessions.gameCreated,
     gameEdited: state.gamingSessions.gameEdited,
     gamingSessionError: state.gamingSessions.error,

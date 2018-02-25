@@ -96,9 +96,9 @@ const config = {
     pattern: /\B`(.+?)`\B/gim,
     matcherFn: (rawText, processed, key) => {
       return (
-        <Text key={key} style={{ fontFamily: "monospace" }}>
-          {processed}
-        </Text>
+        // <Text key={key} style={{ fontFamily: "Monospace" }}>
+
+        <Text key={key}>{processed}</Text>
       );
     }
   },
@@ -379,9 +379,8 @@ class Youtube extends PureComponent {
     return (
       <View>
         <AutosizeImage
-          source={`https://img.youtube.com/vi/${
-            this.props.videoId
-          }/mqdefault.jpg`}
+          source={`https://img.youtube.com/vi/${this.props
+            .videoId}/mqdefault.jpg`}
           onPress={this.onPress}
           placeholderRender={this.placeholderRender}
         >

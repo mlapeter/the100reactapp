@@ -25,7 +25,8 @@ export default class GamingSessionForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewGames: false
+      viewGames: false,
+      advancedOptions: false
     };
   }
 
@@ -36,10 +37,23 @@ export default class GamingSessionForm extends React.Component {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
 
+  toggleAdvancedOptions() {
+    this.setState({
+      advancedOptions: !this.state.advancedOptions
+    });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+  }
+
   render() {
-    const newActivities = toObject(this.props.activities);
-    const finalActivities = t.enums(newActivities);
-    const newGroups = toObject(this.props.groups);
+    var Platform = t.enums({
+      ps4: "PS4",
+      "xbox-one": "XBOX ONE",
+      pc: "PC"
+    });
+
+    let newActivities = toObject(this.props.activities);
+    let finalActivities = t.enums(newActivities);
+    let newGroups = toObject(this.props.groups);
     const finalGroups = t.enums(newGroups);
 
     function toObject(arr) {
@@ -49,14 +63,31 @@ export default class GamingSessionForm extends React.Component {
       return rv;
     }
 
-    var GamingSession = t.struct({
-      activity: finalActivities,
-      description: t.maybe(t.String),
-      start_time: t.Date,
-      group: t.maybe(finalGroups),
-      friends_only: t.Boolean,
-      group_only: t.Boolean
-    });
+    if (this.state.advancedOptions) {
+      var GamingSession = t.struct({
+        activity: finalActivities,
+        description: t.maybe(t.String),
+        start_time: t.Date,
+        group: t.maybe(finalGroups),
+        friends_only: t.Boolean,
+        group_only: t.Boolean,
+        make_auto_public: t.maybe(t.Boolean),
+        beginners_welcome: t.maybe(t.Boolean),
+        sherpa_requested: t.maybe(t.Boolean),
+        mic_required: t.maybe(t.Boolean),
+        party_size: t.maybe(t.Number),
+        platform: Platform
+      });
+    } else {
+      var GamingSession = t.struct({
+        activity: finalActivities,
+        description: t.maybe(t.String),
+        start_time: t.Date,
+        group: t.maybe(finalGroups),
+        friends_only: t.Boolean,
+        group_only: t.Boolean
+      });
+    }
 
     if (this.props.gamingSession) {
       var value = {
@@ -65,7 +96,13 @@ export default class GamingSessionForm extends React.Component {
         start_time: new Date(this.props.gamingSession.start_time),
         group: this.props.gamingSession.group_name,
         friends_only: this.props.gamingSession.friends_only,
-        group_only: this.props.gamingSession.group_only
+        group_only: this.props.gamingSession.group_only,
+        make_auto_public: this.props.gamingSession.make_auto_public,
+        beginners_welcome: this.props.gamingSession.beginners_welcome,
+        sherpa_requested: this.props.gamingSession.sherpa_requested,
+        mic_required: this.props.gamingSession.mic_required,
+        party_size: this.props.gamingSession.party_size,
+        platform: this.props.gamingSession.platform
       };
     } else {
       var value = {
@@ -108,7 +145,7 @@ export default class GamingSessionForm extends React.Component {
       );
     }
 
-    if (this.props.isCreating) {
+    if (this.props.isCreating || this.props.isEditing) {
       return (
         <View style={styles.outerContainer}>
           <View style={styles.container}>
@@ -127,30 +164,35 @@ export default class GamingSessionForm extends React.Component {
             }}
           >
             <View style={styles.container}>
-              <Toggle
-                title={this.props.game.name}
-                toggle={() => this.toggleGames()}
-              />
+              {this.props.editGameForm === true ? null : (
+                <Toggle
+                  title={this.props.game.name}
+                  toggle={() => this.toggleGames()}
+                />
+              )}
 
               {this.state.viewGames ? (
-                <Picker
-                  selectedValue={
-                    this.props.gamingSession
-                      ? this.props.gamingSession.game_id
-                      : this.props.gameId
-                  }
-                  onValueChange={gameId => {
-                    this.props.changeGame(gameId);
-                  }}
-                >
-                  {this.props.games.map(game => (
-                    <Picker.Item
-                      key={game.id}
-                      label={game.name.toString()}
-                      value={game.id}
-                    />
-                  ))}
-                </Picker>
+                <View>
+                  <Picker
+                    style={styles.pickerStyle}
+                    selectedValue={
+                      this.props.gamingSession
+                        ? this.props.gamingSession.game_id
+                        : this.props.gameId
+                    }
+                    onValueChange={gameId => {
+                      this.props.changeGame(gameId);
+                    }}
+                  >
+                    {this.props.games.map(game => (
+                      <Picker.Item
+                        key={game.id}
+                        label={game.name.toString()}
+                        value={game.id}
+                      />
+                    ))}
+                  </Picker>
+                </View>
               ) : null}
 
               <Form
@@ -158,6 +200,11 @@ export default class GamingSessionForm extends React.Component {
                 type={GamingSession}
                 options={options}
                 value={value}
+                advancedOptions={this.state.advancedOptions}
+              />
+              <Toggle
+                title="Advanced Options"
+                toggle={() => this.toggleAdvancedOptions()}
               />
               <TouchableHighlight
                 style={styles.button}

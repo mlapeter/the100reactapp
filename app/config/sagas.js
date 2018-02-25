@@ -55,7 +55,8 @@ import {
 import {
   FETCH_GROUP,
   FETCH_GROUP_RESULT,
-  FETCH_GROUP_ERROR
+  FETCH_GROUP_ERROR,
+  CHANGE_GROUP
 } from "../actions/group";
 
 import {
@@ -153,7 +154,6 @@ function* decodeToken() {
     let token = yield select(state => state.authentication.token);
     let result = jwtDecode(token);
     let userId = yield select(state => state.authentication.user.user_id);
-
     yield put({ type: DECODE_TOKEN_RESULT, result });
   } catch (e) {
     yield put({ type: DECODE_TOKEN_ERROR, error: e.message });
@@ -261,7 +261,13 @@ function* createGamingSession() {
           start_time: gamingSession.start_time,
           group_name: gamingSession.group,
           friends_only: gamingSession.friends_only,
-          group_only: gamingSession.group_only
+          group_only: gamingSession.group_only,
+          make_auto_public: gamingSession.make_auto_public,
+          beginners_welcome: gamingSession.beginners_welcome,
+          sherpa_requested: gamingSession.sherpa_requested,
+          headset_required: gamingSession.mic_required,
+          party_size: gamingSession.party_size,
+          platform: gamingSession.platform
         })
       }
     );
@@ -309,7 +315,13 @@ function* editGamingSession() {
           start_time: gamingSession.start_time,
           group_name: gamingSession.group,
           friends_only: gamingSession.friends_only,
-          group_only: gamingSession.group_only
+          group_only: gamingSession.group_only,
+          make_auto_public: gamingSession.make_auto_public,
+          beginners_welcome: gamingSession.beginners_welcome,
+          sherpa_requested: gamingSession.sherpa_requested,
+          mic_required: gamingSession.mic_required,
+          party_size: gamingSession.party_size,
+          platform: gamingSession.platform
         })
       }
     );
@@ -572,12 +584,17 @@ function* fetchGroup() {
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     yield call(fetchCurrentUser);
-
     let user = yield select(state => state.users.user);
-
-    let endpoint =
-      "https://pwn-staging.herokuapp.com/api/v2/groups/" +
-      user.memberships[0]["group_id"];
+    let selectedGroupId = yield select(state => state.group.selectedGroupId);
+    let endpoint = "";
+    if (selectedGroupId == null) {
+      endpoint =
+        "https://pwn-staging.herokuapp.com/api/v2/groups/" +
+        user.memberships[0]["group_id"];
+    } else {
+      endpoint =
+        "https://pwn-staging.herokuapp.com/api/v2/groups/" + selectedGroupId;
+    }
     yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
   } catch (e) {
     yield put({ type: FETCH_GROUP_ERROR, error: e.message });
@@ -840,6 +857,8 @@ export default function* rootSaga() {
   yield takeEvery(REFRESH_PENDING_FRIENDS, fetchPendingFriends);
 
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
+
+  yield takeEvery(CHANGE_GROUP, fetchGroup);
   yield takeEvery(FETCH_GROUP, fetchGroup);
 
   yield takeEvery(CREATE_GAMING_SESSION, createGamingSession);

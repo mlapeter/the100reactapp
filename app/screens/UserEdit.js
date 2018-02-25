@@ -97,7 +97,8 @@ class UserEdit extends React.Component {
     var PlaySchedule = t.enums({
       "Weekday Mornings and Weekends": "Weekday Mornings and Weekends",
       "Weekday Afternoons and Weekends": "Weekday Afternoons and Weekends",
-      "Weekday Evenings and Weekends": "Weekday Evenings and Weekends"
+      "Weekday Evenings and Weekends": "Weekday Evenings and Weekends",
+      "Weekdays Latenight and Weekends": "Weekdays Latenight and Weekends"
     });
 
     var User = t.struct({
