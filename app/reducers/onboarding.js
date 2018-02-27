@@ -7,15 +7,15 @@ import {
 } from "../actions/onboarding";
 
 const initialState = {
-  platform: "",
-  gamertag: "",
-  timezone: "",
-  playStyle: "",
   age: "",
-  playSchedule: "",
-  group: "",
   email: "",
-  password: ""
+  gamertag: "",
+  password: "",
+  platform: "",
+  timezone: "",
+  play_schedule: "",
+  play_style: "",
+  group: ""
 };
 
 export default (state = initialState, action) => {
@@ -35,10 +35,10 @@ export default (state = initialState, action) => {
     case SET_PROFILE_INFO:
       return {
         ...state,
-        timezone: action.timezone,
-        play_style: action.playStyle,
         age: action.age,
         play_schedule: action.playSchedule,
+        play_style: action.playStyle,
+        timezone: action.timezone,
         group: action.group
       };
       break;

@@ -41,7 +41,6 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import { colors, fontSizes } from "../styles";
 import { HeaderBackButton, DrawerItems } from "react-navigation";
 import { connect } from "react-redux";
-import { userLogout } from "../screens/NotificationsList";
 import Chatroom from "../screens/Chatroom";
 
 const GamingSessionsStack = StackNavigator({
@@ -150,19 +149,7 @@ const MenuDrawer = DrawerNavigator(
     contentComponent: props => (
       <View style={styles.container}>
         <DrawerItems {...props} />
-        <TouchableOpacity
-          style={styles.optionContainer}
-          onPress={() => userLogout()}
-        >
-          <View style={styles.menuItem}>
-            <MaterialCommunityIcons
-              name="account-remove"
-              size={24}
-              style={styles.icon}
-            />
-            <Text style={styles.menuText}>Log Out</Text>
-          </View>
-        </TouchableOpacity>
+
         <View style={styles.menuItem}>
           <MaterialCommunityIcons
             name="alert-circle"
@@ -272,7 +259,7 @@ GamingSession.navigationOptions = {
 const rootNavigator = StackNavigator(
   {
     MainPage: { screen: MainPage },
-    LoginPage: { screen: Login },
+    Login: { screen: Login },
     Main: { screen: MenuDrawer },
     Onboarding: { screen: OnboardingFlowStack }
   },

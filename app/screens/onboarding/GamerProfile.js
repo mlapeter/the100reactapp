@@ -44,7 +44,7 @@ class GamerProfile extends Component {
 
     this.state = {
       timezone: "EST",
-      playStyle: "Casual / having fun is priority",
+      playStyle: "casual",
       age: 25,
       playSchedule: "Weekday Evenings and Weekends",
       group: "NO PREFERENCE",

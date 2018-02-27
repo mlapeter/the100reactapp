@@ -171,8 +171,7 @@ class GamingSession extends React.Component {
               room: room,
               url: url,
               allowAnon: true
-            })
-          }
+            })}
         />
       </View>
     );

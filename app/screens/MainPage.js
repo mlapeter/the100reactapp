@@ -56,7 +56,7 @@ class MainPage extends Component {
         <Image source={ImgLogo} style={styles.logoImage} />
         <TouchableOpacity
           style={styles.loginButton}
-          onPress={() => this.props.navigation.navigate("LoginPage")}
+          onPress={() => this.props.navigation.navigate("Login")}
         >
           <Text style={styles.buttonText}>LOG IN</Text>
         </TouchableOpacity>

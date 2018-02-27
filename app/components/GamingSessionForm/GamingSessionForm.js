@@ -26,7 +26,8 @@ export default class GamingSessionForm extends React.Component {
     super(props);
     this.state = {
       viewGames: false,
-      advancedOptions: false
+      advancedOptions: false,
+      formData: { description: "" }
     };
   }
 
@@ -38,8 +39,10 @@ export default class GamingSessionForm extends React.Component {
   }
 
   toggleAdvancedOptions() {
+    console.log(this.refs.form.getValue());
     this.setState({
-      advancedOptions: !this.state.advancedOptions
+      advancedOptions: !this.state.advancedOptions,
+      formData: this.refs.form.getValue()
     });
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
@@ -53,7 +56,11 @@ export default class GamingSessionForm extends React.Component {
 
     let newActivities = toObject(this.props.activities);
     let finalActivities = t.enums(newActivities);
-    let newGroups = toObject(this.props.groups);
+    let newGroups = { "": "" };
+    if (this.props.groups) {
+      alert("GROUPS: ", this.props.groups.length);
+      newGroups = toObject(this.props.groups);
+    }
     const finalGroups = t.enums(newGroups);
 
     function toObject(arr) {
@@ -63,33 +70,38 @@ export default class GamingSessionForm extends React.Component {
       return rv;
     }
 
-    if (this.state.advancedOptions) {
-      var GamingSession = t.struct({
-        activity: finalActivities,
-        description: t.maybe(t.String),
-        start_time: t.Date,
-        group: t.maybe(finalGroups),
-        friends_only: t.Boolean,
-        group_only: t.Boolean,
-        make_auto_public: t.maybe(t.Boolean),
-        beginners_welcome: t.maybe(t.Boolean),
-        sherpa_requested: t.maybe(t.Boolean),
-        mic_required: t.maybe(t.Boolean),
-        party_size: t.maybe(t.Number),
-        platform: Platform
-      });
-    } else {
-      var GamingSession = t.struct({
-        activity: finalActivities,
-        description: t.maybe(t.String),
-        start_time: t.Date,
-        group: t.maybe(finalGroups),
-        friends_only: t.Boolean,
-        group_only: t.Boolean
-      });
-    }
+    var GamingSession = t.struct({
+      activity: finalActivities,
+      description: t.maybe(t.String),
+      start_time: t.Date,
+      group: t.maybe(finalGroups),
+      friends_only: t.Boolean,
+      group_only: t.Boolean,
+      make_auto_public: t.maybe(t.Boolean),
+      beginners_welcome: t.maybe(t.Boolean),
+      sherpa_requested: t.maybe(t.Boolean),
+      mic_required: t.maybe(t.Boolean),
+      party_size: t.maybe(t.Number),
+      platform: Platform
+    });
 
-    if (this.props.gamingSession) {
+    if (this.props.gamingSession && this.state.advancedOptions) {
+      var value = {
+        activity: this.state.formData.activity,
+        description: this.state.formData.description,
+        start_time: this.state.formData.start_time,
+        group: this.state.formData.group,
+        friends_only: this.state.formData.friends_only,
+        group_only: this.state.formData.group_only,
+        make_auto_public: this.state.formData.make_auto_public,
+        beginners_welcome: this.state.formData.beginners_welcome,
+        sherpa_requested: this.state.formData.sherpa_requested,
+        mic_required: this.state.formData.mic_required,
+        party_size: this.state.formData.party_size,
+        platform: this.state.formData.platform,
+        created_by: "mobile-app"
+      };
+    } else if (this.props.gamingSession) {
       var value = {
         activity: this.props.gamingSession.category,
         description: this.props.gamingSession.name,
@@ -106,6 +118,14 @@ export default class GamingSessionForm extends React.Component {
       };
     } else {
       var value = {
+        activity: this.state.formData.activity,
+        description: this.state.formData.description,
+        start_time: this.state.formData.start_time,
+        group: this.state.formData.group,
+        friends_only: this.state.formData.friends_only,
+        group_only: this.state.formData.group_only,
+        platform: this.props.user.platform,
+        mic_required: true,
         created_by: "mobile-app"
       };
     }
@@ -114,6 +134,10 @@ export default class GamingSessionForm extends React.Component {
       fields: {
         activity: {
           label: "Activity"
+        },
+        description: {
+          label: "Description",
+          onEndEditing: description => console.log(description)
         },
         start_time: {
           config: {
@@ -124,6 +148,27 @@ export default class GamingSessionForm extends React.Component {
         },
         created_by: {
           hidden: true
+        },
+        group: {
+          hidden: !this.props.groups
+        },
+        make_auto_public: {
+          hidden: !this.state.advancedOptions
+        },
+        beginners_welcome: {
+          hidden: !this.state.advancedOptions
+        },
+        sherpa_requested: {
+          hidden: !this.state.advancedOptions
+        },
+        mic_required: {
+          hidden: !this.state.advancedOptions
+        },
+        party_size: {
+          hidden: !this.state.advancedOptions
+        },
+        platform: {
+          hidden: !this.state.advancedOptions
         }
       }
     };
@@ -200,7 +245,7 @@ export default class GamingSessionForm extends React.Component {
                 type={GamingSession}
                 options={options}
                 value={value}
-                advancedOptions={this.state.advancedOptions}
+                // advancedOptions={this.state.advancedOptions}
               />
               <Toggle
                 title="Advanced Options"

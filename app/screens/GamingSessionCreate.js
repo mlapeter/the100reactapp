@@ -48,6 +48,7 @@ class GamingSessionCreate extends React.Component {
           activities={this.props.activities}
           groups={this.props.groups}
           isCreating={this.props.isCreating}
+          user={this.props.user}
         />
       </View>
     );
@@ -60,6 +61,7 @@ const mapStateToProps = state => {
   const games = state.search.games;
   const activities = state.search.activities;
   const groups = state.users.user.groups_for_api;
+  const user = state.users.user;
   const isCreating = state.gamingSessions.isCreating;
 
   return {
@@ -68,6 +70,7 @@ const mapStateToProps = state => {
     games,
     activities,
     groups,
+    user,
     isCreating,
     gameCreated: state.gamingSessions.gameCreated,
     gamingSessionError: state.gamingSessions.error

@@ -24,6 +24,7 @@ import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigator } from "react-navigation";
+import Panel from "../components/Panel/Panel";
 
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
@@ -44,7 +45,8 @@ class Group extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewGroups: false
+      viewGroups: false,
+      isLoading: false
     };
   }
 
@@ -73,43 +75,117 @@ class Group extends React.Component {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
 
-  // giveKarma() {
-  //   this.postData("/give_karma");
-  //   Alert.alert("Karma Given!");
-  // }
-  //
-  // addFriend() {
-  //   this.postData("/add_friend");
-  //   Alert.alert("Friend Request Sent!");
-  // }
+  userHasJoined() {
+    let joined = this.props.groups.find(group => {
+      return group.id === this.props.group.id;
+    });
+    console.log("JOINED: ", joined);
+    return joined;
+  }
 
-  // postData(action) {
-  //   this.setState({
-  //     isLoading: true
-  //   });
-  //   AsyncStorage.getItem("id_token").then(token => {
-  //     console.log("token: " + token);
-  //     fetch("https://pwn-staging.herokuapp.com/api/v2/groups/" + action, {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: "Bearer " + token
-  //       }
-  //     })
-  //       .then(response => response.json())
-  //       .then(responseJson => {
-  //         this.fetchGroupData();
-  //         console.log("ACTION POSTED");
-  //         console.log(responseJson);
-  //       })
-  //       .catch(error => {
-  //         console.error(error);
-  //       });
-  //   });
-  // }
+  joinGroup() {
+    this.postData(this.props.group.id + "/join");
+    Alert.alert("Group Joined!");
+  }
+
+  leaveGroup() {
+    this.postData(this.props.group.id + "/leave");
+    Alert.alert("Group Left.");
+  }
+
+  autoJoinGroup() {
+    this.postData("autojoin");
+    Alert.alert("Group Auto Joined!");
+  }
+
+  postData(action) {
+    this.setState({
+      isLoading: true
+    });
+    AsyncStorage.getItem("id_token").then(token => {
+      console.log("token: " + token);
+      fetch("https://pwn-staging.herokuapp.com/api/v2/groups/" + action, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify({
+          // group_id: this.props.group.id
+        })
+      })
+        .then(response => response.json())
+        .then(responseJson => {
+          console.log("ACTION POSTED");
+          console.log(responseJson);
+          this.fetchGroupData();
+          this.setState({
+            isLoading: false
+          });
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
+  }
 
   render() {
-    if (this.props.isLoading) {
+    function AutoJoinButton(props) {
+      return (
+        <View style={styles.icon}>
+          <TouchableHighlight onPress={props.onPress} underlayColor="white">
+            <Text style={styles.iconText}>
+              <MaterialCommunityIcons
+                name="account-plus"
+                size={18}
+                color={colors.mediumGrey}
+              />{" "}
+              Automatically Join A Matching Group
+            </Text>
+          </TouchableHighlight>
+        </View>
+      );
+    }
+
+    function JoinButton(props) {
+      if (props.joined == null) {
+        return (
+          <View style={styles.icon}>
+            <TouchableHighlight onPress={props.joinGroup} underlayColor="white">
+              <Text style={styles.iconText}>
+                <MaterialCommunityIcons
+                  name="account-plus"
+                  size={18}
+                  color={colors.mediumGrey}
+                />{" "}
+                Join
+              </Text>
+            </TouchableHighlight>
+          </View>
+        );
+      } else {
+        return (
+          <View style={styles.icon}>
+            <TouchableHighlight
+              onPress={props.leaveGroup}
+              underlayColor="white"
+            >
+              <Text style={styles.iconText}>
+                <MaterialCommunityIcons
+                  name="account-plus"
+                  size={18}
+                  color={colors.mediumGrey}
+                />{" "}
+                Leave
+              </Text>
+            </TouchableHighlight>
+          </View>
+        );
+      }
+    }
+
+    if (this.state.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
@@ -118,12 +194,7 @@ class Group extends React.Component {
     } else if (!this.props.group) {
       return (
         <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.buttonWrapper}
-            onPress={this.fetchGroupData}
-          >
-            <Text style={styles.buttonText}>Get Group</Text>
-          </TouchableOpacity>
+          <AutoJoinButton onPress={() => this.autoJoinGroup()} />
         </View>
       );
     }
@@ -143,7 +214,6 @@ class Group extends React.Component {
           }
         >
           {/* <Text style={styles.title}>{this.props.group.name}</Text> */}
-
           <View>
             <Toggle
               title={this.props.group.name}
@@ -154,33 +224,31 @@ class Group extends React.Component {
         <View style={styles.innerContainer}>
           {this.state.viewGroups ? (
             <View>
-              <Picker
-                style={styles.pickerStyle}
-                selectedValue={this.props.selectedGroupId}
-                onValueChange={groupId => {
-                  this.props.dispatch(changeSelectedGroupId(groupId));
-                }}
-              >
-                {this.props.groups.map(group => (
-                  <Picker.Item
-                    key={group.id}
-                    label={group.name}
-                    value={group.id}
-                  />
-                ))}
-              </Picker>
+              <JoinButton
+                joined={this.userHasJoined()}
+                joinGroup={() => this.joinGroup()}
+                leaveGroup={() => this.leaveGroup()}
+              />
+              {this.props.groups.length > 1 ? (
+                <Picker
+                  style={styles.pickerStyle}
+                  selectedValue={this.props.selectedGroupId}
+                  onValueChange={groupId => {
+                    this.props.dispatch(changeSelectedGroupId(groupId));
+                  }}
+                >
+                  {this.props.groups.map(group => (
+                    <Picker.Item
+                      key={group.id}
+                      label={group.name}
+                      value={group.id}
+                    />
+                  ))}
+                </Picker>
+              ) : null}
             </View>
           ) : null}
-          <Text style={styles.description} numberOfLines={3}>
-            {this.props.group.description != null
-              ? this.props.group.description
-              : ""}
-          </Text>
-          <Text style={styles.description} numberOfLines={2}>
-            {this.props.group.latest_news != null
-              ? this.props.group.latest_news
-              : ""}
-          </Text>
+
           <View style={styles.iconBar}>
             <PlatformIcon platform={this.props.group.platform} />
             <PlayerIcon usersCount={this.props.group.users_count} />
@@ -194,6 +262,9 @@ class Group extends React.Component {
             </Text>
             <PlayScheduleIcon playSchedule={this.props.group.play_schedule} />
           </View>
+
+          <Panel text={this.props.group.description} numberOfLines={3} />
+          <Panel text={this.props.group.latest_news} numberOfLines={3} />
 
           <ChatPreview
             room={room}

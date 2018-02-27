@@ -2,6 +2,7 @@ import {
   FETCH_GROUP,
   FETCH_GROUP_RESULT,
   FETCH_GROUP_ERROR,
+  FETCH_GROUP_EMPTY,
   CHANGE_GROUP
 } from "../actions/group";
 
@@ -28,6 +29,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        isLoading: false
+      };
+    case FETCH_GROUP_EMPTY:
+      return {
+        ...state,
         isLoading: false
       };
     case CHANGE_GROUP:

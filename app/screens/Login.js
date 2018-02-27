@@ -67,21 +67,11 @@ class Login extends React.Component {
   userLogin() {
     if (!this.state.username || !this.state.password) return;
     this.props.dispatch(fetchToken(this.state.username, this.state.password));
-    this.setState({ password: "" });
+    this.setState({
+      username: "",
+      password: ""
+    });
   }
-
-  // userLogout() {
-  //   try {
-  //     AsyncStorage.removeItem("id_token");
-  //   } catch (error) {
-  //     console.log("AsyncStorage error: " + error.message);
-  //   }
-  //   this.props.dispatch(removeToken());
-  // }
-
-  static navigationOptions = {
-    title: "Welcome"
-  };
 
   render() {
     if (this.props.authentication.isAuthed) {
