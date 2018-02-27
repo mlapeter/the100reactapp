@@ -56,6 +56,7 @@ import {
   FETCH_GROUP,
   FETCH_GROUP_RESULT,
   FETCH_GROUP_ERROR,
+  FETCH_GROUP_EMPTY,
   CHANGE_GROUP
 } from "../actions/group";
 
@@ -527,7 +528,8 @@ function* fetchGroupMembers() {
       endpoint,
       current_page,
       FETCH_GROUP_MEMBERS_RESULT,
-      FETCH_GROUP_MEMBERS_ERROR
+      FETCH_GROUP_MEMBERS_ERROR,
+      FETCH_GROUP_MEMBERS_NO_DATA
     );
   } catch (e) {
     yield put({ type: FETCH_GROUP_MEMBERS_ERROR, error: e.message });
@@ -587,15 +589,18 @@ function* fetchGroup() {
     let user = yield select(state => state.users.user);
     let selectedGroupId = yield select(state => state.group.selectedGroupId);
     let endpoint = "";
-    if (selectedGroupId == null) {
+    if (selectedGroupId == null && user.memberships[0]) {
       endpoint =
         "https://pwn-staging.herokuapp.com/api/v2/groups/" +
         user.memberships[0]["group_id"];
+      yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
+    } else if (selectedGroupId == null) {
+      yield put({ type: FETCH_GROUP_EMPTY });
     } else {
       endpoint =
         "https://pwn-staging.herokuapp.com/api/v2/groups/" + selectedGroupId;
+      yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
     }
-    yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
   } catch (e) {
     yield put({ type: FETCH_GROUP_ERROR, error: e.message });
   }

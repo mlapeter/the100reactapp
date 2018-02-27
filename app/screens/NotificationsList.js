@@ -15,7 +15,6 @@ import {
 import { NavigationActions } from "react-navigation";
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
-import { removeToken } from "../actions/authentication";
 import { fetchNotifications } from "../actions/notifications";
 import NotificationsItem from "../components/NotificationsItem/NotificationsItem";
 import TopNav from "../components/TopNav/TopNav";
@@ -130,16 +129,6 @@ const mapStateToProps = state => {
     notificationsError: state.notifications.error,
     user
   };
-};
-
-export const userLogout = () => {
-  try {
-    AsyncStorage.removeItem("id_token");
-  } catch (error) {
-    console.log("AsyncStorage error: " + error.message);
-  }
-  // this.props.dispatch(removeToken());
-  // Not Working
 };
 
 export default connect(mapStateToProps)(connectAlert(Notifications));

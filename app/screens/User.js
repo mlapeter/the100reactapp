@@ -105,7 +105,8 @@ export class User extends React.Component {
 
   giveKarma() {
     this.postData("/give_karma");
-    this.props.alertWithType("success", "Success", "Karma Given!");
+    this.props.navigation.navigate("Games");
+    this.props.alertWithType("success", "Success", "Karma Given!!");
   }
 
   addFriend() {
@@ -144,9 +145,9 @@ export class User extends React.Component {
   };
 
   postData(action) {
-    this.setState({
-      isLoading: true
-    });
+    // this.setState({
+    //   isLoading: true
+    // });
     AsyncStorage.getItem("id_token").then(token => {
       fetch(
         "https://pwn-staging.herokuapp.com/api/v2/users/" + userId + action,
@@ -266,9 +267,8 @@ export class User extends React.Component {
         {this.state.conversation && (
           <ChatPreview
             room={`conversation-${this.state.conversation.id}`}
-            url={`chat/conversations/conversation-${
-              this.state.conversation.id
-            }`}
+            url={`chat/conversations/conversation-${this.state.conversation
+              .id}`}
             allowAnon={true}
             onOpenChat={this.openChat}
           />

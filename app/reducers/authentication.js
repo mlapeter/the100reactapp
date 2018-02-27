@@ -66,7 +66,8 @@ export default (state = initialState, action) => {
         isAuthed: false,
         isLoading: false,
         user: {},
-        token: ""
+        token: "",
+        firebaseToken: ""
       };
     case REMOVE_TOKEN_ERROR:
       return {

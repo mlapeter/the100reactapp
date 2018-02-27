@@ -12,6 +12,7 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
   TouchableHighlight,
   TouchableWithoutFeedback
@@ -27,6 +28,8 @@ import PreSplash from "../components/PreSplash/PreSplash";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
+import { removeToken } from "../actions/authentication";
+
 import { connectAlert } from "../components/Alert";
 import { fetchUser } from "../actions/users";
 import { updateUser } from "../actions/users";
@@ -72,6 +75,15 @@ class UserEdit extends React.Component {
     }
   }
 
+  userLogout() {
+    try {
+      AsyncStorage.removeItem("id_token");
+    } catch (error) {
+      console.log("AsyncStorage error: " + error.message);
+    }
+    this.props.dispatch(removeToken());
+  }
+
   render() {
     if (this.props.isCreating) {
       return (
@@ -90,7 +102,7 @@ class UserEdit extends React.Component {
     });
 
     var PlayStyle = t.enums({
-      casual: "Casual",
+      casual: "Casual / having fun is priority",
       serious: "Serious"
     });
 
@@ -173,6 +185,19 @@ class UserEdit extends React.Component {
             }}
           >
             <View style={styles.container}>
+              <TouchableOpacity
+                style={styles.optionContainer}
+                onPress={() => this.userLogout()}
+              >
+                <View style={styles.menuItem}>
+                  <MaterialCommunityIcons
+                    name="account-remove"
+                    size={24}
+                    style={styles.icon}
+                  />
+                  <Text style={styles.menuText}>Log Out</Text>
+                </View>
+              </TouchableOpacity>
               <Form ref="form" type={User} options={options} value={value} />
               <TouchableHighlight
                 style={styles.button}
