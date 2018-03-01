@@ -76,11 +76,11 @@ class UserEdit extends React.Component {
   }
 
   userLogout() {
-    try {
-      AsyncStorage.removeItem("id_token");
-    } catch (error) {
-      console.log("AsyncStorage error: " + error.message);
-    }
+    // try {
+    //   AsyncStorage.removeItem("id_token");
+    // } catch (error) {
+    //   console.log("AsyncStorage error: " + error.message);
+    // }
     this.props.dispatch(removeToken());
   }
 
@@ -185,19 +185,9 @@ class UserEdit extends React.Component {
             }}
           >
             <View style={styles.container}>
-              <TouchableOpacity
-                style={styles.optionContainer}
-                onPress={() => this.userLogout()}
-              >
-                <View style={styles.menuItem}>
-                  <MaterialCommunityIcons
-                    name="account-remove"
-                    size={24}
-                    style={styles.icon}
-                  />
-                  <Text style={styles.menuText}>Log Out</Text>
-                </View>
-              </TouchableOpacity>
+              <View style={styles.logoutContainer}>
+                <Button onPress={() => this.userLogout()} title="Log Out" />
+              </View>
               <Form ref="form" type={User} options={options} value={value} />
               <TouchableHighlight
                 style={styles.button}
@@ -261,6 +251,12 @@ const styles = StyleSheet.create({
     margin: 10
   },
   buttonWrapper: {
+    padding: 10
+  },
+  logoutContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
     padding: 10
   }
 });

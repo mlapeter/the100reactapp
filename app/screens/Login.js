@@ -80,7 +80,7 @@ class Login extends React.Component {
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
-        extraHeight={100}
+        extraHeight={10}
         keyboardOpeningTime={10}
       >
         <View style={styles.container}>
@@ -117,7 +117,7 @@ class Login extends React.Component {
                   padding: 15,
                   fontFamily: fontStyles.primaryFont,
                   fontSize: fontSizes.primary,
-                  height: 50,
+                  height: 80,
                   width: 300,
                   marginBottom: 15
                 }}

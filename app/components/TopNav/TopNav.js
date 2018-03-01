@@ -85,7 +85,10 @@ export default class TopNav extends Component {
                   this.props.setSearchText(searchText)}
                 onSubmitEditing={() => this.submitSearch()}
                 placeholder="Search Users"
-                style={{ color: colors.white }}
+                style={{
+                  color: colors.white,
+                  flex: 1
+                }}
               />
               <TouchableOpacity onPress={() => this.props.setSearchText("")}>
                 <Icon

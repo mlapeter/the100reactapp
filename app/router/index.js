@@ -123,7 +123,7 @@ const HomeTabs = TabNavigator(
     FriendsList: { screen: FriendsStack }
   },
   {
-    // headerMode: "none"
+    tabBarPosition: "bottom"
   }
 );
 

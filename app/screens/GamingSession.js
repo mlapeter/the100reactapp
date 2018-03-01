@@ -124,9 +124,9 @@ class GamingSession extends React.Component {
             {this.props.user.user_id === this.props.gamingSession.creator_id ? (
               <Button
                 style={{
-                  height: 30,
+                  height: 25,
                   width: 180,
-                  marginBottom: 15
+                  marginBottom: 25
                 }}
                 onPress={() =>
                   this.props.navigation.navigate("GamingSessionEdit")}
@@ -352,7 +352,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   buttonsContainer: {
-    flexDirection: "column"
+    flexDirection: "column",
+    justifyContent: "space-between"
   }
 });
 

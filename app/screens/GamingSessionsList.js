@@ -356,7 +356,7 @@ class GamingSessionsList extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     padding: 5,
-    paddingTop: 35,
+    paddingTop: 25,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
