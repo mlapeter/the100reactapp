@@ -6,6 +6,7 @@ import {
   AsyncStorage,
   Button,
   Image,
+  ImageBackground,
   LayoutAnimation,
   ListView,
   Picker,
@@ -204,7 +205,7 @@ class Group extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Image
+        <ImageBackground
           style={styles.backgroundImage}
           source={
             this.props.group.header_background_image_api ===
@@ -220,7 +221,7 @@ class Group extends React.Component {
               toggle={() => this.toggleGroups()}
             />
           </View>
-        </Image>
+        </ImageBackground>
         <View style={styles.innerContainer}>
           {this.state.viewGroups ? (
             <View>
