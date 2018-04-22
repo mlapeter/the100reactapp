@@ -27,7 +27,7 @@ export default class GamingSessionForm extends React.Component {
     this.state = {
       viewGames: false,
       advancedOptions: false,
-      formData: { description: "" }
+      formData: null
     };
   }
 
@@ -46,6 +46,11 @@ export default class GamingSessionForm extends React.Component {
     });
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
+
+  handleSubmit = () => {
+    var value = this.refs.form.getValue();
+    console.log(value);
+  };
 
   render() {
     var Platform = t.enums({
@@ -72,10 +77,10 @@ export default class GamingSessionForm extends React.Component {
     var GamingSession = t.struct({
       activity: finalActivities,
       description: t.maybe(t.String),
-      start_time: t.Date,
+      start_time: t.maybe(t.Date),
       group: t.maybe(finalGroups),
-      friends_only: t.Boolean,
-      group_only: t.Boolean,
+      friends_only: t.maybe(t.Boolean),
+      group_only: t.maybe(t.Boolean),
       make_auto_public: t.maybe(t.Boolean),
       beginners_welcome: t.maybe(t.Boolean),
       sherpa_requested: t.maybe(t.Boolean),
@@ -84,7 +89,8 @@ export default class GamingSessionForm extends React.Component {
       platform: Platform
     });
 
-    if (this.props.gamingSession && this.state.advancedOptions) {
+    if (this.state.formData) {
+      // If form partially filled out and user clicks advanced options
       var value = {
         activity: this.state.formData.activity,
         description: this.state.formData.description,
@@ -101,6 +107,9 @@ export default class GamingSessionForm extends React.Component {
         created_by: "mobile-app"
       };
     } else if (this.props.gamingSession) {
+      console.log("GAMING SESSION FOUND:");
+      console.log(this.props.gamingSession);
+      // If user is editing existing gaming session
       var value = {
         activity: this.props.gamingSession.category,
         description: this.props.gamingSession.name,
@@ -116,13 +125,9 @@ export default class GamingSessionForm extends React.Component {
         platform: this.props.gamingSession.platform
       };
     } else {
+      console.log("NEW GAME");
+      // If user is creating new game
       var value = {
-        activity: this.state.formData.activity,
-        description: this.state.formData.description,
-        start_time: this.state.formData.start_time,
-        group: this.state.formData.group,
-        friends_only: this.state.formData.friends_only,
-        group_only: this.state.formData.group_only,
         platform: this.props.user.platform,
         mic_required: true,
         created_by: "mobile-app"
@@ -135,8 +140,7 @@ export default class GamingSessionForm extends React.Component {
           label: "Activity"
         },
         description: {
-          label: "Description",
-          onEndEditing: description => console.log(description)
+          label: "Description"
         },
         start_time: {
           config: {
@@ -202,64 +206,63 @@ export default class GamingSessionForm extends React.Component {
     return (
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          <TouchableWithoutFeedback
+          {/* <TouchableWithoutFeedback
             onPress={() => {
               Keyboard.dismiss();
             }}
-          >
-            <View style={styles.container}>
-              {this.props.editGameForm === true ? null : (
-                <Toggle
-                  title={this.props.game.name}
-                  toggle={() => this.toggleGames()}
-                />
-              )}
-
-              {this.state.viewGames ? (
-                <View>
-                  <Picker
-                    style={styles.pickerStyle}
-                    selectedValue={
-                      this.props.gamingSession
-                        ? this.props.gamingSession.game_id
-                        : this.props.gameId
-                    }
-                    onValueChange={gameId => {
-                      this.props.changeGame(gameId);
-                    }}
-                  >
-                    {this.props.games.map(game => (
-                      <Picker.Item
-                        key={game.id}
-                        label={game.name.toString()}
-                        value={game.id}
-                      />
-                    ))}
-                  </Picker>
-                </View>
-              ) : null}
-
-              <Form
-                ref="form"
-                type={GamingSession}
-                options={options}
-                value={value}
-                // advancedOptions={this.state.advancedOptions}
-              />
+          > */}
+          <View style={styles.container}>
+            {this.props.editGameForm === true ? null : (
               <Toggle
-                title="Advanced Options"
-                toggle={() => this.toggleAdvancedOptions()}
+                title={this.props.game.name}
+                toggle={() => this.toggleGames()}
               />
-              <TouchableHighlight
-                style={styles.button}
-                onPress={() =>
-                  this.props.handlePress(this.refs.form.getValue())}
-                underlayColor="#99d9f4"
-              >
-                <Text style={styles.buttonText}>Save</Text>
-              </TouchableHighlight>
-            </View>
-          </TouchableWithoutFeedback>
+            )}
+
+            {this.state.viewGames ? (
+              <View>
+                <Picker
+                  style={styles.pickerStyle}
+                  selectedValue={
+                    this.props.gamingSession
+                      ? this.props.gamingSession.game_id
+                      : this.props.gameId
+                  }
+                  onValueChange={gameId => {
+                    this.props.changeGame(gameId);
+                  }}
+                >
+                  {this.props.games.map(game => (
+                    <Picker.Item
+                      key={game.id}
+                      label={game.name.toString()}
+                      value={game.id}
+                    />
+                  ))}
+                </Picker>
+              </View>
+            ) : null}
+
+            <Form
+              ref="form"
+              type={GamingSession}
+              options={options}
+              value={value}
+              // advancedOptions={this.state.advancedOptions}
+            />
+            <Toggle
+              title="Advanced Options"
+              toggle={() => this.toggleAdvancedOptions()}
+            />
+            <TouchableHighlight
+              style={styles.button}
+              onPress={() => this.props.handlePress(this.refs.form.getValue())}
+              underlayColor="#99d9f4"
+            >
+              <Text style={styles.buttonText}>Save</Text>
+            </TouchableHighlight>
+          </View>
+          {/* </TouchableWithoutFeedback> */}
         </ScrollView>
       </View>
     );

@@ -6,6 +6,7 @@ import {
   AsyncStorage,
   Button,
   Image,
+  ImageBackground,
   LayoutAnimation,
   ListView,
   Picker,
@@ -204,7 +205,7 @@ class Group extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Image
+        <ImageBackground
           style={styles.backgroundImage}
           source={
             this.props.group.header_background_image_api ===
@@ -220,7 +221,7 @@ class Group extends React.Component {
               toggle={() => this.toggleGroups()}
             />
           </View>
-        </Image>
+        </ImageBackground>
         <View style={styles.innerContainer}>
           {this.state.viewGroups ? (
             <View>
@@ -258,7 +259,7 @@ class Group extends React.Component {
                 size={14}
                 color={colors.grey}
               />
-              <Text style={styles.icon}>Casual</Text>
+              <Text style={styles.icon}>{this.props.group.play_style}</Text>
             </Text>
             <PlayScheduleIcon playSchedule={this.props.group.play_schedule} />
           </View>
@@ -375,10 +376,15 @@ function PlatformIcon(props) {
 }
 
 function PlayScheduleIcon(props) {
+  var schedule = props.playSchedule
+    .split(" ")
+    .slice(0, 2)
+    .join(" ");
+
   return (
     <Text style={styles.icon}>
       <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
-      <Text style={styles.icon}>Weekday Mornings</Text>
+      <Text style={styles.icon}>{schedule}</Text>
     </Text>
   );
 }
@@ -425,7 +431,7 @@ const styles = StyleSheet.create({
     alignItems: "stretch"
   },
   backgroundImage: {
-    resizeMode: "cover", // or 'stretch'
+    // resizeMode: "cover", // or 'stretch'
     height: 150,
     width: "100%",
     alignItems: "center",

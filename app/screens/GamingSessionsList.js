@@ -43,6 +43,7 @@ import { loadMoreMyGamingSessions } from "../actions/gamingSessions";
 import { fetchGroupGamingSessions } from "../actions/gamingSessions";
 import { refreshGroupGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
+import { fetchUser } from "../actions/users";
 
 class GamingSessionsList extends React.PureComponent {
   static propTypes = {
@@ -65,8 +66,16 @@ class GamingSessionsList extends React.PureComponent {
   }
 
   componentDidMount() {
+    this.props.dispatch(fetchUser(this.props.authedUser.user_id));
     this.fetchGamesData();
-    this.fetchGamingSessionsData();
+    if (this.props.user.platform == null) {
+      setTimeout(() => {
+        // Wait to load user to get user platform for default search
+        this.fetchGamingSessionsData();
+      }, 1000);
+    } else {
+      this.fetchGamingSessionsData();
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -248,10 +257,10 @@ class GamingSessionsList extends React.PureComponent {
               <Image
                 style={styles.avatarMini}
                 source={
-                  this.props.user.computed_avatar_api ===
+                  this.props.authedUser.computed_avatar_api ===
                   "img/default-avatar.png"
                     ? require("../../app/assets/images/default-avatar.png")
-                    : { uri: this.props.user.computed_avatar_api }
+                    : { uri: this.props.authedUser.computed_avatar_api }
                 }
               />
             </TouchableOpacity>
@@ -402,7 +411,7 @@ const mapStateToProps = state => {
   const gameId = state.search.gameId;
   const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
-  const platform = state.search.platform;
+  const platform = state.users.user.platform;
 
   const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
   const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;
@@ -427,8 +436,8 @@ const mapStateToProps = state => {
   const moreGroupGamingSessionsAvailable =
     state.gamingSessions.moreGroupGamingSessionsAvailable;
 
-  const user = state.authentication.user;
-
+  const authedUser = state.authentication.user;
+  const user = state.users.user;
   return {
     activity,
     game,
@@ -449,6 +458,7 @@ const mapStateToProps = state => {
     moreGamingSessionsAvailable,
     moreMyGamingSessionsAvailable,
     moreGroupGamingSessionsAvailable,
+    authedUser,
     user,
     gamingSessionsError: state.gamingSessions.error
   };

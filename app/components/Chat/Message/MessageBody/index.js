@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { Image, Linking, Text, View } from "react-native";
+import { Image, ImageBackground, Linking, Text, View } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import Hyperlink from "../../../Hyperlink";
@@ -312,12 +312,14 @@ class AutosizeImage extends PureComponent {
             onPress={this.props.onPress}
             onLongPress={this.props.onLongPress}
           >
-            <Image
+            <ImageBackground
               source={{ uri: this.props.source }}
               onError={this.onError}
               style={{
                 width: imageWidth,
-                height: imageHeight,
+                height: imageHeight  
+              }}
+              imageStyle={{
                 resizeMode: "contain",
                 flexDirection: "row",
                 alignItems: "center",
@@ -325,7 +327,7 @@ class AutosizeImage extends PureComponent {
               }}
             >
               {this.props.children}
-            </Image>
+            </ImageBackground>
           </TouchableItem>
         </View>
       );

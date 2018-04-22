@@ -282,7 +282,7 @@ function KarmaButton(props) {
   if (props.karmaStatus === "given") {
     return (
       <View style={styles.icon}>
-        <TouchableHighlight onPress={props.giveKarma} underlayColor="white">
+        <TouchableHighlight onPress={null} underlayColor="white">
           <Text style={styles.iconText}>
             <MaterialCommunityIcons
               name="star"
@@ -319,7 +319,7 @@ function FriendButton(props) {
   ) {
     return (
       <View style={styles.icon}>
-        <TouchableHighlight onPress={props.addFriend} underlayColor="white">
+        <TouchableHighlight onPress={null} underlayColor="white">
           <Text style={styles.iconText}>
             <MaterialCommunityIcons
               name="account-plus"

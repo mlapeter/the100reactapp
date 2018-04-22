@@ -96,6 +96,7 @@ class Login extends React.Component {
             returnKeyType="next"
             style={styles.input}
             value={this.state.username}
+            underlineColorAndroid={"transparent"}
           />
 
           <TextInput
@@ -105,6 +106,7 @@ class Login extends React.Component {
             secureTextEntry={true}
             style={styles.input}
             value={this.state.password}
+            underlineColorAndroid={"transparent"}
           />
 
           {this.props.authentication.isLoading ? (
