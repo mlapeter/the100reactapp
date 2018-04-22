@@ -31,6 +31,8 @@ class GamingSessionCreate extends React.Component {
   }
 
   handlePress = formValue => {
+    console.log("Form Button Clicked");
+    console.log(formValue);
     if (formValue) {
       this.props.dispatch(createGamingSession(formValue));
     }
