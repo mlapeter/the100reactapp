@@ -411,7 +411,7 @@ const mapStateToProps = state => {
   const gameId = state.search.gameId;
   const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
-  const platform = state.users.user.platform;
+  const platform = state.search.platform || state.users.user.platform;
 
   const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
   const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;

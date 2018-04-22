@@ -174,7 +174,6 @@ class Chat extends Component {
           avatarUrl: user.avatar
         });
         console.log("Signed Into Firebase: ", user.uid);
-        console.log(user);
         console.log(
           "getUserChatPermission: ",
           getUserChatPermission(user, this.props.room, "RW")

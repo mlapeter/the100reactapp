@@ -104,7 +104,6 @@ class Group extends React.Component {
       isLoading: true
     });
     AsyncStorage.getItem("id_token").then(token => {
-      console.log("token: " + token);
       fetch("https://pwntastic.herokuapp.com/api/v2/groups/" + action, {
         method: "POST",
         headers: {
@@ -276,7 +275,7 @@ class Group extends React.Component {
                 title: `${this.props.group.name} Chat`,
                 room: room,
                 url: url,
-                allowAnon: true
+                allowAnon: false
               })}
           />
         </View>

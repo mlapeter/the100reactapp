@@ -132,7 +132,6 @@ function* fetchToken() {
       }
     );
     const result = yield response.json();
-    // console.log(result);
     if (result.error) {
       yield put({ type: FETCH_TOKEN_ERROR, error: result.error });
     } else if (result.message === "Invalid credentials") {
