@@ -98,7 +98,7 @@ class GamingSessionsList extends React.PureComponent {
 
   searchUrl() {
     return encodeURI(
-      "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions" +
+      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions" +
         // this.props.gamingSessionsPage +
         "?q[game_id_eq]=" +
         this.props.gameId +
@@ -411,7 +411,7 @@ const mapStateToProps = state => {
   const gameId = state.search.gameId;
   const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
-  const platform = state.users.user.platform;
+  const platform = state.search.platform || state.users.user.platform;
 
   const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
   const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;

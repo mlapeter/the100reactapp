@@ -5,6 +5,7 @@ import {
   CHANGE_MY_GAMING_SESSIONS_PAGE,
   CHANGE_GROUP_GAMING_SESSIONS_PAGE,
   CHANGE_PLATFORM,
+  TOGGLE_NOT_FULL,
   FETCH_GAMES,
   FETCH_GAMES_RESULT,
   FETCH_GAMES_ERROR,
@@ -15,7 +16,7 @@ import {
 
 const initialState = {
   activity: "",
-  gameId: 13,
+  gameId: 23,
   games: [],
   game: {},
   activities: [],
@@ -23,7 +24,7 @@ const initialState = {
   gamingSessionsPage: 1,
   myGamingSessionsPage: 1,
   groupGamingSessionsPage: 1,
-  platform: "ps4"
+  platform: null
 };
 
 export default (state = initialState, action) => {
@@ -57,6 +58,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         platform: action.platform
+      };
+    case TOGGLE_NOT_FULL:
+      return {
+        ...state,
+        notFull: action.notFull
       };
     case FETCH_GAMES:
       return {

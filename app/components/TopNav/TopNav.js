@@ -85,6 +85,7 @@ export default class TopNav extends Component {
                   this.props.setSearchText(searchText)}
                 onSubmitEditing={() => this.submitSearch()}
                 placeholder="Search Users"
+                underlineColorAndroid={"transparent"}
                 style={{
                   color: colors.white,
                   flex: 1

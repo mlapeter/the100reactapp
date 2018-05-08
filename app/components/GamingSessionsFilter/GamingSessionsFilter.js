@@ -16,9 +16,9 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 import { changePlatform } from "../../actions/search";
 import { changeGame } from "../../actions/search";
-import { changeActivity } from "../../actions/search";
+import { changeActivity, toggleNotFull } from "../../actions/search";
 import { connect } from "react-redux";
-import { ButtonGroup } from "react-native-elements";
+import { ButtonGroup, CheckBox } from "react-native-elements";
 
 class GamingSessionsFilter extends Component {
   static propTypes = {
@@ -96,7 +96,7 @@ class GamingSessionsFilter extends Component {
             <View
               style={{
                 width: 300,
-                marginTop: 20,
+                marginTop: 60,
                 // height: 600,
                 backgroundColor: colors.white
               }}
@@ -106,6 +106,15 @@ class GamingSessionsFilter extends Component {
                 selectedIndex={this.state.selectedIndex}
                 buttons={this.state.platforms}
                 containerStyle={{ height: 60 }}
+              />
+
+              <CheckBox
+                title="Games that aren't full"
+                checked={this.props.notFull === 1}
+                onPress={() =>
+                  this.props.dispatch(
+                    toggleNotFull(this.props.notFull === 1 ? 0 : 1)
+                  )}
               />
 
               {/* <Button
@@ -214,13 +223,15 @@ const mapStateToProps = state => {
   const games = state.search.games;
   const activities = state.search.activities;
   const activity = state.search.activity;
+  const notFull = state.search.notFull;
 
   return {
     platform,
     gameId,
     games,
     activities,
-    activity
+    activity,
+    notFull
   };
 };
 

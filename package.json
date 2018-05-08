@@ -1,6 +1,6 @@
 {
   "name": "The100",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "private": true,
   "devDependencies": {
     "jest-expo": "^25.0.0",
@@ -40,8 +40,8 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
     "react-native-check-box": "^2.0.2",
     "react-native-collapsible": "^0.9.0",
-    "react-native-dropdownalert": "^2.11.0",
-    "react-native-elements": "^0.17.0",
+    "react-native-dropdownalert": "^3.4.0",
+    "react-native-elements": "^0.19.1",
     "react-native-keyboard-aware-scroll-view": "^0.3.0",
     "react-native-modal": "^4.1.1",
     "react-native-modalbox": "^1.4.2",

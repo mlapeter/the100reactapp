@@ -39,7 +39,6 @@ export default class GamingSessionForm extends React.Component {
   }
 
   toggleAdvancedOptions() {
-    console.log(this.refs.form.getValue());
     this.setState({
       advancedOptions: !this.state.advancedOptions,
       formData: this.refs.form.getValue()
@@ -49,7 +48,6 @@ export default class GamingSessionForm extends React.Component {
 
   handleSubmit = () => {
     var value = this.refs.form.getValue();
-    console.log(value);
   };
 
   render() {

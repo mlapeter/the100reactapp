@@ -69,7 +69,7 @@ class GamingSession extends React.Component {
     });
     AsyncStorage.getItem("id_token").then(token => {
       fetch(
-        "https://pwn-staging.herokuapp.com/api/v2/gaming_sessions/" +
+        "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
           gamingSessionId +
           action,
         {

@@ -17,14 +17,14 @@ import { colors, fontSizes, fontStyles } from "../../styles";
 
 const { width, height } = Dimensions.get("window");
 class CreateCredential extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
       email: "",
       password: "",
       sendNotification: false
-    }
+    };
   }
   componentWillReceiveProps(nextProps) {
     if (
@@ -38,10 +38,15 @@ class CreateCredential extends Component {
     }
   }
   sendUserInfo = () => {
-    this.props.dispatch(setCredential(this.state.email, this.state.password, this.state.sendNotification))
-  }
+    this.props.dispatch(
+      setCredential(
+        this.state.email,
+        this.state.password,
+        this.state.sendNotification
+      )
+    );
+  };
   render() {
-    
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
@@ -50,27 +55,31 @@ class CreateCredential extends Component {
       >
         <Text style={styles.title}>One last thing...</Text>
         <Text style={styles.contentText}>
-          You will need to create a password for logging in, and we will need your email for sending you notifications when you have a game scheduled as well as password reset.
+          You will need to create a password for logging in, and we will need
+          your email for sending you notifications when you have a game
+          scheduled as well as password reset.
         </Text>
         <View style={styles.inputForm}>
           <View style={styles.inputRow}>
             <Text style={styles.gamerLabel}>EMAIL</Text>
             <TextInput
               value={this.state.email}
-              onChangeText={(text) => this.setState({ email: text})}
+              onChangeText={text => this.setState({ email: text })}
               placeholder="INPUT EMAIL"
               style={styles.inputGamer}
-              placeholderStyle={{color: '#606060'}}
+              placeholderStyle={{ color: "#606060" }}
+              underlineColorAndroid={"transparent"}
             />
           </View>
           <View style={styles.inputRow}>
             <Text style={styles.gamerLabel}>PASSWORD</Text>
             <TextInput
               value={this.state.password}
-              onChangeText={(text) => this.setState({ password: text})}
+              onChangeText={text => this.setState({ password: text })}
               placeholder="PASSWORD"
               style={styles.inputGamer}
-              placeholderStyle={{color: '#606060'}}
+              placeholderStyle={{ color: "#606060" }}
+              underlineColorAndroid={"transparent"}
               secureTextEntry
             />
           </View>
@@ -79,15 +88,17 @@ class CreateCredential extends Component {
             rightText="Send notifications about my group"
             rightTextStyle={styles.contentText}
             isChecked={this.state.sendNotification}
-            onClick={(val) => this.setState({ sendNotification: val})}
+            onClick={val => this.setState({ sendNotification: val })}
           />
         </View>
-        { this.state.email && this.state.password ? <TouchableOpacity
-          style={styles.continueBtn}
-          onPress={this.sendUserInfo}
-        >
-          <Text style={styles.btnText}>CONTINUE</Text>
-        </TouchableOpacity>: null}
+        {this.state.email && this.state.password ? (
+          <TouchableOpacity
+            style={styles.continueBtn}
+            onPress={this.sendUserInfo}
+          >
+            <Text style={styles.btnText}>CONTINUE</Text>
+          </TouchableOpacity>
+        ) : null}
       </KeyboardAwareScrollView>
     );
   }
@@ -112,13 +123,13 @@ const styles = {
     paddingVertical: 15
   },
   inputForm: {
-    alignSelf: 'stretch'
+    alignSelf: "stretch"
   },
   inputRow: {
     flexDirection: "row",
     alignSelf: "stretch",
     paddingVertical: 20,
-    alignItems: 'center'
+    alignItems: "center"
   },
   continueBtn: {
     backgroundColor: "#6ba1fc",
@@ -131,7 +142,7 @@ const styles = {
   gamerLabel: {
     flex: 1,
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.onboardingText
   },
   inputGamer: {
     flex: 3,
@@ -142,12 +153,12 @@ const styles = {
     height: 40,
     marginLeft: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#27292d'
+    backgroundColor: "#27292d"
   }
 };
 const mapStateToProps = state => ({
   onboarding: state.onboarding,
   authentication: state.authentication,
   authenticationError: state.authentication.error
-})
+});
 export default connect(mapStateToProps)(connectAlert(CreateCredential));
