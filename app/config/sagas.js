@@ -113,10 +113,10 @@ import {
 } from "../actions/conversations";
 
 function* fetchToken() {
+  console.log("FETCHING TOKEN ------");
   try {
     let username = yield select(state => state.authentication.username);
     let password = yield select(state => state.authentication.password);
-
     const response = yield fetch(
       "https://pwntastic.herokuapp.com/api/v2/sessions/",
       {
@@ -132,6 +132,7 @@ function* fetchToken() {
       }
     );
     const result = yield response.json();
+
     if (result.error) {
       yield put({ type: FETCH_TOKEN_ERROR, error: result.error });
     } else if (result.message === "Invalid credentials") {

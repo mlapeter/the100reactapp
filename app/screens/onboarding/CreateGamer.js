@@ -17,17 +17,17 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 
 const { width, height } = Dimensions.get("window");
 class CreateGamer extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
 
     this.state = {
       gamertag: ""
-    }
+    };
   }
   setGammerTag = () => {
     this.props.dispatch(setGamertag(this.state.gamertag));
     this.props.navigation.navigate("GamerProfile");
-  }
+  };
   render() {
     const { platform } = this.props.onboarding;
     return (
@@ -38,7 +38,8 @@ class CreateGamer extends Component {
       >
         <Text style={styles.title}>Great!</Text>
         <Text style={styles.contentText}>
-          What is you gamertag in <Text style={{fontWeight: "bold"}}>{platform}</Text>
+          What is you gamertag in{" "}
+          <Text style={{ fontWeight: "bold" }}>{platform}</Text>
         </Text>
         <Text style={styles.contentText}>
           Your gamertag will be used in your gamertag.
@@ -47,18 +48,21 @@ class CreateGamer extends Component {
           <Text style={styles.gamerLabel}>GAMERTAG</Text>
           <TextInput
             value={this.state.gamertag}
-            onChangeText={(text) => this.setState({ gamertag: text})}
+            onChangeText={text => this.setState({ gamertag: text })}
             placeholder="Enter your tag"
             style={styles.inputGamer}
-            placeholderStyle={{color: '#606060'}}
+            placeholderStyle={{ color: "#606060" }}
+            underlineColorAndroid={"transparent"}
           />
         </View>
-        { this.state.gamertag ? <TouchableOpacity
-          style={styles.continueBtn}
-          onPress={this.setGammerTag}
-        >
-          <Text style={styles.btnText}>CONTINUE</Text>
-        </TouchableOpacity>: null}
+        {this.state.gamertag ? (
+          <TouchableOpacity
+            style={styles.continueBtn}
+            onPress={this.setGammerTag}
+          >
+            <Text style={styles.btnText}>CONTINUE</Text>
+          </TouchableOpacity>
+        ) : null}
       </KeyboardAwareScrollView>
     );
   }
@@ -86,7 +90,7 @@ const styles = {
     flexDirection: "row",
     alignSelf: "stretch",
     paddingVertical: 20,
-    alignItems: 'center'
+    alignItems: "center"
   },
   continueBtn: {
     backgroundColor: "#6ba1fc",
@@ -98,7 +102,7 @@ const styles = {
   },
   gamerLabel: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.onboardingText
   },
   inputGamer: {
     borderWidth: 1,
@@ -108,10 +112,10 @@ const styles = {
     height: 40,
     marginLeft: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#27292d'
+    backgroundColor: "#27292d"
   }
 };
 const mapStateToProps = state => ({
   onboarding: state.onboarding
-})
+});
 export default connect(mapStateToProps)(connectAlert(CreateGamer));

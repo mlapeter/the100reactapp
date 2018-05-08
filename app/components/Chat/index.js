@@ -461,6 +461,7 @@ class MessageCreateInput extends PureComponent {
             autoCapitalize="sentences"
             autoCorrect={true}
             returnKeyType="send"
+            underlineColorAndroid={"transparent"}
           />
           <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
             <MaterialCommunityIcons
@@ -522,6 +523,7 @@ class MessageEditInput extends PureComponent {
           autoCorrect={true}
           autoFocus={true}
           returnKeyType="done"
+          underlineColorAndroid={"transparent"}
         />
         <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
           <MaterialCommunityIcons

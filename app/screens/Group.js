@@ -46,8 +46,8 @@ class Group extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewGroups: false,
-      isLoading: false
+      viewGroups: false
+      // isLoading: true
     };
   }
 
@@ -185,7 +185,7 @@ class Group extends React.Component {
       }
     }
 
-    if (this.state.isLoading) {
+    if (this.props.isLoading || this.state.isLoading) {
       return (
         <View style={styles.container}>
           <ActivityIndicator />
@@ -267,14 +267,14 @@ class Group extends React.Component {
           <Panel text={this.props.group.latest_news} numberOfLines={3} />
 
           <ChatPreview
-            room={room}
-            url={url}
+            room={`group-${this.props.group.id}`}
+            url={`chat/groups/group-${this.props.group.id}`}
             allowAnon={true}
             onOpenChat={() =>
               this.props.navigation.navigate("GroupChat", {
                 title: `${this.props.group.name} Chat`,
-                room: room,
-                url: url,
+                room: `group-${this.props.group.id}`,
+                url: `chat/groups/group-${this.props.group.id}`,
                 allowAnon: false
               })}
           />
