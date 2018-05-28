@@ -44,6 +44,7 @@ import { fetchGroupGamingSessions } from "../actions/gamingSessions";
 import { refreshGroupGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
 import { fetchUser } from "../actions/users";
+import { removeToken } from "../actions/authentication";
 
 class GamingSessionsList extends React.PureComponent {
   static propTypes = {
@@ -67,6 +68,19 @@ class GamingSessionsList extends React.PureComponent {
 
   componentDidMount() {
     this.props.dispatch(fetchUser(this.props.authedUser.user_id));
+
+    setTimeout(() => {
+      if (this.props.user.gamertag == null) {
+        this.props.alertWithType(
+          "error",
+          "Error",
+          "Error connecting to server, please login again."
+        );
+        this.props.dispatch(removeToken());
+        this.props.navigation.navigate("Login");
+      }
+    }, 5000);
+
     this.fetchGamesData();
     if (this.props.user.platform == null) {
       setTimeout(() => {
@@ -126,9 +140,11 @@ class GamingSessionsList extends React.PureComponent {
 
   refreshMyGames = () => {
     console.log("refreshMyGames Triggered");
-    if (this.props.myGamingSessionsRefreshing === false) {
-      this.props.dispatch(refreshMyGamingSessions());
-    }
+    this.props.dispatch(refreshMyGamingSessions());
+
+    // if (this.props.myGamingSessionsRefreshing === false) {
+    //   this.props.dispatch(refreshMyGamingSessions());
+    // }
   };
 
   refreshGroupGames = () => {

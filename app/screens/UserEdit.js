@@ -46,7 +46,8 @@ class UserEdit extends React.Component {
   }
 
   componentWillMount() {
-    this.fetchUserEditData();
+    this.fetchUserEditData(this.props.authedUser);
+    console.log(this.props.authedUser);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -81,8 +82,8 @@ class UserEdit extends React.Component {
     // } catch (error) {
     //   console.log("AsyncStorage error: " + error.message);
     // }
-    this.props.navigation.navigate("Login");
     this.props.dispatch(removeToken());
+    this.props.navigation.navigate("Login");
   }
 
   render() {

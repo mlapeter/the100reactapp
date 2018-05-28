@@ -32,7 +32,7 @@ const initialState = {
   userUpdated: false,
   isLoading: false,
   refreshing: false,
-  userLoading: true,
+  userLoading: false,
   user: {},
   friends: [],
   groupMembers: [],

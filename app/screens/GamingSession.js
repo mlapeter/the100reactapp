@@ -22,7 +22,11 @@ import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
-import { fetchGamingSession } from "../actions/gamingSessions";
+import {
+  fetchGamingSession,
+  fetchMyGamingSessions,
+  fetchGroupGamingSessions
+} from "../actions/gamingSessions";
 
 // Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
@@ -60,6 +64,8 @@ class GamingSession extends React.Component {
   leaveGame = () => {
     console.log("LEAVE CLICKED");
     this.postData("/leave");
+    this.props.dispatch(fetchMyGamingSessions());
+    this.props.dispatch(fetchGroupGamingSessions());
     this.props.navigation.navigate("GamingSessionsList");
   };
 

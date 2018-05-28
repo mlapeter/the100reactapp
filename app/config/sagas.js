@@ -151,6 +151,7 @@ function* fetchToken() {
 }
 
 function* decodeToken() {
+  console.log("DECODE TOKEN");
   try {
     let token = yield select(state => state.authentication.token);
     let result = jwtDecode(token);
@@ -162,6 +163,7 @@ function* decodeToken() {
 }
 
 function* removeToken() {
+  console.log("REMOVING TOKEN");
   try {
     AsyncStorage.removeItem("id_token");
     AsyncStorage.removeItem("fb_token");
@@ -179,6 +181,14 @@ function* fetchData(endpoint, page, success, failure, noData) {
     });
     const result = yield response.json();
     if (result.error) {
+      console.log(result);
+      console.log("REMOVING TOKEN");
+      try {
+        AsyncStorage.removeItem("id_token");
+        AsyncStorage.removeItem("fb_token");
+      } catch (e) {
+        yield put({ type: REMOVE_TOKEN_ERROR, error: e.message });
+      }
       yield { type: failure, error: result.error };
     } else if (result.length === 0) {
       yield put({ type: noData, result });
@@ -395,10 +405,18 @@ function* fetchCurrentUser() {
 }
 
 function* fetchUser() {
+  console.log("FETCHING USER");
   try {
     let userId = yield select(state => state.users.userId);
     let endpoint = "https://pwntastic.herokuapp.com/api/v2/users/" + userId;
-    yield call(fetchData, endpoint, 1, FETCH_USER_RESULT, FETCH_USER_ERROR);
+    yield call(
+      fetchData,
+      endpoint,
+      1,
+      FETCH_USER_RESULT,
+      FETCH_USER_ERROR,
+      FETCH_USER_ERROR
+    );
   } catch (e) {
     yield put({ type: FETCH_USER_ERROR, error: e.message });
   }
