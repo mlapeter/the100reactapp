@@ -93,6 +93,7 @@ import {
   FETCH_MY_GAMING_SESSIONS_ERROR,
   FETCH_MY_GAMING_SESSIONS_NO_DATA,
   REFRESH_MY_GAMING_SESSIONS,
+  CLEAR_MY_GAMING_SESSIONS,
   LOAD_MORE_MY_GAMING_SESSIONS,
   LOAD_MORE_MY_GAMING_SESSIONS_RESULT,
   FETCH_GROUP_GAMING_SESSIONS,
@@ -141,6 +142,7 @@ function* fetchToken() {
       token = result.token;
       firebaseToken = result.firebase_token;
       AsyncStorage.setItem("id_token", token);
+      console.log("storing fb_token in saga: ", firebaseToken);
       AsyncStorage.setItem("fb_token", firebaseToken);
 
       yield put({ type: FETCH_TOKEN_RESULT, token, firebaseToken });
@@ -689,6 +691,7 @@ function* loadMoreGamingSessions() {
 function* fetchMyGamingSessions() {
   try {
     yield put({ type: CHANGE_MY_GAMING_SESSIONS_PAGE, page: 1 });
+    yield put({ type: CLEAR_MY_GAMING_SESSIONS });
 
     let userId = yield select(state => state.authentication.user.user_id);
     let current_page = yield select(state => state.search.myGamingSessionsPage);
@@ -826,7 +829,7 @@ function* setCredential() {
       token = result.token;
       firebaseToken = result.firebase_token;
       AsyncStorage.setItem("id_token", token);
-      AsyncStorage.setItem("fb_token", firebaseToken);
+      // AsyncStorage.setItem("fb_token", firebaseToken);
       yield put({ type: FETCH_TOKEN_RESULT, token, firebaseToken });
     }
   } catch (e) {
@@ -905,7 +908,7 @@ export default function* rootSaga() {
   yield takeEvery(REFRESH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
   yield takeEvery(LOAD_MORE_GROUP_GAMING_SESSIONS, loadMoreGroupGamingSessions);
 
-  yield takeEvery(SET_CREDENTIAL, setCredential);
+  // yield takeEvery(SET_CREDENTIAL, setCredential);
 
   yield takeEvery(FETCH_CONVERSATIONS, fetchConversations);
 }

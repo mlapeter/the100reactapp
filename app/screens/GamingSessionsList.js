@@ -176,7 +176,7 @@ class GamingSessionsList extends React.PureComponent {
 
   loadMoreMyGamingSessions = () => {
     if (
-      this.props.gamingSessionsRefreshing === false &&
+      this.props.myGamingSessionsRefreshing === false &&
       this.props.moreMyGamingSessionsAvailable === true
     ) {
       console.log("LoadMoreMyGamingSessions Activated");

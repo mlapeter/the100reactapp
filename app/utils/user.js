@@ -1,22 +1,39 @@
 import firebase from "./firebase";
 
-export async function firebaseSignIn(token, allowAnon = false) {
+export async function firebaseSignOut() {
+  firebase.auth().signOut();
+}
+
+export async function firebaseSignIn(token, allowAnon = false, authedUser) {
   let uid = null;
   let anon = false;
 
   let currentUser = firebase.auth().currentUser;
-  console.log("currentUser1");
   // Causes error first time user tries to login to app
-  if (currentUser && (!currentUser.isAnonymous || (allowAnon && !token))) {
+  // if (currentUser && (!currentUser.isAnonymous || (allowAnon && !token))) {
+
+  if (currentUser) {
+    console.log("currentUser: ", currentUser);
     uid = currentUser.uid;
     anon = currentUser.isAnonymous;
     console.log("currentUser");
   } else if (token) {
-    // if (token) {
     let authUser = await firebase.auth().signInWithCustomToken(token);
     uid = authUser.uid;
     anon = false;
-    console.log("authuser");
+
+    authedUserData = {
+      username: authedUser.username,
+      supporter: authedUser.supporter,
+      pwnmaster: authedUser.pwnmaster,
+      avatar: authedUser.computed_avatar_api,
+      groups: authedUser.rooms
+    };
+
+    await firebase
+      .database()
+      .ref("users/" + uid)
+      .set(authedUserData);
   } else if (allowAnon) {
     let authUser = await firebase.auth().signInAnonymously();
     uid = authUser.uid;
@@ -36,10 +53,12 @@ export async function firebaseSignIn(token, allowAnon = false) {
       anon: true
     };
   } else {
+    console.log("uid: ", uid);
     let userData = (await firebase
       .database()
-      .ref(`/users/${uid}`)
+      .ref("/users/" + uid)
       .once("value")).val();
+    console.log("userData: ", userData);
     userData.uid = uid;
     userData.anon = false;
     return userData;

@@ -64,7 +64,7 @@ class GamingSession extends React.Component {
   leaveGame = () => {
     console.log("LEAVE CLICKED");
     this.postData("/leave");
-    this.props.dispatch(fetchMyGamingSessions());
+    this.props.dispatch(refreshMyGamingSessions());
     this.props.dispatch(fetchGroupGamingSessions());
     this.props.navigation.navigate("GamingSessionsList");
   };
