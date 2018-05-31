@@ -40,6 +40,8 @@ class MainPage extends Component {
         this.setState({ isLoaded: true });
       });
       AsyncStorage.getItem("fb_token").then(token => {
+        console.log("getting fb_token: ", token);
+
         this.props.dispatch(setFirebaseToken(token));
       });
     });

@@ -163,7 +163,13 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    firebaseSignIn(this.props.firebaseToken, this.props.allowAnon)
+    console.log("signing in to firebase with token:", this.props.firebaseToken);
+    console.log("authedUser: ", this.props.authedUser);
+    firebaseSignIn(
+      this.props.firebaseToken,
+      this.props.allowAnon,
+      this.props.authedUser
+    )
       .then(user => {
         this.setState({
           uid: user.uid,
@@ -174,6 +180,7 @@ class Chat extends Component {
           avatarUrl: user.avatar
         });
         console.log("Signed Into Firebase: ", user.uid);
+        console.log(user);
         console.log(
           "getUserChatPermission: ",
           getUserChatPermission(user, this.props.room, "RW")
@@ -590,7 +597,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   return {
-    firebaseToken: state.authentication.firebaseToken
+    firebaseToken: state.authentication.firebaseToken,
+    authedUser: state.authentication.user
   };
 };
 

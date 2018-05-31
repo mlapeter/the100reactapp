@@ -34,6 +34,8 @@ import { connectAlert } from "../components/Alert";
 import { fetchUser } from "../actions/users";
 import { updateUser } from "../actions/users";
 
+import { firebaseSignOut } from "../utils/user";
+
 // Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
@@ -82,6 +84,7 @@ class UserEdit extends React.Component {
     // } catch (error) {
     //   console.log("AsyncStorage error: " + error.message);
     // }
+    firebaseSignOut();
     this.props.dispatch(removeToken());
     this.props.navigation.navigate("Login");
   }

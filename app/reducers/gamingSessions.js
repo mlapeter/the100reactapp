@@ -19,6 +19,7 @@ import {
   FETCH_MY_GAMING_SESSIONS_RESULT,
   FETCH_MY_GAMING_SESSIONS_ERROR,
   FETCH_MY_GAMING_SESSIONS_NO_DATA,
+  CLEAR_MY_GAMING_SESSIONS,
   REFRESH_MY_GAMING_SESSIONS,
   LOAD_MORE_MY_GAMING_SESSIONS,
   LOAD_MORE_MY_GAMING_SESSIONS_RESULT,
@@ -150,6 +151,7 @@ export default (state = initialState, action) => {
         gamingSessionsLoading: false,
         gamingSessionsRefreshing: false
       };
+
     case REFRESH_GAMING_SESSIONS:
       return {
         ...state,
@@ -196,6 +198,14 @@ export default (state = initialState, action) => {
         moreMyGamingSessionsAvailable: false,
         myGamingSessionsLoading: false,
         myGamingSessionsRefreshing: false
+      };
+    case CLEAR_MY_GAMING_SESSIONS:
+      return {
+        ...state,
+        myGamingSessions: [],
+        moreGamingSessionsAvailable: true,
+        gamingSessionsRefreshing: true,
+        endpoint: action.endpoint
       };
     case REFRESH_MY_GAMING_SESSIONS:
       return {

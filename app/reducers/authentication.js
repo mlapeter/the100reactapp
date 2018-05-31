@@ -39,7 +39,9 @@ export default (state = initialState, action) => {
         ...state,
         error: action.error,
         isLoading: false,
-        isAuthed: false
+        isAuthed: false,
+        token: "",
+        firebaseToken: ""
       };
     case DECODE_TOKEN:
       return {
