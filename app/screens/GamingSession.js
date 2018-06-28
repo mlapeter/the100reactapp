@@ -25,7 +25,8 @@ import { connectAlert } from "../components/Alert";
 import {
   fetchGamingSession,
   fetchMyGamingSessions,
-  fetchGroupGamingSessions
+  fetchGroupGamingSessions,
+  refreshMyGamingSessions
 } from "../actions/gamingSessions";
 
 // Moment.globalFormat = "h:mm";
@@ -64,9 +65,12 @@ class GamingSession extends React.Component {
   leaveGame = () => {
     console.log("LEAVE CLICKED");
     this.postData("/leave");
-    this.props.dispatch(refreshMyGamingSessions());
-    this.props.dispatch(fetchGroupGamingSessions());
-    this.props.navigation.navigate("GamingSessionsList");
+
+    setTimeout(() => {
+      this.props.dispatch(fetchMyGamingSessions());
+      this.props.dispatch(fetchGroupGamingSessions());
+      this.props.navigation.navigate("GamingSessionsList");
+    }, 1000);
   };
 
   postData(action) {

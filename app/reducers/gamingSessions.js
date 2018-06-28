@@ -203,6 +203,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         myGamingSessions: [],
+        myGamingSessionsLoading: true,
         moreGamingSessionsAvailable: true,
         gamingSessionsRefreshing: true,
         endpoint: action.endpoint
