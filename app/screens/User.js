@@ -24,7 +24,12 @@ import Panel from "../components/Panel/Panel";
 
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
-import { fetchUser } from "../actions/users";
+import {
+  fetchUser,
+  fetchFriends,
+  fetchPendingFriends,
+  fetchGroupMembers
+} from "../actions/users";
 import { fetchConversations } from "../actions/conversations";
 
 import { colors, fontSizes, fontStyles } from "../styles";
@@ -115,6 +120,12 @@ export class User extends React.Component {
     this.props.alertWithType("success", "Success", "Friend Request Sent!");
   }
 
+  acceptFriend() {
+    this.postData("/add_friend");
+    this.props.navigation.navigate("FriendsList");
+    this.props.alertWithType("success", "Success", "Friend Request Accepted!");
+  }
+
   toggleStats() {
     this.setState({
       viewStats: !this.state.viewStats
@@ -159,6 +170,11 @@ export class User extends React.Component {
         .then(response => response.json())
         .then(responseJson => {
           this.fetchUserData();
+
+          this.props.dispatch(fetchFriends());
+          this.props.dispatch(fetchGroupMembers());
+          this.props.dispatch(fetchPendingFriends());
+
           console.log("ACTION POSTED");
         })
         .catch(error => {
@@ -238,6 +254,7 @@ export class User extends React.Component {
             <FriendButton
               friendshipStatus={this.props.user.friendship_status}
               addFriend={() => this.addFriend()}
+              acceptFriend={() => this.acceptFriend()}
             />
             <KarmaButton
               karmaStatus={this.props.user.karma_status}
@@ -324,6 +341,21 @@ function FriendButton(props) {
               color={colors.mediumGrey}
             />{" "}
             {props.friendshipStatus}
+          </Text>
+        </TouchableHighlight>
+      </View>
+    );
+  } else if (props.friendshipStatus === "Confirm Friend") {
+    return (
+      <View style={styles.icon}>
+        <TouchableHighlight onPress={props.acceptFriend} underlayColor="white">
+          <Text style={styles.iconText}>
+            <MaterialCommunityIcons
+              name="account-plus"
+              size={18}
+              color={colors.mediumGrey}
+            />{" "}
+            Accept Invite
           </Text>
         </TouchableHighlight>
       </View>
