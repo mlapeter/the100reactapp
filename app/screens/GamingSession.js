@@ -25,7 +25,8 @@ import { connectAlert } from "../components/Alert";
 import {
   fetchGamingSession,
   fetchMyGamingSessions,
-  fetchGroupGamingSessions
+  fetchGroupGamingSessions,
+  refreshMyGamingSessions
 } from "../actions/gamingSessions";
 
 // Moment.globalFormat = "h:mm";
@@ -41,7 +42,6 @@ class GamingSession extends React.Component {
     super(props);
     this.state = {
       hasJoined: false,
-      isLoading: true,
       refreshing: false,
       gameData: ""
     };
@@ -64,9 +64,15 @@ class GamingSession extends React.Component {
   leaveGame = () => {
     console.log("LEAVE CLICKED");
     this.postData("/leave");
-    this.props.dispatch(refreshMyGamingSessions());
-    this.props.dispatch(fetchGroupGamingSessions());
-    this.props.navigation.navigate("GamingSessionsList");
+
+    setTimeout(() => {
+      this.props.dispatch(fetchMyGamingSessions());
+      this.props.dispatch(fetchGroupGamingSessions());
+      this.setState({
+        isLoading: false
+      });
+      this.props.navigation.navigate("GamingSessionsList");
+    }, 1000);
   };
 
   postData(action) {
@@ -88,8 +94,15 @@ class GamingSession extends React.Component {
       )
         .then(response => response.json())
         .then(responseJson => {
-          this.fetchGamingSessionData();
-          console.log("GAME JOINED OR LEFT");
+          if (action === "/join") {
+            this.fetchGamingSessionData();
+            console.log("GAME JOINED");
+            this.setState({
+              isLoading: false
+            });
+          } else {
+            console.log("GAME LEFT");
+          }
         })
         .catch(error => {
           console.error(error);
@@ -101,6 +114,7 @@ class GamingSession extends React.Component {
     const { params } = this.props.navigation.state;
 
     if (
+      this.state.isLoading ||
       this.props.gamingSessionLoading ||
       !this.props.gamingSession.confirmed_sessions
     ) {

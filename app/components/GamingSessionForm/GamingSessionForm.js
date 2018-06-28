@@ -123,7 +123,6 @@ export default class GamingSessionForm extends React.Component {
         platform: this.props.gamingSession.platform
       };
     } else {
-      console.log("NEW GAME");
       // If user is creating new game
       var value = {
         platform: this.props.user.platform,
