@@ -42,7 +42,6 @@ class GamingSession extends React.Component {
     super(props);
     this.state = {
       hasJoined: false,
-      isLoading: true,
       refreshing: false,
       gameData: ""
     };
@@ -69,6 +68,9 @@ class GamingSession extends React.Component {
     setTimeout(() => {
       this.props.dispatch(fetchMyGamingSessions());
       this.props.dispatch(fetchGroupGamingSessions());
+      this.setState({
+        isLoading: false
+      });
       this.props.navigation.navigate("GamingSessionsList");
     }, 1000);
   };
@@ -92,8 +94,15 @@ class GamingSession extends React.Component {
       )
         .then(response => response.json())
         .then(responseJson => {
-          this.fetchGamingSessionData();
-          console.log("GAME JOINED OR LEFT");
+          if (action === "/join") {
+            this.fetchGamingSessionData();
+            console.log("GAME JOINED");
+            this.setState({
+              isLoading: false
+            });
+          } else {
+            console.log("GAME LEFT");
+          }
         })
         .catch(error => {
           console.error(error);
@@ -105,6 +114,7 @@ class GamingSession extends React.Component {
     const { params } = this.props.navigation.state;
 
     if (
+      this.state.isLoading ||
       this.props.gamingSessionLoading ||
       !this.props.gamingSession.confirmed_sessions
     ) {
