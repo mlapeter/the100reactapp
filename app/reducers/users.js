@@ -18,6 +18,7 @@ import {
   FETCH_PENDING_FRIENDS_NO_DATA,
   LOAD_MORE_PENDING_FRIENDS,
   LOAD_MORE_PENDING_FRIENDS_RESULT,
+  CHANGE_PENDING_FRIENDS_PAGE,
   FETCH_GROUP_MEMBERS,
   FETCH_GROUP_MEMBERS_RESULT,
   FETCH_GROUP_MEMBERS_ERROR,
@@ -30,19 +31,20 @@ import {
 const initialState = {
   isUpdating: false,
   userUpdated: false,
-  isLoading: false,
-  refreshing: false,
   userLoading: false,
   user: {},
   friends: [],
   groupMembers: [],
   pendingFriends: [],
+  isLoadingFriends: false,
+  isLoadingGroupMembers: false,
+  isLoadingPendingFriends: false,
   moreFriendsAvailable: true,
   moreGroupMembersAvailable: true,
   morePendingFriendsAvailable: true,
-
   friendsPage: 1,
-  groupMembersPage: 1
+  groupMembersPage: 1,
+  pendingFriendsPage: 1
 };
 
 export default (state = initialState, action) => {
@@ -88,121 +90,130 @@ export default (state = initialState, action) => {
     case FETCH_FRIENDS:
       return {
         ...state,
-        isLoading: true
+        moreFriendsAvailable: true,
+        isLoadingFriends: true
       };
     case FETCH_FRIENDS_RESULT:
       return {
         ...state,
-        isLoading: false,
+        moreFriendsAvailable: true,
+        isLoadingFriends: false,
         friends: action.result
       };
     case FETCH_FRIENDS_ERROR:
       return {
         ...state,
-        isLoading: false,
+        moreFriendsAvailable: true,
+        isLoadingFriends: false,
         error: action.error
       };
     case FETCH_FRIENDS_NO_DATA:
       return {
         ...state,
         moreFriendsAvailable: false,
-        isLoading: false,
-        refreshing: false
+        isLoadingFriends: false
       };
     case LOAD_MORE_FRIENDS:
       return {
         ...state,
-        refreshing: true
+        isLoadingFriends: true
       };
     case LOAD_MORE_FRIENDS_RESULT:
       return {
         ...state,
         friends: [...state.friends, ...action.result],
-        isLoading: false,
-        refreshing: false
+        isLoadingFriends: false
       };
     case CHANGE_FRIENDS_PAGE:
       return {
         ...state,
         friendsPage: action.page
       };
-    case FETCH_PENDING_FRIENDS:
-      return {
-        ...state,
-        isLoading: true
-      };
-    case FETCH_PENDING_FRIENDS_RESULT:
-      return {
-        ...state,
-        isLoading: false,
-        pendingFriends: action.result
-      };
-    case FETCH_PENDING_FRIENDS_ERROR:
-      return {
-        ...state,
-        isLoading: false,
-        error: action.error
-      };
-    case FETCH_PENDING_FRIENDS_NO_DATA:
-      return {
-        ...state,
-        morePendingFriendsAvailable: false,
-        isLoading: false,
-        refreshing: false
-      };
-    case LOAD_MORE_PENDING_FRIENDS:
-      return {
-        ...state,
-        refreshing: true
-      };
-    case LOAD_MORE_PENDING_FRIENDS_RESULT:
-      return {
-        ...state,
-        pendingFriends: [...state.pendingFriends, ...action.result],
-        isLoading: false,
-        refreshing: false
-      };
     case FETCH_GROUP_MEMBERS:
       return {
         ...state,
-        isLoading: true
+        moreGroupMembersAvailable: true,
+        isLoadingGroupMembers: true
       };
     case FETCH_GROUP_MEMBERS_RESULT:
       return {
         ...state,
-        isLoading: false,
+        moreGroupMembersAvailable: true,
+        isLoadingGroupMembers: false,
         groupMembers: action.result
       };
     case FETCH_GROUP_MEMBERS_ERROR:
       return {
         ...state,
-        isLoading: false,
+        moreGroupMembersAvailable: true,
+        isLoadingGroupMembers: false,
         error: action.error
       };
     case FETCH_GROUP_MEMBERS_NO_DATA:
       return {
         ...state,
         moreGroupMembersAvailable: false,
-        isLoading: false,
-        refreshing: false
+        isLoadingGroupMembers: false
       };
     case LOAD_MORE_GROUP_MEMBERS:
       return {
         ...state,
-        refreshing: true
+        isLoadingGroupMembers: true
       };
     case LOAD_MORE_GROUP_MEMBERS_RESULT:
       return {
         ...state,
         groupMembers: [...state.groupMembers, ...action.result],
-        isLoading: false,
-        refreshing: false
+        isLoadingGroupMembers: false
       };
     case CHANGE_GROUP_MEMBERS_PAGE:
       return {
         ...state,
         groupMembersPage: action.page
       };
+    case FETCH_PENDING_FRIENDS:
+      return {
+        ...state,
+        morePendingFriendsAvailable: true,
+        isLoadingPendingFriends: true
+      };
+    case FETCH_PENDING_FRIENDS_RESULT:
+      return {
+        ...state,
+        morePendingFriendsAvailable: true,
+        isLoadingPendingFriends: false,
+        pendingFriends: action.result
+      };
+    case FETCH_PENDING_FRIENDS_ERROR:
+      return {
+        ...state,
+        morePendingFriendsAvailable: true,
+        isLoadingPendingFriends: false,
+        error: action.error
+      };
+    case FETCH_PENDING_FRIENDS_NO_DATA:
+      return {
+        ...state,
+        morePendingFriendsAvailable: false,
+        isLoadingPendingFriends: false
+      };
+    case LOAD_MORE_PENDING_FRIENDS:
+      return {
+        ...state,
+        isLoadingPendingFriends: true
+      };
+    case LOAD_MORE_PENDING_FRIENDS_RESULT:
+      return {
+        ...state,
+        pendingFriends: [...state.pendingFriends, ...action.result],
+        isLoadingPendingFriends: false
+      };
+    case CHANGE_PENDING_FRIENDS_PAGE:
+      return {
+        ...state,
+        pendingFriendsPage: action.page
+      };
+
     default:
       return state;
   }

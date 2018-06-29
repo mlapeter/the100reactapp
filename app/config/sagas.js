@@ -41,6 +41,7 @@ import {
   FETCH_PENDING_FRIENDS_NO_DATA,
   LOAD_MORE_PENDING_FRIENDS,
   LOAD_MORE_PENDING_FRIENDS_RESULT,
+  CHANGE_PENDING_FRIENDS_PAGE,
   REFRESH_PENDING_FRIENDS,
   FETCH_GROUP_MEMBERS,
   FETCH_GROUP_MEMBERS_RESULT,
@@ -182,6 +183,8 @@ function* fetchData(endpoint, page, success, failure, noData) {
       headers: { Authorization: "Bearer " + token }
     });
     const result = yield response.json();
+    console.log("FETCHING DATA -----");
+    // console.log(result);
     if (result.error) {
       console.log(result);
       // console.log("REMOVING TOKEN");
@@ -193,11 +196,13 @@ function* fetchData(endpoint, page, success, failure, noData) {
       // }
       yield { type: failure, error: result.error };
     } else if (result.length === 0) {
+      console.log("no data returned");
       yield put({ type: noData, result });
     } else {
       yield put({ type: success, result });
     }
   } catch (e) {
+    console.log("error fetching data");
     yield put({ type: failure, error: e.message });
   }
 }
@@ -426,6 +431,8 @@ function* fetchUser() {
 
 function* fetchFriends() {
   try {
+    yield put({ type: CHANGE_FRIENDS_PAGE, page: 1 });
+
     let userId = yield select(state => state.authentication.user.user_id);
     // let current_page = yield select(state => state.users.friendsPage);
 
@@ -437,7 +444,7 @@ function* fetchFriends() {
       1,
       FETCH_FRIENDS_RESULT,
       FETCH_FRIENDS_ERROR,
-      FETCH_FRIENDS_RESULT
+      FETCH_FRIENDS_NO_DATA
     );
   } catch (e) {
     yield put({ type: FETCH_FRIENDS_ERROR, error: e.message });
@@ -489,6 +496,8 @@ function* loadMoreFriends() {
 
 function* fetchPendingFriends() {
   try {
+    yield put({ type: CHANGE_PENDING_FRIENDS_PAGE, page: 1 });
+
     let userId = yield select(state => state.authentication.user.user_id);
     // let current_page = yield select(state => state.users.friendsPage);
 
@@ -502,7 +511,7 @@ function* fetchPendingFriends() {
       1,
       FETCH_PENDING_FRIENDS_RESULT,
       FETCH_PENDING_FRIENDS_ERROR,
-      FETCH_PENDING_FRIENDS_RESULT
+      FETCH_PENDING_FRIENDS_NO_DATA
     );
   } catch (e) {
     yield put({ type: FETCH_PENDING_FRIENDS_ERROR, error: e.message });
@@ -513,7 +522,7 @@ function* loadMorePendingFriends() {
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let current_page = yield select(state => state.users.friendsPage);
-    yield put({ type: CHANGE_FRIENDS_PAGE, page: current_page + 1 });
+    yield put({ type: CHANGE_PENDING_FRIENDS_PAGE, page: current_page + 1 });
     let new_page = yield select(state => state.users.friendsPage);
 
     let endpoint =

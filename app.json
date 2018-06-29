@@ -3,11 +3,16 @@
     "sdkVersion": "25.0.0",
     "name": "The100.io",
     "icon": "./app/assets/images/icon.png",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "slug": "the100",
     "ios": {
+      "buildNumber": "1.0.2",
       "bundleIdentifier": "io.the100.mobile",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "io.the100.mobile",
+      "versionCode": 1
     }
   }
 }

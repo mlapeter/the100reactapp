@@ -21,18 +21,17 @@ import Tabs from "../components/Tabs/Tabs";
 import TopNav from "../components/TopNav/TopNav";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { fetchFriends } from "../actions/users";
-import { loadMoreFriends } from "../actions/users";
-import { changeFriendsPage } from "../actions/users";
-import { refreshFriends } from "../actions/users";
-
-import { fetchGroupMembers } from "../actions/users";
-import { loadMoreGroupMembers } from "../actions/users";
-import { refreshGroupMembers } from "../actions/users";
-
-import { fetchPendingFriends } from "../actions/users";
-import { loadMorePendingFriends } from "../actions/users";
-import { refreshPendingFriends } from "../actions/users";
+import {
+  fetchFriends,
+  loadMoreFriends,
+  refreshFriends,
+  fetchGroupMembers,
+  loadMoreGroupMembers,
+  refreshGroupMembers,
+  fetchPendingFriends,
+  loadMorePendingFriends,
+  refreshPendingFriends
+} from "../actions/users";
 
 import { connectAlert } from "../components/Alert";
 
@@ -50,9 +49,10 @@ class FriendsList extends Component {
     navigation: PropTypes.object,
     alertWithType: PropTypes.func,
     friendsError: PropTypes.string,
-    isLoading: PropTypes.bool,
+    isLoadingFriends: PropTypes.bool,
+    isLoadingGroupMembers: PropTypes.bool,
+    isLoadingPendingFriends: PropTypes.bool,
     friends: PropTypes.array,
-    isLoading: PropTypes.bool,
     refreshing: PropTypes.bool,
     moreFriendsAvailable: PropTypes.bool,
     moreGroupMembersAvailable: PropTypes.bool,
@@ -64,7 +64,7 @@ class FriendsList extends Component {
   }
 
   componentWillMount() {
-    this.fetchUsersData();
+    this.fetchAllData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -103,21 +103,22 @@ class FriendsList extends Component {
     return result;
   }
 
-  fetchUsersData = () => {
+  fetchAllData = () => {
     this.props.dispatch(fetchFriends());
     this.props.dispatch(fetchGroupMembers());
     this.props.dispatch(fetchPendingFriends());
   };
 
   refreshFriends = () => {
+    console.log("refreshFriends triggered");
     this.props.dispatch(refreshFriends());
-    this.props.dispatch(refreshPendingFriends());
   };
 
   loadMoreFriends = () => {
+    console.log("loadMoreFriends triggered");
     if (
-      this.props.refreshing === false &&
-      this.props.moreFriendsAvailable === true
+      this.props.moreFriendsAvailable === true &&
+      this.props.isLoadingFriends === false
     ) {
       this.props.dispatch(loadMoreFriends());
     }
@@ -129,15 +130,48 @@ class FriendsList extends Component {
 
   loadMoreGroupMembers = () => {
     if (
-      this.props.refreshing === false &&
+      this.props.isLoadingGroupMembers === false &&
       this.props.moreGroupMembersAvailable === true
     ) {
       this.props.dispatch(loadMoreGroupMembers());
     }
   };
 
+  refreshPendingFriends = () => {
+    this.props.dispatch(refreshPendingFriends());
+  };
+
+  loadMorePendingFriends = () => {
+    if (
+      this.props.isLoadingPendingFriends === false &&
+      this.props.morePendingFriendsAvailable === true
+    ) {
+      this.props.dispatch(loadMorePendingFriends());
+    }
+  };
+
   renderFooter = () => {
     if (!this.props.moreFriendsAvailable) {
+      return (
+        <View style={styles.alertView}>
+          <MaterialCommunityIcons
+            name="dots-horizontal"
+            size={24}
+            color={colors.mediumGrey}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{ paddingVertical: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+  };
+
+  renderPendingFriendsFooter = () => {
+    if (!this.props.morePendingFriendsAvailable) {
       return (
         <View style={styles.alertView}>
           <MaterialCommunityIcons
@@ -177,13 +211,13 @@ class FriendsList extends Component {
   };
 
   render() {
-    if (this.props.isLoading) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
+    // if (this.props.isLoading) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <ActivityIndicator />
+    //     </View>
+    //   );
+    // }
     return (
       <View style={styles.container}>
         <TouchableWithoutFeedback
@@ -222,7 +256,7 @@ class FriendsList extends Component {
               keyExtractor={(item, index) => index}
               extraData={this.props}
               ListFooterComponent={this.renderFooter}
-              refreshing={this.props.isLoading}
+              refreshing={this.props.isLoadingFriends}
               onRefresh={this.refreshFriends}
               onEndReached={this.loadMoreFriends}
               onEndReachedThreshold={0}
@@ -237,7 +271,7 @@ class FriendsList extends Component {
               keyExtractor={(item, index) => index}
               extraData={this.props}
               ListFooterComponent={this.renderGroupFooter}
-              refreshing={this.props.isLoading}
+              refreshing={this.props.isLoadingGroupMembers}
               onRefresh={this.refreshGroupMembers}
               onEndReached={this.loadMoreGroupMembers}
               onEndReachedThreshold={0}
@@ -251,10 +285,10 @@ class FriendsList extends Component {
               )}
               keyExtractor={(item, index) => index}
               extraData={this.props}
-              ListFooterComponent={this.renderFooter}
-              refreshing={this.props.isLoading}
-              onRefresh={this.refreshFriends}
-              onEndReached={this.loadMoreFriends}
+              ListFooterComponent={this.renderPendingFriendsFooter}
+              refreshing={this.props.isLoadingPendingFriends}
+              onRefresh={this.refreshPendingFriends}
+              onEndReached={this.loadMorePendingFriends}
               onEndReachedThreshold={0}
             />
           </View>
@@ -300,19 +334,25 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   const refreshing = state.users.refreshing;
+
   const friends = state.users.friends;
   const moreFriendsAvailable = state.users.moreFriendsAvailable;
+  const isLoadingFriends = state.users.isLoadingFriends;
 
   const groupMembers = state.users.groupMembers;
   const moreGroupMembersAvailable = state.users.moreGroupMembersAvailable;
+  const isLoadingGroupMembers = state.users.isLoadingGroupMembers;
 
   const pendingFriends = state.users.pendingFriends;
   const morePendingFriendsAvailable = state.users.morePendingFriendsAvailable;
+  const isLoadingPendingFriends = state.users.isLoadingPendingFriends;
 
-  const isLoading = state.users.isLoading;
   const user = state.authentication.user;
 
   return {
+    isLoadingFriends,
+    isLoadingGroupMembers,
+    isLoadingPendingFriends,
     refreshing,
     friends,
     moreFriendsAvailable,
@@ -320,7 +360,6 @@ const mapStateToProps = state => {
     morePendingFriendsAvailable,
     groupMembers,
     moreGroupMembersAvailable,
-    isLoading,
     friendsError: state.users.error,
     user
   };
