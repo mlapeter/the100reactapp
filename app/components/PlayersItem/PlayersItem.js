@@ -1,5 +1,5 @@
 import React from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Image,
   View,
@@ -51,6 +51,9 @@ export default function PlayersItem(props) {
                 color={colors.mediumGrey}
               />
               {props.user.karmas_count}
+            </Text>
+            <Text style={styles.iconText}>
+              {props.reserve === true ? " RESERVE " : null}
             </Text>
           </View>
         </View>

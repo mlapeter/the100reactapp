@@ -86,7 +86,7 @@ export default function GamingSessionItem(props) {
               name="gauge"
               size={14}
               color={colors.mediumGrey}
-            />
+            />{" "}
             {props.data.light_level === null ? " any" : props.data.light_level}
           </Text>
         </View>

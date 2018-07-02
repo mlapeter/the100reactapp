@@ -15,6 +15,8 @@ import {
 
 import ChatPreview from "../components/ChatPreview";
 
+import Panel from "../components/Panel/Panel";
+
 import PlayersList from "../components/PlayersList/PlayersList";
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -160,11 +162,17 @@ class GamingSession extends React.Component {
             />
           </View>
         </View>
-        <Text style={styles.description} numberOfLines={2}>
+        {this.props.gamingSession.name != null ? (
+          <Panel
+            text={this.props.gamingSession.name.toString()}
+            numberOfLines={3}
+          />
+        ) : null}
+        {/* <Text style={styles.description} numberOfLines={2}>
           {this.props.gamingSession.name != null
             ? this.props.gamingSession.name.toString()
             : ""}
-        </Text>
+        </Text> */}
         <View style={styles.iconBar}>
           <TimeIcon startTime={this.props.gamingSession.start_time} />
           <PlatformIcon platform={this.props.gamingSession.platform} />

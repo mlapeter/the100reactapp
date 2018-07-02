@@ -15,6 +15,7 @@ export default function PlayersList(props) {
         <PlayersItem
           user={confirmedSession.user}
           key={confirmedSession.id}
+          reserve={confirmedSession.reserve_spot}
           navigation={props.navigation}
         />
       ))}

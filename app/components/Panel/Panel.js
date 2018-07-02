@@ -55,7 +55,7 @@ export default class Panel extends Component {
     return (
       <View
         style={{
-          marginVertical: 5,
+          margin: 5,
           overflow: "hidden"
         }}
       >
