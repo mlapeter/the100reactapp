@@ -7,6 +7,7 @@ import {
   Image,
   KeyboardAvoidingView,
   ListView,
+  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -183,24 +184,26 @@ class GamingSession extends React.Component {
           <PowerIcon lightLevel={this.props.gamingSession.light_level} />
           <SherpaIcon sherpaLed={this.props.gamingSession.sherpa_led} />
         </View>
-        <Text style={styles.sectionHeader}>Players:</Text>
-        <PlayersList
-          confirmedSessions={this.props.gamingSession.confirmed_sessions}
-          navigation={this.props.navigation}
-        />
-        <Text style={styles.sectionHeader}>Chat:</Text>
-        <ChatPreview
-          room={room}
-          url={url}
-          allowAnon={true}
-          onOpenChat={() =>
-            this.props.navigation.navigate("GamingSessionChat", {
-              title: "Gaming Session Chat",
-              room: room,
-              url: url,
-              allowAnon: true
-            })}
-        />
+        <ScrollView>
+          <Text style={styles.sectionHeader}>Players:</Text>
+          <PlayersList
+            confirmedSessions={this.props.gamingSession.confirmed_sessions}
+            navigation={this.props.navigation}
+          />
+          <Text style={styles.sectionHeader}>Chat:</Text>
+          <ChatPreview
+            room={room}
+            url={url}
+            allowAnon={true}
+            onOpenChat={() =>
+              this.props.navigation.navigate("GamingSessionChat", {
+                title: "Gaming Session Chat",
+                room: room,
+                url: url,
+                allowAnon: true
+              })}
+          />
+        </ScrollView>
       </View>
     );
   }

@@ -54,25 +54,27 @@ class Notifications extends PureComponent {
   };
 
   render() {
-    if (this.props.isLoading) {
+    // if (this.props.isLoading) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <ActivityIndicator />
+    //     </View>
+    //   );
+    // } else {
+    if (this.props.items.length < 1) {
       return (
         <View style={styles.container}>
-          <ActivityIndicator />
+          <TouchableOpacity
+            style={styles.buttonWrapper}
+            onPress={this.fetchNotificationsData}
+          >
+            <Text style={styles.buttonText}>
+              No Notifications yet! Tap to refresh.
+            </Text>
+          </TouchableOpacity>
         </View>
       );
-    } else {
-      if (this.props.items.length < 1) {
-        return (
-          <View style={styles.container}>
-            <TouchableOpacity
-              style={styles.buttonWrapper}
-              onPress={this.fetchNotificationsData}
-            >
-              <Text style={styles.buttonText}>Get Notifications</Text>
-            </TouchableOpacity>
-          </View>
-        );
-      }
+      // }
     }
     return (
       <View style={styles.container}>

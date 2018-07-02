@@ -15,7 +15,10 @@ export default class NotificationsItem extends PureComponent {
                 userId: this.props.item.avatar_user_id
               })
             : this.props.navigation.navigate("GamingSession", {
-                gamingSessionId: this.props.item.notification_object_id
+                gamingSessionId: this.props.item.target_url_app.replace(
+                  /\D/g,
+                  ""
+                )
               })}
         underlayColor="white"
       >

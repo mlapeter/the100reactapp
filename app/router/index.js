@@ -115,11 +115,29 @@ const FriendsStack = StackNavigator({
   }
 });
 
+const NotificationsStack = StackNavigator({
+  NotificationsList: { screen: NotificationsList },
+  GamingSession: {
+    screen: GamingSession,
+    navigationOptions: ({ navigation }) => ({
+      // title: "the game",
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
+      drawerIcon: () => (
+        <MaterialCommunityIcons
+          name="account-settings-variant"
+          size={24}
+          // style={{ color: colors.grey }}
+        />
+      )
+    })
+  }
+});
+
 const HomeTabs = TabNavigator(
   {
     Games: { screen: GamingSessionsStack },
     Group: { screen: GroupStack },
-    NotificationsList: { screen: NotificationsList },
+    NotificationsList: { screen: NotificationsStack },
     FriendsList: { screen: FriendsStack }
   },
   {
@@ -210,6 +228,7 @@ Group.navigationOptions = {
 
 NotificationsList.navigationOptions = {
   tabBarLabel: "Notifications",
+  header: false,
   tabBarIcon: ({ tintColor, focused }) => (
     <MaterialIcons
       name={focused ? "notifications" : "notifications"}
