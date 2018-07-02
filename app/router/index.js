@@ -122,11 +122,12 @@ const NotificationsStack = StackNavigator({
     navigationOptions: ({ navigation }) => ({
       // title: "the game",
       headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
-      drawerIcon: () => (
-        <MaterialCommunityIcons
-          name="account-settings-variant"
-          size={24}
-          // style={{ color: colors.grey }}
+      tabBarLabel: "Notifications",
+      tabBarIcon: ({ tintColor, focused }) => (
+        <MaterialIcons
+          name={focused ? "notifications" : "notifications"}
+          size={26}
+          style={{ color: tintColor }}
         />
       )
     })
@@ -263,12 +264,12 @@ User.navigationOptions = {
 };
 
 GamingSession.navigationOptions = {
-  tabBarLabel: "Games",
+  // tabBarLabel: "Notifications",
   // headerRight: <Button title="Join Game" />,
   // headerTitle: navigation.state.params.title,
   tabBarIcon: ({ tintColor, focused }) => (
-    <MaterialCommunityIcons
-      name={focused ? "account" : "account"}
+    <Ionicons
+      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
       size={26}
       style={{ color: tintColor }}
     />
