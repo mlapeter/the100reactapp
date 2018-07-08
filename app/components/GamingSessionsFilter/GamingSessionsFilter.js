@@ -78,7 +78,7 @@ class GamingSessionsFilter extends Component {
       <View style={{ paddingTop: 0 }}>
         <Modal
           animationType={"slide"}
-          transparent={true}
+          // transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => {
             alert("Modal has been closed using android back button.");
@@ -166,7 +166,14 @@ class GamingSessionsFilter extends Component {
                   />
                 ))}
               </Picker>
+
               <View style={styles.modalButtonStyle}>
+                <Button
+                  onPress={() => {
+                    this.setModalVisible(!this.state.modalVisible);
+                  }}
+                  title="Cancel"
+                />
                 <Button
                   onPress={() => {
                     this.setModalVisible(!this.state.modalVisible);
@@ -213,7 +220,11 @@ const styles = StyleSheet.create({
   // }
   modalButtonStyle: {
     padding: 20,
-    margin: 20
+    marginTop: 10,
+    marginBottom: 30,
+    justifyContent: "center",
+    alignItems: "stretch",
+    flexDirection: "row"
   }
 });
 

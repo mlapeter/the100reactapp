@@ -308,9 +308,9 @@ class GamingSessionsList extends React.PureComponent {
           }}
         >
           <Tabs>
-            <View title="PUBLIC GAMES" style={styles.content}>
+            <View title="MY GAMES" style={styles.content}>
               <FlatList
-                data={this.props.data}
+                data={this.props.myGamingSessions}
                 renderItem={({ item }) => (
                   <GamingSessionsItem
                     data={item}
@@ -318,16 +318,13 @@ class GamingSessionsList extends React.PureComponent {
                   />
                 )}
                 ListHeaderComponent={this.renderEmpty}
-                ListFooterComponent={this.renderFooter}
-                // ListEmptyComponent={this.renderEmpty}
+                ListFooterComponent={this.renderMyFooter}
                 extraData={this.props}
-                // Getting errors using game id
-                keyExtractor={item => item.id}
                 keyExtractor={(item, index) => index}
-                refreshing={this.props.gamingSessionsRefreshing}
-                onRefresh={this.refreshGames}
-                onEndReached={this.loadMoreGamingSessions}
-                onEndReachedThreshold={0.8}
+                refreshing={this.props.myGamingSessionsRefreshing}
+                onRefresh={this.refreshMyGames}
+                onEndReached={this.loadMoreMyGamingSessions}
+                onEndReachedThreshold={0}
               />
             </View>
             <View title="GROUP GAMES" style={styles.content}>
@@ -352,9 +349,9 @@ class GamingSessionsList extends React.PureComponent {
                 onEndReachedThreshold={0}
               />
             </View>
-            <View title="MY GAMES" style={styles.content}>
+            <View title="PUBLIC GAMES" style={styles.content}>
               <FlatList
-                data={this.props.myGamingSessions}
+                data={this.props.data}
                 renderItem={({ item }) => (
                   <GamingSessionsItem
                     data={item}
@@ -362,13 +359,16 @@ class GamingSessionsList extends React.PureComponent {
                   />
                 )}
                 ListHeaderComponent={this.renderEmpty}
-                ListFooterComponent={this.renderMyFooter}
+                ListFooterComponent={this.renderFooter}
+                // ListEmptyComponent={this.renderEmpty}
                 extraData={this.props}
+                // Getting errors using game id
+                keyExtractor={item => item.id}
                 keyExtractor={(item, index) => index}
-                refreshing={this.props.myGamingSessionsRefreshing}
-                onRefresh={this.refreshMyGames}
-                onEndReached={this.loadMoreMyGamingSessions}
-                onEndReachedThreshold={0}
+                refreshing={this.props.gamingSessionsRefreshing}
+                onRefresh={this.refreshGames}
+                onEndReached={this.loadMoreGamingSessions}
+                onEndReachedThreshold={0.8}
               />
             </View>
           </Tabs>
@@ -381,7 +381,7 @@ class GamingSessionsList extends React.PureComponent {
 const styles = StyleSheet.create({
   container: {
     padding: 5,
-    paddingTop: 25,
+    // paddingTop: 25,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",

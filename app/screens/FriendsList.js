@@ -231,7 +231,7 @@ class FriendsList extends Component {
             searchText={this.state.searchText}
             user={this.props.user}
             navigation={this.props.navigation}
-            style={{ flex: 1 }}
+            // style={{ flex: 1 }}
           />
         </TouchableWithoutFeedback>
 
@@ -304,14 +304,22 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 5,
-    paddingTop: 30,
-    margin: 3,
+    // paddingTop: 25,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
-    backgroundColor: colors.white,
-    flex: 1
+    backgroundColor: colors.white
   },
+  // container: {
+  //   padding: 5,
+  //   paddingTop: 30,
+  //   margin: 3,
+  //   flex: 1,
+  //   flexDirection: "column",
+  //   justifyContent: "center",
+  //   backgroundColor: colors.white,
+  //   flex: 1
+  // },
   loading: {
     alignItems: "center",
     justifyContent: "center",

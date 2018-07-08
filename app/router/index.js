@@ -287,7 +287,8 @@ const rootNavigator = StackNavigator(
     headerMode: "none",
     cardStyle: {
       // See https://github.com/react-community/react-navigation/issues/1478#issuecomment-301220017
-      paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight
+      paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+      shadowColor: "transparent"
     }
   }
 );

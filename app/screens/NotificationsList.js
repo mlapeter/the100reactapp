@@ -102,14 +102,22 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
-    paddingTop: 35,
     padding: 5,
-    margin: 3,
+    // paddingTop: 25,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: colors.white
   },
+  // container: {
+  //   paddingTop: 35,
+  //   padding: 5,
+  //   margin: 3,
+  //   flex: 1,
+  //   flexDirection: "column",
+  //   justifyContent: "center",
+  //   backgroundColor: colors.white
+  // },
   loading: {
     alignItems: "center",
     justifyContent: "center",

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { SafeAreaView } from "react-native";
 // import EStylesheet from "react-native-extended-stylesheet";
 // import MainPage from "./screens/MainPage";
 import { AlertProvider } from "./components/Alert";
@@ -12,7 +13,9 @@ export default function App(props) {
   return (
     <Provider store={store}>
       <AlertProvider>
-        <Navigator onNavigationStateChange={null} />
+        <SafeAreaView style={{ flex: 1 }}>
+          <Navigator onNavigationStateChange={null} />
+        </SafeAreaView>
       </AlertProvider>
     </Provider>
   );
