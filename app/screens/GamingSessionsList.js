@@ -376,7 +376,7 @@ class GamingSessionsList extends React.PureComponent {
               />
             </View>
             <View title="GROUP GAMES" style={styles.content}>
-              <FlatList
+              <SectionList
                 // data={this.props.groupGamingSessions}
                 renderItem={({ item }) => (
                   <GamingSessionsItem
