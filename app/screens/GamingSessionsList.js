@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   Keyboard,
+  SectionList,
   StyleSheet,
   Text,
   TextInput,
@@ -13,6 +14,8 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
+import moment from "moment";
+
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
@@ -184,12 +187,76 @@ class GamingSessionsList extends React.PureComponent {
     }
   };
 
+  gamesOnDate = date => {
+    // this.uniqueDates(this.props.data);
+    let games = this.props.data.filter(function(gamingSession) {
+      return (
+        moment(gamingSession.start_time)
+          .startOf("day")
+          .format("MM-DD-YYYY") === date
+      );
+    });
+    return games;
+  };
+
+  uniqueDates = array => {
+    let allDates = array.map(function(item) {
+      return moment(item["start_time"])
+        .startOf("day")
+        .format("MM-DD-YYYY");
+    });
+    // return uniqueDates;
+    // console.log("All dates: ");
+    // console.log(allDates);
+
+    return allDates.reduce(function(result, number) {
+      if (!result.includes(number)) {
+        result.push(number);
+      }
+      console.log("unique dates: ");
+      console.log(result);
+      return result;
+    }, []);
+  };
+
+  gamesArray = () => {
+    let array = this.uniqueDates(this.props.data);
+    console.log(array);
+    let games = array.map(date => ({
+      title: date,
+      data: this.gamesOnDate(date)
+    }));
+
+    // let games = [
+    //   {
+    //     title: moment()
+    //       .startOf("day")
+    //       .format("MM-DD-YYYY"),
+    //     data: this.gamesOnDate(
+    //       moment()
+    //         .startOf("day")
+    //         .format("MM-DD-YYYY")
+    //     )
+    //   },
+    //   {
+    //     title: moment()
+    //       .add(1, "days")
+    //       .startOf("day")
+    //       .format("MM-DD-YYYY"),
+    //     data: this.gamesOnDate(
+    //       moment()
+    //         .add(1, "days")
+    //         .startOf("day")
+    //         .format("MM-DD-YYYY")
+    //     )
+    //   },
+    //   { title: "Friday", data: this.props.data }
+    // ];
+    return games;
+  };
+
   renderFooter = () => {
     if (!this.props.moreGamingSessionsAvailable) {
-      // console.log(
-      //   "In Footer moreGamingSessionsAvailable: " +
-      //     this.props.moreGamingSessionsAvailable
-      // );
       return (
         <View style={styles.alertView}>
           <MaterialCommunityIcons
@@ -308,6 +375,64 @@ class GamingSessionsList extends React.PureComponent {
           }}
         >
           <Tabs>
+            <View title="PUBLIC GAMES" style={styles.content}>
+              <SectionList
+                data={this.props.data}
+                renderItem={({ item }) => (
+                  <GamingSessionsItem
+                    data={item}
+                    navigation={this.props.navigation}
+                  />
+                )}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                  </View>
+                )}
+                sections={this.gamesArray()}
+                // sections={[
+                //   // homogeneous rendering between sections
+                //   {
+                //     title: moment()
+                //       .startOf("day")
+                //       .format("MM-DD-YYYY"),
+                //     data: this.gamesOnDate(
+                //       moment()
+                //         .startOf("day")
+                //         .format("MM-DD-YYYY")
+                //     )
+                //   },
+                //   {
+                //     title: moment()
+                //       .add(1, "days")
+                //       .startOf("day")
+                //       .format("MM-DD-YYYY"),
+                //     data: this.gamesOnDate(
+                //       moment()
+                //         .add(1, "days")
+                //         .startOf("day")
+                //         .format("MM-DD-YYYY")
+                //     )
+                //   },
+                //   { title: "Friday", data: this.props.data }
+                //
+                //   // ,
+                //   // { data: this.props.data[3..6] },
+                //   // { data: this.props.data[6..9] }
+                // ]}
+                ListHeaderComponent={this.renderEmpty}
+                ListFooterComponent={this.renderFooter}
+                // ListEmptyComponent={this.renderEmpty}
+                extraData={this.props}
+                // Getting errors using game id
+                // keyExtractor={item => item.id}
+                keyExtractor={(item, index) => index}
+                refreshing={this.props.gamingSessionsRefreshing}
+                onRefresh={this.refreshGames}
+                onEndReached={this.loadMoreGamingSessions}
+                onEndReachedThreshold={0.8}
+              />
+            </View>
             <View title="MY GAMES" style={styles.content}>
               <FlatList
                 data={this.props.myGamingSessions}
@@ -347,28 +472,6 @@ class GamingSessionsList extends React.PureComponent {
                 onRefresh={this.refreshGroupGames}
                 onEndReached={this.loadMoreGroupGamingSessions}
                 onEndReachedThreshold={0}
-              />
-            </View>
-            <View title="PUBLIC GAMES" style={styles.content}>
-              <FlatList
-                data={this.props.data}
-                renderItem={({ item }) => (
-                  <GamingSessionsItem
-                    data={item}
-                    navigation={this.props.navigation}
-                  />
-                )}
-                ListHeaderComponent={this.renderEmpty}
-                ListFooterComponent={this.renderFooter}
-                // ListEmptyComponent={this.renderEmpty}
-                extraData={this.props}
-                // Getting errors using game id
-                keyExtractor={item => item.id}
-                keyExtractor={(item, index) => index}
-                refreshing={this.props.gamingSessionsRefreshing}
-                onRefresh={this.refreshGames}
-                onEndReached={this.loadMoreGamingSessions}
-                onEndReachedThreshold={0.8}
               />
             </View>
           </Tabs>
