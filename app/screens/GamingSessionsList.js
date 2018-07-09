@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   Keyboard,
+  SectionList,
   StyleSheet,
   Text,
   TextInput,
@@ -13,6 +14,8 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
+import moment from "moment";
+
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
@@ -184,12 +187,46 @@ class GamingSessionsList extends React.PureComponent {
     }
   };
 
+  gamesOnDate = (data, date) => {
+    // this.uniqueDates(this.props.data);
+    let games = data.filter(function(gamingSession) {
+      return (
+        moment(gamingSession.start_time)
+          .startOf("day")
+          .format("dddd MM-DD-YYYY") === date
+      );
+    });
+    return games;
+  };
+
+  uniqueDates = array => {
+    let allDates = array.map(function(item) {
+      return moment(item["start_time"])
+        .startOf("day")
+        .format("dddd MM-DD-YYYY");
+    });
+
+    return allDates.reduce(function(result, number) {
+      if (!result.includes(number)) {
+        result.push(number);
+      }
+      console.log("unique dates: ");
+      console.log(result);
+      return result;
+    }, []);
+  };
+
+  gamesArray = data => {
+    let array = this.uniqueDates(data);
+    let games = array.map(date => ({
+      title: date,
+      data: this.gamesOnDate(data, date)
+    }));
+    return games;
+  };
+
   renderFooter = () => {
     if (!this.props.moreGamingSessionsAvailable) {
-      // console.log(
-      //   "In Footer moreGamingSessionsAvailable: " +
-      //     this.props.moreGamingSessionsAvailable
-      // );
       return (
         <View style={styles.alertView}>
           <MaterialCommunityIcons
@@ -309,14 +346,25 @@ class GamingSessionsList extends React.PureComponent {
         >
           <Tabs>
             <View title="MY GAMES" style={styles.content}>
-              <FlatList
-                data={this.props.myGamingSessions}
+              <SectionList
+                // data={this.props.myGamingSessions}
                 renderItem={({ item }) => (
                   <GamingSessionsItem
                     data={item}
                     navigation={this.props.navigation}
                   />
                 )}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View
+                    style={{
+                      padding: 5,
+                      backgroundColor: "white"
+                    }}
+                  >
+                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                  </View>
+                )}
+                sections={this.gamesArray(this.props.myGamingSessions)}
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderMyFooter}
                 extraData={this.props}
@@ -329,19 +377,23 @@ class GamingSessionsList extends React.PureComponent {
             </View>
             <View title="GROUP GAMES" style={styles.content}>
               <FlatList
-                data={this.props.groupGamingSessions}
+                // data={this.props.groupGamingSessions}
                 renderItem={({ item }) => (
                   <GamingSessionsItem
                     data={item}
                     navigation={this.props.navigation}
                   />
                 )}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                  </View>
+                )}
+                sections={this.gamesArray(this.props.groupGamingSessions)}
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderGroupFooter}
                 ListEmptyComponent={this.renderEmpty}
                 extraData={this.props}
-                // Getting errors using game id
-                // keyExtractor={item => item.id}
                 keyExtractor={(item, index) => index}
                 refreshing={this.props.groupGamingSessionsRefreshing}
                 onRefresh={this.refreshGroupGames}
@@ -350,20 +402,25 @@ class GamingSessionsList extends React.PureComponent {
               />
             </View>
             <View title="PUBLIC GAMES" style={styles.content}>
-              <FlatList
-                data={this.props.data}
+              <SectionList
                 renderItem={({ item }) => (
                   <GamingSessionsItem
                     data={item}
                     navigation={this.props.navigation}
                   />
                 )}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                  </View>
+                )}
+                sections={this.gamesArray(this.props.data)}
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderFooter}
                 // ListEmptyComponent={this.renderEmpty}
                 extraData={this.props}
                 // Getting errors using game id
-                keyExtractor={item => item.id}
+                // keyExtractor={item => item.id}
                 keyExtractor={(item, index) => index}
                 refreshing={this.props.gamingSessionsRefreshing}
                 onRefresh={this.refreshGames}
