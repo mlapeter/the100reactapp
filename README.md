@@ -1,9 +1,9 @@
-This is the official repo for the mobile app for [The100.io](https://www.the100.io/). Code contributions welcome! (Find details about contributing here)[https://github.com/mlapeter/the100reactapp/blob/master/CONTRIBUTING.md]
+This is the official repo for the mobile app for [The100.io](https://www.the100.io/). Code contributions welcome! [Details on contributing here](https://github.com/mlapeter/the100reactapp/blob/master/CONTRIBUTING.md/).
 
-
-This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
 
 We're using [Yarn](https://yarnpkg.com/en/) instead of npm. We're also using [Expo](https://expo.io/). You can install the expo CLI and other tools [here](https://expo.io/tools), then you should be able to run `yarn install` and then `exp start` to start the app locally.
+
+This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
 
 Below you'll find information about performing common tasks. The most recent version of this guide is available [here](https://github.com/react-community/create-react-native-app/blob/master/react-native-scripts/template/README.md).
 
