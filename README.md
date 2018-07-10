@@ -1,4 +1,4 @@
-This is the official repo for the mobile app for [The100.io](https://www.the100.io/). Code contributions welcome! (Find details about contributing here.)[https://github.com/mlapeter/the100reactapp/blob/master/CONTRIBUTING.md]
+This is the official repo for the mobile app for [The100.io](https://www.the100.io/). Code contributions welcome! (Find details about contributing here)[https://github.com/mlapeter/the100reactapp/blob/master/CONTRIBUTING.md]
 
 
 This project was bootstrapped with [Create React Native App](https://github.com/react-community/create-react-native-app).
