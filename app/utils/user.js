@@ -13,10 +13,8 @@ export async function firebaseSignIn(token, allowAnon = false, authedUser) {
   // if (currentUser && (!currentUser.isAnonymous || (allowAnon && !token))) {
 
   if (currentUser) {
-    console.log("currentUser: ", currentUser);
     uid = currentUser.uid;
     anon = currentUser.isAnonymous;
-    console.log("currentUser");
   } else if (token) {
     let authUser = await firebase.auth().signInWithCustomToken(token);
     uid = authUser.uid;
@@ -53,12 +51,10 @@ export async function firebaseSignIn(token, allowAnon = false, authedUser) {
       anon: true
     };
   } else {
-    console.log("uid: ", uid);
     let userData = (await firebase
       .database()
       .ref("/users/" + uid)
       .once("value")).val();
-    console.log("userData: ", userData);
     userData.uid = uid;
     userData.anon = false;
     return userData;
@@ -84,7 +80,6 @@ export function getUserChatPermission(user, roomName, anonPermission = "") {
     return "RWE";
   }
   let room = user.groups[roomName];
-  console.log("Room: ", room);
   if (room) {
     return room.permission;
   } else if (user.anon) {

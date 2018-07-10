@@ -19,6 +19,7 @@ import {
 } from "react-native";
 import PreSplash from "../components/PreSplash/PreSplash";
 import ChatPreview from "../components/ChatPreview";
+import Environment from "../config/environment";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -104,17 +105,23 @@ class Group extends React.Component {
       isLoading: true
     });
     AsyncStorage.getItem("id_token").then(token => {
-      fetch("https://pwntastic.herokuapp.com/api/v2/groups/" + action, {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
-        },
-        body: JSON.stringify({
-          // group_id: this.props.group.id
-        })
-      })
+      fetch(
+        Environment["API_BASE_URL"] +
+          Environment["API_VERSION"] +
+          "groups/" +
+          action,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          },
+          body: JSON.stringify({
+            // group_id: this.props.group.id
+          })
+        }
+      )
         .then(response => response.json())
         .then(responseJson => {
           console.log("ACTION POSTED");

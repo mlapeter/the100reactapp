@@ -1,3 +1,5 @@
+import Environment from "../config/environment";
+
 import {
   CHANGE_ACTIVITY,
   CHANGE_GAME,
@@ -16,7 +18,7 @@ import {
 
 const initialState = {
   activity: "",
-  gameId: 23,
+  gameId: Environment["DEFAULT_GAME_ID"],
   games: [],
   game: {},
   activities: [],

@@ -1,3 +1,5 @@
+import Environment from "../config/environment";
+
 import {
   CREATE_GAMING_SESSION,
   CREATE_GAMING_SESSION_RESULT,
@@ -33,7 +35,10 @@ import {
 } from "../actions/gamingSessions";
 
 const initialState = {
-  endpoint: "https://pwntastic.herokuapp.com/api/v2/gaming_sessions",
+  endpoint:
+    Environment["API_BASE_URL"] +
+    Environment["API_VERSION"] +
+    "gaming_sessions",
   refreshing: false,
   isCreating: false,
   gameCreated: false,

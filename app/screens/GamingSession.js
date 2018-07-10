@@ -13,11 +13,9 @@ import {
   TextInput,
   View
 } from "react-native";
-
+import Environment from "../config/environment";
 import ChatPreview from "../components/ChatPreview";
-
 import Panel from "../components/Panel/Panel";
-
 import PlayersList from "../components/PlayersList/PlayersList";
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -60,12 +58,10 @@ class GamingSession extends React.Component {
   }
 
   joinGame = () => {
-    console.log("JOIN CLICKED");
     this.postData("/join");
   };
 
   leaveGame = () => {
-    console.log("LEAVE CLICKED");
     this.postData("/leave");
 
     setTimeout(() => {
@@ -84,7 +80,9 @@ class GamingSession extends React.Component {
     });
     AsyncStorage.getItem("id_token").then(token => {
       fetch(
-        "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
+        Environment["API_BASE_URL"] +
+          Environment["API_VERSION"] +
+          "gaming_sessions/" +
           gamingSessionId +
           action,
         {

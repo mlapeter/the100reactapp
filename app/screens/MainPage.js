@@ -33,7 +33,6 @@ class MainPage extends Component {
       Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
     }).then(result => {
       AsyncStorage.getItem("id_token").then(token => {
-        console.log("id_token: ", token);
         this.props.dispatch(decodeToken(token));
         if (this.props.authentication.isAuthed === true) {
           this.props.navigation.navigate("Main");
@@ -41,8 +40,6 @@ class MainPage extends Component {
         this.setState({ isLoaded: true });
       });
       AsyncStorage.getItem("fb_token").then(token => {
-        console.log("getting fb_token: ", token);
-
         this.props.dispatch(setFirebaseToken(token));
       });
     });

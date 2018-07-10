@@ -2,6 +2,8 @@ import jwtDecode from "../../node_modules/jwt-decode";
 import { AsyncStorage } from "react-native";
 import { Font } from "expo";
 import { takeEvery, takeLatest, select, call, put } from "redux-saga/effects";
+import Environment from "../config/environment";
+
 import {
   FETCH_TOKEN,
   FETCH_TOKEN_RESULT,
@@ -120,7 +122,7 @@ function* fetchToken() {
     let username = yield select(state => state.authentication.username);
     let password = yield select(state => state.authentication.password);
     const response = yield fetch(
-      "https://pwntastic.herokuapp.com/api/v2/sessions/",
+      Environment["API_BASE_URL"] + Environment["API_VERSION"] + "sessions/",
       {
         method: "POST",
         headers: {
@@ -143,7 +145,6 @@ function* fetchToken() {
       token = result.token;
       firebaseToken = result.firebase_token;
       AsyncStorage.setItem("id_token", token);
-      console.log("storing fb_token in saga: ", firebaseToken);
       AsyncStorage.setItem("fb_token", firebaseToken);
 
       yield put({ type: FETCH_TOKEN_RESULT, token, firebaseToken });
@@ -183,8 +184,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
       headers: { Authorization: "Bearer " + token }
     });
     const result = yield response.json();
-    console.log("FETCHING DATA -----");
-    // console.log(result);
+    console.log("FETCHING ENDPOINT: ", endpoint);
     if (result.error) {
       console.log(result);
       // console.log("REMOVING TOKEN");
@@ -214,7 +214,10 @@ function* updateUser() {
     let user = yield select(state => state.users.user);
 
     const response = yield fetch(
-      "https://pwntastic.herokuapp.com/api/v2/users/" + userId,
+      Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "users/" +
+        userId,
       {
         method: "PUT",
         headers: {
@@ -264,7 +267,9 @@ function* createGamingSession() {
     let platform = yield select(state => state.search.platform);
 
     const response = yield fetch(
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/",
+      Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "gaming_sessions/",
       {
         method: "POST",
         headers: {
@@ -313,11 +318,15 @@ function* editGamingSession() {
     );
     let platform = yield select(state => state.search.platform);
     console.log(
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
+      Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "gaming_sessions/" +
         gamingSessionId
     );
     const response = yield fetch(
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
+      Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "gaming_sessions/" +
         gamingSessionId,
       {
         method: "PATCH",
@@ -360,7 +369,9 @@ function* fetchNotifications() {
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/notifications?";
     yield call(
@@ -378,7 +389,8 @@ function* fetchNotifications() {
 
 function* fetchGames() {
   try {
-    let endpoint = "https://pwntastic.herokuapp.com/api/v2/games?";
+    let endpoint =
+      Environment["API_BASE_URL"] + Environment["API_VERSION"] + "games?";
     yield call(fetchData, endpoint, 1, FETCH_GAMES_RESULT, FETCH_GAMES_ERROR);
     yield call(fetchActivities);
   } catch (e) {
@@ -404,7 +416,11 @@ function* fetchActivities() {
 function* fetchCurrentUser() {
   try {
     let userId = yield select(state => state.authentication.user.user_id);
-    let endpoint = "https://pwntastic.herokuapp.com/api/v2/users/" + userId;
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId;
     yield call(fetchData, endpoint, 1, FETCH_USER_RESULT, FETCH_USER_ERROR);
   } catch (e) {
     yield put({ type: FETCH_USER_ERROR, error: e.message });
@@ -415,7 +431,11 @@ function* fetchUser() {
   console.log("FETCHING USER");
   try {
     let userId = yield select(state => state.users.userId);
-    let endpoint = "https://pwntastic.herokuapp.com/api/v2/users/" + userId;
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId;
     yield call(
       fetchData,
       endpoint,
@@ -437,7 +457,11 @@ function* fetchFriends() {
     // let current_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" + userId + "/friends?";
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId +
+      "/friends?";
     yield call(
       fetchData,
       endpoint,
@@ -459,7 +483,11 @@ function* loadMoreFriends() {
     let new_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" + userId + "/friends?";
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId +
+      "/friends?";
     yield call(
       fetchData,
       endpoint,
@@ -473,27 +501,6 @@ function* loadMoreFriends() {
   }
 }
 
-// function* refreshFriends() {
-//   try {
-//     let userId = yield select(state => state.authentication.user.user_id);
-//     yield put({ type: CHANGE_FRIENDS_PAGE, page: 1 });
-//     let new_page = yield select(state => state.users.friendsPage);
-//
-//     let endpoint =
-//       "https://pwntastic.herokuapp.com/api/v2/users/" + userId + "/friends?";
-//     yield call(
-//       fetchData,
-//       endpoint,
-//       new_page,
-//       FETCH_FRIENDS_RESULT,
-//       FETCH_FRIENDS_ERROR,
-//       FETCH_FRIENDS_NO_DATA
-//     );
-//   } catch (e) {
-//     yield put({ type: FETCH_FRIENDS_ERROR, error: e.message });
-//   }
-// }
-
 function* fetchPendingFriends() {
   try {
     yield put({ type: CHANGE_PENDING_FRIENDS_PAGE, page: 1 });
@@ -502,7 +509,9 @@ function* fetchPendingFriends() {
     // let current_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/pending_friends?";
     yield call(
@@ -526,7 +535,9 @@ function* loadMorePendingFriends() {
     let new_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/pending_friends?";
     yield call(
@@ -548,7 +559,9 @@ function* fetchGroupMembers() {
     let current_page = yield select(state => state.users.groupMembersPage);
 
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/group_members?";
 
@@ -573,7 +586,9 @@ function* loadMoreGroupMembers() {
     let new_page = yield select(state => state.users.groupMembersPage);
 
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/group_members?";
     yield call(
@@ -595,7 +610,9 @@ function* refreshGroupMembers() {
     yield put({ type: CHANGE_GROUP_MEMBERS_PAGE, page: 1 });
     let new_page = yield select(state => state.users.groupMembersPage);
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/group_members?";
     yield call(
@@ -620,14 +637,19 @@ function* fetchGroup() {
     let endpoint = "";
     if (selectedGroupId == null && user.memberships[0]) {
       endpoint =
-        "https://pwntastic.herokuapp.com/api/v2/groups/" +
+        Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "groups/" +
         user.memberships[0]["group_id"];
       yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
     } else if (selectedGroupId == null) {
       yield put({ type: FETCH_GROUP_EMPTY });
     } else {
       endpoint =
-        "https://pwntastic.herokuapp.com/api/v2/groups/" + selectedGroupId;
+        Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "groups/" +
+        selectedGroupId;
       yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
     }
   } catch (e) {
@@ -642,7 +664,9 @@ function* fetchGamingSession() {
     );
 
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "gaming_sessions/" +
       gamingSessionId;
     yield call(
       fetchData,
@@ -705,7 +729,9 @@ function* fetchMyGamingSessions() {
     let userId = yield select(state => state.authentication.user.user_id);
     let current_page = yield select(state => state.search.myGamingSessionsPage);
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/gaming_sessions?";
 
@@ -729,7 +755,9 @@ function* loadMoreMyGamingSessions() {
     yield put({ type: CHANGE_MY_GAMING_SESSIONS_PAGE, page: current_page + 1 });
     let new_page = yield select(state => state.search.myGamingSessionsPage);
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/gaming_sessions?";
 
@@ -755,7 +783,9 @@ function* fetchGroupGamingSessions() {
       state => state.search.groupGamingSessionsPage
     );
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/group_gaming_sessions?";
     yield call(
@@ -783,7 +813,9 @@ function* loadMoreGroupGamingSessions() {
     });
     let new_page = yield select(state => state.search.groupGamingSessionsPage);
     let endpoint =
-      "https://pwntastic.herokuapp.com/api/v2/users/" +
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
       userId +
       "/group_gaming_sessions?";
 
@@ -803,7 +835,7 @@ function* setCredential() {
   try {
     let userInfo = yield select(state => state.onboarding);
     const response = yield fetch(
-      "https://pwntastic.herokuapp.com/api/v2/users/",
+      Environment["API_BASE_URL"] + Environment["API_VERSION"] + "users/",
       {
         method: "POST",
         headers: {
@@ -851,7 +883,9 @@ function* fetchConversations() {
     let token = yield select(state => state.authentication.token);
 
     let response = yield fetch(
-      "https://pwntastic.herokuapp.com/api/v2/conversations/",
+      Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "conversations/",
       {
         method: "GET",
         headers: { Authorization: "Bearer " + token }

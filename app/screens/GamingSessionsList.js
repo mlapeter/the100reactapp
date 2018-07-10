@@ -15,7 +15,7 @@ import {
   View
 } from "react-native";
 import moment from "moment";
-
+import Environment from "../config/environment";
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
@@ -115,7 +115,9 @@ class GamingSessionsList extends React.PureComponent {
 
   searchUrl() {
     return encodeURI(
-      "https://pwntastic.herokuapp.com/api/v2/gaming_sessions" +
+      Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "gaming_sessions" +
         // this.props.gamingSessionsPage +
         "?q[game_id_eq]=" +
         this.props.gameId +
@@ -210,8 +212,6 @@ class GamingSessionsList extends React.PureComponent {
       if (!result.includes(number)) {
         result.push(number);
       }
-      console.log("unique dates: ");
-      console.log(result);
       return result;
     }, []);
   };

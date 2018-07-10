@@ -21,6 +21,7 @@ import {
 import PreSplash from "../components/PreSplash/PreSplash";
 import ChatPreview from "../components/ChatPreview";
 import Panel from "../components/Panel/Panel";
+import Environment from "../config/environment";
 
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -160,13 +161,20 @@ export class User extends React.Component {
     //   isLoading: true
     // });
     AsyncStorage.getItem("id_token").then(token => {
-      fetch("https://pwntastic.herokuapp.com/api/v2/users/" + userId + action, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token
+      fetch(
+        Environment["API_BASE_URL"] +
+          Environment["API_VERSION"] +
+          "users/" +
+          userId +
+          action,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          }
         }
-      })
+      )
         .then(response => response.json())
         .then(responseJson => {
           this.fetchUserData();

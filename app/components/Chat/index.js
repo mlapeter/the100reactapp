@@ -163,8 +163,6 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    console.log("signing in to firebase with token:", this.props.firebaseToken);
-    console.log("authedUser: ", this.props.authedUser);
     firebaseSignIn(
       this.props.firebaseToken,
       this.props.allowAnon,
@@ -179,12 +177,6 @@ class Chat extends Component {
           permission: getUserChatPermission(user, this.props.room, "RW"),
           avatarUrl: user.avatar
         });
-        console.log("Signed Into Firebase: ", user.uid);
-        console.log(user);
-        console.log(
-          "getUserChatPermission: ",
-          getUserChatPermission(user, this.props.room, "RW")
-        );
         this.retrieveMessages();
       })
       .catch(error => {
@@ -352,9 +344,6 @@ class Chat extends Component {
     let createAllowed =
       this.props.room.startsWith("game-") ||
       this.state.permission.includes("W");
-
-    console.log("createAllowed: ", createAllowed);
-    console.log("Permissions: ", this.state.permission);
 
     return (
       <View
