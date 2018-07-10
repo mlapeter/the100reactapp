@@ -37,4 +37,4 @@ Thanks! :100: :100: :100:
 
 The100.io Team
 
-* Contributing guidelines adapted from [Ruby on Rails contributing guidelines](https://github.com/rails/rails), thanks Rails Team!*
+_Contributing guidelines adapted from [Ruby on Rails contributing guidelines](https://github.com/rails/rails), thanks Rails Team!_
