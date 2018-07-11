@@ -46,9 +46,9 @@ export default class GamingSessionForm extends React.Component {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
 
-  handleSubmit = () => {
-    var value = this.refs.form.getValue();
-  };
+  // handleSubmit = () => {
+  //   var value = this.refs.form.getValue();
+  // };
 
   render() {
     var Platform = t.enums({
@@ -88,6 +88,7 @@ export default class GamingSessionForm extends React.Component {
     });
 
     if (this.state.formData) {
+      console.log("form data found");
       // If form partially filled out and user clicks advanced options
       var value = {
         activity: this.state.formData.activity,
@@ -123,9 +124,11 @@ export default class GamingSessionForm extends React.Component {
         platform: this.props.gamingSession.platform
       };
     } else {
+      console.log("new game form");
       // If user is creating new game
       var value = {
         platform: this.props.user.platform,
+        start_time: new Date(),
         mic_required: true,
         created_by: "mobile-app"
       };
