@@ -93,6 +93,7 @@ class Login extends React.Component {
             onChangeText={username => this.setState({ username })}
             placeholder="Username"
             ref="username"
+            textContentType="username"
             returnKeyType="next"
             style={styles.input}
             value={this.state.username}
@@ -103,6 +104,7 @@ class Login extends React.Component {
             onChangeText={password => this.setState({ password })}
             placeholder="Password"
             ref="password"
+            textContentType="password"
             secureTextEntry={true}
             style={styles.input}
             value={this.state.password}
