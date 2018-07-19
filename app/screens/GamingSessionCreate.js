@@ -16,14 +16,18 @@ class GamingSessionCreate extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (
-      nextProps.gamingSessionError &&
-      nextProps.gamingSessionError !== this.props.gamingSessionError
+      nextProps.gamingSessions.error &&
+      nextProps.gamingSessions.errorAt !== this.props.gamingSessions.errorAt
     ) {
-      this.props.alertWithType("error", "Error", nextProps.gamingSessionError);
+      this.props.alertWithType(
+        "error",
+        "Error",
+        nextProps.gamingSessions.error
+      );
     }
     if (
-      nextProps.gameCreated &&
-      nextProps.gameCreated !== this.props.gameCreated
+      nextProps.gamingSessions.gameCreated &&
+      nextProps.gamingSessions.successAt !== this.props.gamingSessions.successAt
     ) {
       this.props.navigation.navigate("GamingSessionsList");
       this.props.alertWithType("success", "Success", "Gaming Session Created!");
@@ -65,6 +69,7 @@ const mapStateToProps = state => {
   const groups = state.users.user.groups_for_api;
   const user = state.users.user;
   const isCreating = state.gamingSessions.isCreating;
+  const gamingSessions = state.gamingSessions;
 
   return {
     gameId,
@@ -74,8 +79,9 @@ const mapStateToProps = state => {
     groups,
     user,
     isCreating,
-    gameCreated: state.gamingSessions.gameCreated,
-    gamingSessionError: state.gamingSessions.error
+    gamingSessions
+    // gameCreated: state.gamingSessions.gameCreated,
+    // gamingSessionError: state.gamingSessions.error
   };
 };
 

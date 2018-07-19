@@ -265,6 +265,7 @@ function* createGamingSession() {
       state => state.gamingSessions.gamingSession
     );
     let platform = yield select(state => state.search.platform);
+    let gameId = yield select(state => state.search.gameId);
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +
@@ -278,9 +279,10 @@ function* createGamingSession() {
           Authorization: "Bearer " + token
         },
         body: JSON.stringify({
+          game_id: gameId,
+          platform: platform,
           description: gamingSession.description,
           activity: gamingSession.activity,
-          platform: platform,
           start_time: gamingSession.start_time,
           group_name: gamingSession.group,
           friends_only: gamingSession.friends_only,
@@ -294,6 +296,7 @@ function* createGamingSession() {
         })
       }
     );
+    console.log(response);
     const result = yield response.json();
     if (result.error) {
       yield put({ type: CREATE_GAMING_SESSION_ERROR, error: result.error });

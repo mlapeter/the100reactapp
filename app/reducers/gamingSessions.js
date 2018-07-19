@@ -79,6 +79,7 @@ export default (state = initialState, action) => {
         ...state,
         isCreating: false,
         gameCreated: true,
+        successAt: new Date(),
         gamingSession: action.result
       };
     case CREATE_GAMING_SESSION_ERROR:
@@ -86,7 +87,8 @@ export default (state = initialState, action) => {
         ...state,
         isCreating: false,
         gameCreated: false,
-        error: action.error
+        error: action.error,
+        errorAt: new Date()
       };
     case EDIT_GAMING_SESSION:
       return {
@@ -100,6 +102,7 @@ export default (state = initialState, action) => {
         ...state,
         isEditing: false,
         gameEdited: true,
+        successAt: new Date(),
         gamingSession: action.result
       };
     case EDIT_GAMING_SESSION_ERROR:
@@ -107,7 +110,8 @@ export default (state = initialState, action) => {
         ...state,
         isEditing: false,
         gameEdited: false,
-        error: action.error
+        error: action.error,
+        errorAt: new Date()
       };
     case FETCH_GAMING_SESSION:
       return {
@@ -125,6 +129,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorAt: new Date(),
         gamingSessionLoading: true
       };
     case FETCH_GAMING_SESSIONS:
