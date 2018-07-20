@@ -30,7 +30,6 @@ import {
 
 const initialState = {
   isUpdating: false,
-  userUpdated: false,
   userLoading: false,
   user: {},
   friends: [],
@@ -59,15 +58,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isUpdating: false,
-        userUpdated: true,
+        success: true,
+        successAt: new Date(),
         user: action.result
       };
     case UPDATE_USER_ERROR:
       return {
         ...state,
         isUpdating: false,
-        userUpdated: false,
-        error: action.error
+        error: action.error,
+        errorAt: new Date()
       };
     case FETCH_USER:
       return {
@@ -85,6 +85,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorAt: new Date(),
         userLoading: false
       };
     case FETCH_FRIENDS:

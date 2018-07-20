@@ -136,11 +136,13 @@ class GamingSession extends React.Component {
     return (
       <View style={styles.container}>
         <View style={styles.titleBar}>
-          <Text style={styles.title}>
-            {this.props.gamingSession.category != null
-              ? this.props.gamingSession.category.toString()
-              : ""}
-          </Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>
+              {this.props.gamingSession.category != null
+                ? this.props.gamingSession.category.toString()
+                : ""}
+            </Text>
+          </View>
           <View style={styles.buttonsContainer}>
             {this.props.user.user_id === this.props.gamingSession.creator_id ? (
               <Button
@@ -331,7 +333,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 5,
-    paddingTop: 30,
+    paddingTop: 10,
     flex: 1,
     flexDirection: "column",
     justifyContent: "flex-start",
@@ -380,7 +382,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 8,
     fontWeight: "bold"
   },
+  titleContainer: {
+    flex: 4,
+    justifyContent: "center"
+  },
   buttonsContainer: {
+    flex: 1,
     flexDirection: "column",
     justifyContent: "space-between"
   }

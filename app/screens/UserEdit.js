@@ -53,12 +53,15 @@ class UserEdit extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.userError && nextProps.userError !== this.props.userError) {
-      this.props.alertWithType("error", "Error", nextProps.userError);
+    if (
+      nextProps.users.error &&
+      nextProps.users.errorAt !== this.props.users.errorAt
+    ) {
+      this.props.alertWithType("error", "Error", nextProps.users.error);
     }
     if (
-      nextProps.userUpdated &&
-      nextProps.userUpdated !== this.props.userUpdated
+      nextProps.users.success &&
+      nextProps.users.successAt !== this.props.users.successAt
     ) {
       this.props.alertWithType("success", "Success", "Profile Updated");
       this.props.navigation.navigate("Home");
@@ -118,13 +121,35 @@ class UserEdit extends React.Component {
       "Weekdays Latenight and Weekends": "Weekdays Latenight and Weekends"
     });
 
+    var Gender = t.enums({
+      Male: "Male",
+      Female: "Female",
+      Other: "Other"
+    });
+
+    let profanityOk = this.props.user.profanity_ok === "yes";
+    console.log(this.props.user);
+
     var User = t.struct({
       gamertag: t.String,
       platform: Platform,
-      play_style: PlayStyle,
+      xbox_live_id: t.maybe(t.String),
+      psn_id: t.maybe(t.String),
+      xbox_windows_id: t.maybe(t.String),
+      steam_id: t.maybe(t.String),
+      battle_net_id: t.maybe(t.String),
+      uplay_id: t.maybe(t.String),
+      description: t.maybe(t.String),
+      light_level: t.maybe(t.Number),
+      headset: t.Boolean,
       play_schedule: PlaySchedule,
-      light_level: t.Number,
+      play_style: PlayStyle,
+      profanity_ok: t.Boolean,
+      gender: Gender,
       age: t.Number,
+      hide_sherpa_badge: t.Boolean,
+      discord_linked: t.Boolean,
+      charlemagne_linked: t.Boolean,
       push_new_group_game: t.Boolean,
       push_new_friend_game: t.Boolean,
       push_player_joined_left: t.Boolean,
@@ -140,10 +165,23 @@ class UserEdit extends React.Component {
     var value = {
       gamertag: this.props.user.gamertag,
       platform: this.props.user.platform,
-      play_style: this.props.user.play_style,
-      play_schedule: this.props.user.play_schedule,
+      xbox_live_id: this.props.user.xbox_live_id,
+      psn_id: this.props.user.psn_id,
+      xbox_windows_id: this.props.user.xbox_windows_id,
+      steam_id: this.props.user.steam_id,
+      battle_net_id: this.props.user.battle_net_id,
+      uplay_id: this.props.user.uplay_id,
+      description: this.props.user.description,
       light_level: this.props.user.light_level,
+      headset: this.props.user.headset,
+      play_schedule: this.props.user.play_schedule,
+      play_style: this.props.user.play_style,
+      profanity_ok: profanityOk,
+      gender: this.props.user.gender,
       age: this.props.user.age,
+      hide_sherpa_badge: this.props.user.hide_sherpa_badge,
+      discord_linked: this.props.user.discord_linked,
+      charlemagne_linked: this.props.user.charlemagne_linked,
       no_emails: this.props.user.no_emails,
       no_push_notifications: this.props.user.no_push_notifications,
       push_new_group_game: this.props.user.push_new_group_game,
@@ -159,6 +197,28 @@ class UserEdit extends React.Component {
 
     var options = {
       fields: {
+        description: {
+          type: "textarea",
+          multiline: true,
+          stylesheet: {
+            ...Form.stylesheet,
+            textbox: {
+              ...Form.stylesheet.textbox,
+              normal: {
+                ...Form.stylesheet.textbox.normal,
+                height: 150,
+                textAlignVertical: "top"
+              },
+              error: {
+                ...Form.stylesheet.textbox.error,
+                height: 150
+              }
+            }
+          }
+        },
+        light_level: {
+          label: "Guardian Power Level"
+        },
         no_emails: {
           label: "Turn off ALL emails"
         },
@@ -194,6 +254,11 @@ class UserEdit extends React.Component {
                 <Button onPress={() => this.userLogout()} title="Log Out" />
               </View>
               <Form ref="form" type={User} options={options} value={value} />
+              <View style={styles.emailNoteContainer}>
+                <Text style={styles.emailNoteText}>
+                  note: email can only be changed on the website.
+                </Text>
+              </View>
               <TouchableHighlight
                 style={styles.button}
                 onPress={() => this.handlePress()}
@@ -263,12 +328,21 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
     padding: 10
+  },
+  emailNoteContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 5
+  },
+  emailNoteText: {
+    color: colors.lightGrey
   }
 });
 
 const mapStateToProps = state => {
   const authedUser = state.authentication.user;
   const user = state.users.user;
+  const users = state.users;
   const isUpdating = state.users.isUpdating;
   const userLoading = state.users.userLoading;
 
@@ -277,10 +351,11 @@ const mapStateToProps = state => {
   return {
     authedUser,
     user,
+    users,
     isUpdating,
-    userLoading,
-    userError: state.users.error,
-    userUpdated: state.users.userUpdated
+    userLoading
+    // userError: state.users.error,
+    // userUpdated: state.users.userUpdated
   };
 };
 
