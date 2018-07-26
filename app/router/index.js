@@ -12,9 +12,9 @@ import {
 } from "react-native";
 import hoistNonReactStatics from "hoist-non-react-statics";
 import {
-  TabNavigator,
-  StackNavigator,
-  DrawerNavigator
+  createStackNavigator,
+  createBottomTabNavigator,
+  createDrawerNavigator
 } from "react-navigation";
 
 import OnboardingFlowStack from "./onboarding-flow";
@@ -45,91 +45,34 @@ import Chatroom from "../screens/Chatroom";
 
 // StackNavigators for each bottom tab
 
-const GamingSessionsStack = StackNavigator({
+const GamingSessionsStack = createStackNavigator({
   GamingSessionsList: { screen: GamingSessionsList },
   GamingSession: { screen: GamingSession },
-  Player: {
-    screen: User,
-    navigationOptions: {
-      tabBarLabel: "Games",
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Ionicons
-          name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      )
-    }
-  },
-  GamingSessionChat: {
-    screen: Chatroom,
-    navigationOptions: {
-      tabBarLabel: "Games",
-      tabBarIcon: ({ tintColor, focused }) => (
-        <Ionicons
-          name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      )
-    }
-  },
+  Player: { screen: User },
+  GamingSessionChat: { screen: Chatroom },
   GamingSessionCreate: { screen: GamingSessionCreate },
   GamingSessionEdit: { screen: GamingSessionEdit }
 });
 
-const GroupStack = StackNavigator({
-  Group: {
-    screen: Group
-  },
-  GroupChat: {
-    screen: Chatroom,
-    navigationOptions: {
-      tabBarLabel: "Group",
-      tabBarIcon: ({ tintColor, focused }) => (
-        <MaterialCommunityIcons
-          name={focused ? "account-multiple" : "account-multiple"}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      )
-    }
-  }
+const GroupStack = createStackNavigator({
+  Group: { screen: Group },
+  GroupChat: { screen: Chatroom }
 });
 
-const NotificationsStack = StackNavigator({
+const NotificationsStack = createStackNavigator({
   NotificationsList: { screen: NotificationsList },
-  GamingSession: {
-    screen: GamingSession,
-    navigationOptions: ({ navigation }) => ({
-      // title: "the game",
-      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
-      tabBarLabel: "Notifications",
-      tabBarIcon: ({ tintColor, focused }) => (
-        <MaterialIcons
-          name={focused ? "notifications" : "notifications"}
-          size={26}
-          style={{ color: tintColor }}
-        />
-      )
-    })
-  }
+  GamingSession: { screen: GamingSession }
 });
 
-const FriendsStack = StackNavigator({
+const FriendsStack = createStackNavigator({
   FriendsList: { screen: FriendsList },
   Friend: { screen: User },
-  Conversation: {
-    screen: Chatroom,
-    navigationOptions: {
-      tabBarLabel: "User"
-    }
-  }
+  Conversation: { screen: Chatroom }
 });
 
 // TabNavigator for bottom tab bar
 
-const HomeTabs = TabNavigator(
+const HomeTabs = createBottomTabNavigator(
   {
     Games: { screen: GamingSessionsStack },
     Group: { screen: GroupStack },
@@ -143,59 +86,57 @@ const HomeTabs = TabNavigator(
 
 // StackNavigators for each drawer menu item
 
-const UserEditStack = StackNavigator({
+const UserEditStack = createStackNavigator({
   UserEdit: {
     screen: UserEdit,
     navigationOptions: ({ navigation }) => ({
       title: "Edit Profile",
-      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
-      drawerIcon: () => (
-        <MaterialCommunityIcons
-          name="account-settings-variant"
-          size={24}
-          // style={{ color: colors.grey }}
+      headerLeft: (
+        <HeaderBackButton
+          onPress={() => navigation.navigate("GamingSessionsStack")}
         />
       )
     })
   }
 });
 
-const HelpChatStack = StackNavigator({
+const HelpChatStack = createStackNavigator({
   HelpChat: {
     screen: HelpChat,
     navigationOptions: ({ navigation }) => ({
       title: "Help Chat",
-      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />,
-      drawerIcon: () => (
-        <MaterialCommunityIcons
-          name="help-circle"
-          size={24}
-          // style={{ color: colors.grey }}
-        />
-      )
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} />
     })
   }
 });
 
 // DrawerNavigator for side menu
 
-const MenuDrawer = DrawerNavigator(
+const MenuDrawer = createDrawerNavigator(
   {
     Home: {
       screen: HomeTabs,
       navigationOptions: ({ navigation }) => ({
         title: "Back",
+        drawerIcon: () => <MaterialCommunityIcons name="home" size={24} />
+      })
+    },
+    "Edit Profile": {
+      screen: UserEditStack,
+      navigationOptions: ({ navigation }) => ({
         drawerIcon: () => (
-          <MaterialCommunityIcons
-            name="home"
-            size={24}
-            // style={{ color: colors.grey }}
-          />
+          <MaterialCommunityIcons name="account-settings-variant" size={24} />
         )
       })
     },
-    "Edit Profile": { screen: UserEditStack },
-    "Help Chat": { screen: HelpChatStack }
+    "Help Chat": {
+      screen: HelpChatStack,
+      navigationOptions: ({ navigation }) => ({
+        drawerIcon: () => (
+          <MaterialCommunityIcons name="help-circle" size={24} />
+        )
+      })
+    }
   },
   {
     contentComponent: props => (
@@ -218,28 +159,18 @@ const MenuDrawer = DrawerNavigator(
 // navigationOptions
 
 GamingSessionCreate.navigationOptions = {
-  headerTitle: "New Gaming Session",
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Ionicons
-      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
-      size={26}
-      style={{ color: tintColor }}
-    />
-  )
+  headerTitle: "New Gaming Session"
 };
 
 GamingSessionEdit.navigationOptions = {
-  headerTitle: "Edit Gaming Session",
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Ionicons
-      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
-      size={26}
-      style={{ color: tintColor }}
-    />
-  )
+  headerTitle: "Edit Gaming Session"
 };
 
-GamingSessionsList.navigationOptions = {
+// HomeTabs.navigationOptions = {
+//   header: false
+// };
+
+GamingSessionsStack.navigationOptions = {
   tabBarLabel: "Games",
   header: false,
   tabBarIcon: ({ tintColor, focused }) => (
@@ -251,7 +182,7 @@ GamingSessionsList.navigationOptions = {
   )
 };
 
-Group.navigationOptions = {
+GroupStack.navigationOptions = {
   header: null,
   tabBarLabel: "Group",
   tabBarIcon: ({ tintColor, focused }) => (
@@ -263,7 +194,7 @@ Group.navigationOptions = {
   )
 };
 
-NotificationsList.navigationOptions = {
+NotificationsStack.navigationOptions = {
   tabBarLabel: "Notifications",
   header: false,
   tabBarIcon: ({ tintColor, focused }) => (
@@ -275,7 +206,7 @@ NotificationsList.navigationOptions = {
   )
 };
 
-FriendsList.navigationOptions = {
+FriendsStack.navigationOptions = {
   tabBarLabel: "Friends",
   header: false,
   tabBarIcon: ({ tintColor, focused }) => (
@@ -299,20 +230,7 @@ User.navigationOptions = {
   )
 };
 
-GamingSession.navigationOptions = {
-  // tabBarLabel: "Notifications",
-  // headerRight: <Button title="Join Game" />,
-  // headerTitle: navigation.state.params.title,
-  tabBarIcon: ({ tintColor, focused }) => (
-    <Ionicons
-      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
-      size={26}
-      style={{ color: tintColor }}
-    />
-  )
-};
-
-const rootNavigator = StackNavigator(
+const rootNavigator = createStackNavigator(
   {
     MainPage: { screen: MainPage },
     Login: { screen: Login },

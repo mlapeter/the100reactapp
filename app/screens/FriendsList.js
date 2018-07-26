@@ -40,10 +40,6 @@ class FriendsList extends Component {
     searchText: "",
     searchResults: []
   };
-  static navigationOptions = {
-    header: null,
-    title: "test"
-  };
 
   static propTypes = {
     navigation: PropTypes.object,
@@ -59,9 +55,14 @@ class FriendsList extends Component {
     friends: PropTypes.array,
     groupMembers: PropTypes.array
   };
+
   constructor(props) {
     super(props);
   }
+
+  static navigationOptions = {
+    header: null
+  };
 
   componentWillMount() {
     this.fetchAllData();

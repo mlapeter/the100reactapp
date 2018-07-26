@@ -56,7 +56,7 @@ export default class TopNav extends Component {
         {this.props.user ? (
           <View style={styles.menu}>
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("DrawerOpen")}
+              onPress={() => this.props.navigation.openDrawer()}
             >
               <Image
                 style={styles.avatarMini}
