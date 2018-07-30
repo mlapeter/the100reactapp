@@ -62,6 +62,9 @@ class Login extends React.Component {
     ) {
       this.props.alertWithType("error", "Error", nextProps.authenticationError);
     }
+    if (nextProps.authentication.isAuthed) {
+      this.props.navigation.navigate("App");
+    }
   }
 
   userLogin() {
@@ -71,11 +74,6 @@ class Login extends React.Component {
       username: "",
       password: ""
     });
-    setTimeout(() => {
-      if (this.props.authentication.isAuthed) {
-        this.props.navigation.navigate("App");
-      }
-    }, 2000);
   }
 
   render() {

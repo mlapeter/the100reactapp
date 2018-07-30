@@ -21,7 +21,7 @@ import {
 import AuthLoading from "../screens/AuthLoading";
 import OnboardingFlowStack from "./onboarding-flow";
 import Login from "../screens/Login";
-import MainPage from "../screens/MainPage";
+import AuthMainPage from "../screens/AuthMainPage";
 
 import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
@@ -45,7 +45,9 @@ import { HeaderBackButton, DrawerItems } from "react-navigation";
 import { connect } from "react-redux";
 import Chatroom from "../screens/Chatroom";
 
-// StackNavigators for each bottom tab
+// For navigation, start with rootNavigator around line 170
+
+// StackNavigators for BottomTabNavigator items
 
 const GamingSessionsStack = createStackNavigator({
   GamingSessionsList: { screen: GamingSessionsList },
@@ -72,7 +74,7 @@ const FriendsStack = createStackNavigator({
   Conversation: { screen: Chatroom }
 });
 
-// TabNavigator for bottom tab bar
+// BottomTabNavigator for bottom tab bar
 
 const HomeTabs = createBottomTabNavigator(
   {
@@ -86,7 +88,7 @@ const HomeTabs = createBottomTabNavigator(
   }
 );
 
-// StackNavigators for each drawer menu item
+// StackNavigators for DrawerNavigator items
 
 const UserEditStack = createStackNavigator({
   UserEdit: {
@@ -158,7 +160,28 @@ const MenuDrawer = createDrawerNavigator(
   }
 );
 
-// navigationOptions
+// Login/ New User stack if not already logged in
+
+const AuthStack = createStackNavigator({
+  AuthMainPage: AuthMainPage,
+  Login: Login,
+  Onboarding: { screen: OnboardingFlowStack }
+});
+
+// SwitchNavigator to initially load app and redirect to app or auth stack if no login found
+
+const rootNavigator = createSwitchNavigator(
+  {
+    AuthLoading: AuthLoading,
+    App: MenuDrawer,
+    Auth: AuthStack
+  },
+  {
+    initialRouteName: "AuthLoading"
+  }
+);
+
+// Screen Specific navigationOptions
 
 GamingSessionCreate.navigationOptions = {
   headerTitle: "New Gaming Session"
@@ -180,6 +203,20 @@ NotificationsList.navigationOptions = {
   header: null
 };
 
+FriendsList.navigationOptions = {
+  header: null
+};
+
+AuthMainPage.navigationOptions = {
+  header: null
+};
+
+OnboardingFlowStack.navigationOptions = {
+  header: null
+};
+
+// Stack Navigation Options
+
 GamingSessionsStack.navigationOptions = {
   tabBarLabel: "Games",
   tabBarIcon: ({ tintColor, focused }) => (
@@ -192,7 +229,6 @@ GamingSessionsStack.navigationOptions = {
 };
 
 GroupStack.navigationOptions = {
-  header: null,
   tabBarLabel: "Group",
   tabBarIcon: ({ tintColor, focused }) => (
     <MaterialCommunityIcons
@@ -216,7 +252,6 @@ NotificationsStack.navigationOptions = {
 
 FriendsStack.navigationOptions = {
   tabBarLabel: "Friends",
-  header: null,
   tabBarIcon: ({ tintColor, focused }) => (
     <MaterialCommunityIcons
       name={focused ? "account-star" : "account-star"}
@@ -224,10 +259,6 @@ FriendsStack.navigationOptions = {
       style={{ color: tintColor }}
     />
   )
-};
-
-FriendsList.navigationOptions = {
-  header: null
 };
 
 User.navigationOptions = {
@@ -240,48 +271,6 @@ User.navigationOptions = {
       style={{ color: tintColor }}
     />
   )
-};
-
-// const rootNavigator = createStackNavigator(
-//   {
-//     MainPage: { screen: MainPage },
-//     Login: { screen: Login },
-//     Main: { screen: MenuDrawer },
-//     Onboarding: { screen: OnboardingFlowStack }
-//   },
-//   {
-//     headerMode: "none",
-//     cardStyle: {
-//       // See https://github.com/react-community/react-navigation/issues/1478#issuecomment-301220017
-//       paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
-//       shadowColor: "transparent"
-//     }
-//   }
-// );
-
-const AuthStack = createStackNavigator({
-  MainPage: MainPage,
-  Login: Login,
-  Onboarding: { screen: OnboardingFlowStack }
-});
-
-const rootNavigator = createSwitchNavigator(
-  {
-    AuthLoading: AuthLoading,
-    App: MenuDrawer,
-    Auth: AuthStack
-  },
-  {
-    initialRouteName: "AuthLoading"
-  }
-);
-
-MainPage.navigationOptions = {
-  header: null
-};
-
-OnboardingFlowStack.navigationOptions = {
-  header: null
 };
 
 const styles = StyleSheet.create({
@@ -303,7 +292,6 @@ const styles = StyleSheet.create({
   menuText: {
     fontWeight: "bold",
     marginLeft: 6
-    // textAlign: "center"
   }
 });
 

@@ -1,8 +1,8 @@
 export const SET_PLATFORM = "SET_PLATFORM";
 export const SET_GAMERTAG = "SET_GAMERTAG";
 export const SET_PROFILE_INFO = "SET_PROFILE_INFO";
-export const SET_CREDENTIAL = "SET_CREDENTIAL";
-export const SET_USERINFO_ERROR = "SET_USERINFO_ERROR";
+export const CREATE_USER = "CREATE_USER";
+export const CREATE_USER_ERROR = "CREATE_USER_ERROR";
 
 export const setPlatform = platform => ({
   type: SET_PLATFORM,
@@ -26,8 +26,15 @@ export const setProfileInfo = (
   playSchedule,
   group
 });
-export const setCredential = (email, password, notificationFlag) => ({
-  type: SET_CREDENTIAL,
+export const createUser = (
   email,
-  password
+  password,
+  sendNotification,
+  tos_privacy_agreement
+) => ({
+  type: CREATE_USER,
+  email,
+  password,
+  sendNotification,
+  tos_privacy_agreement
 });
