@@ -5,7 +5,7 @@ import { createStackNavigator } from "react-navigation";
 import ChoosePlatform from "../screens/onboarding/ChoosePlatform";
 import CreateGamer from "../screens/onboarding/CreateGamer";
 import GamerProfile from "../screens/onboarding/GamerProfile";
-import CreateCredential from "../screens/onboarding/CreatCredential";
+import CreateCredential from "../screens/onboarding/CreateCredential";
 
 import { colors } from "../styles";
 

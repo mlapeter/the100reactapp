@@ -60,9 +60,9 @@ class FriendsList extends Component {
     super(props);
   }
 
-  static navigationOptions = {
-    header: null
-  };
+  // static navigationOptions = {
+  //   header: null
+  // };
 
   componentWillMount() {
     this.fetchAllData();

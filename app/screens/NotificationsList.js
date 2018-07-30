@@ -33,9 +33,9 @@ class Notifications extends PureComponent {
     super(props);
   }
 
-  static navigationOptions = {
-    header: null
-  };
+  // static navigationOptions = {
+  //   header: null
+  // };
 
   componentWillMount() {
     this.fetchNotificationsData();

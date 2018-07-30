@@ -69,9 +69,9 @@ class GamingSessionsList extends React.PureComponent {
     this.updateFilter = this.updateFilter.bind(this);
   }
 
-  static navigationOptions = {
-    header: null
-  };
+  // static navigationOptions = {
+  //   header: null
+  // };
 
   componentDidMount() {
     this.props.dispatch(fetchUser(this.props.authedUser.user_id));

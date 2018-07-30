@@ -27,23 +27,23 @@ class MainPage extends Component {
     };
   }
 
-  componentWillMount() {
-    Font.loadAsync({
-      Lato: require("../../app/assets/fonts/Lato-Bold.ttf"),
-      Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
-    }).then(result => {
-      AsyncStorage.getItem("id_token").then(token => {
-        this.props.dispatch(decodeToken(token));
-        if (this.props.authentication.isAuthed === true) {
-          this.props.navigation.navigate("Main");
-        }
-        this.setState({ isLoaded: true });
-      });
-      AsyncStorage.getItem("fb_token").then(token => {
-        this.props.dispatch(setFirebaseToken(token));
-      });
-    });
-  }
+  // componentWillMount() {
+  //   Font.loadAsync({
+  //     Lato: require("../../app/assets/fonts/Lato-Bold.ttf"),
+  //     Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
+  //   }).then(result => {
+  //     AsyncStorage.getItem("id_token").then(token => {
+  //       this.props.dispatch(decodeToken(token));
+  //       if (this.props.authentication.isAuthed === true) {
+  //         this.props.navigation.navigate("Main");
+  //       }
+  //       this.setState({ isLoaded: true });
+  //     });
+  //     AsyncStorage.getItem("fb_token").then(token => {
+  //       this.props.dispatch(setFirebaseToken(token));
+  //     });
+  //   });
+  // }
 
   render() {
     if (!this.state.isLoaded || this.props.authentication.isLoading) {

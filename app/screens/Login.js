@@ -71,12 +71,14 @@ class Login extends React.Component {
       username: "",
       password: ""
     });
+    setTimeout(() => {
+      if (this.props.authentication.isAuthed) {
+        this.props.navigation.navigate("App");
+      }
+    }, 2000);
   }
 
   render() {
-    if (this.props.authentication.isAuthed) {
-      return <MenuDrawer />;
-    }
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
@@ -184,7 +186,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   const authentication = state.authentication;
-  // const onAuthChange = state.authentication.onAuthChange(token);
 
   return {
     authentication,

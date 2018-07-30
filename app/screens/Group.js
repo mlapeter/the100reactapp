@@ -52,9 +52,9 @@ class Group extends React.Component {
     };
   }
 
-  static navigationOptions = {
-    header: null
-  };
+  // static navigationOptions = {
+  //   header: null
+  // };
 
   componentWillMount() {
     this.fetchGroupData();

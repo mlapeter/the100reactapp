@@ -14,9 +14,11 @@ import hoistNonReactStatics from "hoist-non-react-statics";
 import {
   createStackNavigator,
   createBottomTabNavigator,
-  createDrawerNavigator
+  createDrawerNavigator,
+  createSwitchNavigator
 } from "react-navigation";
 
+import AuthLoading from "../screens/AuthLoading";
 import OnboardingFlowStack from "./onboarding-flow";
 import Login from "../screens/Login";
 import MainPage from "../screens/MainPage";
@@ -166,13 +168,20 @@ GamingSessionEdit.navigationOptions = {
   headerTitle: "Edit Gaming Session"
 };
 
-// HomeTabs.navigationOptions = {
-//   header: false
-// };
+GamingSessionsList.navigationOptions = {
+  header: null
+};
+
+Group.navigationOptions = {
+  header: null
+};
+
+NotificationsList.navigationOptions = {
+  header: null
+};
 
 GamingSessionsStack.navigationOptions = {
   tabBarLabel: "Games",
-  header: false,
   tabBarIcon: ({ tintColor, focused }) => (
     <Ionicons
       name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
@@ -196,7 +205,6 @@ GroupStack.navigationOptions = {
 
 NotificationsStack.navigationOptions = {
   tabBarLabel: "Notifications",
-  header: false,
   tabBarIcon: ({ tintColor, focused }) => (
     <MaterialIcons
       name={focused ? "notifications" : "notifications"}
@@ -208,7 +216,7 @@ NotificationsStack.navigationOptions = {
 
 FriendsStack.navigationOptions = {
   tabBarLabel: "Friends",
-  header: false,
+  header: null,
   tabBarIcon: ({ tintColor, focused }) => (
     <MaterialCommunityIcons
       name={focused ? "account-star" : "account-star"}
@@ -216,6 +224,10 @@ FriendsStack.navigationOptions = {
       style={{ color: tintColor }}
     />
   )
+};
+
+FriendsList.navigationOptions = {
+  header: null
 };
 
 User.navigationOptions = {
@@ -230,22 +242,47 @@ User.navigationOptions = {
   )
 };
 
-const rootNavigator = createStackNavigator(
+// const rootNavigator = createStackNavigator(
+//   {
+//     MainPage: { screen: MainPage },
+//     Login: { screen: Login },
+//     Main: { screen: MenuDrawer },
+//     Onboarding: { screen: OnboardingFlowStack }
+//   },
+//   {
+//     headerMode: "none",
+//     cardStyle: {
+//       // See https://github.com/react-community/react-navigation/issues/1478#issuecomment-301220017
+//       paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
+//       shadowColor: "transparent"
+//     }
+//   }
+// );
+
+const AuthStack = createStackNavigator({
+  MainPage: MainPage,
+  Login: Login,
+  Onboarding: { screen: OnboardingFlowStack }
+});
+
+const rootNavigator = createSwitchNavigator(
   {
-    MainPage: { screen: MainPage },
-    Login: { screen: Login },
-    Main: { screen: MenuDrawer },
-    Onboarding: { screen: OnboardingFlowStack }
+    AuthLoading: AuthLoading,
+    App: MenuDrawer,
+    Auth: AuthStack
   },
   {
-    headerMode: "none",
-    cardStyle: {
-      // See https://github.com/react-community/react-navigation/issues/1478#issuecomment-301220017
-      paddingTop: Platform.OS === "ios" ? 0 : StatusBar.currentHeight,
-      shadowColor: "transparent"
-    }
+    initialRouteName: "AuthLoading"
   }
 );
+
+MainPage.navigationOptions = {
+  header: null
+};
+
+OnboardingFlowStack.navigationOptions = {
+  header: null
+};
 
 const styles = StyleSheet.create({
   container: {

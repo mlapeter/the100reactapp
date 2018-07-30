@@ -956,7 +956,7 @@ export default function* rootSaga() {
   yield takeEvery(REFRESH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
   yield takeEvery(LOAD_MORE_GROUP_GAMING_SESSIONS, loadMoreGroupGamingSessions);
 
-  // yield takeEvery(SET_CREDENTIAL, setCredential);
+  yield takeEvery(SET_CREDENTIAL, setCredential);
 
   yield takeEvery(FETCH_CONVERSATIONS, fetchConversations);
 }

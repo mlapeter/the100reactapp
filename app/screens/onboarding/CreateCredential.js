@@ -16,6 +16,7 @@ import CheckBox from "react-native-check-box";
 import { colors, fontSizes, fontStyles } from "../../styles";
 
 const { width, height } = Dimensions.get("window");
+
 class CreateCredential extends Component {
   constructor(props) {
     super(props);
@@ -23,7 +24,7 @@ class CreateCredential extends Component {
     this.state = {
       email: "",
       password: "",
-      sendNotification: false
+      sendNotification: true
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -38,6 +39,7 @@ class CreateCredential extends Component {
     }
   }
   sendUserInfo = () => {
+    console.log("submitting user info");
     this.props.dispatch(
       setCredential(
         this.state.email,
