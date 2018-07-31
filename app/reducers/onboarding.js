@@ -2,8 +2,8 @@ import {
   SET_PLATFORM,
   SET_GAMERTAG,
   SET_PROFILE_INFO,
-  SET_CREDENTIAL,
-  SET_USERINFO_ERROR
+  CREATE_USER,
+  CREATE_USER_ERROR
 } from "../actions/onboarding";
 
 const initialState = {
@@ -15,7 +15,9 @@ const initialState = {
   timezone: "",
   play_schedule: "",
   play_style: "",
-  group: ""
+  group: "",
+  sendNotification: false,
+  tos_privacy_agreement: false
 };
 
 export default (state = initialState, action) => {
@@ -42,25 +44,27 @@ export default (state = initialState, action) => {
         group: action.group
       };
       break;
-    case SET_CREDENTIAL:
+    case CREATE_USER:
       return {
         ...state,
         email: action.email,
-        password: action.password
+        password: action.password,
+        sendNotification: action.sendNotification,
+        tos_privacy_agreement: action.tos_privacy_agreement
       };
       break;
-    case SET_USERINFO_ERROR:
+    case CREATE_USER_ERROR:
       return {
         ...state,
         error: action.error,
-        platform: "",
-        gamertag: "",
-        timezone: "",
-        play_style: "",
-        age: "",
-        play_schedule: "",
-        group: "",
-        email: "",
+        // platform: "",
+        // gamertag: "",
+        // timezone: "",
+        // play_style: "",
+        // age: "",
+        // play_schedule: "",
+        // group: "",
+        // email: "",
         password: ""
       };
     default:

@@ -69,6 +69,10 @@ class GamingSessionsList extends React.PureComponent {
     this.updateFilter = this.updateFilter.bind(this);
   }
 
+  // static navigationOptions = {
+  //   header: null
+  // };
+
   componentDidMount() {
     this.props.dispatch(fetchUser(this.props.authedUser.user_id));
 
@@ -305,7 +309,7 @@ class GamingSessionsList extends React.PureComponent {
         <View style={styles.topContainer}>
           <View style={styles.leftContainer}>
             <TouchableOpacity
-              onPress={() => this.props.navigation.navigate("DrawerOpen")}
+              onPress={() => this.props.navigation.openDrawer()}
             >
               <Image
                 style={styles.avatarMini}

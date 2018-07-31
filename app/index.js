@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { SafeAreaView } from "react-native";
 // import EStylesheet from "react-native-extended-stylesheet";
-// import MainPage from "./screens/MainPage";
 import { AlertProvider } from "./components/Alert";
 import Navigator from "./router";
 

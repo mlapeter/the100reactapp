@@ -108,7 +108,7 @@ import {
   LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
 
-import { SET_CREDENTIAL } from "../actions/onboarding";
+import { CREATE_USER, CREATE_USER_ERROR } from "../actions/onboarding";
 
 import {
   FETCH_CONVERSATIONS,
@@ -836,7 +836,7 @@ function* loadMoreGroupGamingSessions() {
     yield put({ type: FETCH_GROUP_GAMING_SESSIONS_ERROR, error: e.message });
   }
 }
-function* setCredential() {
+function* createUser() {
   try {
     let userInfo = yield select(state => state.onboarding);
     const response = yield fetch(
@@ -870,7 +870,7 @@ function* setCredential() {
     );
     const result = yield response.json();
     if (result.error) {
-      // ERROR
+      yield put({ type: CREATE_USER_ERROR, error: result.error });
     } else {
       token = result.token;
       firebaseToken = result.firebase_token;
@@ -956,7 +956,7 @@ export default function* rootSaga() {
   yield takeEvery(REFRESH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
   yield takeEvery(LOAD_MORE_GROUP_GAMING_SESSIONS, loadMoreGroupGamingSessions);
 
-  // yield takeEvery(SET_CREDENTIAL, setCredential);
+  yield takeEvery(CREATE_USER, createUser);
 
   yield takeEvery(FETCH_CONVERSATIONS, fetchConversations);
 }

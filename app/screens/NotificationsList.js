@@ -28,9 +28,14 @@ class Notifications extends PureComponent {
     notificationsError: PropTypes.string,
     items: PropTypes.array
   };
+
   constructor(props) {
     super(props);
   }
+
+  // static navigationOptions = {
+  //   header: null
+  // };
 
   componentWillMount() {
     this.fetchNotificationsData();

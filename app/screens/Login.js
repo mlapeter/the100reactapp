@@ -62,6 +62,9 @@ class Login extends React.Component {
     ) {
       this.props.alertWithType("error", "Error", nextProps.authenticationError);
     }
+    if (nextProps.authentication.isAuthed) {
+      this.props.navigation.navigate("App");
+    }
   }
 
   userLogin() {
@@ -74,9 +77,6 @@ class Login extends React.Component {
   }
 
   render() {
-    if (this.props.authentication.isAuthed) {
-      return <MenuDrawer />;
-    }
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
@@ -184,7 +184,6 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   const authentication = state.authentication;
-  // const onAuthChange = state.authentication.onAuthChange(token);
 
   return {
     authentication,

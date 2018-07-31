@@ -1,11 +1,11 @@
 import React from "react";
 import { TouchableOpacity, Text } from "react-native";
-import { StackNavigator } from "react-navigation";
+import { createStackNavigator } from "react-navigation";
 
 import ChoosePlatform from "../screens/onboarding/ChoosePlatform";
 import CreateGamer from "../screens/onboarding/CreateGamer";
 import GamerProfile from "../screens/onboarding/GamerProfile";
-import CreateCredential from "../screens/onboarding/CreatCredential";
+import CreateCredential from "../screens/onboarding/CreateCredential";
 
 import { colors } from "../styles";
 
@@ -33,7 +33,7 @@ const BackButton = ({ onPress, title }) => (
   </TouchableOpacity>
 );
 
-const OnboardingFlowStack = StackNavigator({
+const OnboardingFlowStack = createStackNavigator({
   ChoosePlatform: { screen: ChoosePlatform },
   CreateGamer: { screen: CreateGamer },
   GamerProfile: { screen: GamerProfile },

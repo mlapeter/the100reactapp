@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
-import { setCredential } from "../../actions/onboarding";
+import { createUser } from "../../actions/onboarding";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CheckBox from "react-native-check-box";
@@ -16,6 +16,7 @@ import CheckBox from "react-native-check-box";
 import { colors, fontSizes, fontStyles } from "../../styles";
 
 const { width, height } = Dimensions.get("window");
+
 class CreateCredential extends Component {
   constructor(props) {
     super(props);
@@ -23,26 +24,35 @@ class CreateCredential extends Component {
     this.state = {
       email: "",
       password: "",
-      sendNotification: false
+      sendNotification: true,
+      tos_privacy_agreement: true
     };
   }
   componentWillReceiveProps(nextProps) {
     if (
-      nextProps.authenticationError
-      // && nextProps.authenticationError !== this.props.authenticationError
+      nextProps.users.error &&
+      nextProps.users.errorAt !== this.props.users.errorAt
     ) {
-      this.props.alertWithType("error", "Error", nextProps.authenticationError);
+      this.props.alertWithType("error", "Error", nextProps.users.error);
     }
-    if (nextProps.authentication.isAuthed === true) {
-      this.props.navigation.navigate("Main");
+    if (
+      nextProps.users.success &&
+      nextProps.users.successAt !== this.props.users.successAt
+    ) {
+      this.props.alertWithType("success", "Success", "Account Created!");
+    }
+    if (nextProps.authentication.isAuthed) {
+      this.props.navigation.navigate("App");
     }
   }
   sendUserInfo = () => {
+    console.log("submitting user info");
     this.props.dispatch(
-      setCredential(
+      createUser(
         this.state.email,
         this.state.password,
-        this.state.sendNotification
+        this.state.sendNotification,
+        this.state.tos_privacy_agreement
       )
     );
   };
@@ -88,7 +98,18 @@ class CreateCredential extends Component {
             rightText="Send notifications about my group"
             rightTextStyle={styles.contentText}
             isChecked={this.state.sendNotification}
-            onClick={val => this.setState({ sendNotification: val })}
+            onClick={val =>
+              this.setState({ sendNotification: !this.state.sendNotification })}
+          />
+          <CheckBox
+            checkBoxColor="#949599"
+            rightText="I agree to privacy policy and terms of service"
+            rightTextStyle={styles.contentText}
+            isChecked={this.state.tos_privacy_agreement}
+            onClick={val =>
+              this.setState({
+                tos_privacy_agreement: !this.state.tos_privacy_agreement
+              })}
           />
         </View>
         {this.state.email && this.state.password ? (
@@ -159,6 +180,6 @@ const styles = {
 const mapStateToProps = state => ({
   onboarding: state.onboarding,
   authentication: state.authentication,
-  authenticationError: state.authentication.error
+  users: state.users
 });
 export default connect(mapStateToProps)(connectAlert(CreateCredential));

@@ -19,34 +19,13 @@ import ImgLogo from "../assets/images/logo.png";
 
 const { width, height } = Dimensions.get("window");
 
-class MainPage extends Component {
+class AuthMainPage extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      isLoaded: false
-    };
-  }
-
-  componentWillMount() {
-    Font.loadAsync({
-      Lato: require("../../app/assets/fonts/Lato-Bold.ttf"),
-      Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
-    }).then(result => {
-      AsyncStorage.getItem("id_token").then(token => {
-        this.props.dispatch(decodeToken(token));
-        if (this.props.authentication.isAuthed === true) {
-          this.props.navigation.navigate("Main");
-        }
-        this.setState({ isLoaded: true });
-      });
-      AsyncStorage.getItem("fb_token").then(token => {
-        this.props.dispatch(setFirebaseToken(token));
-      });
-    });
   }
 
   render() {
-    if (!this.state.isLoaded || this.props.authentication.isLoading) {
+    if (this.props.authentication.isLoading) {
       return <PreSplash />;
     }
 
@@ -111,4 +90,4 @@ const mapStateToProps = state => {
     authenticationError: state.authentication.error
   };
 };
-export default connect(mapStateToProps)(connectAlert(MainPage));
+export default connect(mapStateToProps)(connectAlert(AuthMainPage));
