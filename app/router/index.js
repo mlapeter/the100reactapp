@@ -95,11 +95,7 @@ const UserEditStack = createStackNavigator({
     screen: UserEdit,
     navigationOptions: ({ navigation }) => ({
       title: "Edit Profile",
-      headerLeft: (
-        <HeaderBackButton
-          onPress={() => navigation.navigate("GamingSessionsStack")}
-        />
-      )
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />
     })
   }
 });
@@ -109,7 +105,7 @@ const HelpChatStack = createStackNavigator({
     screen: HelpChat,
     navigationOptions: ({ navigation }) => ({
       title: "Help Chat",
-      headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} />
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />
     })
   }
 });
@@ -143,6 +139,9 @@ const MenuDrawer = createDrawerNavigator(
     }
   },
   {
+    initialRouteName: "Home",
+    // drawerBackgroundColor: colors.blue,
+    backBehavior: "initialRoute",
     contentComponent: props => (
       <View style={styles.container}>
         <DrawerItems {...props} />

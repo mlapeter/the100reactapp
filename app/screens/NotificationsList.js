@@ -93,7 +93,7 @@ class Notifications extends PureComponent {
           renderItem={({ item }) => (
             <NotificationsItem item={item} navigation={this.props.navigation} />
           )}
-          keyExtractor={(item, index) => index}
+          keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.isLoading}
           onRefresh={this.handleRefresh}
         />
