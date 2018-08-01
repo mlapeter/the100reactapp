@@ -511,7 +511,7 @@ function* fetchPendingFriends() {
     yield put({ type: CHANGE_PENDING_FRIENDS_PAGE, page: 1 });
 
     let userId = yield select(state => state.authentication.user.user_id);
-    // let current_page = yield select(state => state.users.friendsPage);
+    let current_page = yield select(state => state.users.pendingFriendsPage);
 
     let endpoint =
       Environment["API_BASE_URL"] +
@@ -522,7 +522,7 @@ function* fetchPendingFriends() {
     yield call(
       fetchData,
       endpoint,
-      1,
+      current_page,
       FETCH_PENDING_FRIENDS_RESULT,
       FETCH_PENDING_FRIENDS_ERROR,
       FETCH_PENDING_FRIENDS_NO_DATA
@@ -535,9 +535,9 @@ function* fetchPendingFriends() {
 function* loadMorePendingFriends() {
   try {
     let userId = yield select(state => state.authentication.user.user_id);
-    let current_page = yield select(state => state.users.friendsPage);
+    let current_page = yield select(state => state.users.pendingFriendsPage);
     yield put({ type: CHANGE_PENDING_FRIENDS_PAGE, page: current_page + 1 });
-    let new_page = yield select(state => state.users.friendsPage);
+    let new_page = yield select(state => state.users.pendingFriendsPage);
 
     let endpoint =
       Environment["API_BASE_URL"] +

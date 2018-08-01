@@ -242,7 +242,7 @@ class FriendsList extends Component {
             renderItem={({ item }) => (
               <Friend user={item} navigation={this.props.navigation} />
             )}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => index.toString()}
             extraData={this.props}
             onEndReachedThreshold={0}
           />
@@ -254,7 +254,7 @@ class FriendsList extends Component {
               renderItem={({ item }) => (
                 <Friend user={item} navigation={this.props.navigation} />
               )}
-              keyExtractor={(item, index) => index}
+              keyExtractor={(item, index) => index.toString()}
               extraData={this.props}
               ListFooterComponent={this.renderFooter}
               refreshing={this.props.isLoadingFriends}
@@ -269,7 +269,7 @@ class FriendsList extends Component {
               renderItem={({ item }) => (
                 <Friend user={item} navigation={this.props.navigation} />
               )}
-              keyExtractor={(item, index) => index}
+              keyExtractor={(item, index) => index.toString()}
               extraData={this.props}
               ListFooterComponent={this.renderGroupFooter}
               refreshing={this.props.isLoadingGroupMembers}
@@ -284,7 +284,7 @@ class FriendsList extends Component {
               renderItem={({ item }) => (
                 <Friend user={item} navigation={this.props.navigation} />
               )}
-              keyExtractor={(item, index) => index}
+              keyExtractor={(item, index) => index.toString()}
               extraData={this.props}
               ListFooterComponent={this.renderPendingFriendsFooter}
               refreshing={this.props.isLoadingPendingFriends}
