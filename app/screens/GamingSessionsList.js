@@ -14,8 +14,11 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
+import { Notifications } from "expo";
+
 import moment from "moment";
 import Environment from "../config/environment";
+import { registerForPushNotificationsAsync } from "../utils/expoPushNotifications";
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
@@ -46,7 +49,7 @@ import { loadMoreMyGamingSessions } from "../actions/gamingSessions";
 import { fetchGroupGamingSessions } from "../actions/gamingSessions";
 import { refreshGroupGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
-import { fetchUser } from "../actions/users";
+import { fetchUser, updateUser } from "../actions/users";
 import { removeToken } from "../actions/authentication";
 
 class GamingSessionsList extends React.PureComponent {
@@ -69,6 +72,10 @@ class GamingSessionsList extends React.PureComponent {
     this.updateFilter = this.updateFilter.bind(this);
   }
 
+  state = {
+    notification: {}
+  };
+
   // static navigationOptions = {
   //   header: null
   // };
@@ -76,17 +83,17 @@ class GamingSessionsList extends React.PureComponent {
   componentDidMount() {
     this.props.dispatch(fetchUser(this.props.authedUser.user_id));
 
-    setTimeout(() => {
-      if (this.props.user.gamertag == null) {
-        this.props.alertWithType(
-          "error",
-          "Error",
-          "Error connecting to server, please login again."
-        );
-        this.props.dispatch(removeToken());
-        this.props.navigation.navigate("Login");
-      }
-    }, 5000);
+    // setTimeout(() => {
+    //   if (this.props.user.gamertag == null) {
+    //     this.props.alertWithType(
+    //       "error",
+    //       "Error",
+    //       "Error connecting to server, please login again."
+    //     );
+    //     this.props.dispatch(removeToken());
+    //     this.props.navigation.navigate("Login");
+    //   }
+    // }, 5000);
 
     this.fetchGamesData();
     if (this.props.user.platform == null) {
@@ -97,6 +104,19 @@ class GamingSessionsList extends React.PureComponent {
     } else {
       this.fetchGamingSessionsData();
     }
+
+    registerForPushNotificationsAsync().then(token => {
+      if (
+        this.props.user.expo_push_token == null ||
+        this.props.user.expo_push_token !== token
+      ) {
+        this.props.dispatch(updateUser(token));
+      }
+      this._notificationSubscription = Notifications.addListener(
+        this._handleNotification
+      );
+    });
+    Notifications.setBadgeNumberAsync(0);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -107,6 +127,15 @@ class GamingSessionsList extends React.PureComponent {
       this.props.alertWithType("error", "Error", nextProps.gamingSessionsError);
     }
   }
+
+  _handleNotification = notification => {
+    console.log(notification);
+    if (notification.origin === "selected") {
+      this.props.navigation.navigate("NotificationsList");
+    } else {
+      this.props.alertWithType("info", "", notification.data.message);
+    }
+  };
 
   fetchGamesData() {
     this.props.dispatch(fetchGames());

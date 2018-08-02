@@ -43,7 +43,8 @@ const initialState = {
   morePendingFriendsAvailable: true,
   friendsPage: 1,
   groupMembersPage: 1,
-  pendingFriendsPage: 1
+  pendingFriendsPage: 1,
+  expoPushToken: null
 };
 
 export default (state = initialState, action) => {
@@ -60,7 +61,7 @@ export default (state = initialState, action) => {
         isUpdating: false,
         success: true,
         successAt: new Date(),
-        user: action.result
+        user: { ...state.user, ...action.user }
       };
     case UPDATE_USER_ERROR:
       return {
