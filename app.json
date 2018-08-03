@@ -1,6 +1,8 @@
 {
   "expo": {
     "sdkVersion": "28.0.0",
+    "privacy": "public",
+    "scheme": "the100",
     "name": "The100.io",
     "description":
       "This is the early alpha version of the new mobile app for The100.io. Please leave any feedback or bugs you find in our discord: https://discord.gg/cWDAt4Z thanks!",
@@ -8,7 +10,7 @@
     "version": "2.0.1",
     "slug": "the100",
     "ios": {
-      "buildNumber": "1.0.2",
+      "buildNumber": "1.0.6",
       "bundleIdentifier": "io.the100.mobile",
       "supportsTablet": true
     },
