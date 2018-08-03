@@ -85,6 +85,7 @@ export default (state = initialState, action) => {
     case FETCH_USER_ERROR:
       return {
         ...state,
+        user: {},
         error: action.error,
         errorAt: new Date(),
         userLoading: false

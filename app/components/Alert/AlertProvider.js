@@ -8,7 +8,6 @@ class AlertProvider extends Component {
   static childContextTypes = {
     alertWithType: PropTypes.func,
     alert: PropTypes.func
-    // onClose: PropTypes.func
   };
 
   static propTypes = {
@@ -19,7 +18,6 @@ class AlertProvider extends Component {
     return {
       alert: (...args) => this.dropdown.alert(...args),
       alertWithType: (...args) => this.dropdown.alertWithType(...args)
-      // onClose: (...args) => this.dropdown.onClose(...args)
     };
   }
 
@@ -31,7 +29,6 @@ class AlertProvider extends Component {
           ref={ref => {
             this.dropdown = ref;
           }}
-          onClose={(...args) => this.dropdown.onClose(...args)}
           tapToCloseEnabled={true}
         />
       </View>

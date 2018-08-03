@@ -82,8 +82,8 @@ class GamingSessionsList extends React.PureComponent {
 
   componentDidMount() {
     this.props.dispatch(fetchUser(this.props.authedUser.user_id));
-
     // setTimeout(() => {
+    //   console.log(this.props.user.gamertag);
     //   if (this.props.user.gamertag == null) {
     //     this.props.alertWithType(
     //       "error",
@@ -378,6 +378,60 @@ class GamingSessionsList extends React.PureComponent {
           }}
         >
           <Tabs>
+            <View title="PUBLIC GAMES" style={styles.content}>
+              <SectionList
+                renderItem={({ item }) => (
+                  <GamingSessionsItem
+                    data={item}
+                    navigation={this.props.navigation}
+                  />
+                )}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                  </View>
+                )}
+                sections={this.gamesArray(this.props.data)}
+                ListHeaderComponent={this.renderEmpty}
+                ListFooterComponent={this.renderFooter}
+                // ListEmptyComponent={this.renderEmpty}
+                extraData={this.props}
+                // Getting errors using game id
+                // keyExtractor={item => item.id}
+                keyExtractor={(item, index) => index}
+                refreshing={this.props.gamingSessionsRefreshing}
+                onRefresh={this.refreshGames}
+                onEndReached={this.loadMoreGamingSessions}
+                onEndReachedThreshold={0.8}
+              />
+            </View>
+
+            <View title="GROUP GAMES" style={styles.content}>
+              <SectionList
+                // data={this.props.groupGamingSessions}
+                renderItem={({ item }) => (
+                  <GamingSessionsItem
+                    data={item}
+                    navigation={this.props.navigation}
+                  />
+                )}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                  </View>
+                )}
+                sections={this.gamesArray(this.props.groupGamingSessions)}
+                ListHeaderComponent={this.renderEmpty}
+                ListFooterComponent={this.renderGroupFooter}
+                ListEmptyComponent={this.renderEmpty}
+                extraData={this.props}
+                keyExtractor={(item, index) => index}
+                refreshing={this.props.groupGamingSessionsRefreshing}
+                onRefresh={this.refreshGroupGames}
+                onEndReached={this.loadMoreGroupGamingSessions}
+                onEndReachedThreshold={0}
+              />
+            </View>
             <View title="MY GAMES" style={styles.content}>
               <SectionList
                 // data={this.props.myGamingSessions}
@@ -406,59 +460,6 @@ class GamingSessionsList extends React.PureComponent {
                 onRefresh={this.refreshMyGames}
                 onEndReached={this.loadMoreMyGamingSessions}
                 onEndReachedThreshold={0}
-              />
-            </View>
-            <View title="GROUP GAMES" style={styles.content}>
-              <SectionList
-                // data={this.props.groupGamingSessions}
-                renderItem={({ item }) => (
-                  <GamingSessionsItem
-                    data={item}
-                    navigation={this.props.navigation}
-                  />
-                )}
-                renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
-                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
-                  </View>
-                )}
-                sections={this.gamesArray(this.props.groupGamingSessions)}
-                ListHeaderComponent={this.renderEmpty}
-                ListFooterComponent={this.renderGroupFooter}
-                ListEmptyComponent={this.renderEmpty}
-                extraData={this.props}
-                keyExtractor={(item, index) => index}
-                refreshing={this.props.groupGamingSessionsRefreshing}
-                onRefresh={this.refreshGroupGames}
-                onEndReached={this.loadMoreGroupGamingSessions}
-                onEndReachedThreshold={0}
-              />
-            </View>
-            <View title="PUBLIC GAMES" style={styles.content}>
-              <SectionList
-                renderItem={({ item }) => (
-                  <GamingSessionsItem
-                    data={item}
-                    navigation={this.props.navigation}
-                  />
-                )}
-                renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
-                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
-                  </View>
-                )}
-                sections={this.gamesArray(this.props.data)}
-                ListHeaderComponent={this.renderEmpty}
-                ListFooterComponent={this.renderFooter}
-                // ListEmptyComponent={this.renderEmpty}
-                extraData={this.props}
-                // Getting errors using game id
-                // keyExtractor={item => item.id}
-                keyExtractor={(item, index) => index}
-                refreshing={this.props.gamingSessionsRefreshing}
-                onRefresh={this.refreshGames}
-                onEndReached={this.loadMoreGamingSessions}
-                onEndReachedThreshold={0.8}
               />
             </View>
           </Tabs>

@@ -185,15 +185,13 @@ function* fetchData(endpoint, page, success, failure, noData) {
     });
     const result = yield response.json();
     console.log("FETCHING ENDPOINT: ", endpoint);
-    if (result.error) {
+    if (result.error && result.error === "Not Authorized") {
+      console.log("REMOVING TOKEN!");
+      AsyncStorage.removeItem("id_token");
+      AsyncStorage.removeItem("fb_token");
+      yield { type: failure, error: result.error };
+    } else if (result.error) {
       console.log(result);
-      // console.log("REMOVING TOKEN");
-      // try {
-      //   AsyncStorage.removeItem("id_token");
-      //   AsyncStorage.removeItem("fb_token");
-      // } catch (e) {
-      //   yield put({ type: REMOVE_TOKEN_ERROR, error: e.message });
-      // }
       yield { type: failure, error: result.error };
     } else if (result.length === 0) {
       console.log("no data returned");

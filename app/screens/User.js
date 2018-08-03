@@ -286,6 +286,19 @@ export class User extends React.Component {
           <KarmaIcon karmasCount={this.props.user.karmas_count} />
           <PlayScheduleIcon playSchedule={this.props.user.play_schedule} />
         </View>
+        <View
+          style={{
+            alignItems: "center",
+            flexDirection: "row",
+            justifyContent: "center",
+            padding: 15,
+            paddingTop: 30
+          }}
+        >
+          <Text style={{ color: colors.grey }}>
+            Coming Soon: User Chat/ Direct Messaging
+          </Text>
+        </View>
         {this.state.conversation && (
           <ChatPreview
             room={`conversation-${this.state.conversation.id}`}
