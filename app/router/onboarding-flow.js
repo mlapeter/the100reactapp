@@ -45,7 +45,7 @@ ChoosePlatform.navigationOptions = ({ navigation }) => ({
     <BackButton
       title="BACK"
       onPress={() => {
-        navigation.navigate("MainPage");
+        navigation.navigate("AuthMainPage");
       }}
     />
   ),
