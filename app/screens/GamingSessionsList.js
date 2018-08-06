@@ -107,8 +107,9 @@ class GamingSessionsList extends React.PureComponent {
 
     registerForPushNotificationsAsync().then(token => {
       if (
-        this.props.user.expo_push_token == null ||
-        this.props.user.expo_push_token !== token
+        token &&
+        (this.props.user.expo_push_token == null ||
+          this.props.user.expo_push_token !== token)
       ) {
         this.props.dispatch(updateUser(token));
       }
