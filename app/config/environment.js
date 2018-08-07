@@ -23,10 +23,28 @@ var environments = {
   }
 };
 
+function getReleaseChannel() {
+  let releaseChannel = Expo.Constants.manifest.releaseChannel;
+  if (releaseChannel === undefined) {
+    return "production";
+  } else if (releaseChannel === "staging") {
+    return "staging";
+  } else {
+    return "production";
+  }
+}
+
 function getEnvironment(env) {
+  console.log("Release Channel: ", getReleaseChannel());
   return environments[env];
 }
 
-var Environment = getEnvironment("production");
+var Environment = getEnvironment(getReleaseChannel());
+
+// function getEnvironment(env) {
+//   return environments[env];
+// }
+
+// var Environment = getEnvironment("production");
 
 export default Environment;

@@ -7,6 +7,9 @@ import {
   EDIT_GAMING_SESSION,
   EDIT_GAMING_SESSION_RESULT,
   EDIT_GAMING_SESSION_ERROR,
+  DELETE_GAMING_SESSION,
+  DELETE_GAMING_SESSION_RESULT,
+  DELETE_GAMING_SESSION_ERROR,
   FETCH_GAMING_SESSION,
   FETCH_GAMING_SESSION_RESULT,
   FETCH_GAMING_SESSION_ERROR,
@@ -42,7 +45,7 @@ const initialState = {
   refreshing: false,
   isCreating: false,
   gameCreated: false,
-  isEditing: false,
+  isLoading: false,
   gameEdited: false,
   moreGamingSessionsAvailable: true,
   moreGroupGamingSessionsAvailable: true,
@@ -94,13 +97,14 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gameEdited: false,
-        isEditing: true,
+        gameDeleted: false,
+        isLoading: true,
         gamingSession: action.gamingSession
       };
     case EDIT_GAMING_SESSION_RESULT:
       return {
         ...state,
-        isEditing: false,
+        isLoading: false,
         gameEdited: true,
         successAt: new Date(),
         gamingSession: action.result
@@ -108,8 +112,32 @@ export default (state = initialState, action) => {
     case EDIT_GAMING_SESSION_ERROR:
       return {
         ...state,
-        isEditing: false,
+        isLoading: false,
         gameEdited: false,
+        error: action.error,
+        errorAt: new Date()
+      };
+    case DELETE_GAMING_SESSION:
+      return {
+        ...state,
+        gameEdited: false,
+        gameDeleted: false,
+        isLoading: true,
+        deleteGamingSessionId: action.deleteGamingSessionId
+      };
+    case DELETE_GAMING_SESSION_RESULT:
+      return {
+        ...state,
+        isLoading: false,
+        gameDeleted: true,
+        successAt: new Date(),
+        gamingSession: action.result
+      };
+    case DELETE_GAMING_SESSION_ERROR:
+      return {
+        ...state,
+        isLoading: false,
+        gameDeleted: false,
         error: action.error,
         errorAt: new Date()
       };
