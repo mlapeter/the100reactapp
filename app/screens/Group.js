@@ -32,6 +32,9 @@ import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { fetchGroup, changeSelectedGroupId } from "../actions/group";
 
+import { firebaseSignOut } from "../utils/user";
+import { removeToken } from "../actions/authentication";
+
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 
 Moment.globalFormat = "h:mm";
@@ -57,6 +60,16 @@ class Group extends React.Component {
   // };
 
   componentWillMount() {
+    if (this.props.user.gamertag == null) {
+      this.props.alertWithType(
+        "error",
+        "Error",
+        "Error connecting to server, please login again."
+      );
+      firebaseSignOut();
+      this.props.dispatch(removeToken());
+      this.props.navigation.navigate("Login");
+    }
     this.fetchGroupData();
   }
 
@@ -503,7 +516,8 @@ const mapStateToProps = state => {
     isLoading: state.group.isLoading,
     groupError: state.group.error,
     groups: state.users.user.groups,
-    selectedGroupId: state.group.selectedGroupId
+    selectedGroupId: state.group.selectedGroupId,
+    user: state.users.user
   };
 };
 
