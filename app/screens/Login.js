@@ -57,10 +57,14 @@ class Login extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (
-      nextProps.authenticationError
-      // && nextProps.authenticationError !== this.props.authenticationError
+      nextProps.authentication.error &&
+      nextProps.authentication.errorAt !== this.props.authentication.errorAt
     ) {
-      this.props.alertWithType("error", "Error", nextProps.authenticationError);
+      this.props.alertWithType(
+        "error",
+        "Error",
+        nextProps.authentication.error
+      );
     }
     if (nextProps.authentication.isAuthed) {
       this.props.navigation.navigate("App");
@@ -186,8 +190,7 @@ const mapStateToProps = state => {
   const authentication = state.authentication;
 
   return {
-    authentication,
-    authenticationError: state.authentication.error
+    authentication
   };
 };
 

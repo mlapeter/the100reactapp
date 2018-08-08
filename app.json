@@ -9,6 +9,11 @@
     "icon": "./app/assets/images/icon.png",
     "version": "2.0.1",
     "slug": "the100",
+    "androidStatusBarColor": "#334393",
+    "androidStatusBar": {
+      "barStyle": "light-content",
+      "backgroundColor": "#334393"
+    },
     "ios": {
       "buildNumber": "1.0.7",
       "bundleIdentifier": "io.the100.mobile",
