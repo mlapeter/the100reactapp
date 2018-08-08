@@ -50,6 +50,16 @@ class UserEdit extends React.Component {
   componentWillMount() {
     this.fetchUserEditData(this.props.authedUser);
     console.log(this.props.authedUser);
+    setTimeout(() => {
+      if (this.props.user.gamertag == null) {
+        this.props.alertWithType(
+          "error",
+          "Error",
+          "Error connecting to server, please login again."
+        );
+        this.userLogout();
+      }
+    }, 5000);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -90,11 +100,6 @@ class UserEdit extends React.Component {
   }
 
   userLogout() {
-    // try {
-    //   AsyncStorage.removeItem("id_token");
-    // } catch (error) {
-    //   console.log("AsyncStorage error: " + error.message);
-    // }
     firebaseSignOut();
     this.props.dispatch(removeToken());
     this.props.navigation.navigate("Login");

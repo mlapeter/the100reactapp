@@ -81,26 +81,14 @@ class GamingSessionsList extends React.PureComponent {
   // };
 
   componentDidMount() {
-    this.props.dispatch(fetchUser(this.props.authedUser.user_id));
-    // setTimeout(() => {
-    //   console.log(this.props.user.gamertag);
-    //   if (this.props.user.gamertag == null) {
-    //     this.props.alertWithType(
-    //       "error",
-    //       "Error",
-    //       "Error connecting to server, please login again."
-    //     );
-    //     this.props.dispatch(removeToken());
-    //     this.props.navigation.navigate("Login");
-    //   }
-    // }, 5000);
+    // this.props.dispatch(fetchUser(this.props.authedUser.user_id));
 
-    this.fetchGamesData();
+    // this.fetchGamesData();
     if (this.props.user.platform == null) {
       setTimeout(() => {
         // Wait to load user to get user platform for default search
         this.fetchGamingSessionsData();
-      }, 1000);
+      }, 3000);
     } else {
       this.fetchGamingSessionsData();
     }

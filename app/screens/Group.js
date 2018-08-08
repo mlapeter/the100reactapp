@@ -60,16 +60,6 @@ class Group extends React.Component {
   // };
 
   componentWillMount() {
-    if (this.props.user.gamertag == null) {
-      this.props.alertWithType(
-        "error",
-        "Error",
-        "Error connecting to server, please login again."
-      );
-      firebaseSignOut();
-      this.props.dispatch(removeToken());
-      this.props.navigation.navigate("Login");
-    }
     this.fetchGroupData();
   }
 

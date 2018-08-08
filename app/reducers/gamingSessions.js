@@ -164,7 +164,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         moreGamingSessionsAvailable: true,
-        gamingSessionsLoading: true,
+        // gamingSessionsLoading: true,
         endpoint: action.endpoint
       };
     case FETCH_GAMING_SESSIONS_RESULT:
