@@ -18,6 +18,7 @@ class AuthLoading extends React.Component {
   }
 
   bootstrap = () => {
+    console.log("Starting App");
     Font.loadAsync({
       Lato: require("../../app/assets/fonts/Lato-Bold.ttf"),
       Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")

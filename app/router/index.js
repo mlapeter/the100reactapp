@@ -186,9 +186,9 @@ GamingSessionCreate.navigationOptions = {
   headerTitle: "New Gaming Session"
 };
 
-// GamingSessionEdit.navigationOptions = {
-//   headerTitle: "Edit Gaming Session"
-// };
+GamingSessionEdit.navigationOptions = {
+  headerTitle: "Edit Gaming Session"
+};
 
 GamingSessionsList.navigationOptions = {
   header: null
