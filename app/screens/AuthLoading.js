@@ -30,14 +30,26 @@ class AuthLoading extends React.Component {
       });
       AsyncStorage.getItem("id_token").then(token => {
         this.props.dispatch(decodeToken(token));
+        // setTimeout(() => {
+        //   if (
+        //     this.props.authentication.isAuthed === true &&
+        //     this.props.users.currentUser.gamertag != null
+        //   ) {
+        //     this.props.navigation.navigate("App");
+        //   } else {
+        //     this.props.navigation.navigate("Auth");
+        //   }
+        // }, 3000);
+
         setTimeout(() => {
           if (
-            this.props.authentication.isAuthed === true &&
-            this.props.users.currentUser.gamertag != null
+            !this.props.users.currentUser ||
+            this.props.users.currentUser.gamertag == null ||
+            this.props.authentication.isAuthed !== true
           ) {
-            this.props.navigation.navigate("App");
-          } else {
             this.props.navigation.navigate("Auth");
+          } else {
+            this.props.navigation.navigate("App");
           }
         }, 3000);
       });
