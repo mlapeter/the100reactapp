@@ -31,7 +31,11 @@ import { connect } from "react-redux";
 import { removeToken } from "../actions/authentication";
 
 import { connectAlert } from "../components/Alert";
-import { fetchCurrentUser, updateUser } from "../actions/users";
+import {
+  fetchCurrentUser,
+  updateUser,
+  clearCurrentUser
+} from "../actions/users";
 
 import { firebaseSignOut } from "../utils/user";
 
@@ -104,6 +108,7 @@ class UserEdit extends React.Component {
   userLogout() {
     firebaseSignOut();
     this.props.dispatch(removeToken());
+    this.props.dispatch(clearCurrentUser());
     this.props.navigation.navigate("Login");
   }
 

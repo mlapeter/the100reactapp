@@ -8,6 +8,7 @@ export const FETCH_USER_ERROR = "FETCH_USER_ERROR";
 
 export const FETCH_CURRENT_USER = "FETCH_CURRENT_USER";
 export const FETCH_CURRENT_USER_RESULT = "FETCH_CURRENT_USER_RESULT";
+export const CLEAR_CURRENT_USER = "CLEAR_CURRENT_USER";
 
 export const FETCH_FRIENDS = "FETCH_FRIENDS";
 export const FETCH_FRIENDS_RESULT = "FETCH_FRIENDS_RESULT";
@@ -50,6 +51,10 @@ export const fetchCurrentUser = () => ({
 export const updateUser = currentUser => ({
   type: UPDATE_USER,
   currentUser
+});
+
+export const clearCurrentUser = () => ({
+  type: CLEAR_CURRENT_USER
 });
 
 export const fetchFriends = () => ({

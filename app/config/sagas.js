@@ -715,7 +715,7 @@ function* refreshGroupMembers() {
 function* fetchGroup() {
   try {
     // let userId = yield select(state => state.authentication.user.user_id);
-    // yield call(fetchCurrentUser);
+    yield call(fetchCurrentUser);
     let user = yield select(state => state.users.currentUser);
     let selectedGroupId = yield select(state => state.group.selectedGroupId);
     let endpoint = "";
@@ -982,7 +982,7 @@ export default function* rootSaga() {
 
   yield takeEvery(DECODE_TOKEN_RESULT, fetchCurrentUser);
   yield takeEvery(DECODE_TOKEN_RESULT, fetchGames);
-  yield takeEvery(DECODE_TOKEN_RESULT, fetchGroup);
+  // yield takeEvery(DECODE_TOKEN_RESULT, fetchGroup);
 
   yield takeEvery(REMOVE_TOKEN, removeToken);
 

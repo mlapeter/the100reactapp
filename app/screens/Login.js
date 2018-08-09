@@ -50,9 +50,9 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.authentication.isAuthed === true) {
-      this.props.navigation.navigate("Main");
-    }
+    // if (this.props.authentication.isAuthed === true) {
+    //   this.props.navigation.navigate("Main");
+    // }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -66,10 +66,21 @@ class Login extends React.Component {
         nextProps.authentication.error
       );
     }
-    if (nextProps.authentication.isAuthed) {
+    if (nextProps.users.currentUser && nextProps.authentication.isAuthed) {
       this.props.navigation.navigate("App");
     }
   }
+
+  // setTimeout(() => {
+  //   if (
+  //     this.props.authentication.isAuthed === true &&
+  //     this.props.users.currentUser.gamertag != null
+  //   ) {
+  //     this.props.navigation.navigate("App");
+  //   } else {
+  //     this.props.navigation.navigate("Auth");
+  //   }
+  // }, 3000);
 
   userLogin() {
     if (!this.state.username || !this.state.password) return;
@@ -188,9 +199,11 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   const authentication = state.authentication;
+  const users = state.users;
 
   return {
-    authentication
+    authentication,
+    users
   };
 };
 

@@ -21,7 +21,7 @@
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 1
+      "versionCode": 2
     }
   }
 }

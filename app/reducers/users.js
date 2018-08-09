@@ -7,6 +7,7 @@ import {
   FETCH_USER_ERROR,
   FETCH_CURRENT_USER,
   FETCH_CURRENT_USER_RESULT,
+  CLEAR_CURRENT_USER,
   FETCH_FRIENDS,
   FETCH_FRIENDS_RESULT,
   FETCH_FRIENDS_ERROR,
@@ -34,7 +35,7 @@ const initialState = {
   isUpdating: false,
   userLoading: true,
   user: {},
-  currentUser: {},
+  currentUser: null,
   friends: [],
   groupMembers: [],
   pendingFriends: [],
@@ -103,6 +104,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentUser: action.result,
+        currentUserLoading: false
+      };
+    case CLEAR_CURRENT_USER:
+      return {
+        ...state,
+        user: {},
+        currentUser: null,
+        friends: [],
+        groupMembers: [],
+        pendingFriends: [],
         currentUserLoading: false
       };
     case FETCH_FRIENDS:
