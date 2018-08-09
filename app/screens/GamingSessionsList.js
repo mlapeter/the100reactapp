@@ -49,7 +49,7 @@ import { loadMoreMyGamingSessions } from "../actions/gamingSessions";
 import { fetchGroupGamingSessions } from "../actions/gamingSessions";
 import { refreshGroupGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
-import { fetchUser, updateUser } from "../actions/users";
+import { updateUser } from "../actions/users";
 import { removeToken } from "../actions/authentication";
 
 class GamingSessionsList extends React.PureComponent {
@@ -81,8 +81,6 @@ class GamingSessionsList extends React.PureComponent {
   // };
 
   componentDidMount() {
-    // this.props.dispatch(fetchUser(this.props.authedUser.user_id));
-
     // this.fetchGamesData();
     if (this.props.user.platform == null) {
       setTimeout(() => {
