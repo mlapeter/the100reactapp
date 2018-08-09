@@ -29,6 +29,8 @@ import {
   FETCH_USER,
   FETCH_USER_RESULT,
   FETCH_USER_ERROR,
+  FETCH_CURRENT_USER,
+  FETCH_CURRENT_USER_RESULT,
   FETCH_FRIENDS,
   FETCH_FRIENDS_RESULT,
   FETCH_FRIENDS_ERROR,
@@ -162,7 +164,7 @@ function* decodeToken() {
   try {
     let token = yield select(state => state.authentication.token);
     let result = jwtDecode(token);
-    let userId = yield select(state => state.authentication.user.user_id);
+    // let userId = yield select(state => state.authentication.user.user_id);
     yield put({ type: DECODE_TOKEN_RESULT, result });
   } catch (e) {
     yield put({ type: DECODE_TOKEN_ERROR, error: e.message });
@@ -277,10 +279,11 @@ function* deleteGamingSession() {
 }
 
 function* updateUser() {
+  console.log("UPDATING USER");
   try {
     let token = yield select(state => state.authentication.token);
     let userId = yield select(state => state.authentication.user.user_id);
-    let user = yield select(state => state.users.user);
+    let user = yield select(state => state.users.currentUser);
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +
@@ -317,6 +320,7 @@ function* updateUser() {
       }
     );
     const result = yield response.json();
+    console.log(result);
     if (result.error) {
       yield put({ type: UPDATE_USER_ERROR, error: result.error });
     } else if (result.message === "Invalid credentials") {
@@ -495,7 +499,13 @@ function* fetchCurrentUser() {
       Environment["API_VERSION"] +
       "users/" +
       userId;
-    yield call(fetchData, endpoint, 1, FETCH_USER_RESULT, FETCH_USER_ERROR);
+    yield call(
+      fetchData,
+      endpoint,
+      1,
+      FETCH_CURRENT_USER_RESULT,
+      FETCH_USER_ERROR
+    );
   } catch (e) {
     yield put({ type: FETCH_USER_ERROR, error: e.message });
   }
@@ -704,9 +714,9 @@ function* refreshGroupMembers() {
 
 function* fetchGroup() {
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    // let userId = yield select(state => state.authentication.user.user_id);
     // yield call(fetchCurrentUser);
-    let user = yield select(state => state.users.user);
+    let user = yield select(state => state.users.currentUser);
     let selectedGroupId = yield select(state => state.group.selectedGroupId);
     let endpoint = "";
     if (selectedGroupId == null && user.memberships[0]) {
@@ -972,10 +982,13 @@ export default function* rootSaga() {
 
   yield takeEvery(DECODE_TOKEN_RESULT, fetchCurrentUser);
   yield takeEvery(DECODE_TOKEN_RESULT, fetchGames);
+  yield takeEvery(DECODE_TOKEN_RESULT, fetchGroup);
 
   yield takeEvery(REMOVE_TOKEN, removeToken);
 
   yield takeEvery(UPDATE_USER, updateUser);
+
+  yield takeEvery(FETCH_CURRENT_USER, fetchCurrentUser);
 
   yield takeEvery(FETCH_USER, fetchUser);
 

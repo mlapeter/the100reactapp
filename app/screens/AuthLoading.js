@@ -33,7 +33,7 @@ class AuthLoading extends React.Component {
         setTimeout(() => {
           if (
             this.props.authentication.isAuthed === true &&
-            this.props.users.user.gamertag != null
+            this.props.users.currentUser.gamertag != null
           ) {
             this.props.navigation.navigate("App");
           } else {

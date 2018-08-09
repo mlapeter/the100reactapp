@@ -70,8 +70,8 @@ const mapStateToProps = state => {
   const game = state.search.game;
   const games = state.search.games;
   const activities = state.search.activities;
-  const groups = state.users.user.groups_for_api;
-  const user = state.users.user;
+  const groups = state.users.cuurentUser.groups_for_api;
+  const user = state.users.currentUser;
   const isCreating = state.gamingSessions.isCreating;
   const gamingSessions = state.gamingSessions;
 

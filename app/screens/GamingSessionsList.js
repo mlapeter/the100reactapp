@@ -332,10 +332,10 @@ class GamingSessionsList extends React.PureComponent {
               <Image
                 style={styles.avatarMini}
                 source={
-                  this.props.authedUser.computed_avatar_api ===
+                  this.props.user.computed_avatar_api ===
                   "img/default-avatar.png"
                     ? require("../../app/assets/images/default-avatar.png")
-                    : { uri: this.props.authedUser.computed_avatar_api }
+                    : { uri: this.props.user.computed_avatar_api }
                 }
               />
             </TouchableOpacity>
@@ -507,7 +507,7 @@ const mapStateToProps = state => {
   const gameId = state.search.gameId;
   const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
-  const platform = state.search.platform || state.users.user.platform;
+  const platform = state.search.platform || state.users.currentUser.platform;
 
   const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
   const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;
@@ -532,8 +532,7 @@ const mapStateToProps = state => {
   const moreGroupGamingSessionsAvailable =
     state.gamingSessions.moreGroupGamingSessionsAvailable;
 
-  const authedUser = state.authentication.user;
-  const user = state.users.user;
+  const user = state.users.currentUser;
   return {
     activity,
     game,
@@ -554,7 +553,6 @@ const mapStateToProps = state => {
     moreGamingSessionsAvailable,
     moreMyGamingSessionsAvailable,
     moreGroupGamingSessionsAvailable,
-    authedUser,
     user,
     gamingSessionsError: state.gamingSessions.error
   };

@@ -5,6 +5,8 @@ import {
   FETCH_USER,
   FETCH_USER_RESULT,
   FETCH_USER_ERROR,
+  FETCH_CURRENT_USER,
+  FETCH_CURRENT_USER_RESULT,
   FETCH_FRIENDS,
   FETCH_FRIENDS_RESULT,
   FETCH_FRIENDS_ERROR,
@@ -30,8 +32,9 @@ import {
 
 const initialState = {
   isUpdating: false,
-  userLoading: false,
+  userLoading: true,
   user: {},
+  currentUser: {},
   friends: [],
   groupMembers: [],
   pendingFriends: [],
@@ -53,7 +56,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isUpdating: true,
-        user: action.user
+        currentUser: action.currentUser
       };
     case UPDATE_USER_RESULT:
       return {
@@ -61,7 +64,7 @@ export default (state = initialState, action) => {
         isUpdating: false,
         success: true,
         successAt: new Date(),
-        user: { ...state.user, ...action.user }
+        currentUser: { ...state.currentUser, ...action.currentUser }
       };
     case UPDATE_USER_ERROR:
       return {
@@ -88,7 +91,19 @@ export default (state = initialState, action) => {
         user: {},
         error: action.error,
         errorAt: new Date(),
-        userLoading: false
+        userLoading: false,
+        currentUserLoading: false
+      };
+    case FETCH_CURRENT_USER:
+      return {
+        ...state,
+        currentUserLoading: true
+      };
+    case FETCH_CURRENT_USER_RESULT:
+      return {
+        ...state,
+        currentUser: action.result,
+        currentUserLoading: false
       };
     case FETCH_FRIENDS:
       return {

@@ -6,6 +6,9 @@ export const FETCH_USER = "FETCH_USER";
 export const FETCH_USER_RESULT = "FETCH_USER_RESULT";
 export const FETCH_USER_ERROR = "FETCH_USER_ERROR";
 
+export const FETCH_CURRENT_USER = "FETCH_CURRENT_USER";
+export const FETCH_CURRENT_USER_RESULT = "FETCH_CURRENT_USER_RESULT";
+
 export const FETCH_FRIENDS = "FETCH_FRIENDS";
 export const FETCH_FRIENDS_RESULT = "FETCH_FRIENDS_RESULT";
 export const FETCH_FRIENDS_ERROR = "FETCH_FRIENDS_ERROR";
@@ -40,9 +43,13 @@ export const fetchUser = userId => ({
   userId
 });
 
-export const updateUser = user => ({
+export const fetchCurrentUser = () => ({
+  type: FETCH_CURRENT_USER
+});
+
+export const updateUser = currentUser => ({
   type: UPDATE_USER,
-  user
+  currentUser
 });
 
 export const fetchFriends = () => ({

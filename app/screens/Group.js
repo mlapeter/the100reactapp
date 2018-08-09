@@ -505,9 +505,9 @@ const mapStateToProps = state => {
     group: state.group.group,
     isLoading: state.group.isLoading,
     groupError: state.group.error,
-    groups: state.users.user.groups,
+    groups: state.users.currentUser.groups,
     selectedGroupId: state.group.selectedGroupId,
-    user: state.users.user
+    user: state.users.currentUser
   };
 };
 
