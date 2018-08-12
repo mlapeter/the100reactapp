@@ -8,7 +8,8 @@ var environments = {
     FIREBASE_DATABASE_URL: "https://the100-chat.firebaseio.com/",
     FIREBASE_PROJECT_ID: "the100-chat",
     FIREBASE_STORAGE_BUCKET: "the100-chat.appspot.com",
-    FIREBASE_MESSAGING_SENDER_ID: "254217080427"
+    FIREBASE_MESSAGING_SENDER_ID: "254217080427",
+    GOOGLE_ANALYTICS_ID: "UA-55503040-1"
   },
   staging: {
     API_BASE_URL: "https://pwn-staging.herokuapp.com/api/",
@@ -19,7 +20,8 @@ var environments = {
     FIREBASE_DATABASE_URL: "https://the100-staging-42536.firebaseio.com/",
     FIREBASE_PROJECT_ID: "the100-staging-42536",
     FIREBASE_STORAGE_BUCKET: "the100-staging-42536.appspot.com",
-    FIREBASE_MESSAGING_SENDER_ID: ""
+    FIREBASE_MESSAGING_SENDER_ID: "",
+    GOOGLE_ANALYTICS_ID: "UA-55503040-1"
   }
 };
 

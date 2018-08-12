@@ -94,11 +94,13 @@ class Group extends React.Component {
 
   joinGroup() {
     this.postData(this.props.group.id + "/join");
+    this.fetchGroupData();
     Alert.alert("Group Joined!");
   }
 
   leaveGroup() {
     this.postData(this.props.group.id + "/leave");
+    this.fetchGroupData();
     Alert.alert("Group Left.");
   }
 
@@ -249,6 +251,8 @@ class Group extends React.Component {
                   selectedValue={this.props.selectedGroupId}
                   onValueChange={groupId => {
                     this.props.dispatch(changeSelectedGroupId(groupId));
+                    this.fetchGroupData();
+                    this.toggleGroups();
                   }}
                 >
                   {this.props.groups.map(group => (

@@ -16,14 +16,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback
 } from "react-native";
+// import { Analytics, PageHit } from "expo-analytics";
 import PreSplash from "../components/PreSplash/PreSplash";
 import MenuDrawer from "../router/index";
-
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
-
 import { fetchToken } from "../actions/authentication";
 import { decodeToken } from "../actions/authentication";
 import { setFirebaseToken } from "../actions/authentication";
@@ -50,6 +48,8 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
+    // const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    // analytics.hit(new PageHit("App Login"));
     // if (this.props.authentication.isAuthed === true) {
     //   this.props.navigation.navigate("Main");
     // }
