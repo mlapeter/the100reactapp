@@ -26,7 +26,7 @@ const initialState = {
   gamingSessionsPage: 1,
   myGamingSessionsPage: 1,
   groupGamingSessionsPage: 1,
-  platform: null
+  platform: "ps4"
 };
 
 export default (state = initialState, action) => {
