@@ -31,8 +31,11 @@ import { connect } from "react-redux";
 import { removeToken } from "../actions/authentication";
 
 import { connectAlert } from "../components/Alert";
-import { fetchUser } from "../actions/users";
-import { updateUser } from "../actions/users";
+import {
+  fetchCurrentUser,
+  updateUser,
+  clearCurrentUser
+} from "../actions/users";
 
 import { firebaseSignOut } from "../utils/user";
 
@@ -48,8 +51,19 @@ class UserEdit extends React.Component {
   }
 
   componentWillMount() {
-    this.fetchUserEditData(this.props.authedUser);
-    console.log(this.props.authedUser);
+    // this.fetchUserEditData(this.props.user);
+    console.log(this.props.user);
+    this.props.dispatch(fetchCurrentUser());
+    setTimeout(() => {
+      if (this.props.user.gamertag == null) {
+        this.props.alertWithType(
+          "error",
+          "Error",
+          "Error connecting to server, please login again."
+        );
+        this.userLogout();
+      }
+    }, 5000);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -76,32 +90,30 @@ class UserEdit extends React.Component {
     }
   }
 
-  fetchUserEditData() {
-    console.log("Fetching User");
-    this.props.dispatch(fetchUser(this.props.authedUser.user_id));
-  }
+  // fetchUserEditData() {
+  //   console.log("Fetching User");
+  //   this.props.dispatch(fetchCurrentUser());
+  // }
 
   handlePress() {
+    console.log("pressed");
     var value = this.refs.form.getValue();
     if (value) {
       // if validation fails, value will be null
+      console.log("update user pressed");
       this.props.dispatch(updateUser(value));
     }
   }
 
   userLogout() {
-    // try {
-    //   AsyncStorage.removeItem("id_token");
-    // } catch (error) {
-    //   console.log("AsyncStorage error: " + error.message);
-    // }
     firebaseSignOut();
     this.props.dispatch(removeToken());
+    this.props.dispatch(clearCurrentUser());
     this.props.navigation.navigate("Login");
   }
 
   render() {
-    if (this.props.isCreating) {
+    if (this.props.currentUserLoading || this.props.isUpdating) {
       return (
         <View style={styles.outerContainer}>
           <View style={styles.container}>
@@ -136,7 +148,6 @@ class UserEdit extends React.Component {
     });
 
     let profanityOk = this.props.user.profanity_ok === "yes";
-    console.log(this.props.user);
 
     var User = t.struct({
       gamertag: t.String,
@@ -153,7 +164,7 @@ class UserEdit extends React.Component {
       play_schedule: PlaySchedule,
       play_style: PlayStyle,
       profanity_ok: t.Boolean,
-      gender: Gender,
+      gender: t.maybe(Gender),
       age: t.Number,
       hide_sherpa_badge: t.Boolean,
       discord_linked: t.Boolean,
@@ -235,20 +246,20 @@ class UserEdit extends React.Component {
         }
       }
     };
-    if (this.props.userLoading) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
-    if (this.props.isUpdating) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
+    // if (this.props.userLoading) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <ActivityIndicator />
+    //     </View>
+    //   );
+    // }
+    // if (this.props.isUpdating) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <ActivityIndicator />
+    //     </View>
+    //   );
+    // }
     return (
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -348,20 +359,20 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const authedUser = state.authentication.user;
-  const user = state.users.user;
+  // const authedUser = state.authentication.user;
+  const user = state.users.currentUser;
   const users = state.users;
   const isUpdating = state.users.isUpdating;
-  const userLoading = state.users.userLoading;
+  const currentUserLoading = state.users.currentUserLoading;
 
   // const isUpdating = state.users.isUpdating;
 
   return {
-    authedUser,
+    // authedUser,
     user,
     users,
     isUpdating,
-    userLoading
+    currentUserLoading
     // userError: state.users.error,
     // userUpdated: state.users.userUpdated
   };

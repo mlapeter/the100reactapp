@@ -7,6 +7,10 @@ export const EDIT_GAMING_SESSION = "EDIT_GAMING_SESSION";
 export const EDIT_GAMING_SESSION_RESULT = "EDIT_GAMING_SESSION_RESULT";
 export const EDIT_GAMING_SESSION_ERROR = "EDIT_GAMING_SESSION_ERROR";
 
+export const DELETE_GAMING_SESSION = "DELETE_GAMING_SESSION";
+export const DELETE_GAMING_SESSION_RESULT = "DELETE_GAMING_SESSION_RESULT";
+export const DELETE_GAMING_SESSION_ERROR = "DELETE_GAMING_SESSION_ERROR";
+
 export const FETCH_GAMING_SESSION = "FETCH_GAMING_SESSION";
 export const FETCH_GAMING_SESSION_RESULT = "FETCH_GAMING_SESSION_RESULT";
 export const FETCH_GAMING_SESSION_ERROR = "FETCH_GAMING_SESSION_ERROR";
@@ -53,6 +57,11 @@ export const createGamingSession = gamingSession => ({
 export const editGamingSession = gamingSession => ({
   type: EDIT_GAMING_SESSION,
   gamingSession
+});
+
+export const deleteGamingSession = deleteGamingSessionId => ({
+  type: DELETE_GAMING_SESSION,
+  deleteGamingSessionId
 });
 
 export const fetchGamingSession = gamingSessionId => ({

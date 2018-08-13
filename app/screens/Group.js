@@ -32,6 +32,9 @@ import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { fetchGroup, changeSelectedGroupId } from "../actions/group";
 
+import { firebaseSignOut } from "../utils/user";
+import { removeToken } from "../actions/authentication";
+
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 
 Moment.globalFormat = "h:mm";
@@ -91,11 +94,13 @@ class Group extends React.Component {
 
   joinGroup() {
     this.postData(this.props.group.id + "/join");
+    this.fetchGroupData();
     Alert.alert("Group Joined!");
   }
 
   leaveGroup() {
     this.postData(this.props.group.id + "/leave");
+    this.fetchGroupData();
     Alert.alert("Group Left.");
   }
 
@@ -246,6 +251,8 @@ class Group extends React.Component {
                   selectedValue={this.props.selectedGroupId}
                   onValueChange={groupId => {
                     this.props.dispatch(changeSelectedGroupId(groupId));
+                    this.fetchGroupData();
+                    this.toggleGroups();
                   }}
                 >
                   {this.props.groups.map(group => (
@@ -502,8 +509,9 @@ const mapStateToProps = state => {
     group: state.group.group,
     isLoading: state.group.isLoading,
     groupError: state.group.error,
-    groups: state.users.user.groups,
-    selectedGroupId: state.group.selectedGroupId
+    groups: state.users.currentUser.groups,
+    selectedGroupId: state.group.selectedGroupId,
+    user: state.users.currentUser
   };
 };
 

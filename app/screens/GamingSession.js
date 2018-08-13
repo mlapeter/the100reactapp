@@ -145,16 +145,17 @@ class GamingSession extends React.Component {
           </View>
           <View style={styles.buttonsContainer}>
             {this.props.user.user_id === this.props.gamingSession.creator_id ? (
-              <Button
-                style={{
-                  height: 25,
-                  width: 180,
-                  marginBottom: 25
-                }}
-                onPress={() =>
-                  this.props.navigation.navigate("GamingSessionEdit")}
-                title="Edit"
-              />
+              <View style={{ marginBottom: 10 }}>
+                <Button
+                  style={{
+                    height: 25,
+                    width: 180
+                  }}
+                  onPress={() =>
+                    this.props.navigation.navigate("GamingSessionEdit")}
+                  title="Edit"
+                />
+              </View>
             ) : null}
             <JoinLeaveButton
               hasJoined={userIds.includes(this.props.user.user_id)}

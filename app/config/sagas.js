@@ -29,6 +29,8 @@ import {
   FETCH_USER,
   FETCH_USER_RESULT,
   FETCH_USER_ERROR,
+  FETCH_CURRENT_USER,
+  FETCH_CURRENT_USER_RESULT,
   FETCH_FRIENDS,
   FETCH_FRIENDS_RESULT,
   FETCH_FRIENDS_ERROR,
@@ -81,6 +83,9 @@ import {
   EDIT_GAMING_SESSION,
   EDIT_GAMING_SESSION_RESULT,
   EDIT_GAMING_SESSION_ERROR,
+  DELETE_GAMING_SESSION,
+  DELETE_GAMING_SESSION_RESULT,
+  DELETE_GAMING_SESSION_ERROR,
   FETCH_GAMING_SESSION,
   FETCH_GAMING_SESSION_RESULT,
   FETCH_GAMING_SESSION_ERROR,
@@ -159,7 +164,7 @@ function* decodeToken() {
   try {
     let token = yield select(state => state.authentication.token);
     let result = jwtDecode(token);
-    let userId = yield select(state => state.authentication.user.user_id);
+    // let userId = yield select(state => state.authentication.user.user_id);
     yield put({ type: DECODE_TOKEN_RESULT, result });
   } catch (e) {
     yield put({ type: DECODE_TOKEN_ERROR, error: e.message });
@@ -205,11 +210,80 @@ function* fetchData(endpoint, page, success, failure, noData) {
   }
 }
 
+function* postData(method, endpoint, body, success, failure) {
+  console.log("POSTING DATA -----------");
+  try {
+    let token = yield select(state => state.authentication.token);
+    console.log("BODY:");
+    console.log(body);
+    const response = yield fetch(endpoint, {
+      method: method,
+      headers: {
+        Authorization: "Bearer " + token,
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      body: body
+    });
+    console.log("RESPONSE ---------");
+    const result = yield response.json();
+    console.log(result);
+
+    if (!response.ok) {
+      console.log("POST DATA ERROR ------");
+      yield put({
+        type: failure,
+        error: result.message
+      });
+    } else if (result.error) {
+      yield put({ type: failure, error: result.error });
+    } else {
+      console.log("postData Success");
+      console.log(result);
+      yield put({ type: success, result });
+    }
+  } catch (e) {
+    yield put({ type: failure, error: e.message });
+  }
+}
+
+function* deleteGamingSession() {
+  console.log("DELETING GAMING SESSION -----------");
+  try {
+    let token = yield select(state => state.authentication.token);
+    let deleteGamingSessionId = yield select(
+      state => state.gamingSessions.deleteGamingSessionId
+    );
+    let body = JSON.stringify({});
+
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "gaming_sessions/" +
+      deleteGamingSessionId;
+
+    yield call(
+      postData,
+      "DELETE",
+      endpoint,
+      body,
+      DELETE_GAMING_SESSION_RESULT,
+      DELETE_GAMING_SESSION_ERROR
+    );
+  } catch (e) {
+    yield put({
+      type: DELETE_GAMING_SESSION_ERROR,
+      error: "Error Deleting Gaming Session: " + e.message
+    });
+  }
+}
+
 function* updateUser() {
+  console.log("UPDATING USER");
   try {
     let token = yield select(state => state.authentication.token);
     let userId = yield select(state => state.authentication.user.user_id);
-    let user = yield select(state => state.users.user);
+    let user = yield select(state => state.users.currentUser);
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +
@@ -246,6 +320,7 @@ function* updateUser() {
       }
     );
     const result = yield response.json();
+    console.log(result);
     if (result.error) {
       yield put({ type: UPDATE_USER_ERROR, error: result.error });
     } else if (result.message === "Invalid credentials") {
@@ -424,7 +499,13 @@ function* fetchCurrentUser() {
       Environment["API_VERSION"] +
       "users/" +
       userId;
-    yield call(fetchData, endpoint, 1, FETCH_USER_RESULT, FETCH_USER_ERROR);
+    yield call(
+      fetchData,
+      endpoint,
+      1,
+      FETCH_CURRENT_USER_RESULT,
+      FETCH_USER_ERROR
+    );
   } catch (e) {
     yield put({ type: FETCH_USER_ERROR, error: e.message });
   }
@@ -633,9 +714,9 @@ function* refreshGroupMembers() {
 
 function* fetchGroup() {
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    // let userId = yield select(state => state.authentication.user.user_id);
     yield call(fetchCurrentUser);
-    let user = yield select(state => state.users.user);
+    let user = yield select(state => state.users.currentUser);
     let selectedGroupId = yield select(state => state.group.selectedGroupId);
     let endpoint = "";
     if (selectedGroupId == null && user.memberships[0]) {
@@ -834,6 +915,7 @@ function* loadMoreGroupGamingSessions() {
     yield put({ type: FETCH_GROUP_GAMING_SESSIONS_ERROR, error: e.message });
   }
 }
+
 function* createUser() {
   try {
     let userInfo = yield select(state => state.onboarding);
@@ -850,20 +932,6 @@ function* createUser() {
             ...userInfo
           }
         })
-
-        // WORKING HARDCODED PARAMS, USERNAME AND GAMERTAG MUST BE UNIQUE EACH TIME:
-        // body: JSON.stringify({
-        //   user: {
-        //     gamertag: "testing002173",
-        //     email: "testing002173@example.com",
-        //     password: "test123",
-        //     platform: "ps4",
-        //     play_style: "casual",
-        //     play_schedule: "Weekday Evenings and Weekends",
-        //     age: "20",
-        //     group_preference: "parents"
-        //   }
-        // })
       }
     );
     const result = yield response.json();
@@ -912,9 +980,15 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_TOKEN_RESULT, decodeToken);
   yield takeEvery(DECODE_TOKEN, decodeToken);
 
+  yield takeEvery(DECODE_TOKEN_RESULT, fetchCurrentUser);
+  yield takeEvery(DECODE_TOKEN_RESULT, fetchGames);
+  // yield takeEvery(DECODE_TOKEN_RESULT, fetchGroup);
+
   yield takeEvery(REMOVE_TOKEN, removeToken);
 
   yield takeEvery(UPDATE_USER, updateUser);
+
+  yield takeEvery(FETCH_CURRENT_USER, fetchCurrentUser);
 
   yield takeEvery(FETCH_USER, fetchUser);
 
@@ -937,6 +1011,7 @@ export default function* rootSaga() {
 
   yield takeEvery(CREATE_GAMING_SESSION, createGamingSession);
   yield takeEvery(EDIT_GAMING_SESSION, editGamingSession);
+  yield takeEvery(DELETE_GAMING_SESSION, deleteGamingSession);
 
   yield takeEvery(FETCH_GAMES, fetchGames);
 

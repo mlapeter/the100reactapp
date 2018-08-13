@@ -3,7 +3,10 @@ import { View } from "react-native";
 import GamingSessionForm from "../components/GamingSessionForm/GamingSessionForm";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
-import { createGamingSession } from "../actions/gamingSessions";
+import {
+  createGamingSession,
+  refreshMyGamingSessions
+} from "../actions/gamingSessions";
 import { changeGame } from "../actions/search";
 
 class GamingSessionCreate extends React.Component {
@@ -29,6 +32,7 @@ class GamingSessionCreate extends React.Component {
       nextProps.gamingSessions.gameCreated &&
       nextProps.gamingSessions.successAt !== this.props.gamingSessions.successAt
     ) {
+      this.props.dispatch(refreshMyGamingSessions());
       this.props.navigation.navigate("GamingSessionsList");
       this.props.alertWithType("success", "Success", "Gaming Session Created!");
     }
@@ -66,8 +70,8 @@ const mapStateToProps = state => {
   const game = state.search.game;
   const games = state.search.games;
   const activities = state.search.activities;
-  const groups = state.users.user.groups_for_api;
-  const user = state.users.user;
+  const groups = state.users.currentUser.groups_for_api;
+  const user = state.users.currentUser;
   const isCreating = state.gamingSessions.isCreating;
   const gamingSessions = state.gamingSessions;
 

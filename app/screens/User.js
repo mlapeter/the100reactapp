@@ -68,7 +68,9 @@ export class User extends React.Component {
   }
 
   componentDidMount() {
-    this.fetchUserData();
+    // this.fetchUserData();
+    console.log("fetchuser: ", userId);
+    this.props.dispatch(fetchUser(userId));
 
     this.props.dispatch(fetchConversations());
   }
@@ -104,10 +106,10 @@ export class User extends React.Component {
     }
   }
 
-  fetchUserData() {
-    console.log("Fetching User");
-    this.props.dispatch(fetchUser(userId));
-  }
+  // fetchUserData() {
+  //   console.log("Fetching User");
+  //   this.props.dispatch(fetchUser(userId));
+  // }
 
   giveKarma() {
     this.postData("/give_karma");
@@ -177,7 +179,7 @@ export class User extends React.Component {
       )
         .then(response => response.json())
         .then(responseJson => {
-          this.fetchUserData();
+          // this.fetchUserData();
 
           this.props.dispatch(fetchFriends());
           this.props.dispatch(fetchGroupMembers());
@@ -644,14 +646,34 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
+  const currentUser = state.users.currentUser;
+  const user = state.users.user;
+  const users = state.users;
+  const isUpdating = state.users.isUpdating;
+  const userLoading = state.users.userLoading;
+  const conversationsLoading = state.conversations.isLoading;
+  const conversations = state.conversations.conversations;
+
   return {
-    currentUser: state.authentication.user,
-    user: state.users.user,
-    userLoading: state.users.userLoading,
-    userError: state.users.error,
-    conversationsLoading: state.conversations.isLoading,
-    conversations: state.conversations.conversations
+    currentUser,
+    user,
+    users,
+    isUpdating,
+    userLoading,
+    conversationsLoading,
+    conversations
   };
 };
+
+// const mapStateToProps = state => {
+//   return {
+//     currentUser: state.users.currentUser,
+//     user: state.users.user,
+//     userLoading: state.users.userLoading,
+//     userError: state.users.error,
+//     conversationsLoading: state.conversations.isLoading;
+//     conversations: state.conversations.conversations
+//   };
+// };
 
 export default connect(mapStateToProps)(connectAlert(User));

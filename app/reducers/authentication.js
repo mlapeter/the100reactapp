@@ -38,6 +38,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorAt: new Date(),
         isLoading: false,
         isAuthed: false,
         token: "",
@@ -59,6 +60,8 @@ export default (state = initialState, action) => {
     case DECODE_TOKEN_ERROR:
       return {
         ...state,
+        error: action.error,
+        errorAt: new Date(),
         isLoading: false,
         isAuthed: false
       };
@@ -75,6 +78,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorAt: new Date(),
         isLoading: false,
         isAuthed: false,
         user: {},

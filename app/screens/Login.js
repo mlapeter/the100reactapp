@@ -16,14 +16,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback
 } from "react-native";
+// import { Analytics, PageHit } from "expo-analytics";
 import PreSplash from "../components/PreSplash/PreSplash";
 import MenuDrawer from "../router/index";
-
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
-
 import { fetchToken } from "../actions/authentication";
 import { decodeToken } from "../actions/authentication";
 import { setFirebaseToken } from "../actions/authentication";
@@ -50,22 +48,39 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.authentication.isAuthed === true) {
-      this.props.navigation.navigate("Main");
-    }
+    // const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    // analytics.hit(new PageHit("App Login"));
+    // if (this.props.authentication.isAuthed === true) {
+    //   this.props.navigation.navigate("Main");
+    // }
   }
 
   componentWillReceiveProps(nextProps) {
     if (
-      nextProps.authenticationError
-      // && nextProps.authenticationError !== this.props.authenticationError
+      nextProps.authentication.error &&
+      nextProps.authentication.errorAt !== this.props.authentication.errorAt
     ) {
-      this.props.alertWithType("error", "Error", nextProps.authenticationError);
+      this.props.alertWithType(
+        "error",
+        "Error",
+        nextProps.authentication.error
+      );
     }
-    if (nextProps.authentication.isAuthed) {
+    if (nextProps.users.currentUser && nextProps.authentication.isAuthed) {
       this.props.navigation.navigate("App");
     }
   }
+
+  // setTimeout(() => {
+  //   if (
+  //     this.props.authentication.isAuthed === true &&
+  //     this.props.users.currentUser.gamertag != null
+  //   ) {
+  //     this.props.navigation.navigate("App");
+  //   } else {
+  //     this.props.navigation.navigate("Auth");
+  //   }
+  // }, 3000);
 
   userLogin() {
     if (!this.state.username || !this.state.password) return;
@@ -184,10 +199,11 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   const authentication = state.authentication;
+  const users = state.users;
 
   return {
     authentication,
-    authenticationError: state.authentication.error
+    users
   };
 };
 

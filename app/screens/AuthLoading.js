@@ -10,6 +10,8 @@ import { Font } from "expo";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { decodeToken, setFirebaseToken } from "../actions/authentication";
+import { colors, fontSizes } from "../styles";
+import PreSplash from "../components/PreSplash/PreSplash";
 
 class AuthLoading extends React.Component {
   constructor(props) {
@@ -18,6 +20,7 @@ class AuthLoading extends React.Component {
   }
 
   bootstrap = () => {
+    console.log("Starting App");
     Font.loadAsync({
       Lato: require("../../app/assets/fonts/Lato-Bold.ttf"),
       Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
@@ -27,11 +30,28 @@ class AuthLoading extends React.Component {
       });
       AsyncStorage.getItem("id_token").then(token => {
         this.props.dispatch(decodeToken(token));
-        if (this.props.authentication.isAuthed === true) {
-          this.props.navigation.navigate("App");
-        } else {
-          this.props.navigation.navigate("Auth");
-        }
+        // setTimeout(() => {
+        //   if (
+        //     this.props.authentication.isAuthed === true &&
+        //     this.props.users.currentUser.gamertag != null
+        //   ) {
+        //     this.props.navigation.navigate("App");
+        //   } else {
+        //     this.props.navigation.navigate("Auth");
+        //   }
+        // }, 3000);
+
+        setTimeout(() => {
+          if (
+            !this.props.users.currentUser ||
+            this.props.users.currentUser.gamertag == null ||
+            this.props.authentication.isAuthed !== true
+          ) {
+            this.props.navigation.navigate("Auth");
+          } else {
+            this.props.navigation.navigate("App");
+          }
+        }, 3000);
       });
     });
   };
@@ -49,19 +69,31 @@ class AuthLoading extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <ActivityIndicator />
-        <StatusBar barStyle="default" />
+        <PreSplash />
       </View>
     );
   }
 }
 
+const styles = StyleSheet.create({
+  container: {
+    padding: 5,
+    // paddingTop: 25,
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    backgroundColor: colors.white
+  }
+});
+
 const mapStateToProps = state => {
   const authentication = state.authentication;
+  const users = state.users;
   // const onAuthChange = state.authentication.onAuthChange(token);
 
   return {
     authentication,
+    users,
     authenticationError: state.authentication.error
   };
 };

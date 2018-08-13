@@ -149,14 +149,17 @@ class Chat extends Component {
   };
 
   componentWillMount() {
-    Keyboard.addListener("keyboardDidShow", this.onKeyboardShown);
-    Keyboard.addListener("keyboardDidHide", this.onKeyboardHidden);
+    if (Platform.OS === "ios") {
+      Keyboard.addListener("keyboardDidShow", this.onKeyboardShown);
+      Keyboard.addListener("keyboardDidHide", this.onKeyboardHidden);
+    }
   }
 
   componentWillUnmount() {
-    Keyboard.removeListener("keyboardDidShow", this.onKeyboardShown);
-    Keyboard.removeListener("keyboardDidHide", this.onKeyboardHidden);
-
+    if (Platform.OS === "ios") {
+      Keyboard.removeListener("keyboardDidShow", this.onKeyboardShown);
+      Keyboard.removeListener("keyboardDidHide", this.onKeyboardHidden);
+    }
     if (this.messagesQuery) {
       this.messagesQuery.off();
     }

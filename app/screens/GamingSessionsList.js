@@ -49,7 +49,7 @@ import { loadMoreMyGamingSessions } from "../actions/gamingSessions";
 import { fetchGroupGamingSessions } from "../actions/gamingSessions";
 import { refreshGroupGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
-import { fetchUser, updateUser } from "../actions/users";
+import { updateUser } from "../actions/users";
 import { removeToken } from "../actions/authentication";
 
 class GamingSessionsList extends React.PureComponent {
@@ -81,34 +81,21 @@ class GamingSessionsList extends React.PureComponent {
   // };
 
   componentDidMount() {
-    this.props.dispatch(fetchUser(this.props.authedUser.user_id));
-    // setTimeout(() => {
-    //   console.log(this.props.user.gamertag);
-    //   if (this.props.user.gamertag == null) {
-    //     this.props.alertWithType(
-    //       "error",
-    //       "Error",
-    //       "Error connecting to server, please login again."
-    //     );
-    //     this.props.dispatch(removeToken());
-    //     this.props.navigation.navigate("Login");
-    //   }
-    // }, 5000);
-
-    this.fetchGamesData();
+    // this.fetchGamesData();
     if (this.props.user.platform == null) {
       setTimeout(() => {
         // Wait to load user to get user platform for default search
         this.fetchGamingSessionsData();
-      }, 1000);
+      }, 3000);
     } else {
       this.fetchGamingSessionsData();
     }
 
     registerForPushNotificationsAsync().then(token => {
       if (
-        this.props.user.expo_push_token == null ||
-        this.props.user.expo_push_token !== token
+        token &&
+        (this.props.user.expo_push_token == null ||
+          this.props.user.expo_push_token !== token)
       ) {
         this.props.dispatch(updateUser(token));
       }
@@ -343,10 +330,10 @@ class GamingSessionsList extends React.PureComponent {
               <Image
                 style={styles.avatarMini}
                 source={
-                  this.props.authedUser.computed_avatar_api ===
+                  this.props.user.computed_avatar_api ===
                   "img/default-avatar.png"
                     ? require("../../app/assets/images/default-avatar.png")
-                    : { uri: this.props.authedUser.computed_avatar_api }
+                    : { uri: this.props.user.computed_avatar_api }
                 }
               />
             </TouchableOpacity>
@@ -518,7 +505,7 @@ const mapStateToProps = state => {
   const gameId = state.search.gameId;
   const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
-  const platform = state.search.platform || state.users.user.platform;
+  const platform = state.search.platform || state.users.currentUser.platform;
 
   const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
   const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;
@@ -543,8 +530,7 @@ const mapStateToProps = state => {
   const moreGroupGamingSessionsAvailable =
     state.gamingSessions.moreGroupGamingSessionsAvailable;
 
-  const authedUser = state.authentication.user;
-  const user = state.users.user;
+  const user = state.users.currentUser;
   return {
     activity,
     game,
@@ -565,7 +551,6 @@ const mapStateToProps = state => {
     moreGamingSessionsAvailable,
     moreMyGamingSessionsAvailable,
     moreGroupGamingSessionsAvailable,
-    authedUser,
     user,
     gamingSessionsError: state.gamingSessions.error
   };

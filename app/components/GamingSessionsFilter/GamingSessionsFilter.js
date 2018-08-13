@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 10,
     marginBottom: 30,
-    justifyContent: "center",
+    justifyContent: "space-around",
     alignItems: "stretch",
     flexDirection: "row"
   }
