@@ -57,6 +57,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorAt: new Date(),
         // platform: "",
         // gamertag: "",
         // timezone: "",

@@ -15,16 +15,15 @@ export default class ChatPreview extends Component {
   render() {
     return (
       <View style={this.props.stype}>
+        <View style={{ paddingHorizontal: 12, paddingTop: 12 }}>
+          <Button onPress={this.props.onOpenChat} title="View Chat" />
+        </View>
         <Chat
           room={this.props.room}
           url={this.props.url}
           allowAnon={this.props.allowAnon}
           preview={true}
         />
-
-        <View style={{ paddingHorizontal: 12, paddingTop: 12 }}>
-          <Button onPress={this.props.onOpenChat} title="View Chat" />
-        </View>
       </View>
     );
   }

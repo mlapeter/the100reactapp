@@ -10,6 +10,7 @@ import {
   LayoutAnimation,
   ListView,
   Picker,
+  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -60,6 +61,11 @@ class Group extends React.Component {
   // };
 
   componentWillMount() {
+    AsyncStorage.getItem("default_group_id").then(groupId => {
+      if (groupId) {
+        this.props.dispatch(changeSelectedGroupId(groupId));
+      }
+    });
     this.fetchGroupData();
   }
 
@@ -107,6 +113,20 @@ class Group extends React.Component {
   autoJoinGroup() {
     this.postData("autojoin");
     Alert.alert("Group Auto Joined!");
+  }
+
+  onShare() {
+    Share.share(
+      {
+        message: "Join " + this.props.group.name,
+        url: "https://the100.io/groups/" + this.props.group.id,
+        title: ""
+      },
+      {
+        // Android only:
+        dialogTitle: "Share Group Link"
+      }
+    );
   }
 
   postData(action) {
@@ -245,6 +265,17 @@ class Group extends React.Component {
                 joinGroup={() => this.joinGroup()}
                 leaveGroup={() => this.leaveGroup()}
               />
+              <View style={{ marginVertical: 10 }}>
+                <Button
+                  style={{
+                    height: 30,
+                    width: 180,
+                    marginBottom: 15
+                  }}
+                  onPress={() => this.onShare()}
+                  title="Share"
+                />
+              </View>
               {this.props.groups.length > 1 ? (
                 <Picker
                   style={styles.pickerStyle}

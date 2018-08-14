@@ -164,6 +164,8 @@ function* decodeToken() {
   try {
     let token = yield select(state => state.authentication.token);
     let result = jwtDecode(token);
+    console.log(result);
+
     // let userId = yield select(state => state.authentication.user.user_id);
     yield put({ type: DECODE_TOKEN_RESULT, result });
   } catch (e) {
@@ -176,6 +178,7 @@ function* removeToken() {
   try {
     AsyncStorage.removeItem("id_token");
     AsyncStorage.removeItem("fb_token");
+    AsyncStorage.removeItem("default_group_id");
   } catch (e) {
     yield put({ type: REMOVE_TOKEN_ERROR, error: e.message });
   }
@@ -492,6 +495,7 @@ function* fetchActivities() {
 }
 
 function* fetchCurrentUser() {
+  console.log("fetching current user...");
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let endpoint =
@@ -735,6 +739,7 @@ function* fetchGroup() {
         "groups/" +
         selectedGroupId;
       yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
+      AsyncStorage.setItem("default_group_id", selectedGroupId.toString());
     }
   } catch (e) {
     yield put({ type: FETCH_GROUP_ERROR, error: e.message });
@@ -938,10 +943,12 @@ function* createUser() {
     if (result.error) {
       yield put({ type: CREATE_USER_ERROR, error: result.error });
     } else {
+      console.log("New User Created: ");
+      console.log(result);
       token = result.token;
       firebaseToken = result.firebase_token;
       AsyncStorage.setItem("id_token", token);
-      // AsyncStorage.setItem("fb_token", firebaseToken);
+      AsyncStorage.setItem("fb_token", firebaseToken);
       yield put({ type: FETCH_TOKEN_RESULT, token, firebaseToken });
     }
   } catch (e) {

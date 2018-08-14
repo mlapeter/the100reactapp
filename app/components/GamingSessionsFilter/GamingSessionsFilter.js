@@ -19,6 +19,7 @@ import { changeGame } from "../../actions/search";
 import { changeActivity, toggleNotFull } from "../../actions/search";
 import { connect } from "react-redux";
 import { ButtonGroup, CheckBox } from "react-native-elements";
+import { AsyncStorage } from "react-native";
 
 class GamingSessionsFilter extends Component {
   static propTypes = {
@@ -43,6 +44,7 @@ class GamingSessionsFilter extends Component {
     platform = this.state.platforms[selectedIndex];
     this.props.dispatch(changePlatform(platform));
     this.setState({ selectedIndex: selectedIndex });
+    AsyncStorage.setItem("search_platform", platform);
   }
 
   updateFilter() {

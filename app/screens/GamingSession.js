@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   ListView,
   ScrollView,
+  Share,
   StyleSheet,
   Text,
   TextInput,
@@ -111,6 +112,21 @@ class GamingSession extends React.Component {
     });
   }
 
+  onShare() {
+    Share.share(
+      {
+        message:
+          "New game, join up! " + this.props.gamingSession.category.toString(),
+        url: "https://the100.io/game/" + this.props.gamingSession.id,
+        title: ""
+      },
+      {
+        // Android only:
+        dialogTitle: "Share Gaming Session"
+      }
+    );
+  }
+
   render() {
     const { params } = this.props.navigation.state;
 
@@ -162,6 +178,17 @@ class GamingSession extends React.Component {
               leaveGame={this.leaveGame.bind(this)}
               joinGame={this.joinGame}
             />
+            <View style={{ marginTop: 10 }}>
+              <Button
+                style={{
+                  height: 30,
+                  width: 180,
+                  marginBottom: 15
+                }}
+                onPress={() => this.onShare()}
+                title="Share"
+              />
+            </View>
           </View>
         </View>
         {this.props.gamingSession.name != null ? (

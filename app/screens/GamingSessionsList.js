@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
+  AsyncStorage,
   FlatList,
   Image,
   Keyboard,
@@ -19,6 +20,7 @@ import { Notifications } from "expo";
 import moment from "moment";
 import Environment from "../config/environment";
 import { registerForPushNotificationsAsync } from "../utils/expoPushNotifications";
+
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
@@ -36,7 +38,7 @@ import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 
 import { fetchGames } from "../actions/search";
-import { changeGamingSessionsPage } from "../actions/search";
+import { changeGamingSessionsPage, changePlatform } from "../actions/search";
 
 import { fetchGamingSessions } from "../actions/gamingSessions";
 import { refreshGamingSessions } from "../actions/gamingSessions";
@@ -82,6 +84,15 @@ class GamingSessionsList extends React.PureComponent {
 
   componentDidMount() {
     // this.fetchGamesData();
+
+    // Todo: save search settings in local storage and retrieve
+    // AsyncStorage.getItem("search_platform").then(platform => {
+    //   if (platform) {
+    //     console.log("platform in local storage: ", platform)
+    //     this.props.dispatch(changePlatform(platform));
+    //   }
+    // });
+
     if (this.props.user.platform == null) {
       setTimeout(() => {
         // Wait to load user to get user platform for default search

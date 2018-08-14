@@ -10,6 +10,8 @@ import { Font } from "expo";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { decodeToken, setFirebaseToken } from "../actions/authentication";
+import { changeSelectedGroupId } from "../actions/group";
+
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 
@@ -30,6 +32,7 @@ class AuthLoading extends React.Component {
       });
       AsyncStorage.getItem("id_token").then(token => {
         this.props.dispatch(decodeToken(token));
+
         // setTimeout(() => {
         //   if (
         //     this.props.authentication.isAuthed === true &&
