@@ -10,6 +10,7 @@ import {
   LayoutAnimation,
   ListView,
   Picker,
+  Platform,
   Share,
   StyleSheet,
   Text,
@@ -118,7 +119,14 @@ class Group extends React.Component {
   onShare() {
     Share.share(
       {
-        message: "Join " + this.props.group.name,
+        message:
+          Platform.OS === "android"
+            ? "Join " +
+              this.props.group.name +
+              " " +
+              "https://the100.io/groups/" +
+              this.props.group.id
+            : "Join " + this.props.group.name,
         url: "https://the100.io/groups/" + this.props.group.id,
         title: ""
       },
@@ -265,16 +273,8 @@ class Group extends React.Component {
                 joinGroup={() => this.joinGroup()}
                 leaveGroup={() => this.leaveGroup()}
               />
-              <View style={{ marginVertical: 10 }}>
-                <Button
-                  style={{
-                    height: 30,
-                    width: 180,
-                    marginBottom: 15
-                  }}
-                  onPress={() => this.onShare()}
-                  title="Share"
-                />
+              <View style={{ paddingHorizontal: 12, paddingVertical: 12 }}>
+                <Button onPress={() => this.onShare()} title="Share" />
               </View>
               {this.props.groups.length > 1 ? (
                 <Picker

@@ -1,9 +1,13 @@
+// if (process.env.NODE_ENV === "development") {
+//   require("./reactotron");
+// }
 require("./reactotron");
+
+import Reactotron from "reactotron-react-native";
 
 import { createStore, applyMiddleware } from "redux";
 import logger from "redux-logger";
 import createSagaMiddleware from "redux-saga";
-import Reactotron from "reactotron-react-native";
 
 import reducers from "../reducers";
 import rootSaga from "./sagas";

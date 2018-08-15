@@ -989,7 +989,7 @@ export default function* rootSaga() {
 
   yield takeEvery(DECODE_TOKEN_RESULT, fetchCurrentUser);
   yield takeEvery(DECODE_TOKEN_RESULT, fetchGames);
-  // yield takeEvery(DECODE_TOKEN_RESULT, fetchGroup);
+  yield takeEvery(DECODE_TOKEN_RESULT, fetchGroup);
 
   yield takeEvery(REMOVE_TOKEN, removeToken);
 

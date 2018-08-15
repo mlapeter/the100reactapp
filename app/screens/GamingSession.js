@@ -116,7 +116,15 @@ class GamingSession extends React.Component {
     Share.share(
       {
         message:
-          "New game, join up! " + this.props.gamingSession.category.toString(),
+          Platform.OS === "android"
+            ? "New game, join up! " +
+              this.props.gamingSession.category.toString() +
+              " " +
+              "https://the100.io/game/" +
+              this.props.gamingSession.id
+            : "New game, join up! " +
+              this.props.gamingSession.category.toString() +
+              " ",
         url: "https://the100.io/game/" + this.props.gamingSession.id,
         title: ""
       },
