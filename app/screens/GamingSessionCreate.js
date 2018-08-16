@@ -71,7 +71,6 @@ const mapStateToProps = state => {
   const games = state.search.games;
   const activities = state.search.activities;
   const groups = state.users.currentUser.groups_for_api;
-  console.log("groups_for_api: ");
   console.log(state.users.currentUser.groups_for_api);
   const user = state.users.currentUser;
   const isCreating = state.gamingSessions.isCreating;

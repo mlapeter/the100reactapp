@@ -723,12 +723,12 @@ function* fetchGroup() {
     let user = yield select(state => state.users.currentUser);
     let selectedGroupId = yield select(state => state.group.selectedGroupId);
     let endpoint = "";
-    if (selectedGroupId == null && user.memberships[0]) {
+    if (selectedGroupId == null && user.groups[0]) {
       endpoint =
         Environment["API_BASE_URL"] +
         Environment["API_VERSION"] +
         "groups/" +
-        user.memberships[0]["group_id"];
+        user.groups[0]["id"];
       yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
     } else if (selectedGroupId == null) {
       yield put({ type: FETCH_GROUP_EMPTY });

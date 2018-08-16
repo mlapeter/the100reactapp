@@ -6,14 +6,18 @@ import {
   Button,
   Image,
   KeyboardAvoidingView,
+  LayoutAnimation,
   ListView,
   ScrollView,
   Share,
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View
 } from "react-native";
+import CustomButton from "../components/CustomButton";
+import Touchable from "react-native-platform-touchable";
 import Environment from "../config/environment";
 import ChatPreview from "../components/ChatPreview";
 import Panel from "../components/Panel/Panel";
@@ -26,6 +30,7 @@ import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import {
   fetchGamingSession,
+  fetchGamingSessions,
   fetchMyGamingSessions,
   fetchGroupGamingSessions,
   refreshMyGamingSessions
@@ -45,7 +50,8 @@ class GamingSession extends React.Component {
     this.state = {
       hasJoined: false,
       refreshing: false,
-      gameData: ""
+      gameData: "",
+      reserveButtonVisible: false
     };
     gamingSessionId = this.props.navigation.state.params.gamingSessionId;
   }
@@ -62,10 +68,17 @@ class GamingSession extends React.Component {
     this.postData("/join");
   };
 
+  joinGameAsReserve = () => {
+    this.postData("/join?join_as_reserve=true");
+    this.onLongPress();
+  };
+
   leaveGame = () => {
     this.postData("/leave");
 
     setTimeout(() => {
+      this.props.dispatch(fetchGamingSessions());
+
       this.props.dispatch(fetchMyGamingSessions());
       this.props.dispatch(fetchGroupGamingSessions());
       this.setState({
@@ -96,7 +109,7 @@ class GamingSession extends React.Component {
       )
         .then(response => response.json())
         .then(responseJson => {
-          if (action === "/join") {
+          if (action === "/join" || action === "/join?join_as_reserve=true") {
             this.fetchGamingSessionData();
             console.log("GAME JOINED");
             this.setState({
@@ -135,6 +148,13 @@ class GamingSession extends React.Component {
     );
   }
 
+  onLongPress = () => {
+    this.setState({
+      reserveButtonVisible: !this.state.reserveButtonVisible
+    });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+  };
+
   render() {
     const { params } = this.props.navigation.state;
 
@@ -159,6 +179,23 @@ class GamingSession extends React.Component {
     );
     return (
       <View style={styles.container}>
+        {this.state.reserveButtonVisible ? (
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-end"
+            }}
+          >
+            <Button
+              style={{
+                height: 30,
+                marginBottom: 15
+              }}
+              onPress={() => this.joinGameAsReserve()}
+              title="Join As Reserve"
+            />
+          </View>
+        ) : null}
         <View style={styles.titleBar}>
           <View style={styles.titleContainer}>
             <Text style={styles.title}>
@@ -185,7 +222,9 @@ class GamingSession extends React.Component {
               hasJoined={userIds.includes(this.props.user.user_id)}
               leaveGame={this.leaveGame.bind(this)}
               joinGame={this.joinGame}
+              onLongPress={this.onLongPress}
             />
+
             <View style={{ marginTop: 10 }}>
               <Button
                 style={{
@@ -205,11 +244,7 @@ class GamingSession extends React.Component {
             numberOfLines={3}
           />
         ) : null}
-        {/* <Text style={styles.description} numberOfLines={2}>
-          {this.props.gamingSession.name != null
-            ? this.props.gamingSession.name.toString()
-            : ""}
-        </Text> */}
+
         <View style={styles.iconBar}>
           <TimeIcon startTime={this.props.gamingSession.start_time} />
           <PlatformIcon platform={this.props.gamingSession.platform} />
@@ -248,26 +283,27 @@ class GamingSession extends React.Component {
 export function JoinLeaveButton(props) {
   if (props.hasJoined) {
     return (
-      <Button
+      <CustomButton
         style={{
           height: 30,
           width: 180,
           marginBottom: 15
         }}
-        onPress={() => props.leaveGame()}
         title="Leave"
+        onPress={() => props.leaveGame()}
       />
     );
   } else {
     return (
-      <Button
+      <CustomButton
         style={{
           height: 30,
           width: 180,
           marginBottom: 15
         }}
-        onPress={() => props.joinGame()}
         title="Join"
+        onPress={() => props.joinGame()}
+        onLongPress={() => props.onLongPress()}
       />
     );
   }
