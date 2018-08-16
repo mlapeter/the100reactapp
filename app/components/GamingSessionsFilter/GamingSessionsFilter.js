@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import {
   Button,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -19,6 +20,7 @@ import { changeGame } from "../../actions/search";
 import { changeActivity, toggleNotFull } from "../../actions/search";
 import { connect } from "react-redux";
 import { ButtonGroup, CheckBox } from "react-native-elements";
+import { AsyncStorage } from "react-native";
 
 class GamingSessionsFilter extends Component {
   static propTypes = {
@@ -43,6 +45,7 @@ class GamingSessionsFilter extends Component {
     platform = this.state.platforms[selectedIndex];
     this.props.dispatch(changePlatform(platform));
     this.setState({ selectedIndex: selectedIndex });
+    AsyncStorage.setItem("search_platform", platform);
   }
 
   updateFilter() {
@@ -84,40 +87,41 @@ class GamingSessionsFilter extends Component {
             alert("Modal has been closed using android back button.");
           }}
         >
-          <View
-            style={{
-              flex: 1,
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: colors.white
-            }}
-          >
+          <ScrollView>
             <View
               style={{
-                width: 300,
-                marginTop: 60,
-                // height: 600,
+                flex: 1,
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
                 backgroundColor: colors.white
               }}
             >
-              <ButtonGroup
-                onPress={this.updateIndex}
-                selectedIndex={this.state.selectedIndex}
-                buttons={this.state.platforms}
-                containerStyle={{ height: 60 }}
-              />
+              <View
+                style={{
+                  width: 300,
+                  marginTop: 30,
+                  // height: 600,
+                  backgroundColor: colors.white
+                }}
+              >
+                <ButtonGroup
+                  onPress={this.updateIndex}
+                  selectedIndex={this.state.selectedIndex}
+                  buttons={this.state.platforms}
+                  containerStyle={{ height: 60 }}
+                />
 
-              <CheckBox
-                title="Games that aren't full"
-                checked={this.props.notFull === 1}
-                onPress={() =>
-                  this.props.dispatch(
-                    toggleNotFull(this.props.notFull === 1 ? 0 : 1)
-                  )}
-              />
+                <CheckBox
+                  title="Games that aren't full"
+                  checked={this.props.notFull === 1}
+                  onPress={() =>
+                    this.props.dispatch(
+                      toggleNotFull(this.props.notFull === 1 ? 0 : 1)
+                    )}
+                />
 
-              {/* <Button
+                {/* <Button
                 raised
                 icon={{ name: "home", size: 32 }}
                 buttonStyle={{ backgroundColor: "red", borderRadius: 10 }}
@@ -125,7 +129,7 @@ class GamingSessionsFilter extends Component {
                 title={`Welcome to\nReact Native Elements`}
               /> */}
 
-              {/* <Picker
+                {/* <Picker
                 style={styles.pickerStyle}
                 selectedValue={this.props.platform}
                 onValueChange={platform => {
@@ -136,54 +140,55 @@ class GamingSessionsFilter extends Component {
                 <Picker.Item label="PS4" value="ps4" />
               </Picker> */}
 
-              <Picker
-                style={styles.pickerStyle}
-                selectedValue={this.props.activity}
-                onValueChange={activity =>
-                  this.props.dispatch(changeActivity(activity))}
-              >
-                <Picker.Item label="All" value="" />
-                {this.props.activities.map(activity => (
-                  <Picker.Item
-                    key={activity.toString()}
-                    label={activity.toString()}
-                    value={activity.toString()}
-                  />
-                ))}
-              </Picker>
-              <Picker
-                style={styles.pickerStyle}
-                selectedValue={this.props.gameId}
-                onValueChange={gameId => {
-                  this.props.dispatch(changeGame(gameId));
-                }}
-              >
-                {this.props.games.map(game => (
-                  <Picker.Item
-                    key={game.id}
-                    label={game.name.toString()}
-                    value={game.id}
-                  />
-                ))}
-              </Picker>
+                <Picker
+                  style={styles.pickerStyle}
+                  selectedValue={this.props.activity}
+                  onValueChange={activity =>
+                    this.props.dispatch(changeActivity(activity))}
+                >
+                  <Picker.Item label="All" value="" />
+                  {this.props.activities.map(activity => (
+                    <Picker.Item
+                      key={activity.toString()}
+                      label={activity.toString()}
+                      value={activity.toString()}
+                    />
+                  ))}
+                </Picker>
+                <Picker
+                  style={styles.pickerStyle}
+                  selectedValue={this.props.gameId}
+                  onValueChange={gameId => {
+                    this.props.dispatch(changeGame(gameId));
+                  }}
+                >
+                  {this.props.games.map(game => (
+                    <Picker.Item
+                      key={game.id}
+                      label={game.name.toString()}
+                      value={game.id}
+                    />
+                  ))}
+                </Picker>
 
-              <View style={styles.modalButtonStyle}>
-                <Button
-                  onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible);
-                  }}
-                  title="Cancel"
-                />
-                <Button
-                  onPress={() => {
-                    this.setModalVisible(!this.state.modalVisible);
-                    this.props.updateFilter();
-                  }}
-                  title="Search"
-                />
+                <View style={styles.modalButtonStyle}>
+                  <Button
+                    onPress={() => {
+                      this.setModalVisible(!this.state.modalVisible);
+                    }}
+                    title="Cancel"
+                  />
+                  <Button
+                    onPress={() => {
+                      this.setModalVisible(!this.state.modalVisible);
+                      this.props.updateFilter();
+                    }}
+                    title="Search"
+                  />
+                </View>
               </View>
             </View>
-          </View>
+          </ScrollView>
         </Modal>
 
         {/* <Button
