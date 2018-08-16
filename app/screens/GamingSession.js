@@ -78,7 +78,6 @@ class GamingSession extends React.Component {
 
     setTimeout(() => {
       this.props.dispatch(fetchGamingSessions());
-
       this.props.dispatch(fetchMyGamingSessions());
       this.props.dispatch(fetchGroupGamingSessions());
       this.setState({

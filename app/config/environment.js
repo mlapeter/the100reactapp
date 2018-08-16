@@ -30,7 +30,7 @@ function getReleaseChannel() {
   if (releaseChannel === undefined) {
     return "staging";
   } else if (releaseChannel === "staging") {
-    return "staging";
+    return "production";
   } else {
     return "production";
   }
