@@ -62,12 +62,12 @@ class Group extends React.Component {
   // };
 
   componentWillMount() {
-    AsyncStorage.getItem("default_group_id").then(groupId => {
-      if (groupId) {
-        this.props.dispatch(changeSelectedGroupId(groupId));
-      }
-    });
-    this.fetchGroupData();
+    // AsyncStorage.getItem("default_group_id").then(groupId => {
+    //   if (groupId) {
+    //     this.props.dispatch(changeSelectedGroupId(groupId));
+    //   }
+    // });
+    // this.fetchGroupData();
   }
 
   componentWillReceiveProps(nextProps) {

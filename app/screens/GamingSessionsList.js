@@ -338,15 +338,19 @@ class GamingSessionsList extends React.PureComponent {
             <TouchableOpacity
               onPress={() => this.props.navigation.openDrawer()}
             >
-              <Image
-                style={styles.avatarMini}
-                source={
-                  this.props.user.computed_avatar_api ===
-                  "img/default-avatar.png"
-                    ? require("../../app/assets/images/default-avatar.png")
-                    : { uri: this.props.user.computed_avatar_api }
-                }
-              />
+              {this.props.user ? (
+                <Image
+                  style={styles.avatarMini}
+                  source={
+                    this.props.user.computed_avatar_api ===
+                    "img/default-avatar.png"
+                      ? require("../../app/assets/images/default-avatar.png")
+                      : { uri: this.props.user.computed_avatar_api }
+                  }
+                />
+              ) : (
+                <ActivityIndicator />
+              )}
             </TouchableOpacity>
           </View>
           <View style={styles.rightContainer}>

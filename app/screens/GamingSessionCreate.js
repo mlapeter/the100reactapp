@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View } from "react-native";
+import { ActivityIndicator, AsyncStorage, View } from "react-native";
 import GamingSessionForm from "../components/GamingSessionForm/GamingSessionForm";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -8,6 +8,7 @@ import {
   refreshMyGamingSessions
 } from "../actions/gamingSessions";
 import { changeGame } from "../actions/search";
+import { fetchGroup } from "../actions/group";
 
 class GamingSessionCreate extends React.Component {
   constructor(props) {
@@ -16,6 +17,10 @@ class GamingSessionCreate extends React.Component {
   }
 
   componentDidMount() {}
+
+  componentWillMount() {
+    this.props.dispatch(fetchGroup());
+  }
 
   componentWillReceiveProps(nextProps) {
     if (
@@ -47,6 +52,15 @@ class GamingSessionCreate extends React.Component {
   };
 
   render() {
+    if (!this.props.user) {
+      return (
+        <View style={styles.outerContainer}>
+          <View style={styles.container}>
+            <ActivityIndicator />
+          </View>
+        </View>
+      );
+    }
     return (
       <View style={{ flex: 1 }}>
         <GamingSessionForm

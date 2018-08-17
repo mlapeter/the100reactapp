@@ -27,8 +27,17 @@ export default class GamingSessionForm extends React.Component {
     this.state = {
       viewGames: false,
       advancedOptions: false,
-      formData: null
+      formData: null,
+      loading: true
     };
+  }
+
+  componentWillMount() {
+    setTimeout(() => {
+      this.setState({
+        loading: false
+      });
+    }, 500);
   }
 
   toggleGames() {
@@ -39,10 +48,18 @@ export default class GamingSessionForm extends React.Component {
   }
 
   toggleAdvancedOptions() {
-    this.setState({
-      advancedOptions: !this.state.advancedOptions,
-      formData: this.refs.form.getValue()
-    });
+    let formValue = this.refs.form.getValue();
+    console.log(formValue);
+    if (formValue) {
+      this.setState({
+        advancedOptions: !this.state.advancedOptions,
+        formData: formValue
+      });
+    } else {
+      this.setState({
+        advancedOptions: !this.state.advancedOptions
+      });
+    }
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
 
@@ -60,9 +77,9 @@ export default class GamingSessionForm extends React.Component {
     let newActivities = toObject(this.props.activities);
     let finalActivities = t.enums(newActivities);
     let newGroups = { "": "" };
-    if (this.props.groups) {
-      newGroups = toObject(this.props.groups);
-    }
+    // if (this.props.groups) {
+    //   newGroups = toObject(this.props.groups);
+    // }
     const finalGroups = t.enums(newGroups);
 
     function toObject(arr) {
@@ -193,7 +210,12 @@ export default class GamingSessionForm extends React.Component {
       );
     }
 
-    if (this.props.isCreating || this.props.isEditing) {
+    if (
+      this.props.isCreating ||
+      this.props.isEditing ||
+      !this.props.user ||
+      this.state.loading
+    ) {
       return (
         <View style={styles.outerContainer}>
           <View style={styles.container}>
