@@ -247,7 +247,7 @@ class GamingSessionsList extends React.PureComponent {
     }, []);
   };
 
-  gamesArray = data => {
+  gamingSessionsArray = data => {
     let array = this.uniqueDates(data);
     let games = array.map(date => ({
       title: date,
@@ -323,13 +323,13 @@ class GamingSessionsList extends React.PureComponent {
   };
 
   render() {
-    if (this.props.gamingSessionsLoading) {
-      return (
-        <View style={styles.container}>
-          <PreSplash />
-        </View>
-      );
-    }
+    // if (this.props.gamingSessionsRefreshing) {
+    //   return (
+    //     <View style={styles.container}>
+    //       <PreSplash />
+    //     </View>
+    //   );
+    // }
 
     return (
       <View style={styles.container}>
@@ -393,7 +393,7 @@ class GamingSessionsList extends React.PureComponent {
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
-                sections={this.gamesArray(this.props.data)}
+                sections={this.gamingSessionsArray(this.props.data)}
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderFooter}
                 // ListEmptyComponent={this.renderEmpty}
@@ -422,7 +422,9 @@ class GamingSessionsList extends React.PureComponent {
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
-                sections={this.gamesArray(this.props.groupGamingSessions)}
+                sections={this.gamingSessionsArray(
+                  this.props.groupGamingSessions
+                )}
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderGroupFooter}
                 ListEmptyComponent={this.renderEmpty}
@@ -453,7 +455,7 @@ class GamingSessionsList extends React.PureComponent {
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
-                sections={this.gamesArray(this.props.myGamingSessions)}
+                sections={this.gamingSessionsArray(this.props.myGamingSessions)}
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderMyFooter}
                 extraData={this.props}
@@ -522,10 +524,10 @@ const mapStateToProps = state => {
   const notFull = state.search.notFull;
   const platform = state.search.platform || state.users.currentUser.platform;
 
-  const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
-  const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;
-  const groupGamingSessionsLoading =
-    state.gamingSessions.groupGamingSessionsLoading;
+  // const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
+  // const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;
+  // const groupGamingSessionsLoading =
+  //   state.gamingSessions.groupGamingSessionsLoading;
   const gamingSessionsRefreshing =
     state.gamingSessions.gamingSessionsRefreshing;
   const groupGamingSessionsRefreshing =
@@ -552,9 +554,9 @@ const mapStateToProps = state => {
     gameId,
     platform,
     notFull,
-    gamingSessionsLoading,
-    myGamingSessionsLoading,
-    groupGamingSessionsLoading,
+    // gamingSessionsLoading,
+    // myGamingSessionsLoading,
+    // groupGamingSessionsLoading,
     gamingSessionsRefreshing,
     myGamingSessionsRefreshing,
     groupGamingSessionsRefreshing,
