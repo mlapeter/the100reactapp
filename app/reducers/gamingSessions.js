@@ -244,7 +244,6 @@ export default (state = initialState, action) => {
         myGamingSessions: [],
         // myGamingSessionsLoading: true,
         moreGamingSessionsAvailable: true,
-        gamingSessionsRefreshing: true,
         endpoint: action.endpoint
       };
     case REFRESH_MY_GAMING_SESSIONS:

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import {
   ActivityIndicator,
   Button,
@@ -24,75 +24,83 @@ import JoinLeaveButton from "../../screens/GamingSession";
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
-export default function GamingSessionItem(props) {
-  return (
-    <TouchableHighlight
-      onPress={() =>
-        props.navigation.navigate("GamingSession", {
-          gamingSessionId: props.data.id
-          // headerRight: (
-          //   <Button
-          //     style={{
-          //       height: 30,
-          //       width: 180,
-          //       marginBottom: 15
-          //     }}
-          //     onPress={() => this.joinGame()}
-          //     title="Join"
-          //   />
-          // )
-        })}
-      underlayColor="white"
-    >
-      <View style={styles.box}>
-        <View style={styles.leftBox}>
-          <Image
-            style={styles.avatarMini}
-            source={
-              props.data.game_avatar_url === "img/default-avatar.png"
-                ? require("../../assets/images/default-avatar.png")
-                : { uri: props.data.game_avatar_url }
-            }
-          />
-          <Text style={styles.groupNameText}>{props.data.clan_tag}</Text>
+class GamingSessionItem extends PureComponent {
+  // export default function GamingSessionItem(this.props) {
+
+  render() {
+    return (
+      <TouchableHighlight
+        onPress={() =>
+          this.props.navigation.navigate("GamingSession", {
+            gamingSessionId: this.props.data.id
+            // headerRight: (
+            //   <Button
+            //     style={{
+            //       height: 30,
+            //       width: 180,
+            //       marginBottom: 15
+            //     }}
+            //     onPress={() => this.joinGame()}
+            //     title="Join"
+            //   />
+            // )
+          })}
+        underlayColor="white"
+      >
+        <View style={styles.box}>
+          <View style={styles.leftBox}>
+            <Image
+              style={styles.avatarMini}
+              source={
+                this.props.data.game_avatar_url === "img/default-avatar.png"
+                  ? require("../../assets/images/default-avatar.png")
+                  : { uri: this.props.data.game_avatar_url }
+              }
+            />
+            <Text style={styles.groupNameText}>{this.props.data.clan_tag}</Text>
+          </View>
+          <View style={styles.middleBox}>
+            <Text style={styles.gamingSessionTitle}>
+              {this.props.data.category}
+            </Text>
+            <Text style={styles.gamingSessionDescription} numberOfLines={2}>
+              {this.props.data.name}
+            </Text>
+          </View>
+          <View style={styles.rightBox}>
+            <Text style={styles.iconText}>
+              <MaterialCommunityIcons
+                name="calendar"
+                size={12}
+                color={colors.mediumGrey}
+              />{" "}
+              <Moment format="h:mma" element={Text}>
+                {this.props.data.start_time}
+              </Moment>
+            </Text>
+            <Text style={styles.iconText}>
+              <MaterialCommunityIcons
+                name="account"
+                size={14}
+                color={colors.mediumGrey}
+              />{" "}
+              {this.props.data.primary_users_count}/{this.props.data.team_size}
+            </Text>
+            <Text style={styles.iconText}>
+              <MaterialCommunityIcons
+                name="gauge"
+                size={14}
+                color={colors.mediumGrey}
+              />{" "}
+              {this.props.data.light_level === null
+                ? " any"
+                : this.props.data.light_level}
+            </Text>
+          </View>
         </View>
-        <View style={styles.middleBox}>
-          <Text style={styles.gamingSessionTitle}>{props.data.category}</Text>
-          <Text style={styles.gamingSessionDescription} numberOfLines={2}>
-            {props.data.name}
-          </Text>
-        </View>
-        <View style={styles.rightBox}>
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="calendar"
-              size={12}
-              color={colors.mediumGrey}
-            />{" "}
-            <Moment format="h:mma" element={Text}>
-              {props.data.start_time}
-            </Moment>
-          </Text>
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="account"
-              size={14}
-              color={colors.mediumGrey}
-            />{" "}
-            {props.data.primary_users_count}/{props.data.team_size}
-          </Text>
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="gauge"
-              size={14}
-              color={colors.mediumGrey}
-            />{" "}
-            {props.data.light_level === null ? " any" : props.data.light_level}
-          </Text>
-        </View>
-      </View>
-    </TouchableHighlight>
-  );
+      </TouchableHighlight>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -167,3 +175,5 @@ const styles = StyleSheet.create({
     color: colors.lightestGrey
   }
 });
+
+export default GamingSessionItem;

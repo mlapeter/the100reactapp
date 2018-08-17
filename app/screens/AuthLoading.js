@@ -53,6 +53,7 @@ class AuthLoading extends React.Component {
             this.props.navigation.navigate("Auth");
           } else {
             AsyncStorage.getItem("default_group_id").then(groupId => {
+              console.log("default_group_id: ", groupId);
               if (groupId) {
                 this.props.dispatch(changeSelectedGroupId(groupId));
               }

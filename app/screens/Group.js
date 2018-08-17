@@ -67,7 +67,7 @@ class Group extends React.Component {
     //     this.props.dispatch(changeSelectedGroupId(groupId));
     //   }
     // });
-    // this.fetchGroupData();
+    this.fetchGroupData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -95,7 +95,6 @@ class Group extends React.Component {
     let joined = this.props.groups.find(group => {
       return group.id === this.props.group.id;
     });
-    console.log("JOINED: ", joined);
     return joined;
   }
 

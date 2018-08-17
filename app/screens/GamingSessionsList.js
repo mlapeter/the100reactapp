@@ -54,7 +54,7 @@ import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
 import { updateUser } from "../actions/users";
 import { removeToken } from "../actions/authentication";
 
-class GamingSessionsList extends React.PureComponent {
+class GamingSessionsList extends PureComponent {
   static propTypes = {
     activity: PropTypes.string,
     game: PropTypes.object,
@@ -65,7 +65,7 @@ class GamingSessionsList extends React.PureComponent {
     isLoading: PropTypes.bool,
     // refreshing: PropTypes.bool,
     moreDataAvailable: PropTypes.bool,
-    data: PropTypes.array,
+    gamingSessions: PropTypes.array,
     myGamingSessions: PropTypes.array,
     groupGamingSessions: PropTypes.array
   };
@@ -176,11 +176,11 @@ class GamingSessionsList extends React.PureComponent {
 
   refreshMyGames = () => {
     console.log("refreshMyGames Triggered");
-    this.props.dispatch(refreshMyGamingSessions());
+    // this.props.dispatch(refreshMyGamingSessions());
 
-    // if (this.props.myGamingSessionsRefreshing === false) {
-    //   this.props.dispatch(refreshMyGamingSessions());
-    // }
+    if (this.props.myGamingSessionsRefreshing === false) {
+      this.props.dispatch(refreshMyGamingSessions());
+    }
   };
 
   refreshGroupGames = () => {
@@ -330,7 +330,6 @@ class GamingSessionsList extends React.PureComponent {
     //     </View>
     //   );
     // }
-
     return (
       <View style={styles.container}>
         <View style={styles.topContainer}>
@@ -393,11 +392,11 @@ class GamingSessionsList extends React.PureComponent {
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
-                sections={this.gamingSessionsArray(this.props.data)}
+                sections={this.gamingSessionsArray(this.props.gamingSessions)}
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderFooter}
-                // ListEmptyComponent={this.renderEmpty}
-                extraData={this.props}
+                ListEmptyComponent={this.renderEmpty}
+                extraData={this.props.gamingSessions}
                 // Getting errors using game id
                 // keyExtractor={item => item.id}
                 keyExtractor={(item, index) => index}
@@ -428,7 +427,7 @@ class GamingSessionsList extends React.PureComponent {
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderGroupFooter}
                 ListEmptyComponent={this.renderEmpty}
-                extraData={this.props}
+                extraData={this.props.groupGamingSessions}
                 keyExtractor={(item, index) => index}
                 refreshing={this.props.groupGamingSessionsRefreshing}
                 onRefresh={this.refreshGroupGames}
@@ -446,19 +445,14 @@ class GamingSessionsList extends React.PureComponent {
                   />
                 )}
                 renderSectionHeader={({ section: { title } }) => (
-                  <View
-                    style={{
-                      padding: 5,
-                      backgroundColor: "white"
-                    }}
-                  >
+                  <View style={{ padding: 5, backgroundColor: "white" }}>
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
                 sections={this.gamingSessionsArray(this.props.myGamingSessions)}
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderMyFooter}
-                extraData={this.props}
+                extraData={this.props.myGamingSessions}
                 keyExtractor={(item, index) => index}
                 refreshing={this.props.myGamingSessionsRefreshing}
                 onRefresh={this.refreshMyGames}
@@ -537,7 +531,7 @@ const mapStateToProps = state => {
 
   // const refreshing = state.gamingSessions.refreshing;
   const moreDataAvailable = state.gamingSessions.moreDataAvailable;
-  const data = state.gamingSessions.gamingSessions;
+  const gamingSessions = state.gamingSessions.gamingSessions;
   const myGamingSessions = state.gamingSessions.myGamingSessions;
   const groupGamingSessions = state.gamingSessions.groupGamingSessions;
   const moreGamingSessionsAvailable =
@@ -562,7 +556,7 @@ const mapStateToProps = state => {
     groupGamingSessionsRefreshing,
     // refreshing,
     moreDataAvailable,
-    data,
+    gamingSessions,
     myGamingSessions,
     groupGamingSessions,
     moreGamingSessionsAvailable,

@@ -1,5 +1,6 @@
-import React, { Component } from "react";
+import React, { Component, PureComponent } from "react";
 import {
+  AsyncStorage,
   StyleSheet, // CSS-like styles
   Text, // Renders text
   TouchableOpacity, // Pressable container
@@ -9,12 +10,20 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 
 import { colors, fontSizes } from "../../styles";
 
-export default class Tabs extends Component {
+export default class Tabs extends PureComponent {
   // Initialize State
   state = {
     // First tab is active by default
     activeTab: 0
   };
+
+  componentWillMount() {
+    AsyncStorage.getItem("active_tab").then(tab => {
+      if (tab) {
+        this.setState({ activeTab: parseInt(tab) });
+      }
+    });
+  }
 
   // Pull children out of props passed from App component
   render({ children } = this.props) {
@@ -32,7 +41,10 @@ export default class Tabs extends Component {
                 index === this.state.activeTab ? styles.tabContainerActive : []
               ]}
               // Change active tab
-              onPress={() => this.setState({ activeTab: index })}
+              onPress={() => {
+                this.setState({ activeTab: index });
+                AsyncStorage.setItem("active_tab", index.toString());
+              }}
               // Required key prop for components generated returned by map iterator
               key={index}
             >
