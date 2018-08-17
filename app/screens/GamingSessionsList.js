@@ -349,7 +349,7 @@ class GamingSessionsList extends React.PureComponent {
                   }
                 />
               ) : (
-                <ActivityIndicator />
+                <ActivityIndicator size="small" />
               )}
             </TouchableOpacity>
           </View>
