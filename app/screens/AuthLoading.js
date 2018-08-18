@@ -10,7 +10,7 @@ import { Font } from "expo";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { decodeToken, setFirebaseToken } from "../actions/authentication";
-import { changeSelectedGroupId } from "../actions/group";
+import { changeSelectedGroupId, fetchGroup } from "../actions/group";
 
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
@@ -56,6 +56,8 @@ class AuthLoading extends React.Component {
               console.log("default_group_id: ", groupId);
               if (groupId) {
                 this.props.dispatch(changeSelectedGroupId(groupId));
+              } else {
+                this.props.dispatch(fetchGroup());
               }
             });
             this.props.navigation.navigate("App");

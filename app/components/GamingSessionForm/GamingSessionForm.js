@@ -51,11 +51,13 @@ export default class GamingSessionForm extends React.Component {
     let formValue = this.refs.form.getValue();
     console.log(formValue);
     if (formValue) {
+      console.log("setting form data");
       this.setState({
         advancedOptions: !this.state.advancedOptions,
         formData: formValue
       });
     } else {
+      console.log("not setting form data");
       this.setState({
         advancedOptions: !this.state.advancedOptions
       });
@@ -90,7 +92,7 @@ export default class GamingSessionForm extends React.Component {
     }
 
     var GamingSession = t.struct({
-      activity: finalActivities,
+      activity: t.maybe(finalActivities),
       description: t.maybe(t.String),
       start_time: t.maybe(t.Date),
       group: t.maybe(finalGroups),
@@ -101,7 +103,7 @@ export default class GamingSessionForm extends React.Component {
       sherpa_requested: t.maybe(t.Boolean),
       mic_required: t.maybe(t.Boolean),
       party_size: t.maybe(t.Number),
-      platform: Platform
+      platform: t.maybe(Platform)
     });
 
     if (this.state.formData) {

@@ -51,7 +51,7 @@ import { loadMoreMyGamingSessions } from "../actions/gamingSessions";
 import { fetchGroupGamingSessions } from "../actions/gamingSessions";
 import { refreshGroupGamingSessions } from "../actions/gamingSessions";
 import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
-import { updateUser } from "../actions/users";
+import { updateUserPushToken } from "../actions/users";
 import { removeToken } from "../actions/authentication";
 
 class GamingSessionsList extends PureComponent {
@@ -92,15 +92,16 @@ class GamingSessionsList extends PureComponent {
     //     this.props.dispatch(changePlatform(platform));
     //   }
     // });
+    this.fetchGamingSessionsData();
 
-    if (this.props.user.platform == null) {
-      setTimeout(() => {
-        // Wait to load user to get user platform for default search
-        this.fetchGamingSessionsData();
-      }, 3000);
-    } else {
-      this.fetchGamingSessionsData();
-    }
+    // if (this.props.user.platform == null) {
+    //   setTimeout(() => {
+    //     // Wait to load user to get user platform for default search
+    //     this.fetchGamingSessionsData();
+    //   }, 3000);
+    // } else {
+    //   this.fetchGamingSessionsData();
+    // }
 
     registerForPushNotificationsAsync().then(token => {
       if (
@@ -108,7 +109,7 @@ class GamingSessionsList extends PureComponent {
         (this.props.user.expo_push_token == null ||
           this.props.user.expo_push_token !== token)
       ) {
-        this.props.dispatch(updateUser(token));
+        this.props.dispatch(updateUserPushToken(token));
       }
       this._notificationSubscription = Notifications.addListener(
         this._handleNotification
@@ -145,6 +146,14 @@ class GamingSessionsList extends PureComponent {
   }
 
   searchUrl() {
+    let platform = this.props.platform;
+    console.log("PLATFORM: ", platform);
+
+    if (this.props.platform == null) {
+      platform = this.props.user.platform;
+    }
+    console.log("PLATFORM: ", platform);
+
     return encodeURI(
       Environment["API_BASE_URL"] +
         Environment["API_VERSION"] +
@@ -153,7 +162,7 @@ class GamingSessionsList extends PureComponent {
         "?q[game_id_eq]=" +
         this.props.gameId +
         "&q[platform_cont]=" +
-        this.props.platform +
+        platform +
         "&q[category_cont]=" +
         this.props.activity +
         "&q[with_available_slots]=" +
@@ -337,18 +346,18 @@ class GamingSessionsList extends PureComponent {
             <TouchableOpacity
               onPress={() => this.props.navigation.openDrawer()}
             >
-              {this.props.user ? (
+              {this.props.user.computed_avatar_api &&
+              this.props.user.computed_avatar_api !==
+                "img/default-avatar.png" ? (
                 <Image
                   style={styles.avatarMini}
-                  source={
-                    this.props.user.computed_avatar_api ===
-                    "img/default-avatar.png"
-                      ? require("../../app/assets/images/default-avatar.png")
-                      : { uri: this.props.user.computed_avatar_api }
-                  }
+                  source={{ uri: this.props.user.computed_avatar_api }}
                 />
               ) : (
-                <ActivityIndicator size="small" />
+                <Image
+                  style={styles.avatarMini}
+                  source={require("../../app/assets/images/default-avatar.png")}
+                />
               )}
             </TouchableOpacity>
           </View>
@@ -427,7 +436,7 @@ class GamingSessionsList extends PureComponent {
                 ListHeaderComponent={this.renderEmpty}
                 ListFooterComponent={this.renderGroupFooter}
                 ListEmptyComponent={this.renderEmpty}
-                extraData={this.props.groupGamingSessions}
+                extraData={this.props}
                 keyExtractor={(item, index) => index}
                 refreshing={this.props.groupGamingSessionsRefreshing}
                 onRefresh={this.refreshGroupGames}
@@ -482,6 +491,13 @@ const styles = StyleSheet.create({
     padding: 10
   },
   leftContainer: {},
+  middleContainer: {
+    padding: 5,
+    justifyContent: "center"
+  },
+  announcementText: {
+    color: colors.lightGrey
+  },
   rightContainer: {
     flexDirection: "row",
     justifyContent: "space-between"
@@ -516,7 +532,8 @@ const mapStateToProps = state => {
   const gameId = state.search.gameId;
   const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
-  const platform = state.search.platform || state.users.currentUser.platform;
+  // const platform = state.search.platform || state.users.currentUser.platform;
+  const platform = state.search.platform;
 
   // const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
   // const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;

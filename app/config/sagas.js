@@ -26,6 +26,7 @@ import {
   UPDATE_USER,
   UPDATE_USER_RESULT,
   UPDATE_USER_ERROR,
+  UPDATE_USER_PUSH_TOKEN,
   FETCH_USER,
   FETCH_USER_RESULT,
   FETCH_USER_ERROR,
@@ -109,6 +110,7 @@ import {
   FETCH_GROUP_GAMING_SESSIONS_ERROR,
   FETCH_GROUP_GAMING_SESSIONS_NO_DATA,
   REFRESH_GROUP_GAMING_SESSIONS,
+  CLEAR_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
@@ -277,6 +279,35 @@ function* deleteGamingSession() {
       type: DELETE_GAMING_SESSION_ERROR,
       error: "Error Deleting Gaming Session: " + e.message
     });
+  }
+}
+
+function* updateUserPushToken() {
+  console.log("UPDATING USER PUSH TOKEN");
+  try {
+    let token = yield select(state => state.authentication.token);
+    let userId = yield select(state => state.authentication.user.user_id);
+    let expoPushToken = yield select(state => state.users.expoPushToken);
+
+    const response = yield fetch(
+      Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "users/" +
+        userId,
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify(expoPushToken)
+      }
+    );
+    const result = yield response.json();
+    console.log(result);
+  } catch (e) {
+    console.log("ERROR UPDATING EXPO PUSH TOKEN");
   }
 }
 
@@ -876,12 +907,13 @@ function* loadMoreMyGamingSessions() {
       FETCH_MY_GAMING_SESSIONS_NO_DATA
     );
   } catch (e) {
-    yield put({ type: FETCH_GROUP_GAMING_SESSIONS_ERROR, error: e.message });
+    yield put({ type: FETCH_MY_GAMING_SESSIONS_ERROR, error: e.message });
   }
 }
 
 function* fetchGroupGamingSessions() {
   try {
+    yield put({ type: CLEAR_GROUP_GAMING_SESSIONS });
     yield put({ type: CHANGE_GROUP_GAMING_SESSIONS_PAGE, page: 1 });
 
     let userId = yield select(state => state.authentication.user.user_id);
@@ -1015,6 +1047,9 @@ export default function* rootSaga() {
   yield takeEvery(REMOVE_TOKEN, removeToken);
 
   yield takeEvery(UPDATE_USER, updateUser);
+  yield takeEvery(UPDATE_USER_RESULT, fetchCurrentUser);
+
+  yield takeEvery(UPDATE_USER_PUSH_TOKEN, updateUserPushToken);
 
   yield takeEvery(FETCH_CURRENT_USER, fetchCurrentUser);
 

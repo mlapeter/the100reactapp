@@ -32,6 +32,7 @@ import {
   FETCH_GROUP_GAMING_SESSIONS_RESULT,
   FETCH_GROUP_GAMING_SESSIONS_ERROR,
   FETCH_GROUP_GAMING_SESSIONS_NO_DATA,
+  CLEAR_GROUP_GAMING_SESSIONS,
   REFRESH_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
@@ -292,6 +293,14 @@ export default (state = initialState, action) => {
         moreGroupGamingSessionsAvailable: false,
         // groupGamingSessionsLoading: false,
         groupGamingSessionsRefreshing: false
+      };
+    case CLEAR_GROUP_GAMING_SESSIONS:
+      return {
+        ...state,
+        groupGamingSessions: [],
+        // myGamingSessionsLoading: true,
+        moreGroupGamingSessionsAvailable: true,
+        endpoint: action.endpoint
       };
     case REFRESH_GROUP_GAMING_SESSIONS:
       return {

@@ -2,6 +2,7 @@ import {
   UPDATE_USER,
   UPDATE_USER_RESULT,
   UPDATE_USER_ERROR,
+  UPDATE_USER_PUSH_TOKEN,
   FETCH_USER,
   FETCH_USER_RESULT,
   FETCH_USER_ERROR,
@@ -64,8 +65,8 @@ export default (state = initialState, action) => {
         ...state,
         isUpdating: false,
         success: true,
-        successAt: new Date(),
-        currentUser: { ...state.currentUser, ...action.currentUser }
+        successAt: new Date()
+        // currentUser: { ...state.currentUser, ...action.currentUser }
       };
     case UPDATE_USER_ERROR:
       return {
@@ -74,6 +75,12 @@ export default (state = initialState, action) => {
         error: action.error,
         errorAt: new Date()
       };
+    case UPDATE_USER_PUSH_TOKEN:
+      return {
+        ...state,
+        expoPushToken: action.token
+      };
+
     case FETCH_USER:
       return {
         ...state,
