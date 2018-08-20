@@ -421,6 +421,7 @@ function* editGamingSession() {
           category: gamingSession.activity,
           platform: platform,
           start_time: gamingSession.start_time,
+          start_date: gamingSession.start_time,
           group_name: gamingSession.group,
           friends_only: gamingSession.friends_only,
           group_only: gamingSession.group_only,

@@ -1,5 +1,5 @@
-import { StyleSheet } from "react-native";
-import { colors, fontSizes, fontStyles } from "../../styles";
+import { Platform, StyleSheet } from "react-native";
+import { colors, fontSizes, fontStyles, Platf } from "../../styles";
 
 export default (styles = StyleSheet.create({
   button: Platform.select({

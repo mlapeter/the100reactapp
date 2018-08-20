@@ -60,6 +60,7 @@ class GamingSessionEdit extends React.Component {
 
   handlePress = formValue => {
     if (formValue) {
+      console.log(formValue);
       this.props.dispatch(editGamingSession(formValue));
     }
   };
@@ -94,7 +95,8 @@ class GamingSessionEdit extends React.Component {
                   onPress={() =>
                     this.props.dispatch(
                       deleteGamingSession(this.props.gamingSession.id)
-                    )}
+                    )
+                  }
                   title="Delete"
                 />
               </View>
