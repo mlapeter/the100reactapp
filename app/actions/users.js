@@ -4,6 +4,8 @@ export const UPDATE_USER = "UPDATE_USER";
 export const UPDATE_USER_RESULT = "UPDATE_USER_RESULT";
 export const UPDATE_USER_ERROR = "UPDATE_USER_ERROR";
 
+export const UPDATE_USER_PUSH_TOKEN = "UPDATE_USER_PUSH_TOKEN";
+
 export const FETCH_USER = "FETCH_USER";
 export const FETCH_USER_RESULT = "FETCH_USER_RESULT";
 export const FETCH_USER_ERROR = "FETCH_USER_ERROR";
@@ -53,6 +55,11 @@ export const fetchCurrentUser = () => ({
 export const updateUser = currentUser => ({
   type: UPDATE_USER,
   currentUser
+});
+
+export const updateUserPushToken = token => ({
+  type: UPDATE_USER_PUSH_TOKEN,
+  token
 });
 
 export const clearCurrentUser = () => ({

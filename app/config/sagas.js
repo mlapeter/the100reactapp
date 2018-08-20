@@ -26,6 +26,7 @@ import {
   UPDATE_USER,
   UPDATE_USER_RESULT,
   UPDATE_USER_ERROR,
+  UPDATE_USER_PUSH_TOKEN,
   FETCH_USER,
   FETCH_USER_RESULT,
   FETCH_USER_ERROR,
@@ -109,6 +110,7 @@ import {
   FETCH_GROUP_GAMING_SESSIONS_ERROR,
   FETCH_GROUP_GAMING_SESSIONS_NO_DATA,
   REFRESH_GROUP_GAMING_SESSIONS,
+  CLEAR_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
@@ -122,7 +124,7 @@ import {
 } from "../actions/conversations";
 
 function* fetchToken() {
-  console.log("FETCHING TOKEN ------");
+  console.log("FETCHING TOKEN");
   try {
     let username = yield select(state => state.authentication.username);
     let password = yield select(state => state.authentication.password);
@@ -160,12 +162,10 @@ function* fetchToken() {
 }
 
 function* decodeToken() {
-  console.log("DECODE TOKEN");
+  console.log("DECODING TOKEN");
   try {
     let token = yield select(state => state.authentication.token);
     let result = jwtDecode(token);
-    console.log(result);
-
     // let userId = yield select(state => state.authentication.user.user_id);
     yield put({ type: DECODE_TOKEN_RESULT, result });
   } catch (e) {
@@ -194,7 +194,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
     const result = yield response.json();
     console.log("FETCHING ENDPOINT: ", endpoint);
     if (result.error && result.error === "Not Authorized") {
-      console.log("REMOVING TOKEN!");
+      console.log("ERROR - REMOVING TOKEN");
       AsyncStorage.removeItem("id_token");
       AsyncStorage.removeItem("fb_token");
       yield { type: failure, error: result.error };
@@ -214,7 +214,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
 }
 
 function* postData(method, endpoint, body, success, failure) {
-  console.log("POSTING DATA -----------");
+  console.log("POSTING DATA TO: ", endpoint);
   try {
     let token = yield select(state => state.authentication.token);
     console.log("BODY:");
@@ -246,12 +246,13 @@ function* postData(method, endpoint, body, success, failure) {
       yield put({ type: success, result });
     }
   } catch (e) {
+    console.log("error posting data");
     yield put({ type: failure, error: e.message });
   }
 }
 
 function* deleteGamingSession() {
-  console.log("DELETING GAMING SESSION -----------");
+  console.log("DELETING GAMING SESSION");
   try {
     let token = yield select(state => state.authentication.token);
     let deleteGamingSessionId = yield select(
@@ -278,6 +279,35 @@ function* deleteGamingSession() {
       type: DELETE_GAMING_SESSION_ERROR,
       error: "Error Deleting Gaming Session: " + e.message
     });
+  }
+}
+
+function* updateUserPushToken() {
+  console.log("UPDATING USER PUSH TOKEN");
+  try {
+    let token = yield select(state => state.authentication.token);
+    let userId = yield select(state => state.authentication.user.user_id);
+    let expoPushToken = yield select(state => state.users.expoPushToken);
+
+    const response = yield fetch(
+      Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "users/" +
+        userId,
+      {
+        method: "PUT",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token
+        },
+        body: JSON.stringify(expoPushToken)
+      }
+    );
+    const result = yield response.json();
+    console.log(result);
+  } catch (e) {
+    console.log("ERROR UPDATING EXPO PUSH TOKEN");
   }
 }
 
@@ -337,6 +367,7 @@ function* updateUser() {
 }
 
 function* createGamingSession() {
+  console.log("CREATING GAMING SESSION");
   try {
     let token = yield select(state => state.authentication.token);
     let gamingSession = yield select(
@@ -448,6 +479,7 @@ function* editGamingSession() {
 }
 
 function* fetchNotifications() {
+  console.log("FETCHING NOTIFICATIONS");
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let endpoint =
@@ -481,6 +513,7 @@ function* fetchGames() {
 }
 
 function* fetchActivities() {
+  console.log("FETCHING ACTIVITIES");
   try {
     let gameId = yield select(state => state.search.gameId);
     let games = yield select(state => state.search.games);
@@ -496,7 +529,7 @@ function* fetchActivities() {
 }
 
 function* fetchCurrentUser() {
-  console.log("fetching current user...");
+  console.log("FETCHING CURRENT USER");
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let endpoint =
@@ -539,6 +572,7 @@ function* fetchUser() {
 }
 
 function* fetchFriends() {
+  console.log("FETCHING FRIENDS");
   try {
     yield put({ type: CHANGE_FRIENDS_PAGE, page: 1 });
 
@@ -643,6 +677,7 @@ function* loadMorePendingFriends() {
 }
 
 function* fetchGroupMembers() {
+  console.log("FETCHING GROUP MEMBERS");
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let current_page = yield select(state => state.users.groupMembersPage);
@@ -668,6 +703,7 @@ function* fetchGroupMembers() {
 }
 
 function* loadMoreGroupMembers() {
+  console.log("LOAD MORE GROUP MEMBERS");
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let current_page = yield select(state => state.users.groupMembersPage);
@@ -694,6 +730,7 @@ function* loadMoreGroupMembers() {
 }
 
 function* refreshGroupMembers() {
+  console.log("REFRESH GROUP MEMBERS");
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     yield put({ type: CHANGE_GROUP_MEMBERS_PAGE, page: 1 });
@@ -718,20 +755,24 @@ function* refreshGroupMembers() {
 }
 
 function* fetchGroup() {
+  console.log("STARTING FETCH GROUP");
   try {
     // let userId = yield select(state => state.authentication.user.user_id);
-    yield call(fetchCurrentUser);
+    // yield call(fetchCurrentUser);
     let user = yield select(state => state.users.currentUser);
     let selectedGroupId = yield select(state => state.group.selectedGroupId);
     let endpoint = "";
-    if (selectedGroupId == null && user.groups[0]) {
+    if (selectedGroupId == null && user.groups && user.groups[0]) {
       endpoint =
         Environment["API_BASE_URL"] +
         Environment["API_VERSION"] +
         "groups/" +
         user.groups[0]["id"];
+      console.log("FETCHING GROUP (no default group): ", endpoint);
+
       yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
     } else if (selectedGroupId == null) {
+      console.log("FETCH GROUP - EMPTY");
       yield put({ type: FETCH_GROUP_EMPTY });
     } else {
       endpoint =
@@ -739,10 +780,15 @@ function* fetchGroup() {
         Environment["API_VERSION"] +
         "groups/" +
         selectedGroupId;
+      console.log("FETCHING GROUP: ", endpoint);
+
       yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
       AsyncStorage.setItem("default_group_id", selectedGroupId.toString());
     }
   } catch (e) {
+    console.log("FETCH GROUP ERROR");
+    console.log(e.message);
+    // console.log(user);
     yield put({ type: FETCH_GROUP_ERROR, error: e.message });
   }
 }
@@ -791,6 +837,7 @@ function* fetchGamingSessions() {
 }
 
 function* loadMoreGamingSessions() {
+  console.log("LOAD MORE GAMING SESSIONS");
   try {
     let current_page = yield select(state => state.search.gamingSessionsPage);
     yield put({ type: CHANGE_GAMING_SESSIONS_PAGE, page: current_page + 1 });
@@ -839,6 +886,7 @@ function* fetchMyGamingSessions() {
 }
 
 function* loadMoreMyGamingSessions() {
+  console.log("LOAD MORE MY GAMING SESSIONS");
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let current_page = yield select(state => state.search.myGamingSessionsPage);
@@ -860,12 +908,13 @@ function* loadMoreMyGamingSessions() {
       FETCH_MY_GAMING_SESSIONS_NO_DATA
     );
   } catch (e) {
-    yield put({ type: FETCH_GROUP_GAMING_SESSIONS_ERROR, error: e.message });
+    yield put({ type: FETCH_MY_GAMING_SESSIONS_ERROR, error: e.message });
   }
 }
 
 function* fetchGroupGamingSessions() {
   try {
+    yield put({ type: CLEAR_GROUP_GAMING_SESSIONS });
     yield put({ type: CHANGE_GROUP_GAMING_SESSIONS_PAGE, page: 1 });
 
     let userId = yield select(state => state.authentication.user.user_id);
@@ -892,6 +941,7 @@ function* fetchGroupGamingSessions() {
 }
 
 function* loadMoreGroupGamingSessions() {
+  console.log("LOAD MORE GROUP GAMING SESSIONS");
   try {
     let userId = yield select(state => state.authentication.user.user_id);
     let current_page = yield select(
@@ -958,6 +1008,7 @@ function* createUser() {
 }
 
 function* fetchConversations() {
+  console.log("FETCH CONVERSATIONS");
   try {
     let token = yield select(state => state.authentication.token);
 
@@ -990,11 +1041,16 @@ export default function* rootSaga() {
 
   yield takeEvery(DECODE_TOKEN_RESULT, fetchCurrentUser);
   yield takeEvery(DECODE_TOKEN_RESULT, fetchGames);
-  yield takeEvery(DECODE_TOKEN_RESULT, fetchGroup);
+
+  // called from authloading.js because we need default group from AsyncStorage
+  // yield takeEvery(FETCH_CURRENT_USER_RESULT, fetchGroup);
 
   yield takeEvery(REMOVE_TOKEN, removeToken);
 
   yield takeEvery(UPDATE_USER, updateUser);
+  yield takeEvery(UPDATE_USER_RESULT, fetchCurrentUser);
+
+  yield takeEvery(UPDATE_USER_PUSH_TOKEN, updateUserPushToken);
 
   yield takeEvery(FETCH_CURRENT_USER, fetchCurrentUser);
 

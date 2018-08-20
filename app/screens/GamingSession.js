@@ -75,16 +75,6 @@ class GamingSession extends React.Component {
 
   leaveGame = () => {
     this.postData("/leave");
-
-    setTimeout(() => {
-      this.props.dispatch(fetchGamingSessions());
-      this.props.dispatch(fetchMyGamingSessions());
-      this.props.dispatch(fetchGroupGamingSessions());
-      this.setState({
-        isLoading: false
-      });
-      this.props.navigation.navigate("GamingSessionsList");
-    }, 1000);
   };
 
   postData(action) {
@@ -111,12 +101,20 @@ class GamingSession extends React.Component {
           if (action === "/join" || action === "/join?join_as_reserve=true") {
             this.fetchGamingSessionData();
             console.log("GAME JOINED");
+            // this.setState({
+            //   isLoading: false
+            // });
+          } else {
+            this.props.navigation.navigate("GamingSessionsList");
+            console.log("GAME LEFT");
+          }
+          setTimeout(() => {
+            this.props.dispatch(fetchMyGamingSessions());
+            this.props.dispatch(fetchGroupGamingSessions());
             this.setState({
               isLoading: false
             });
-          } else {
-            console.log("GAME LEFT");
-          }
+          }, 500);
         })
         .catch(error => {
           console.error(error);

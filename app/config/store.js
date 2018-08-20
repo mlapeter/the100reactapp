@@ -10,7 +10,7 @@ import rootSaga from "./sagas";
 
 // let sagaMonitor;
 // let sagaMiddleware;
-//
+
 // if (process.env.NODE_ENV === "development") {
 //   // middleware.push(logger);
 //   sagaMonitor = Reactotron.createSagaMonitor();

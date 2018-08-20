@@ -48,21 +48,12 @@ class GamingSessionsFilter extends Component {
     AsyncStorage.setItem("search_platform", platform);
   }
 
-  updateFilter() {
-    // Off for debugging
-    // this.fetchData();
-    // this.setState(
-    //   {
-    //     data: [],
-    //     moreDataAvailable: true
-    //   },
-    //   () => {
-    //     this.fetchData();
-    //   }
-    // );
+  componentWillMount() {
+    console.log("platform: ", this.props.platform);
+    selectedIndex = this.state.platforms.indexOf(this.props.platform);
+    console.log("selectedIndex: ", selectedIndex);
+    this.setState({ selectedIndex: selectedIndex });
   }
-
-  componentWillMount() {}
 
   setModalVisible(visible) {
     this.setState({
@@ -234,7 +225,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const platform = state.search.platform;
+  const platform = state.search.platform || state.users.currentUser.platform;
   const gameId = state.search.gameId;
   const games = state.search.games;
   const activities = state.search.activities;

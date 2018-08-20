@@ -28,9 +28,9 @@ var environments = {
 function getReleaseChannel() {
   let releaseChannel = Expo.Constants.manifest.releaseChannel;
   if (releaseChannel === undefined) {
-    return "staging";
+    return "production";
   } else if (releaseChannel === "staging") {
-    return "staging";
+    return "production";
   } else {
     return "production";
   }

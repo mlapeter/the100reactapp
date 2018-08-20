@@ -25,6 +25,7 @@ import { connectAlert } from "../components/Alert";
 import { fetchToken } from "../actions/authentication";
 import { decodeToken } from "../actions/authentication";
 import { setFirebaseToken } from "../actions/authentication";
+import { changeSelectedGroupId, fetchGroup } from "../actions/group";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 const { height, width } = Dimensions.get("window");
@@ -89,6 +90,16 @@ class Login extends React.Component {
       username: "",
       password: ""
     });
+    setTimeout(() => {
+      AsyncStorage.getItem("default_group_id").then(groupId => {
+        console.log("default_group_id: ", groupId);
+        if (groupId) {
+          this.props.dispatch(changeSelectedGroupId(groupId));
+        } else {
+          this.props.dispatch(fetchGroup());
+        }
+      });
+    }, 2000);
   }
 
   render() {
