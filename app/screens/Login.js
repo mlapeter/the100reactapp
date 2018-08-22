@@ -17,6 +17,10 @@ import {
   TouchableWithoutFeedback
 } from "react-native";
 // import { Analytics, PageHit } from "expo-analytics";
+import { Container } from "../components/Container";
+
+import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
+
 import PreSplash from "../components/PreSplash/PreSplash";
 import MenuDrawer from "../router/index";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -104,11 +108,7 @@ class Login extends React.Component {
 
   render() {
     return (
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.container}
-        extraHeight={10}
-        keyboardOpeningTime={10}
-      >
+      <KeyboardAvoidingScrollView>
         <View style={styles.container}>
           <Image
             style={styles.image}
@@ -124,6 +124,11 @@ class Login extends React.Component {
             style={styles.input}
             value={this.state.username}
             underlineColorAndroid={"transparent"}
+            autoCapitalize="none"
+            onSubmitEditing={() => {
+              this.secondTextInput.focus();
+            }}
+            maxLength={100}
           />
 
           <TextInput
@@ -135,39 +140,57 @@ class Login extends React.Component {
             style={styles.input}
             value={this.state.password}
             underlineColorAndroid={"transparent"}
+            autoCapitalize="none"
+            ref={input => {
+              this.secondTextInput = input;
+            }}
+            maxLength={100}
           />
 
           {this.props.authentication.isLoading ? (
             <Text>Loading...</Text>
           ) : (
-            <TouchableOpacity style={{}} onPress={this.userLogin.bind(this)}>
-              <Text
-                style={{
-                  textAlign: "center",
-                  padding: 15,
-                  fontFamily: fontStyles.primaryFont,
-                  fontSize: fontSizes.primary,
-                  height: 80,
-                  width: 300,
-                  marginBottom: 15
-                }}
-              >
-                Login
-              </Text>
-            </TouchableOpacity>
+            <Button
+              style={{
+                height: 80,
+                width: 300,
+                padding: 15,
+                marginBottom: 15
+              }}
+              onPress={() => this.userLogin(this)}
+              title="Login"
+            />
+
+            // <TouchableOpacity style={{}} onPress={this.userLogin.bind(this)}>
+            //   <Text
+            //     style={{
+            //       textAlign: "center",
+            //       padding: 15,
+            //       fontFamily: fontStyles.primaryFont,
+            //       fontSize: fontSizes.primary,
+            //       height: 80,
+            //       width: 300,
+            //       marginBottom: 15
+            //     }}
+            //   >
+            //     Login
+            //   </Text>
+            // </TouchableOpacity>
           )}
         </View>
-      </KeyboardAwareScrollView>
+      </KeyboardAvoidingScrollView>
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "space-between",
+    flex: 1,
     alignItems: "center",
-    paddingTop: 50,
-    paddingBottom: 40
+    justifyContent: "space-between",
+    paddingHorizontal: 5,
+    width: "100%",
+    paddingVertical: 10
   },
   slogan: {
     fontSize: 40,
@@ -198,7 +221,6 @@ const styles = StyleSheet.create({
   input: {
     margin: 15,
     padding: 5,
-    fontFamily: fontStyles.primaryFont,
     fontSize: fontSizes.primary,
     borderWidth: 0.5,
     borderColor: "#d6d7da",
