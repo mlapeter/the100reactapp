@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   LayoutAnimation,
   ListView,
+  Platform,
   ScrollView,
   Share,
   StyleSheet,
@@ -210,7 +211,8 @@ class GamingSession extends React.Component {
                     width: 180
                   }}
                   onPress={() =>
-                    this.props.navigation.navigate("GamingSessionEdit")}
+                    this.props.navigation.navigate("GamingSessionEdit")
+                  }
                   title="Edit"
                 />
               </View>
@@ -269,7 +271,8 @@ class GamingSession extends React.Component {
                 room: room,
                 url: url,
                 allowAnon: true
-              })}
+              })
+            }
           />
         </ScrollView>
       </View>

@@ -126,7 +126,7 @@ export default class GamingSessionForm extends React.Component {
       };
     } else if (this.props.gamingSession) {
       console.log("GAMING SESSION FOUND:");
-      console.log(this.props.gamingSession);
+      // console.log(this.props.gamingSession);
       // If user is editing existing gaming session
       var value = {
         activity: this.props.gamingSession.category,

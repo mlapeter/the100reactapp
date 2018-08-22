@@ -111,40 +111,12 @@ class GamingSessionEdit extends React.Component {
                 isEditing={this.props.isEditing}
                 gamingSession={this.props.gamingSession}
                 editGameForm={true}
+                user={this.props.user}
               />
             </View>
           </TouchableWithoutFeedback>
         </ScrollView>
       </View>
-
-      // <View style={{ flex: 1 }}>
-      //   <View style={styles.buttonsContainer}>
-      //     <Button
-      //       style={{
-      //         height: 25,
-      //         width: 180,
-      //         marginBottom: 25
-      //       }}
-      //       onPress={() =>
-      //         this.props.dispatch(
-      //           deleteGamingSession(this.props.gamingSession.id)
-      //         )}
-      //       title="Delete"
-      //     />
-      //   </View>
-      //   <GamingSessionForm
-      //     handlePress={this.handlePress}
-      //     changeGame={gameId => this.props.dispatch(changeGame(gameId))}
-      //     gameId={this.props.gameId}
-      //     game={this.props.game}
-      //     games={this.props.games}
-      //     activities={this.props.activities}
-      //     groups={this.props.groups}
-      //     isEditing={this.props.isEditing}
-      //     gamingSession={this.props.gamingSession}
-      //     editGameForm={true}
-      //   />
-      // </View>
     );
   }
 }
@@ -225,6 +197,8 @@ const mapStateToProps = state => {
   const gamingSession = state.gamingSessions.gamingSession;
   const gamingSessions = state.gamingSessions;
 
+  const user = state.users.currentUser;
+
   return {
     gameId,
     game,
@@ -236,7 +210,8 @@ const mapStateToProps = state => {
     // gameEdited: state.gamingSessions.gameEdited,
     // gamingSessionError: state.gamingSessions.error,
     gamingSession,
-    gamingSessions
+    gamingSessions,
+    user
   };
 };
 
