@@ -83,8 +83,6 @@ class GamingSessionsList extends PureComponent {
   // };
 
   componentDidMount() {
-    // this.fetchGamesData();
-
     // Todo: save search settings in local storage and retrieve
     // AsyncStorage.getItem("search_platform").then(platform => {
     //   if (platform) {
@@ -93,15 +91,6 @@ class GamingSessionsList extends PureComponent {
     //   }
     // });
     this.fetchGamingSessionsData();
-
-    // if (this.props.user.platform == null) {
-    //   setTimeout(() => {
-    //     // Wait to load user to get user platform for default search
-    //     this.fetchGamingSessionsData();
-    //   }, 3000);
-    // } else {
-    //   this.fetchGamingSessionsData();
-    // }
 
     registerForPushNotificationsAsync().then(token => {
       if (
@@ -368,7 +357,8 @@ class GamingSessionsList extends PureComponent {
             <View style={styles.newButton}>
               <TouchableOpacity
                 onPress={() =>
-                  this.props.navigation.navigate("GamingSessionCreate")}
+                  this.props.navigation.navigate("GamingSessionCreate")
+                }
               >
                 <MaterialIcons
                   name="add-box"

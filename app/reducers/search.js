@@ -83,8 +83,8 @@ export default (state = initialState, action) => {
     case FETCH_ACTIVITIES_RESULT:
       return {
         ...state,
-        game: action.game,
-        activities: action.game.activities
+        // game: action.game,
+        activities: action.activities
       };
     default:
       return state;
