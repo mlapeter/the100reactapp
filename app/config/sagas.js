@@ -523,7 +523,6 @@ function* fetchActivities() {
     });
 
     console.log("GAME -------");
-    // console.log(game.activities.sort((a, b) => a.localeCompare(b)));
     let activities = game.activities.sort((a, b) => a.localeCompare(b));
     console.log(activities);
 
