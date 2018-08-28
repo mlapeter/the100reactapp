@@ -522,7 +522,11 @@ function* fetchActivities() {
       return game.id === gameId;
     });
 
-    yield put({ type: FETCH_ACTIVITIES_RESULT, game });
+    console.log("GAME -------");
+    let activities = game.activities.sort((a, b) => a.localeCompare(b));
+    console.log(activities);
+
+    yield put({ type: FETCH_ACTIVITIES_RESULT, activities });
   } catch (e) {
     yield put({ type: FETCH_GAMES_ERROR, error: e.message });
   }
