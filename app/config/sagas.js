@@ -74,7 +74,8 @@ import {
   FETCH_ACTIVITIES_RESULT,
   CHANGE_GAMING_SESSIONS_PAGE,
   CHANGE_MY_GAMING_SESSIONS_PAGE,
-  CHANGE_GROUP_GAMING_SESSIONS_PAGE
+  CHANGE_GROUP_GAMING_SESSIONS_PAGE,
+  CHANGE_RECENT_GAMING_SESSIONS_PAGE
 } from "../actions/search";
 
 import {
@@ -985,6 +986,7 @@ function* loadMoreGroupGamingSessions() {
 }
 
 function* fetchRecentGamingSessions() {
+  console.log("Fetching Recent Gaming Sessions");
   try {
     yield put({ type: CLEAR_RECENT_GAMING_SESSIONS });
     yield put({ type: CHANGE_RECENT_GAMING_SESSIONS_PAGE, page: 1 });
@@ -1165,6 +1167,12 @@ export default function* rootSaga() {
   yield takeEvery(FETCH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
   yield takeEvery(REFRESH_GROUP_GAMING_SESSIONS, fetchGroupGamingSessions);
   yield takeEvery(LOAD_MORE_GROUP_GAMING_SESSIONS, loadMoreGroupGamingSessions);
+  yield takeEvery(FETCH_RECENT_GAMING_SESSIONS, fetchRecentGamingSessions);
+  yield takeEvery(REFRESH_RECENT_GAMING_SESSIONS, fetchRecentGamingSessions);
+  yield takeEvery(
+    LOAD_MORE_RECENT_GAMING_SESSIONS,
+    loadMoreRecentGamingSessions
+  );
 
   yield takeEvery(CREATE_USER, createUser);
 
