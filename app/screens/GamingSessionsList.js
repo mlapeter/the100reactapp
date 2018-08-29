@@ -459,6 +459,31 @@ class GamingSessionsList extends PureComponent {
                 onEndReachedThreshold={0}
               />
             </View>
+            <View title="RECENT GAMES" style={styles.content}>
+              <SectionList
+                // data={this.props.myGamingSessions}
+                renderItem={({ item }) => (
+                  <GamingSessionsItem
+                    data={item}
+                    navigation={this.props.navigation}
+                  />
+                )}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                  </View>
+                )}
+                sections={this.gamingSessionsArray(this.props.myGamingSessions)}
+                ListHeaderComponent={this.renderEmpty}
+                ListFooterComponent={this.renderMyFooter}
+                extraData={this.props.myGamingSessions}
+                keyExtractor={(item, index) => index}
+                refreshing={this.props.myGamingSessionsRefreshing}
+                onRefresh={this.refreshMyGames}
+                onEndReached={this.loadMoreMyGamingSessions}
+                onEndReachedThreshold={0}
+              />
+            </View>
           </Tabs>
         </TouchableWithoutFeedback>
       </View>

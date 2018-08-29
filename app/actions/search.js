@@ -4,6 +4,8 @@ export const CHANGE_GAMING_SESSIONS_PAGE = "CHANGE_GAMING_SESSIONS_PAGE";
 export const CHANGE_MY_GAMING_SESSIONS_PAGE = "CHANGE_MY_GAMING_SESSIONS_PAGE";
 export const CHANGE_GROUP_GAMING_SESSIONS_PAGE =
   "CHANGE_GROUP_GAMING_SESSIONS_PAGE";
+export const CHANGE_RECENT_GAMING_SESSIONS_PAGE =
+  "CHANGE_RECENT_GAMING_SESSIONS_PAGE";
 export const CHANGE_PLATFORM = "CHANGE_PLATFORM";
 export const TOGGLE_NOT_FULL = "TOGGLE_NOT_FULL";
 export const FETCH_GAMES = "FETCH_GAMES";
@@ -21,11 +23,6 @@ export const changeGame = gameId => ({
   gameId
 });
 
-// export const changePage = page => ({
-//   type: CHANGE_PAGE,
-//   page
-// });
-
 export const changePlatform = platform => ({
   type: CHANGE_PLATFORM,
   platform
@@ -40,18 +37,3 @@ export const toggleNotFull = notFull => ({
   type: TOGGLE_NOT_FULL,
   notFull
 });
-
-// export const changeGamingSessionsPage = page => ({
-//   type: CHANGE_GAMING_SESSIONS_PAGE,
-//   page
-// });
-//
-// export const changeMyGamingSessionsPage = page => ({
-//   type: CHANGE_MY_GAMING_SESSIONS_PAGE,
-//   page
-// });
-//
-// export const changeGroupGamingSessionsPage = page => ({
-//   type: CHANGE_GROUP_GAMING_SESSIONS_PAGE,
-//   page
-// });

@@ -35,7 +35,15 @@ import {
   CLEAR_GROUP_GAMING_SESSIONS,
   REFRESH_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS,
-  LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
+  LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT,
+  FETCH_RECENT_GAMING_SESSIONS,
+  FETCH_RECENT_GAMING_SESSIONS_RESULT,
+  FETCH_RECENT_GAMING_SESSIONS_ERROR,
+  FETCH_RECENT_GAMING_SESSIONS_NO_DATA,
+  CLEAR_RECENT_GAMING_SESSIONS,
+  REFRESH_RECENT_GAMING_SESSIONS,
+  LOAD_MORE_RECENT_GAMING_SESSIONS,
+  LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
 
 const initialState = {
@@ -48,26 +56,24 @@ const initialState = {
   gameCreated: false,
   isLoading: false,
   gameEdited: false,
-  moreGamingSessionsAvailable: true,
-  moreGroupGamingSessionsAvailable: true,
-  moreMyGamingSessionsAvailable: true,
-
+  gamingSessionId: null,
+  gamingSession: {},
   gamingSessionLoading: true,
 
-  // gamingSessionsLoading: false,
-  // myGamingSessionsLoading: false,
-  // groupGamingSessionsLoading: false,
+  moreGamingSessionsAvailable: true,
+  moreMyGamingSessionsAvailable: true,
+  moreGroupGamingSessionsAvailable: true,
+  moreRecentGamingSessionsAvailable: true,
 
   gamingSessionsRefreshing: false,
   myGamingSessionsRefreshing: false,
   groupGamingSessionsRefreshing: false,
+  recentGamingSessionsRefreshing: false,
 
   gamingSessions: [],
   myGamingSessions: [],
   groupGamingSessions: [],
-
-  gamingSessionId: null,
-  gamingSession: {}
+  recentGamingSessions: []
 };
 
 export default (state = initialState, action) => {
@@ -165,7 +171,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         moreGamingSessionsAvailable: true,
-        // gamingSessionsLoading: true,
         gamingSessionsRefreshing: true,
         endpoint: action.endpoint
       };
@@ -173,14 +178,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gamingSessions: action.result,
-        // gamingSessionsLoading: false,
         gamingSessionsRefreshing: false
       };
     case FETCH_GAMING_SESSIONS_ERROR:
       return {
         ...state,
         error: action.error,
-        // gamingSessionsLoading: false,
         gamingSessionsRefreshing: false,
         moreGamingSessionsAvailable: false
       };
@@ -188,7 +191,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         moreGamingSessionsAvailable: false,
-        // gamingSessionsLoading: false,
         gamingSessionsRefreshing: false
       };
 
@@ -209,42 +211,37 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gamingSessions: [...state.gamingSessions, ...action.result],
-        // gamingSessionsLoading: false,
         gamingSessionsRefreshing: false
       };
     case FETCH_MY_GAMING_SESSIONS:
       return {
         ...state,
+        myGamingSessionsRefreshing: true,
         moreMyGamingSessionsAvailable: true
-        // myGamingSessionsLoading: true
       };
     case FETCH_MY_GAMING_SESSIONS_RESULT:
       return {
         ...state,
         myGamingSessions: action.result,
-        // myGamingSessionsLoading: false,
         myGamingSessionsRefreshing: false
       };
     case FETCH_MY_GAMING_SESSIONS_ERROR:
       return {
         ...state,
         error: action.error,
-        // myGamingSessionsLoading: false,
         myGamingSessionsRefreshing: false
       };
     case FETCH_MY_GAMING_SESSIONS_NO_DATA:
       return {
         ...state,
         moreMyGamingSessionsAvailable: false,
-        // myGamingSessionsLoading: false,
         myGamingSessionsRefreshing: false
       };
     case CLEAR_MY_GAMING_SESSIONS:
       return {
         ...state,
         myGamingSessions: [],
-        // myGamingSessionsLoading: true,
-        moreGamingSessionsAvailable: true,
+        moreMyGamingSessionsAvailable: true,
         endpoint: action.endpoint
       };
     case REFRESH_MY_GAMING_SESSIONS:
@@ -264,7 +261,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         myGamingSessions: [...state.myGamingSessions, ...action.result],
-        // myGamingSessionsLoading: false,
         myGamingSessionsRefreshing: false
       };
     case FETCH_GROUP_GAMING_SESSIONS:
@@ -277,28 +273,24 @@ export default (state = initialState, action) => {
         ...state,
         moreGroupGamingSessionsAvailable: true,
         groupGamingSessions: action.result,
-        // groupGamingSessionsLoading: false,
         groupGamingSessionsRefreshing: false
       };
     case FETCH_GROUP_GAMING_SESSIONS_ERROR:
       return {
         ...state,
         error: action.error,
-        // groupGamingSessionsLoading: false,
         groupGamingSessionsRefreshing: false
       };
     case FETCH_GROUP_GAMING_SESSIONS_NO_DATA:
       return {
         ...state,
         moreGroupGamingSessionsAvailable: false,
-        // groupGamingSessionsLoading: false,
         groupGamingSessionsRefreshing: false
       };
     case CLEAR_GROUP_GAMING_SESSIONS:
       return {
         ...state,
         groupGamingSessions: [],
-        // myGamingSessionsLoading: true,
         moreGroupGamingSessionsAvailable: true,
         endpoint: action.endpoint
       };
@@ -319,8 +311,57 @@ export default (state = initialState, action) => {
       return {
         ...state,
         groupGamingSessions: [...state.groupGamingSessions, ...action.result],
-        // groupGamingSessionsLoading: false,
         groupGamingSessionsRefreshing: false
+      };
+    case FETCH_RECENT_GAMING_SESSIONS:
+      return {
+        ...state,
+        recentGamingSessionsRefreshing: true,
+        moreRecentGamingSessionsAvailable: true
+      };
+    case FETCH_RECENT_GAMING_SESSIONS_RESULT:
+      return {
+        ...state,
+        recentGamingSessions: action.result,
+        recentGamingSessionsRefreshing: false
+      };
+    case FETCH_RECENT_GAMING_SESSIONS_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        recentGamingSessionsRefreshing: false
+      };
+    case FETCH_RECENT_GAMING_SESSIONS_NO_DATA:
+      return {
+        ...state,
+        moreRecentGamingSessionsAvailable: false,
+        recentGamingSessionsRefreshing: false
+      };
+    case CLEAR_RECENT_GAMING_SESSIONS:
+      return {
+        ...state,
+        recentGamingSessions: [],
+        moreRecentGamingSessionsAvailable: true,
+        endpoint: action.endpoint
+      };
+    case REFRESH_RECENT_GAMING_SESSIONS:
+      return {
+        ...state,
+        moreRecentGamingSessionsAvailable: true,
+        recentGamingSessionsRefreshing: true,
+        endpoint: action.endpoint
+      };
+    case LOAD_MORE_RECENT_GAMING_SESSIONS:
+      return {
+        ...state,
+        recentGamingSessionsRefreshing: true,
+        endpoint: action.endpoint
+      };
+    case LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT:
+      return {
+        ...state,
+        recentGamingSessions: [...state.recentGamingSessions, ...action.result],
+        recentGamingSessionsRefreshing: false
       };
     default:
       return state;

@@ -1,6 +1,7 @@
 import React, { Component, PureComponent } from "react";
 import {
   AsyncStorage,
+  ScrollView,
   StyleSheet, // CSS-like styles
   Text, // Renders text
   TouchableOpacity, // Pressable container
@@ -31,33 +32,41 @@ export default class Tabs extends PureComponent {
       <View style={styles.container}>
         {/* Tabs row */}
         <View style={styles.tabsContainer}>
-          {/* Pull props out of children, and pull title out of props */}
-          {children.map(({ props: { title } }, index) => (
-            <TouchableOpacity
-              style={[
-                // Default style for every tab
-                styles.tabContainer,
-                // Merge default style with styles.tabContainerActive for active tab
-                index === this.state.activeTab ? styles.tabContainerActive : []
-              ]}
-              // Change active tab
-              onPress={() => {
-                this.setState({ activeTab: index });
-                AsyncStorage.setItem("active_tab", index.toString());
-              }}
-              // Required key prop for components generated returned by map iterator
-              key={index}
-            >
-              <Text
+          <ScrollView
+            contentContainerStyle={styles.tabsScrollContainer}
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+          >
+            {/* Pull props out of children, and pull title out of props */}
+            {children.map(({ props: { title } }, index) => (
+              <TouchableOpacity
                 style={[
-                  styles.tabText,
-                  index === this.state.activeTab ? styles.tabTextActive : []
+                  // Default style for every tab
+                  styles.tabContainer,
+                  // Merge default style with styles.tabContainerActive for active tab
+                  index === this.state.activeTab
+                    ? styles.tabContainerActive
+                    : []
                 ]}
+                // Change active tab
+                onPress={() => {
+                  this.setState({ activeTab: index });
+                  AsyncStorage.setItem("active_tab", index.toString());
+                }}
+                // Required key prop for components generated returned by map iterator
+                key={index}
               >
-                {title}
-              </Text>
-            </TouchableOpacity>
-          ))}
+                <Text
+                  style={[
+                    styles.tabText,
+                    index === this.state.activeTab ? styles.tabTextActive : []
+                  ]}
+                >
+                  {title}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
         <View style={styles.contentContainer}>
           {children[this.state.activeTab]}
@@ -77,10 +86,13 @@ const styles = StyleSheet.create({
     flexDirection: "row" // Arrange tabs in a row
     // paddingTop: 30 // Top padding
   },
+
+  tabsScrollContainer: {},
   // Individual tab container
   tabContainer: {
     flex: 1, // Take up equal amount of space for each tab
     paddingVertical: 15, // Vertical padding
+    paddingHorizontal: 10, // Vertical padding
     borderBottomWidth: 3, // Add thick border at the bottom
     borderBottomColor: "transparent" // Transparent border for inactive tabs
   },

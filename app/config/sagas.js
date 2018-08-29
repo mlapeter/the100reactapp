@@ -112,7 +112,15 @@ import {
   REFRESH_GROUP_GAMING_SESSIONS,
   CLEAR_GROUP_GAMING_SESSIONS,
   LOAD_MORE_GROUP_GAMING_SESSIONS,
-  LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT
+  LOAD_MORE_GROUP_GAMING_SESSIONS_RESULT,
+  FETCH_RECENT_GAMING_SESSIONS,
+  FETCH_RECENT_GAMING_SESSIONS_RESULT,
+  FETCH_RECENT_GAMING_SESSIONS_ERROR,
+  FETCH_RECENT_GAMING_SESSIONS_NO_DATA,
+  REFRESH_RECENT_GAMING_SESSIONS,
+  CLEAR_RECENT_GAMING_SESSIONS,
+  LOAD_MORE_RECENT_GAMING_SESSIONS,
+  LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
 
 import { CREATE_USER, CREATE_USER_ERROR } from "../actions/onboarding";
@@ -973,6 +981,67 @@ function* loadMoreGroupGamingSessions() {
     );
   } catch (e) {
     yield put({ type: FETCH_GROUP_GAMING_SESSIONS_ERROR, error: e.message });
+  }
+}
+
+function* fetchRecentGamingSessions() {
+  try {
+    yield put({ type: CLEAR_RECENT_GAMING_SESSIONS });
+    yield put({ type: CHANGE_RECENT_GAMING_SESSIONS_PAGE, page: 1 });
+
+    let userId = yield select(state => state.authentication.user.user_id);
+    let current_page = yield select(
+      state => state.search.recentGamingSessionsPage
+    );
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId +
+      "/recent_gaming_sessions?";
+
+    yield call(
+      fetchData,
+      endpoint,
+      current_page,
+      FETCH_RECENT_GAMING_SESSIONS_RESULT,
+      FETCH_RECENT_GAMING_SESSIONS_ERROR,
+      FETCH_RECENT_GAMING_SESSIONS_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_RECENT_GAMING_SESSIONS_ERROR, error: e.message });
+  }
+}
+
+function* loadMoreRecentGamingSessions() {
+  console.log("LOAD MORE RECENT GAMING SESSIONS");
+  try {
+    let userId = yield select(state => state.authentication.user.user_id);
+    let current_page = yield select(
+      state => state.search.recentGamingSessionsPage
+    );
+    yield put({
+      type: CHANGE_RECENT_GAMING_SESSIONS_PAGE,
+      page: current_page + 1
+    });
+    let new_page = yield select(state => state.search.recentGamingSessionsPage);
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId +
+      "/recent_gaming_sessions?";
+
+    yield call(
+      fetchData,
+      endpoint,
+      new_page,
+      LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT,
+      FETCH_RECENT_GAMING_SESSIONS_ERROR,
+      FETCH_RECENT_GAMING_SESSIONS_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_RECENT_GAMING_SESSIONS_ERROR, error: e.message });
   }
 }
 
