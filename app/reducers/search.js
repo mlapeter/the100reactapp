@@ -6,6 +6,7 @@ import {
   CHANGE_GAMING_SESSIONS_PAGE,
   CHANGE_MY_GAMING_SESSIONS_PAGE,
   CHANGE_GROUP_GAMING_SESSIONS_PAGE,
+  CHANGE_RECENT_GAMING_SESSIONS_PAGE,
   CHANGE_PLATFORM,
   TOGGLE_NOT_FULL,
   FETCH_GAMES,
@@ -26,6 +27,7 @@ const initialState = {
   gamingSessionsPage: 1,
   myGamingSessionsPage: 1,
   groupGamingSessionsPage: 1,
+  recentGamingSessionsPage: 1,
   platform: null
 };
 
@@ -55,6 +57,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         groupGamingSessionsPage: action.page
+      };
+    case CHANGE_RECENT_GAMING_SESSIONS_PAGE:
+      return {
+        ...state,
+        recentGamingSessionsPage: action.page
       };
     case CHANGE_PLATFORM:
       return {

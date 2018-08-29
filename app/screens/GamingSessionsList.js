@@ -40,17 +40,21 @@ import { connectAlert } from "../components/Alert";
 import { fetchGames } from "../actions/search";
 import { changeGamingSessionsPage, changePlatform } from "../actions/search";
 
-import { fetchGamingSessions } from "../actions/gamingSessions";
-import { refreshGamingSessions } from "../actions/gamingSessions";
+import {
+  fetchGamingSessions,
+  refreshGamingSessions,
+  loadMoreGamingSessions,
+  fetchMyGamingSessions,
+  refreshMyGamingSessions,
+  loadMoreMyGamingSessions,
+  fetchGroupGamingSessions,
+  refreshGroupGamingSessions,
+  loadMoreGroupGamingSessions,
+  fetchRecentGamingSessions,
+  refreshRecentGamingSessions,
+  loadMoreRecentGamingSessions
+} from "../actions/gamingSessions";
 
-import { loadMoreGamingSessions } from "../actions/gamingSessions";
-import { fetchMyGamingSessions } from "../actions/gamingSessions";
-import { refreshMyGamingSessions } from "../actions/gamingSessions";
-import { loadMoreMyGamingSessions } from "../actions/gamingSessions";
-
-import { fetchGroupGamingSessions } from "../actions/gamingSessions";
-import { refreshGroupGamingSessions } from "../actions/gamingSessions";
-import { loadMoreGroupGamingSessions } from "../actions/gamingSessions";
 import { updateUserPushToken } from "../actions/users";
 import { removeToken } from "../actions/authentication";
 
@@ -163,6 +167,7 @@ class GamingSessionsList extends PureComponent {
     this.props.dispatch(fetchGamingSessions(this.searchUrl()));
     this.props.dispatch(fetchMyGamingSessions());
     this.props.dispatch(fetchGroupGamingSessions());
+    this.props.dispatch(fetchRecentGamingSessions());
   }
 
   refreshGames = () => {
@@ -174,8 +179,6 @@ class GamingSessionsList extends PureComponent {
 
   refreshMyGames = () => {
     console.log("refreshMyGames Triggered");
-    // this.props.dispatch(refreshMyGamingSessions());
-
     if (this.props.myGamingSessionsRefreshing === false) {
       this.props.dispatch(refreshMyGamingSessions());
     }
@@ -185,6 +188,13 @@ class GamingSessionsList extends PureComponent {
     console.log("refreshGroupGames Triggered");
     if (this.props.groupGamingSessionsRefreshing === false) {
       this.props.dispatch(refreshGroupGamingSessions());
+    }
+  };
+
+  refreshRecentGames = () => {
+    console.log("refreshRecentGames Triggered");
+    if (this.props.recentGamingSessionsRefreshing === false) {
+      this.props.dispatch(refreshRecentGamingSessions());
     }
   };
 
@@ -198,6 +208,16 @@ class GamingSessionsList extends PureComponent {
     }
   };
 
+  loadMoreMyGamingSessions = () => {
+    if (
+      this.props.myGamingSessionsRefreshing === false &&
+      this.props.moreMyGamingSessionsAvailable === true
+    ) {
+      console.log("LoadMoreMyGamingSessions Activated");
+      this.props.dispatch(loadMoreMyGamingSessions(this.searchUrl()));
+    }
+  };
+
   loadMoreGroupGamingSessions = () => {
     if (
       this.props.groupGamingSessionsRefreshing === false &&
@@ -208,13 +228,13 @@ class GamingSessionsList extends PureComponent {
     }
   };
 
-  loadMoreMyGamingSessions = () => {
+  loadMoreRecentGamingSessions = () => {
     if (
-      this.props.myGamingSessionsRefreshing === false &&
-      this.props.moreMyGamingSessionsAvailable === true
+      this.props.recentGamingSessionsRefreshing === false &&
+      this.props.moreRecentGamingSessionsAvailable === true
     ) {
-      console.log("LoadMoreMyGamingSessions Activated");
-      this.props.dispatch(loadMoreMyGamingSessions(this.searchUrl()));
+      console.log("LoadMoreRecentGamingSessions Activated");
+      this.props.dispatch(loadMoreRecentGamingSessions(this.searchUrl()));
     }
   };
 
@@ -320,14 +340,27 @@ class GamingSessionsList extends PureComponent {
     }
   };
 
+  renderRecentFooter = () => {
+    if (!this.props.moreRecentGamingSessionsAvailable) {
+      return (
+        <View style={styles.alertView}>
+          <MaterialCommunityIcons
+            name="dots-horizontal"
+            size={24}
+            color={colors.mediumGrey}
+          />
+        </View>
+      );
+    } else {
+      return (
+        <View style={{ paddingVertical: 20 }}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
+  };
+
   render() {
-    // if (this.props.gamingSessionsRefreshing) {
-    //   return (
-    //     <View style={styles.container}>
-    //       <PreSplash />
-    //     </View>
-    //   );
-    // }
     return (
       <View style={styles.container}>
         <View style={styles.topContainer}>
@@ -459,6 +492,33 @@ class GamingSessionsList extends PureComponent {
                 onEndReachedThreshold={0}
               />
             </View>
+            <View title="RECENT GAMES" style={styles.content}>
+              <SectionList
+                // data={this.props.myGamingSessions}
+                renderItem={({ item }) => (
+                  <GamingSessionsItem
+                    data={item}
+                    navigation={this.props.navigation}
+                  />
+                )}
+                renderSectionHeader={({ section: { title } }) => (
+                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                  </View>
+                )}
+                sections={this.gamingSessionsArray(
+                  this.props.recentGamingSessions
+                )}
+                ListHeaderComponent={this.renderEmpty}
+                ListFooterComponent={this.renderRecentFooter}
+                extraData={this.props.recentGamingSessions}
+                keyExtractor={(item, index) => index}
+                refreshing={this.props.recentGamingSessionsRefreshing}
+                onRefresh={this.refreshRecentGames}
+                onEndReached={this.loadMoreRecentGamingSessions}
+                onEndReachedThreshold={0}
+              />
+            </View>
           </Tabs>
         </TouchableWithoutFeedback>
       </View>
@@ -522,31 +582,31 @@ const mapStateToProps = state => {
   const gameId = state.search.gameId;
   const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
-  // const platform = state.search.platform || state.users.currentUser.platform;
   const platform = state.search.platform;
 
-  // const gamingSessionsLoading = state.gamingSessions.gamingSessionsLoading;
-  // const myGamingSessionsLoading = state.gamingSessions.myGamingSessionsLoading;
-  // const groupGamingSessionsLoading =
-  //   state.gamingSessions.groupGamingSessionsLoading;
   const gamingSessionsRefreshing =
     state.gamingSessions.gamingSessionsRefreshing;
   const groupGamingSessionsRefreshing =
     state.gamingSessions.groupGamingSessionsRefreshing;
   const myGamingSessionsRefreshing =
     state.gamingSessions.myGamingSessionsRefreshing;
+  const recentGamingSessionsRefreshing =
+    state.gamingSessions.recentGamingSessionsRefreshing;
 
-  // const refreshing = state.gamingSessions.refreshing;
   const moreDataAvailable = state.gamingSessions.moreDataAvailable;
   const gamingSessions = state.gamingSessions.gamingSessions;
   const myGamingSessions = state.gamingSessions.myGamingSessions;
   const groupGamingSessions = state.gamingSessions.groupGamingSessions;
+  const recentGamingSessions = state.gamingSessions.recentGamingSessions;
+
   const moreGamingSessionsAvailable =
     state.gamingSessions.moreGamingSessionsAvailable;
   const moreMyGamingSessionsAvailable =
     state.gamingSessions.moreMyGamingSessionsAvailable;
   const moreGroupGamingSessionsAvailable =
     state.gamingSessions.moreGroupGamingSessionsAvailable;
+  const moreRecentGamingSessionsAvailable =
+    state.gamingSessions.moreRecentGamingSessionsAvailable;
 
   const user = state.users.currentUser;
   return {
@@ -555,21 +615,24 @@ const mapStateToProps = state => {
     gameId,
     platform,
     notFull,
-    // gamingSessionsLoading,
-    // myGamingSessionsLoading,
-    // groupGamingSessionsLoading,
+    moreDataAvailable,
+    user,
+
     gamingSessionsRefreshing,
     myGamingSessionsRefreshing,
     groupGamingSessionsRefreshing,
-    // refreshing,
-    moreDataAvailable,
+    recentGamingSessionsRefreshing,
+
     gamingSessions,
     myGamingSessions,
     groupGamingSessions,
+    recentGamingSessions,
+
     moreGamingSessionsAvailable,
     moreMyGamingSessionsAvailable,
     moreGroupGamingSessionsAvailable,
-    user,
+    moreRecentGamingSessionsAvailable,
+
     gamingSessionsError: state.gamingSessions.error
   };
 };
