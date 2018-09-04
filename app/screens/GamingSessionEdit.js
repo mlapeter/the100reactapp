@@ -60,13 +60,17 @@ class GamingSessionEdit extends React.Component {
 
   handlePress = formValue => {
     if (formValue) {
+      console.log("FORM UPDATED");
       console.log(formValue);
       this.props.dispatch(editGamingSession(formValue));
     }
   };
 
   render() {
-    if (this.props.gamingSessions.isLoading) {
+    if (
+      !this.props.gamingSession.game_id ||
+      this.props.gamingSessions.isLoading
+    ) {
       return (
         <View style={styles.outerContainer}>
           <View style={styles.container}>
@@ -75,7 +79,7 @@ class GamingSessionEdit extends React.Component {
         </View>
       );
     }
-
+    console.log(this.props.gamingSession.game_id);
     return (
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -102,11 +106,11 @@ class GamingSessionEdit extends React.Component {
               </View>
               <GamingSessionForm
                 handlePress={this.handlePress}
-                changeGame={gameId => this.props.dispatch(changeGame(gameId))}
+                // changeGame={gameId => this.props.dispatch(changeGame(gameId))}
                 gameId={this.props.gamingSession.game_id}
-                game={this.props.game}
+                // game={this.props.game}
                 games={this.props.games}
-                activities={this.props.activities}
+                // activities={this.props.activities}
                 groups={this.props.groups}
                 isEditing={this.props.isEditing}
                 gamingSession={this.props.gamingSession}
@@ -188,9 +192,9 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = state => {
   const gameId = state.gamingSessions.gamingSession.game_id;
-  const game = state.search.game;
+  // const game = state.search.game;
   const games = state.search.games;
-  const activities = state.search.activities;
+  // const activities = state.search.activities;
   const groups = state.users.currentUser.groups_for_api;
   const isEditing = state.gamingSessions.isEditing;
 
@@ -201,9 +205,9 @@ const mapStateToProps = state => {
 
   return {
     gameId,
-    game,
+    // game,
     games,
-    activities,
+    // activities,
     groups,
     isEditing,
     // gameCreated: state.gamingSessions.gameCreated,
