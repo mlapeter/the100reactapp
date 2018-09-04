@@ -38,9 +38,7 @@ export default class GamingSessionForm extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.gameId) {
-      this.fetchActivities(this.props.gameId);
-    }
+    this.fetchActivities(this.props.gameId);
   }
 
   switchActivities = gameId => {
@@ -63,7 +61,6 @@ export default class GamingSessionForm extends React.Component {
     let game = this.props.games.find(function(game) {
       return game.id === gameId;
     });
-    console.log("Game: ", game);
     let activities = game.activities.sort((a, b) => a.localeCompare(b));
     this.setState(
       {
@@ -87,7 +84,6 @@ export default class GamingSessionForm extends React.Component {
 
   toggleAdvancedOptions() {
     let formValue = this.refs.form.getValue();
-    console.log(formValue);
     if (formValue) {
       console.log("setting form data");
       this.setState({

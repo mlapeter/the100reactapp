@@ -16,8 +16,6 @@ class GamingSessionCreate extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {}
-
   componentWillMount() {
     this.props.dispatch(fetchGroup());
   }
@@ -44,8 +42,6 @@ class GamingSessionCreate extends React.Component {
   }
 
   handlePress = formValue => {
-    console.log("Form Button Clicked");
-    console.log(formValue);
     if (formValue) {
       this.props.dispatch(createGamingSession(formValue));
     }
@@ -65,11 +61,8 @@ class GamingSessionCreate extends React.Component {
       <View style={{ flex: 1 }}>
         <GamingSessionForm
           handlePress={this.handlePress}
-          // changeGame={gameId => this.props.dispatch(changeGame(gameId))}
           gameId={this.props.gameId}
-          // game={this.props.game}
           games={this.props.games}
-          // activities={this.props.activities}
           groups={this.props.groups}
           isCreating={this.props.isCreating}
           user={this.props.user}
@@ -81,9 +74,7 @@ class GamingSessionCreate extends React.Component {
 
 const mapStateToProps = state => {
   const gameId = state.search.gameId;
-  // const game = state.search.game;
   const games = state.search.games;
-  // const activities = state.search.activities;
   const groups = state.users.currentUser.groups_for_api;
   const user = state.users.currentUser;
   const isCreating = state.gamingSessions.isCreating;
@@ -91,9 +82,7 @@ const mapStateToProps = state => {
 
   return {
     gameId,
-    // game,
     games,
-    // activities,
     groups,
     user,
     isCreating,
