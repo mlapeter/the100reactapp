@@ -533,7 +533,6 @@ function* fetchActivities() {
 
     console.log("GAME -------");
     let activities = game.activities.sort((a, b) => a.localeCompare(b));
-    console.log(activities);
 
     yield put({ type: FETCH_ACTIVITIES_RESULT, activities });
   } catch (e) {

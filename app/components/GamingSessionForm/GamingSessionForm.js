@@ -38,7 +38,22 @@ export default class GamingSessionForm extends React.Component {
         loading: false
       });
     }, 500);
+    this.fetchActivities();
   }
+
+  fetchActivities = () => {
+    let gameId = this.props.gameId;
+    let game = this.props.games.find(function(game) {
+      return game.id === gameId;
+    });
+    let activities = game.activities.sort((a, b) => a.localeCompare(b));
+    this.setState({
+      game: game,
+      activities: activities
+    });
+    console.log("ACTIVITIES IN EDIT GAME ----------");
+    console.log(activities);
+  };
 
   toggleGames() {
     this.setState({
@@ -76,8 +91,10 @@ export default class GamingSessionForm extends React.Component {
       pc: "PC"
     });
 
-    let newActivities = toObject(this.props.activities);
+    // let newActivities = toObject(this.props.activities);
+    let newActivities = toObject(this.state.activities);
     let finalActivities = t.enums(newActivities);
+
     let newGroups = { "": "" };
     if (this.props.groups) {
       newGroups = toObject(this.props.groups);
@@ -238,7 +255,7 @@ export default class GamingSessionForm extends React.Component {
           <View style={styles.container}>
             {this.props.editGameForm === true ? null : (
               <Toggle
-                title={this.props.game.name}
+                title={this.state.game.name}
                 toggle={() => this.toggleGames()}
               />
             )}

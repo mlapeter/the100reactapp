@@ -103,7 +103,7 @@ class GamingSessionEdit extends React.Component {
               <GamingSessionForm
                 handlePress={this.handlePress}
                 changeGame={gameId => this.props.dispatch(changeGame(gameId))}
-                gameId={this.props.gameId}
+                gameId={this.props.gamingSession.game_id}
                 game={this.props.game}
                 games={this.props.games}
                 activities={this.props.activities}
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const gameId = state.search.gameId;
+  const gameId = state.gamingSessions.gamingSession.game_id;
   const game = state.search.game;
   const games = state.search.games;
   const activities = state.search.activities;
