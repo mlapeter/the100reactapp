@@ -38,11 +38,11 @@ export default class GamingSessionForm extends React.Component {
         loading: false
       });
     }, 500);
-    this.fetchActivities();
+    this.fetchActivities(this.props.gameId);
   }
 
-  fetchActivities = () => {
-    let gameId = this.props.gameId;
+  fetchActivities = gameId => {
+    // let gameId = this.props.gameId;
     let game = this.props.games.find(function(game) {
       return game.id === gameId;
     });
@@ -267,10 +267,10 @@ export default class GamingSessionForm extends React.Component {
                   selectedValue={
                     this.props.gamingSession
                       ? this.props.gamingSession.game_id
-                      : this.props.gameId
+                      : this.state.game.id
                   }
                   onValueChange={gameId => {
-                    this.props.changeGame(gameId);
+                    this.fetchActivities(gameId);
                   }}
                 >
                   {this.props.games.map(game => (
