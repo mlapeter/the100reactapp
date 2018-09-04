@@ -14,9 +14,9 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors, fontSizes, fontStyles } from "../../styles";
-
 import styles from "./styles";
 import moment from "../../../node_modules/moment";
+import Toggle from "../Toggle";
 
 var t = require("tcomb-form-native");
 var Form = t.form.Form;
@@ -28,17 +28,52 @@ export default class GamingSessionForm extends React.Component {
       viewGames: false,
       advancedOptions: false,
       formData: null,
-      loading: true
+      loading: true,
+      game: null,
+      activities: null,
+      selectedActivity: this.props.gamingSession
+        ? this.props.gamingSession.category
+        : null
     };
   }
 
   componentWillMount() {
-    setTimeout(() => {
-      this.setState({
-        loading: false
-      });
-    }, 500);
+    this.fetchActivities(this.props.gameId);
   }
+
+  switchActivities = gameId => {
+    this.setState(
+      {
+        selectedActivity: null
+      },
+      () => {
+        this.fetchActivities(gameId);
+      }
+    );
+  };
+
+  fetchActivities = gameId => {
+    console.log("FETCHING ACTIVITIES IN FORM, GAME ID: ", gameId);
+    this.setState({
+      loading: true
+    });
+
+    let game = this.props.games.find(function(game) {
+      return game.id === gameId;
+    });
+    let activities = game.activities.sort((a, b) => a.localeCompare(b));
+    this.setState(
+      {
+        game: game,
+        activities: activities
+      },
+      () => {
+        this.setState({
+          loading: false
+        });
+      }
+    );
+  };
 
   toggleGames() {
     this.setState({
@@ -49,12 +84,12 @@ export default class GamingSessionForm extends React.Component {
 
   toggleAdvancedOptions() {
     let formValue = this.refs.form.getValue();
-    console.log(formValue);
     if (formValue) {
       console.log("setting form data");
       this.setState({
         advancedOptions: !this.state.advancedOptions,
-        formData: formValue
+        formData: formValue,
+        selectedActivity: formValue.activity
       });
     } else {
       console.log("not setting form data");
@@ -65,10 +100,6 @@ export default class GamingSessionForm extends React.Component {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
 
-  // handleSubmit = () => {
-  //   var value = this.refs.form.getValue();
-  // };
-
   render() {
     var Platform = t.enums({
       ps4: "PS4",
@@ -76,8 +107,9 @@ export default class GamingSessionForm extends React.Component {
       pc: "PC"
     });
 
-    let newActivities = toObject(this.props.activities);
+    let newActivities = toObject(this.state.activities);
     let finalActivities = t.enums(newActivities);
+
     let newGroups = { "": "" };
     if (this.props.groups) {
       newGroups = toObject(this.props.groups);
@@ -92,6 +124,7 @@ export default class GamingSessionForm extends React.Component {
     }
 
     var GamingSession = t.struct({
+      game_id: t.maybe(t.Number),
       activity: t.maybe(finalActivities),
       description: t.maybe(t.String),
       start_time: t.maybe(t.Date),
@@ -110,7 +143,9 @@ export default class GamingSessionForm extends React.Component {
       console.log("form data found");
       // If form partially filled out and user clicks advanced options
       var value = {
-        activity: this.state.formData.activity,
+        // activity: this.state.formData.activity,
+        game_id: this.state.game.id,
+        activity: this.state.selectedActivity,
         description: this.state.formData.description,
         start_time: this.state.formData.start_time,
         group: this.state.formData.group,
@@ -126,10 +161,10 @@ export default class GamingSessionForm extends React.Component {
       };
     } else if (this.props.gamingSession) {
       console.log("GAMING SESSION FOUND:");
-      // console.log(this.props.gamingSession);
       // If user is editing existing gaming session
       var value = {
-        activity: this.props.gamingSession.category,
+        game_id: this.state.game.id,
+        activity: this.state.selectedActivity,
         description: this.props.gamingSession.name,
         start_time: new Date(this.props.gamingSession.start_time),
         group: this.props.gamingSession.group_name,
@@ -146,6 +181,7 @@ export default class GamingSessionForm extends React.Component {
       console.log("new game form");
       // If user is creating new game
       var value = {
+        game_id: this.state.game.id,
         platform: this.props.user.platform,
         start_time: new Date(),
         mic_required: true,
@@ -169,6 +205,9 @@ export default class GamingSessionForm extends React.Component {
           blurOnSubmit: true
         },
         created_by: {
+          hidden: true
+        },
+        game_id: {
           hidden: true
         },
         group: {
@@ -195,23 +234,6 @@ export default class GamingSessionForm extends React.Component {
       }
     };
 
-    function Toggle(props) {
-      return (
-        <View style={styles.icon}>
-          <TouchableHighlight onPress={props.toggle} underlayColor="white">
-            <Text style={styles.iconText}>
-              {props.title}{" "}
-              <MaterialCommunityIcons
-                name="settings"
-                size={15}
-                color={colors.mediumGrey}
-              />
-            </Text>
-          </TouchableHighlight>
-        </View>
-      );
-    }
-
     if (
       this.props.isCreating ||
       this.props.isEditing ||
@@ -236,24 +258,18 @@ export default class GamingSessionForm extends React.Component {
             }}
           > */}
           <View style={styles.container}>
-            {this.props.editGameForm === true ? null : (
-              <Toggle
-                title={this.props.game.name}
-                toggle={() => this.toggleGames()}
-              />
-            )}
+            <Toggle
+              title={this.state.game.name}
+              toggle={() => this.toggleGames()}
+            />
 
             {this.state.viewGames ? (
               <View>
                 <Picker
                   style={styles.pickerStyle}
-                  selectedValue={
-                    this.props.gamingSession
-                      ? this.props.gamingSession.game_id
-                      : this.props.gameId
-                  }
+                  selectedValue={this.state.game.id}
                   onValueChange={gameId => {
-                    this.props.changeGame(gameId);
+                    this.switchActivities(gameId);
                   }}
                 >
                   {this.props.games.map(game => (
@@ -272,7 +288,6 @@ export default class GamingSessionForm extends React.Component {
               type={GamingSession}
               options={options}
               value={value}
-              // advancedOptions={this.state.advancedOptions}
             />
             <Toggle
               title="Advanced Options"
@@ -280,7 +295,9 @@ export default class GamingSessionForm extends React.Component {
             />
             <TouchableHighlight
               style={styles.button}
-              onPress={() => this.props.handlePress(this.refs.form.getValue())}
+              onPress={() => {
+                this.props.handlePress(this.refs.form.getValue());
+              }}
               underlayColor="#99d9f4"
             >
               <Text style={styles.buttonText}>Save</Text>

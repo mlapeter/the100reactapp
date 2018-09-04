@@ -10,7 +10,6 @@ import {
 } from "react-native";
 import GamingSessionForm from "../components/GamingSessionForm/GamingSessionForm";
 import { colors, fontSizes, fontStyles } from "../styles";
-
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import {
@@ -18,7 +17,6 @@ import {
   editGamingSession,
   refreshMyGamingSessions
 } from "../actions/gamingSessions";
-
 import { changeGame } from "../actions/search";
 
 class GamingSessionEdit extends React.Component {
@@ -27,13 +25,12 @@ class GamingSessionEdit extends React.Component {
     this.state = {};
   }
 
-  componentDidMount() {}
-
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.gamingSessions.error &&
       nextProps.gamingSessions.errorAt !== this.props.gamingSessions.errorAt
     ) {
+      this.props.navigation.navigate("GamingSessionsList");
       this.props.alertWithType(
         "error",
         "Error",
@@ -60,13 +57,15 @@ class GamingSessionEdit extends React.Component {
 
   handlePress = formValue => {
     if (formValue) {
-      console.log(formValue);
       this.props.dispatch(editGamingSession(formValue));
     }
   };
 
   render() {
-    if (this.props.gamingSessions.isLoading) {
+    if (
+      !this.props.gamingSession.game_id ||
+      this.props.gamingSessions.isLoading
+    ) {
       return (
         <View style={styles.outerContainer}>
           <View style={styles.container}>
@@ -75,7 +74,6 @@ class GamingSessionEdit extends React.Component {
         </View>
       );
     }
-
     return (
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -102,11 +100,11 @@ class GamingSessionEdit extends React.Component {
               </View>
               <GamingSessionForm
                 handlePress={this.handlePress}
-                changeGame={gameId => this.props.dispatch(changeGame(gameId))}
-                gameId={this.props.gameId}
-                game={this.props.game}
+                // changeGame={gameId => this.props.dispatch(changeGame(gameId))}
+                gameId={this.props.gamingSession.game_id}
+                // game={this.props.game}
                 games={this.props.games}
-                activities={this.props.activities}
+                // activities={this.props.activities}
                 groups={this.props.groups}
                 isEditing={this.props.isEditing}
                 gamingSession={this.props.gamingSession}
@@ -187,10 +185,8 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const gameId = state.search.gameId;
-  const game = state.search.game;
+  const gameId = state.gamingSessions.gamingSession.game_id;
   const games = state.search.games;
-  const activities = state.search.activities;
   const groups = state.users.currentUser.groups_for_api;
   const isEditing = state.gamingSessions.isEditing;
 
@@ -201,14 +197,9 @@ const mapStateToProps = state => {
 
   return {
     gameId,
-    game,
     games,
-    activities,
     groups,
     isEditing,
-    // gameCreated: state.gamingSessions.gameCreated,
-    // gameEdited: state.gamingSessions.gameEdited,
-    // gamingSessionError: state.gamingSessions.error,
     gamingSession,
     gamingSessions,
     user

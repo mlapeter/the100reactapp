@@ -383,7 +383,7 @@ function* createGamingSession() {
       state => state.gamingSessions.gamingSession
     );
     let platform = yield select(state => state.search.platform);
-    let gameId = yield select(state => state.search.gameId);
+    // let gameId = yield select(state => state.search.gameId);
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +
@@ -397,7 +397,7 @@ function* createGamingSession() {
           Authorization: "Bearer " + token
         },
         body: JSON.stringify({
-          game_id: gameId,
+          game_id: gamingSession.game_id,
           platform: platform,
           description: gamingSession.description,
           activity: gamingSession.activity,
@@ -457,6 +457,7 @@ function* editGamingSession() {
           Authorization: "Bearer " + token
         },
         body: JSON.stringify({
+          game_id: gamingSession.game_id,
           name: gamingSession.description,
           category: gamingSession.activity,
           platform: platform,
@@ -533,7 +534,6 @@ function* fetchActivities() {
 
     console.log("GAME -------");
     let activities = game.activities.sort((a, b) => a.localeCompare(b));
-    console.log(activities);
 
     yield put({ type: FETCH_ACTIVITIES_RESULT, activities });
   } catch (e) {
