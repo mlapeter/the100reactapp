@@ -6,6 +6,7 @@ import {
   Animated,
   AsyncStorage,
   Button,
+  Clipboard,
   Image,
   Keyboard,
   LayoutAnimation,
@@ -15,6 +16,7 @@ import {
   Text,
   TextInput,
   TouchableHighlight,
+  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from "react-native";
@@ -145,6 +147,11 @@ export class User extends React.Component {
     this.props.alertWithType("success", "Success", "Friend Request Sent!");
   }
 
+  copyToClipboard = text => {
+    Clipboard.setString(text);
+    this.props.alertWithType("info", "", "Gamertag copied to clipboard!");
+  };
+
   openChat = () => {
     if (this.state.conversation) {
       let room = `conversation-${this.state.conversation.id}`;
@@ -210,7 +217,8 @@ export class User extends React.Component {
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.user.destiny_status_link)}
+                Linking.openURL(this.props.user.destiny_status_link)
+              }
               underlayColor="white"
             >
               <Text>Destiny Status</Text>
@@ -219,7 +227,8 @@ export class User extends React.Component {
           <View style={styles.statsLink}>
             <TouchableHighlight
               onPress={() =>
-                Linking.openURL(this.props.user.destiny_tracker_link)}
+                Linking.openURL(this.props.user.destiny_tracker_link)
+              }
               underlayColor="white"
             >
               <Text>Destiny Tracker</Text>
@@ -257,7 +266,12 @@ export class User extends React.Component {
             }
           />
           <View style={styles.titleAndTags}>
-            <Text style={styles.title}>{this.props.user.gamertag}</Text>
+            <TouchableOpacity
+              onLongPress={() => this.copyToClipboard(this.props.user.gamertag)}
+              activeOpacity={0.6}
+            >
+              <Text style={styles.title}>{this.props.user.gamertag}</Text>
+            </TouchableOpacity>
             <SupporterBadge supporter={this.props.user.supporter} />
           </View>
           <View style={styles.actionButtons}>
@@ -304,8 +318,9 @@ export class User extends React.Component {
         {this.state.conversation && (
           <ChatPreview
             room={`conversation-${this.state.conversation.id}`}
-            url={`chat/conversations/conversation-${this.state.conversation
-              .id}`}
+            url={`chat/conversations/conversation-${
+              this.state.conversation.id
+            }`}
             allowAnon={true}
             onOpenChat={this.openChat}
           />
