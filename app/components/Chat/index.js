@@ -339,11 +339,11 @@ class Chat extends Component {
   };
 
   render() {
-    let messages = Object.entries(
-      this.state.messages
-    ).sort(([keyA, messageA], [keyB, messageB]) => {
-      return messageB.createdAt - messageA.createdAt;
-    });
+    let messages = Object.entries(this.state.messages).sort(
+      ([keyA, messageA], [keyB, messageB]) => {
+        return messageB.createdAt - messageA.createdAt;
+      }
+    );
 
     let createAllowed =
       this.props.room.startsWith("game-") ||
@@ -458,7 +458,7 @@ class MessageCreateInput extends PureComponent {
             onChangeText={this.onChange}
             onSubmitEditing={this.onSubmit}
             value={this.state.text}
-            autoCapitalize="sentences"
+            autoCapitalize="none"
             autoCorrect={true}
             returnKeyType="send"
             underlineColorAndroid={"transparent"}
@@ -519,7 +519,7 @@ class MessageEditInput extends PureComponent {
           onChangeText={this.onChange}
           onSubmitEditing={this.onSubmit}
           value={this.state.text}
-          autoCapitalize="sentences"
+          autoCapitalize="none"
           autoCorrect={true}
           autoFocus={true}
           returnKeyType="done"
