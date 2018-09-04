@@ -14,7 +14,6 @@ import {
 } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors, fontSizes, fontStyles } from "../../styles";
-
 import styles from "./styles";
 import moment from "../../../node_modules/moment";
 
@@ -28,21 +27,22 @@ export default class GamingSessionForm extends React.Component {
       viewGames: false,
       advancedOptions: false,
       formData: null,
-      loading: true
+      loading: true,
+      game: null,
+      activities: null
     };
   }
 
   componentWillMount() {
+    this.fetchActivities(this.props.gameId);
+  }
+
+  fetchActivities = gameId => {
     setTimeout(() => {
       this.setState({
         loading: false
       });
     }, 500);
-    this.fetchActivities(this.props.gameId);
-  }
-
-  fetchActivities = gameId => {
-    // let gameId = this.props.gameId;
     let game = this.props.games.find(function(game) {
       return game.id === gameId;
     });
@@ -51,8 +51,6 @@ export default class GamingSessionForm extends React.Component {
       game: game,
       activities: activities
     });
-    console.log("ACTIVITIES IN EDIT GAME ----------");
-    console.log(activities);
   };
 
   toggleGames() {
@@ -80,10 +78,6 @@ export default class GamingSessionForm extends React.Component {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   }
 
-  // handleSubmit = () => {
-  //   var value = this.refs.form.getValue();
-  // };
-
   render() {
     var Platform = t.enums({
       ps4: "PS4",
@@ -91,7 +85,6 @@ export default class GamingSessionForm extends React.Component {
       pc: "PC"
     });
 
-    // let newActivities = toObject(this.props.activities);
     let newActivities = toObject(this.state.activities);
     let finalActivities = t.enums(newActivities);
 
@@ -143,7 +136,6 @@ export default class GamingSessionForm extends React.Component {
       };
     } else if (this.props.gamingSession) {
       console.log("GAMING SESSION FOUND:");
-      // console.log(this.props.gamingSession);
       // If user is editing existing gaming session
       var value = {
         activity: this.props.gamingSession.category,
@@ -211,23 +203,6 @@ export default class GamingSessionForm extends React.Component {
         }
       }
     };
-
-    function Toggle(props) {
-      return (
-        <View style={styles.icon}>
-          <TouchableHighlight onPress={props.toggle} underlayColor="white">
-            <Text style={styles.iconText}>
-              {props.title}{" "}
-              <MaterialCommunityIcons
-                name="settings"
-                size={15}
-                color={colors.mediumGrey}
-              />
-            </Text>
-          </TouchableHighlight>
-        </View>
-      );
-    }
 
     if (
       this.props.isCreating ||
