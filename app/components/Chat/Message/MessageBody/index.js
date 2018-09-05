@@ -19,13 +19,13 @@ import reactStringReplace from "react-string-replace-recursively";
 import emoji from "node-emoji";
 
 function usernameMentionMatcherFn(rawText, processed, key) {
-  let regex = /\b \b/;
-  let username = rawText.replace(regex, "_");
+  // let regex = /\b \b/gi;
+  // let username = rawText.replace(regex, "_");
   return (
     <AppHyperlink
       key={key}
-      link={"https://the100.io/users/" + username}
-      text={"@" + username}
+      link={"https://the100.io/users/" + rawText}
+      text={"@" + rawText}
     />
   );
 }
