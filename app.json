@@ -5,7 +5,7 @@
     "scheme": "the100",
     "name": "The100.io",
     "description":
-      "This is the early alpha version of the new mobile app for The100.io. Please leave any feedback or bugs you find in our discord: https://discord.gg/cWDAt4Z thanks!",
+      "The official mobile app for The100.io. Please leave any feedback or bugs you find in our discord: https://discord.gg/cWDAt4Z thanks!",
     "icon": "./app/assets/images/icon.png",
     "version": "2.0.2",
     "slug": "the100",
@@ -15,13 +15,13 @@
       "backgroundColor": "#334393"
     },
     "ios": {
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.1.0",
       "bundleIdentifier": "io.the100.mobile",
       "supportsTablet": true
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20004
+      "versionCode": 20005
     }
   }
 }
