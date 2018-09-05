@@ -18,11 +18,10 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
-
 import { colors, fontSizes, fontStyles } from "../../styles";
+import UsersItemSmall from "../../components/UsersItemSmall";
 
 import firebase from "../../utils/firebase";
 import {
@@ -375,6 +374,7 @@ class Chat extends Component {
             <MessageCreateInput
               createAllowed={createAllowed}
               onSubmit={this.onMessageCreate}
+              users={this.state.users}
             />
           ) : (
             <MessageEditInput
@@ -440,6 +440,26 @@ class MessageCreateInput extends PureComponent {
 
   onChange = text => {
     this.setState({ text: text });
+    let usernames = this.props.users.values();
+    let usernamesArray = Array.from(usernames);
+    let result = usernamesArray.filter(user => {
+      return (
+        text.includes("@") && ("@" + user).toLowerCase().search(text) !== -1
+      );
+    });
+    this.setState({
+      usernameResults: result
+    });
+    console.log("usernameResults: ");
+    console.log(this.state.usernameResults);
+  };
+
+  autofillUsername = username => {
+    this.setState({
+      text: "@" + username + " ",
+      usernameResults: []
+    });
+    this.chatInput.focus();
   };
 
   onSubmit = () => {
@@ -451,25 +471,52 @@ class MessageCreateInput extends PureComponent {
   render() {
     if (this.props.createAllowed) {
       return (
-        <View style={styles.input}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Enter your message..."
-            onChangeText={this.onChange}
-            onSubmitEditing={this.onSubmit}
-            value={this.state.text}
-            autoCapitalize="none"
-            autoCorrect={true}
-            returnKeyType="send"
-            underlineColorAndroid={"transparent"}
-          />
-          <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
-            <MaterialCommunityIcons
-              name="send"
-              size={28}
-              style={{ color: colors.grey }}
+        <View>
+          <View Style={styles.usernameResults}>
+            <FlatList
+              data={this.state.usernameResults}
+              renderItem={({ item }) => (
+                <UsersItemSmall
+                  user={item}
+                  onPress={() => this.autofillUsername(item)}
+                />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              extraData={this.state.usernameResults}
+              onEndReachedThreshold={0}
+              keyboardShouldPersistTaps={
+                this.state.usernameResults &&
+                this.state.usernameResults.length > 0
+                  ? "always"
+                  : "never"
+              }
             />
-          </TouchableItem>
+          </View>
+
+          <View style={styles.input}>
+            <TextInput
+              style={styles.inputText}
+              placeholder="Enter your message..."
+              onChangeText={this.onChange}
+              onSubmitEditing={this.onSubmit}
+              value={this.state.text}
+              autoCapitalize="none"
+              autoCorrect={true}
+              returnKeyType="send"
+              underlineColorAndroid={"transparent"}
+              ref={input => {
+                this.chatInput = input;
+              }}
+              blurOnSubmit={false}
+            />
+            <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
+              <MaterialCommunityIcons
+                name="send"
+                size={28}
+                style={{ color: colors.grey }}
+              />
+            </TouchableItem>
+          </View>
         </View>
       );
     } else {
@@ -585,6 +632,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginLeft: 5
+  },
+  usernameResults: {
+    flex: 1
   }
 });
 
