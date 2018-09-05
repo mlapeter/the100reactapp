@@ -77,7 +77,6 @@ class CreateCredential extends Component {
             <TextInput
               value={this.state.email}
               onChangeText={text => this.setState({ email: text })}
-              placeholder="INPUT EMAIL"
               style={styles.inputGamer}
               placeholderStyle={{ color: "#606060" }}
               underlineColorAndroid={"transparent"}
@@ -88,7 +87,6 @@ class CreateCredential extends Component {
             <TextInput
               value={this.state.password}
               onChangeText={text => this.setState({ password: text })}
-              placeholder="PASSWORD"
               style={styles.inputGamer}
               placeholderStyle={{ color: "#606060" }}
               underlineColorAndroid={"transparent"}
@@ -134,7 +132,7 @@ const styles = {
     justifyContent: "flex-start",
     alignItems: "flex-start",
     paddingHorizontal: 20,
-    backgroundColor: colors.strongBlack,
+    backgroundColor: colors.veryDarkGrey,
     paddingTop: 40
   },
   title: {
@@ -178,7 +176,7 @@ const styles = {
     height: 40,
     marginLeft: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#27292d"
+    backgroundColor: colors.darkGrey
   }
 };
 const mapStateToProps = state => ({

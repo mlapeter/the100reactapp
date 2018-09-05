@@ -185,7 +185,7 @@ const styles = {
     justifyContent: "flex-start",
     alignItems: "flex-start",
     paddingHorizontal: 20,
-    backgroundColor: colors.strongBlack,
+    backgroundColor: colors.veryDarkGrey,
     paddingTop: 40
   },
   title: {

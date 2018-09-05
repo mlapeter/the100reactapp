@@ -71,7 +71,7 @@ const styles = {
     justifyContent: "flex-start",
     alignItems: "flex-start",
     paddingHorizontal: 20,
-    backgroundColor: colors.strongBlack,
+    backgroundColor: colors.veryDarkGrey,
     paddingTop: 40
   },
   title: {
@@ -110,7 +110,7 @@ const styles = {
     height: 40,
     marginLeft: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#27292d"
+    backgroundColor: colors.darkGrey
   }
 };
 const mapStateToProps = state => ({
