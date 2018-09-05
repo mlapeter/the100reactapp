@@ -22,7 +22,7 @@ function usernameMentionMatcherFn(rawText, processed, key) {
   // let regex = /\b \b/gi;
   // let username = rawText.replace(regex, "_");
   return (
-    <AppHyperlink
+    <Hyperlink
       key={key}
       link={"https://the100.io/users/" + rawText}
       text={"@" + rawText}

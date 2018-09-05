@@ -26,7 +26,6 @@ export default class Hyperlink extends PureComponent {
 
 const styles = StyleSheet.create({
   link: {
-    color: "blue",
-    textDecorationLine: "underline"
+    color: "#337ab7"
   }
 });

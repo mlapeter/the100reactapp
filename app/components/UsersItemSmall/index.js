@@ -17,6 +17,15 @@ export default function UsersItemSmall(props) {
   return (
     <TouchableHighlight onPress={() => props.onPress()} underlayColor="white">
       <View style={styles.profileBox}>
+        <Image
+          style={styles.profileAvatar}
+          source={
+            props.usernameAvatars[props.user] === undefined ||
+            props.usernameAvatars[props.user] === "img/default-avatar.png"
+              ? require("../../assets/images/default-avatar.png")
+              : { uri: props.usernameAvatars[props.user] }
+          }
+        />
         <View style={styles.profileText}>
           <Text style={styles.gamertag}>{props.user}</Text>
         </View>
@@ -27,20 +36,17 @@ export default function UsersItemSmall(props) {
 
 const styles = StyleSheet.create({
   profileAvatar: {
-    height: 40,
-    width: 40,
-    borderRadius: 20
+    height: 20,
+    width: 20,
+    borderRadius: 10
   },
   profileBox: {
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "stretch",
-    margin: 3,
-    padding: 12,
-    borderTopWidth: 0.5,
-    borderTopColor: "#d6d7da",
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#d6d7da",
+    padding: 10,
+    borderTopWidth: 0.3,
+    borderTopColor: colors.veryLightestGrey,
     backgroundColor: colors.white
   },
   profileText: {
@@ -50,19 +56,7 @@ const styles = StyleSheet.create({
   gamertag: {
     fontFamily: fontStyles.primaryFont,
     paddingLeft: 5,
-    fontSize: fontSizes.secondary
-  },
-  iconBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "stretch",
-    paddingLeft: 3
-  },
-  icon: {
-    padding: 2,
-    margin: 2,
-    fontSize: fontSizes.small,
-    backgroundColor: colors.white,
+    fontSize: fontSizes.secondary,
     color: colors.mediumGrey
   }
 });

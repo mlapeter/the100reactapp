@@ -10,6 +10,7 @@ export const colors = {
   mediumGrey: "rgba(79,84,92,.9)",
   lightGrey: "#737f8d",
   lightestGrey: "#99aab5",
+  veryLightestGrey: "#d6d7da",
   searchbar: "#ededed",
 
   /** Dark theme */
@@ -31,8 +32,10 @@ export const fontSizes = {
 };
 
 export const fontStyles = {
-  primaryFont: "Nunito",
+  // primaryFont: "Nunito",
+  primaryFont: "Helvetica Neue",
   gameHeaderFont: "Lato",
   nunito: "Nunito",
-  lato: "Lato"
+  lato: "Lato",
+  alternate: "Helvetica Neue"
 };

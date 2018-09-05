@@ -2,7 +2,7 @@ import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Linking, StyleSheet, Text } from "react-native";
 
-export default class Hyperlink extends PureComponent {
+export default class AppHyperlink extends PureComponent {
   static propTypes = {
     link: PropTypes.string.isRequired,
     text: PropTypes.string

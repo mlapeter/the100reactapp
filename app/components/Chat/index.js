@@ -61,6 +61,7 @@ class Chat extends Component {
       permission: "",
       avatarUrl: "/default-avatar.png",
       users: new Set(),
+      avatars: new Set(),
       selectedKey: null,
       editingKey: null,
       messageCount: this.props.preview ? 3 : 25,
@@ -85,12 +86,14 @@ class Chat extends Component {
     message.key = key;
 
     this.setState(prevState => {
-      let { messages, users } = prevState;
+      let { messages, users, avatars } = prevState;
       messages[key] = message;
       users.add(message.username);
+      avatars.add(message.avatarUrl);
       return {
         messages: messages,
-        users: users
+        users: users,
+        avatars: avatars
       };
     });
   }
@@ -375,6 +378,7 @@ class Chat extends Component {
               createAllowed={createAllowed}
               onSubmit={this.onMessageCreate}
               users={this.state.users}
+              avatars={this.state.avatars}
             />
           ) : (
             <MessageEditInput
@@ -440,18 +444,30 @@ class MessageCreateInput extends PureComponent {
 
   onChange = text => {
     this.setState({ text: text });
-    let usernames = this.props.users.values();
-    let usernamesArray = Array.from(usernames);
-    let result = usernamesArray.filter(user => {
+    this.filterUsernamesAndAvatars(text);
+  };
+
+  filterUsernamesAndAvatars = text => {
+    let usernamesArray = Array.from(this.props.users.values());
+    let avatarsArray = Array.from(this.props.avatars.values());
+    const usernameAvatars = avatarsArray.reduce(
+      (result, avatar, index) => ({
+        ...result,
+        [usernamesArray[index]]: avatar
+      }),
+      {}
+    );
+    let escapedText = text.replace(/([()[{*+.$^\\|?])/g, "\\$1");
+    let results = usernamesArray.filter(user => {
       return (
-        text.includes("@") && ("@" + user).toLowerCase().search(text) !== -1
+        escapedText.includes("@") &&
+        ("@" + user).toLowerCase().search(escapedText) !== -1
       );
     });
     this.setState({
-      usernameResults: result
+      usernameResults: results,
+      usernameAvatars: usernameAvatars
     });
-    console.log("usernameResults: ");
-    console.log(this.state.usernameResults);
   };
 
   autofillUsername = username => {
@@ -472,12 +488,13 @@ class MessageCreateInput extends PureComponent {
     if (this.props.createAllowed) {
       return (
         <View>
-          <View Style={styles.usernameResults}>
+          <View style={styles.usernameResults}>
             <FlatList
               data={this.state.usernameResults}
               renderItem={({ item }) => (
                 <UsersItemSmall
                   user={item}
+                  usernameAvatars={this.state.usernameAvatars}
                   onPress={() => this.autofillUsername(item)}
                 />
               )}
@@ -634,7 +651,7 @@ const styles = StyleSheet.create({
     marginLeft: 5
   },
   usernameResults: {
-    flex: 1
+    maxHeight: 150
   }
 });
 
