@@ -1,21 +1,40 @@
 import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
-import { Image, ImageBackground, Linking, Text, View } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  Linking,
+  Text,
+  TouchableHighlight,
+  View
+} from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import Hyperlink from "../../../Hyperlink";
+import AppHyperlink from "../../../AppHyperlink";
+
 import TouchableItem from "../../../TouchableItem";
 
 import reactStringReplace from "react-string-replace-recursively";
 import emoji from "node-emoji";
 
 function usernameMentionMatcherFn(rawText, processed, key) {
-  let username = rawText;
+  let regex = /\b \b/;
+  let username = rawText.replace(regex, "_");
   return (
-    <Text key={key} style={{ color: "#007fff" }}>
-      @{username}
-    </Text>
+    <AppHyperlink
+      key={key}
+      link={"https://the100.io/users/" + username}
+      text={"@" + username}
+    />
   );
+}
+
+function urlMatcherFn(rawText, processed, key) {
+  let regex = /https:\/\/|http:\/\//gi;
+  let url = rawText.replace(regex, "");
+
+  return <Hyperlink key={key} link={"https://" + url} />;
 }
 
 const config = {
@@ -83,7 +102,7 @@ const config = {
   },
   */
   strikeThrough: {
-    pattern: /\B-(.+?)-\B/gim,
+    pattern: /\B-(\S.+?\S)-\B/gim,
     matcherFn: (rawText, processed, key) => {
       return (
         <Text key={key} style={{ textDecorationLine: "line-through" }}>
@@ -127,6 +146,10 @@ const config = {
         />
       );
     }
+  },
+  url: {
+    pattern: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/,
+    matcherFn: urlMatcherFn
   }
 };
 
@@ -298,7 +321,7 @@ class AutosizeImage extends PureComponent {
     } else {
       let imageWidth = Math.min(this.state.imageWidth, this.state.layoutWidth);
       let imageHeight =
-        imageWidth / this.state.imageWidth * this.state.imageHeight;
+        (imageWidth / this.state.imageWidth) * this.state.imageHeight;
       return (
         <View
           onLayout={this.onLayout}
@@ -317,7 +340,7 @@ class AutosizeImage extends PureComponent {
               onError={this.onError}
               style={{
                 width: imageWidth,
-                height: imageHeight  
+                height: imageHeight
               }}
               imageStyle={{
                 resizeMode: "contain",
@@ -381,8 +404,9 @@ class Youtube extends PureComponent {
     return (
       <View>
         <AutosizeImage
-          source={`https://img.youtube.com/vi/${this.props
-            .videoId}/mqdefault.jpg`}
+          source={`https://img.youtube.com/vi/${
+            this.props.videoId
+          }/mqdefault.jpg`}
           onPress={this.onPress}
           placeholderRender={this.placeholderRender}
         >
