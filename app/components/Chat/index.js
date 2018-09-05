@@ -18,11 +18,10 @@ import {
 } from "react-native";
 import Modal from "react-native-modal";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
-
 import { colors, fontSizes, fontStyles } from "../../styles";
+import UsersItemSmall from "../../components/UsersItemSmall";
 
 import firebase from "../../utils/firebase";
 import {
@@ -62,6 +61,7 @@ class Chat extends Component {
       permission: "",
       avatarUrl: "/default-avatar.png",
       users: new Set(),
+      avatars: new Set(),
       selectedKey: null,
       editingKey: null,
       messageCount: this.props.preview ? 3 : 25,
@@ -86,12 +86,14 @@ class Chat extends Component {
     message.key = key;
 
     this.setState(prevState => {
-      let { messages, users } = prevState;
+      let { messages, users, avatars } = prevState;
       messages[key] = message;
       users.add(message.username);
+      avatars.add(message.avatarUrl);
       return {
         messages: messages,
-        users: users
+        users: users,
+        avatars: avatars
       };
     });
   }
@@ -375,6 +377,8 @@ class Chat extends Component {
             <MessageCreateInput
               createAllowed={createAllowed}
               onSubmit={this.onMessageCreate}
+              users={this.state.users}
+              avatars={this.state.avatars}
             />
           ) : (
             <MessageEditInput
@@ -440,6 +444,38 @@ class MessageCreateInput extends PureComponent {
 
   onChange = text => {
     this.setState({ text: text });
+    this.filterUsernamesAndAvatars(text);
+  };
+
+  filterUsernamesAndAvatars = text => {
+    let usernamesArray = Array.from(this.props.users.values());
+    let avatarsArray = Array.from(this.props.avatars.values());
+    const usernameAvatars = avatarsArray.reduce(
+      (result, avatar, index) => ({
+        ...result,
+        [usernamesArray[index]]: avatar
+      }),
+      {}
+    );
+    let escapedText = text.replace(/([()[{*+.$^\\|?])/g, "\\$1");
+    let results = usernamesArray.filter(user => {
+      return (
+        escapedText.includes("@") &&
+        ("@" + user).toLowerCase().search(escapedText) !== -1
+      );
+    });
+    this.setState({
+      usernameResults: results,
+      usernameAvatars: usernameAvatars
+    });
+  };
+
+  autofillUsername = username => {
+    this.setState({
+      text: "@" + username + " ",
+      usernameResults: []
+    });
+    this.chatInput.focus();
   };
 
   onSubmit = () => {
@@ -451,25 +487,53 @@ class MessageCreateInput extends PureComponent {
   render() {
     if (this.props.createAllowed) {
       return (
-        <View style={styles.input}>
-          <TextInput
-            style={styles.inputText}
-            placeholder="Enter your message..."
-            onChangeText={this.onChange}
-            onSubmitEditing={this.onSubmit}
-            value={this.state.text}
-            autoCapitalize="none"
-            autoCorrect={true}
-            returnKeyType="send"
-            underlineColorAndroid={"transparent"}
-          />
-          <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
-            <MaterialCommunityIcons
-              name="send"
-              size={28}
-              style={{ color: colors.grey }}
+        <View>
+          <View style={styles.usernameResults}>
+            <FlatList
+              data={this.state.usernameResults}
+              renderItem={({ item }) => (
+                <UsersItemSmall
+                  user={item}
+                  usernameAvatars={this.state.usernameAvatars}
+                  onPress={() => this.autofillUsername(item)}
+                />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              extraData={this.state.usernameResults}
+              onEndReachedThreshold={0}
+              keyboardShouldPersistTaps={
+                this.state.usernameResults &&
+                this.state.usernameResults.length > 0
+                  ? "always"
+                  : "never"
+              }
             />
-          </TouchableItem>
+          </View>
+
+          <View style={styles.input}>
+            <TextInput
+              style={styles.inputText}
+              placeholder="Enter your message..."
+              onChangeText={this.onChange}
+              onSubmitEditing={this.onSubmit}
+              value={this.state.text}
+              autoCapitalize="none"
+              autoCorrect={true}
+              returnKeyType="send"
+              underlineColorAndroid={"transparent"}
+              ref={input => {
+                this.chatInput = input;
+              }}
+              blurOnSubmit={false}
+            />
+            <TouchableItem onPress={this.onSubmit} style={styles.inputButton}>
+              <MaterialCommunityIcons
+                name="send"
+                size={28}
+                style={{ color: colors.grey }}
+              />
+            </TouchableItem>
+          </View>
         </View>
       );
     } else {
@@ -585,6 +649,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginLeft: 5
+  },
+  usernameResults: {
+    maxHeight: 150
   }
 });
 
