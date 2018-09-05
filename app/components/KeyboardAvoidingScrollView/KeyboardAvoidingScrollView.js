@@ -20,7 +20,7 @@ class KeyboardAvoidingScrollView extends Component {
   render() {
     if (Platform.OS === "ios") {
       return (
-        <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
+        <KeyboardAwareScrollView style={styles.scrollContainer}>
           {this.props.children}
         </KeyboardAwareScrollView>
       );

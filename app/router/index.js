@@ -117,7 +117,7 @@ const MenuDrawer = createDrawerNavigator(
     Home: {
       screen: HomeTabs,
       navigationOptions: ({ navigation }) => ({
-        title: "Back",
+        title: "Home",
         drawerIcon: () => <MaterialCommunityIcons name="home" size={24} />
       })
     },
@@ -125,7 +125,13 @@ const MenuDrawer = createDrawerNavigator(
       screen: UserEditStack,
       navigationOptions: ({ navigation }) => ({
         drawerIcon: () => (
-          <MaterialCommunityIcons name="account-settings-variant" size={24} />
+          <View style={styles.menuItem}>
+            <MaterialCommunityIcons
+              name="account-settings-variant"
+              size={24}
+              style={styles.icon}
+            />
+          </View>
         )
       })
     },
@@ -133,13 +139,24 @@ const MenuDrawer = createDrawerNavigator(
       screen: HelpChatStack,
       navigationOptions: ({ navigation }) => ({
         drawerIcon: () => (
-          <MaterialCommunityIcons name="help-circle" size={24} />
+          <MaterialCommunityIcons
+            name="help-circle"
+            size={24}
+            style={styles.icon}
+          />
         )
       })
     }
   },
   {
     initialRouteName: "Home",
+    contentOptions: {
+      activeTintColor: colors.veryDarkGrey,
+      inactiveTintColor: colors.white,
+      activeBackgroundColor: "#E8EAF6",
+      iconContainerStyle: { opacity: 1 }
+    },
+
     // drawerBackgroundColor: colors.blue,
     backBehavior: "initialRoute",
     contentComponent: props => (
@@ -181,6 +198,20 @@ const rootNavigator = createSwitchNavigator(
 );
 
 // Screen Specific navigationOptions
+
+Login.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerTitle: "",
+  headerStyle: styles.headerStyle,
+  headerTitleStyle: styles.headerTitleStyle
+});
 
 GamingSessionCreate.navigationOptions = {
   headerTitle: "New Gaming Session"
@@ -272,10 +303,17 @@ User.navigationOptions = {
   )
 };
 
+const BackButton = ({ onPress, title }) => (
+  <TouchableOpacity onPress={onPress} style={styles.backButtonStyle}>
+    <Text style={styles.backTitle}>{title}</Text>
+  </TouchableOpacity>
+);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20
+    paddingTop: 20,
+    backgroundColor: colors.veryDarkGrey
   },
   menuItem: {
     padding: 15,
@@ -283,14 +321,30 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start"
   },
   icon: {
-    marginRight: 25,
     width: 24,
     height: 24,
-    color: colors.grey
+    color: colors.white
   },
   menuText: {
     fontWeight: "bold",
-    marginLeft: 6
+    marginLeft: 30,
+    color: colors.white
+  },
+  headerStyle: {
+    backgroundColor: colors.veryDarkGrey,
+    height: 60,
+    paddingHorizontal: 20
+  },
+  headerTitleStyle: {
+    color: colors.white
+  },
+  backButtonStyle: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    backgroundColor: colors.darkGrey
+  },
+  backTitle: {
+    color: colors.white
   }
 });
 
