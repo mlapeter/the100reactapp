@@ -11,17 +11,22 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import Hyperlink from "../../../Hyperlink";
+import AppHyperlink from "../../../AppHyperlink";
+
 import TouchableItem from "../../../TouchableItem";
 
 import reactStringReplace from "react-string-replace-recursively";
 import emoji from "node-emoji";
 
 function usernameMentionMatcherFn(rawText, processed, key) {
-  let username = rawText;
+  let regex = /\b \b/;
+  let username = rawText.replace(regex, "_");
   return (
-    <Text key={key} style={{ color: "#007fff" }}>
-      @{username}
-    </Text>
+    <AppHyperlink
+      key={key}
+      link={"https://the100.io/users/" + username}
+      text={"@" + username}
+    />
   );
 }
 
