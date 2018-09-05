@@ -116,7 +116,7 @@ class GamerProfile extends Component {
           </TouchableOpacity>
         </View> */}
         <View style={styles.inputRow}>
-          <Text style={styles.gamerLabel}>PlAY STYLE</Text>
+          <Text style={styles.gamerLabel}>PLAY STYLE</Text>
           <TouchableOpacity
             style={styles.selectBox}
             onPress={() => this.showPopover("playStyle")}
@@ -206,12 +206,12 @@ const styles = {
     justifyContent: "space-between"
   },
   continueBtn: {
-    backgroundColor: "#6ba1fc",
+    backgroundColor: colors.primaryBlue,
     paddingHorizontal: 30,
     paddingVertical: 15
   },
   btnText: {
-    color: "#fff"
+    color: colors.white
   },
   gamerLabel: {
     fontSize: fontSizes.secondary,

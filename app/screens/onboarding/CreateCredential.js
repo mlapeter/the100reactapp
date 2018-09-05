@@ -101,7 +101,8 @@ class CreateCredential extends Component {
             rightTextStyle={styles.contentText}
             isChecked={this.state.sendNotification}
             onClick={val =>
-              this.setState({ sendNotification: !this.state.sendNotification })}
+              this.setState({ sendNotification: !this.state.sendNotification })
+            }
           />
           <CheckBox
             checkBoxColor="#949599"
@@ -111,7 +112,8 @@ class CreateCredential extends Component {
             onClick={val =>
               this.setState({
                 tos_privacy_agreement: !this.state.tos_privacy_agreement
-              })}
+              })
+            }
           />
         </View>
         {this.state.email && this.state.password ? (
@@ -155,7 +157,7 @@ const styles = {
     alignItems: "center"
   },
   continueBtn: {
-    backgroundColor: "#6ba1fc",
+    backgroundColor: colors.primaryBlue,
     paddingHorizontal: 30,
     paddingVertical: 15
   },
@@ -171,7 +173,7 @@ const styles = {
     flex: 3,
     borderWidth: 1,
     borderColor: "#606060",
-    color: "#9fa0a4",
+    color: colors.white,
     flex: 1,
     height: 40,
     marginLeft: 20,

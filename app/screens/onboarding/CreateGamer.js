@@ -38,20 +38,18 @@ class CreateGamer extends Component {
       >
         <Text style={styles.title}>Great!</Text>
         <Text style={styles.contentText}>
-          What is you gamertag in{" "}
-          <Text style={{ fontWeight: "bold" }}>{platform}</Text>
+          What is your gamertag on{" "}
+          <Text style={{ fontWeight: "bold" }}>{platform}?</Text>
         </Text>
-        <Text style={styles.contentText}>
-          Your gamertag will be used in your gamertag.
-        </Text>
+
         <View style={styles.gamerForm}>
           <Text style={styles.gamerLabel}>GAMERTAG</Text>
           <TextInput
             value={this.state.gamertag}
             onChangeText={text => this.setState({ gamertag: text })}
-            placeholder="Enter your tag"
+            autoFocus={true}
             style={styles.inputGamer}
-            placeholderStyle={{ color: "#606060" }}
+            placeholderStyle={{ color: colors.grey }}
             underlineColorAndroid={"transparent"}
           />
         </View>
@@ -98,7 +96,7 @@ const styles = {
     paddingVertical: 15
   },
   btnText: {
-    color: "#fff"
+    color: colors.white
   },
   gamerLabel: {
     fontSize: fontSizes.secondary,
@@ -107,7 +105,7 @@ const styles = {
   inputGamer: {
     borderWidth: 1,
     borderColor: "#606060",
-    color: "#9fa0a4",
+    color: colors.white,
     flex: 1,
     height: 40,
     marginLeft: 20,

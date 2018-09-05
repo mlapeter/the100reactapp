@@ -5,18 +5,25 @@ export const colors = {
   secondary: "#929292",
   border: "#E4E4E4",
   tabPrimary: "#F7F9F9",
+  primaryBlue: "#5a8cf0",
   white: "#fff",
   grey: "#43454a",
+  veryDarkGrey: "#23272A",
+  darkGrey: "#2C2F33",
   mediumGrey: "rgba(79,84,92,.9)",
   lightGrey: "#737f8d",
   lightestGrey: "#99aab5",
   veryLightestGrey: "#d6d7da",
   searchbar: "#ededed",
 
+  // dlight: #36393f
+
   /** Dark theme */
   strongBlack: "#18191b",
-  onboardingTitle: "#9ea0a9",
-  onboardingText: "#575a5f"
+  onboardingTitle: "#fff",
+  onboardingText: "#fff"
+  // onboardingTitle: "#9ea0a9",
+  // onboardingText: "#575a5f"
 };
 
 export const fontSizes = {
