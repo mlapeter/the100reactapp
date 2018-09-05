@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import {
-  Alert,
   Image,
   View,
   StyleSheet,
   Text,
   TouchableHighlight
 } from "react-native";
-import { StackNavigator } from "react-navigation";
 
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors, fontSizes, fontStyles } from "../../styles";
@@ -54,7 +52,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5
   },
   gamertag: {
-    fontFamily: fontStyles.primaryFont,
+    fontFamily: fontStyles.alternateFont,
     paddingLeft: 5,
     fontSize: fontSizes.secondary,
     color: colors.mediumGrey

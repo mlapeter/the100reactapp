@@ -32,10 +32,9 @@ export const fontSizes = {
 };
 
 export const fontStyles = {
-  // primaryFont: "Nunito",
-  primaryFont: "Helvetica Neue",
+  primaryFont: "Nunito",
   gameHeaderFont: "Lato",
   nunito: "Nunito",
   lato: "Lato",
-  alternate: "Helvetica Neue"
+  alternateFont: "Helvetica Neue"
 };
