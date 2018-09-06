@@ -137,12 +137,14 @@ const styles = {
   },
   title: {
     fontSize: fontSizes.h1,
-    color: colors.onboardingTitle,
+    color: colors.white,
+    opacity: colors.headlineOpacity,
     textAlign: "left"
   },
   contentText: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.white,
+    opacity: colors.primaryOpacity,
     paddingVertical: 15
   },
   inputForm: {
@@ -160,12 +162,13 @@ const styles = {
     paddingVertical: 15
   },
   btnText: {
-    color: "#fff"
+    color: colors.white
   },
   gamerLabel: {
     flex: 1,
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText
+    color: colors.white,
+    opacity: colors.headlineOpacity
   },
   inputGamer: {
     flex: 3,

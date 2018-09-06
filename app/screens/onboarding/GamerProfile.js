@@ -190,12 +190,14 @@ const styles = {
   },
   title: {
     fontSize: fontSizes.h2,
-    color: colors.onboardingTitle,
+    color: colors.white,
+    opacity: colors.headlineOpacity,
     textAlign: "left"
   },
   contentText: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.white,
+    opacity: colors.primaryOpacity,
     paddingVertical: 15
   },
   inputRow: {
@@ -215,7 +217,8 @@ const styles = {
   },
   gamerLabel: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText
+    color: colors.white,
+    opacity: colors.headlineOpacity
   },
   selectBox: {
     flexDirection: "row",

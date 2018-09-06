@@ -16,7 +16,8 @@ const styles = {
     paddingHorizontal: 20
   },
   headerTitleStyle: {
-    color: colors.white
+    color: colors.white,
+    opacity: colors.headlineOpacity
   },
   backButtonStyle: {
     paddingVertical: 15,
@@ -24,7 +25,7 @@ const styles = {
     backgroundColor: colors.darkGrey
   },
   backTitle: {
-    color: "#fff"
+    color: colors.white
   }
 };
 const BackButton = ({ onPress, title }) => (

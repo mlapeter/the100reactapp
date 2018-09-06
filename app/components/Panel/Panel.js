@@ -62,7 +62,7 @@ export default class Panel extends Component {
         <View>
           <TouchableHighlight
             onPress={this.toggle.bind(this)}
-            underlayColor="#ffffff"
+            underlayColor={colors.white}
           >
             <Text
               style={styles.description}

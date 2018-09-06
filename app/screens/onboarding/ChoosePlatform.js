@@ -63,19 +63,22 @@ const styles = {
   },
   title: {
     fontSize: fontSizes.h1,
-    color: colors.onboardingTitle,
+    color: colors.white,
+    opacity: colors.headlineOpacity,
     textAlign: "left"
   },
   contentText: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.white,
+    opacity: colors.primaryOpacity,
     paddingVertical: 25
   },
   quote: {
     fontSize: fontSizes.secondary,
     fontFamily: fontStyles.primaryFont,
     fontWeight: "bold",
-    color: colors.onboardingTitle
+    color: colors.white,
+    opacity: colors.primaryOpacity
   },
   osButtonGroup: {
     paddingVertical: 20,

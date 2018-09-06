@@ -76,12 +76,14 @@ const styles = {
   },
   title: {
     fontSize: fontSizes.h1,
-    color: colors.onboardingTitle,
+    color: colors.white,
+    opacity: colors.headlineOpacity,
     textAlign: "left"
   },
   contentText: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.white,
+    opacity: colors.primaryOpacity,
     paddingVertical: 15
   },
   gamerForm: {
@@ -91,7 +93,7 @@ const styles = {
     alignItems: "center"
   },
   continueBtn: {
-    backgroundColor: "#6ba1fc",
+    backgroundColor: colors.primaryBlue,
     paddingHorizontal: 30,
     paddingVertical: 15
   },
@@ -100,7 +102,8 @@ const styles = {
   },
   gamerLabel: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText
+    color: colors.white,
+    opacity: colors.headlineOpacity
   },
   inputGamer: {
     borderWidth: 1,

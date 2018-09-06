@@ -8,6 +8,7 @@ import {
   View
 } from "react-native";
 import PropTypes from "prop-types";
+import { colors, fontSizes, fontStyles } from "../../styles";
 
 var SCREEN_HEIGHT = Dimensions.get("window").height;
 var noop = () => {};
@@ -57,7 +58,7 @@ export default class ListPopover extends Component {
     var styles = this.props.style || DefaultStyles;
     var maxHeight = {};
     if (this.props.list.length > 12) {
-      maxHeight = { height: SCREEN_HEIGHT * 3 / 4 };
+      maxHeight = { height: (SCREEN_HEIGHT * 3) / 4 };
     }
     return (
       <ListView
@@ -110,7 +111,7 @@ const DefaultStyles = StyleSheet.create({
     margin: 10,
     borderRadius: 3,
     padding: 3,
-    backgroundColor: "#ffffff"
+    backgroundColor: colors.white
   },
   rowText: {
     padding: 10
