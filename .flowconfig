@@ -6,7 +6,7 @@
 .*/local-cli/templates/.*
 
 ; Ignore the Dangerfile
-<PROJECT_ROOT>/bots/dangerfile.js
+<PROJECT_ROOT>/danger/dangerfile.js
 
 ; Ignore "BUCK" generated dirs
 <PROJECT_ROOT>/\.buckd/
@@ -25,21 +25,7 @@
 ; Ignore metro
 .*/node_modules/metro/.*
 
-
-; ORIGINAL IGNORES We fork some components by platform
-
-
-; Ignore unexpected extra "@providesModule"
-.*/node_modules/.*/node_modules/fbjs/.*
-
-; Ignore duplicate module providers
-; For RN Apps installed via npm, "Libraries" folder is inside
-; "node_modules/react-native" but in the source repo it is in the root
-.*/Libraries/react-native/React.js
-.*/Libraries/react-native/ReactNative.js
-
-; Additional create-react-native-app ignores
-
+; Manually added from original flowconfig:
 ; Ignore duplicate module providers
 .*/node_modules/fbemitter/lib/*
 
@@ -84,5 +70,8 @@ suppress_comment=\\(.\\|\n\\)*\\$FlowIssue\\((\\(<VERSION>\\)? *\\(site=[a-z,_]*
 suppress_comment=\\(.\\|\n\\)*\\$FlowFixedInNextDeploy
 suppress_comment=\\(.\\|\n\\)*\\$FlowExpectedError
 
+esproposal.decorators=ignore
+
+
 [version]
-^0.63.1
+^0.63.0

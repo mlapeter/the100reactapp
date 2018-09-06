@@ -3,7 +3,9 @@
   "version": "2.0.0",
   "private": true,
   "devDependencies": {
-    "flow-bin": "^0.47.0",
+    "babel-cli": "^6.26.0",
+    "babel-preset-flow": "^6.23.0",
+    "flow-bin": "^0.63.1",
     "jest-expo": "^28.0.0",
     "react-native-scripts": "^1.14.1",
     "react-test-renderer": "16.0.0-alpha.12",
@@ -39,8 +41,7 @@
     "prop-types": "^15.6.0",
     "react": "16.3.1",
     "react-moment": "^0.6.5",
-    "react-native":
-      "https://github.com/expo/react-native/archive/sdk-28.0.0.tar.gz",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-28.0.0.tar.gz",
     "react-native-check-box": "^2.0.2",
     "react-native-collapsible": "^0.9.0",
     "react-native-dropdownalert": "^3.4.0",
@@ -64,6 +65,8 @@
     "tcomb-form-native": "^0.6.10"
   },
   "rnpm": {
-    "assets": ["./assets/fonts/"]
+    "assets": [
+      "./assets/fonts/"
+    ]
   }
 }
