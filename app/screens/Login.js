@@ -19,10 +19,9 @@ import {
 // import { Analytics, PageHit } from "expo-analytics";
 import { Container } from "../components/Container";
 
-import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
+// import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
 
 import PreSplash from "../components/PreSplash/PreSplash";
-import MenuDrawer from "../router/index";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -32,7 +31,7 @@ import { setFirebaseToken } from "../actions/authentication";
 import { changeSelectedGroupId, fetchGroup } from "../actions/group";
 
 import { colors, fontSizes, fontStyles } from "../styles";
-const { height, width } = Dimensions.get("window");
+// const { height, width } = Dimensions.get("window");
 
 class Login extends React.Component {
   constructor(props) {
@@ -52,13 +51,7 @@ class Login extends React.Component {
     }
   }
 
-  componentWillMount() {
-    // const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    // analytics.hit(new PageHit("App Login"));
-    // if (this.props.authentication.isAuthed === true) {
-    //   this.props.navigation.navigate("Main");
-    // }
-  }
+  componentWillMount() {}
 
   componentWillReceiveProps(nextProps) {
     if (
@@ -75,17 +68,6 @@ class Login extends React.Component {
       this.props.navigation.navigate("App");
     }
   }
-
-  // setTimeout(() => {
-  //   if (
-  //     this.props.authentication.isAuthed === true &&
-  //     this.props.users.currentUser.gamertag != null
-  //   ) {
-  //     this.props.navigation.navigate("App");
-  //   } else {
-  //     this.props.navigation.navigate("Auth");
-  //   }
-  // }, 3000);
 
   userLogin() {
     if (!this.state.username || !this.state.password) return;
@@ -108,16 +90,16 @@ class Login extends React.Component {
 
   render() {
     return (
-      <KeyboardAvoidingScrollView>
+      <KeyboardAwareScrollView contentContainerStyle={styles.container}>
         <View style={styles.container}>
           <Image
             style={styles.image}
             source={require("../assets/images/logo.png")}
           />
-
           <TextInput
             onChangeText={username => this.setState({ username })}
             placeholder="Username"
+            placeholderStyle={{ color: colors.darkGrey }}
             ref="username"
             textContentType="username"
             returnKeyType="next"
@@ -130,10 +112,10 @@ class Login extends React.Component {
             }}
             maxLength={100}
           />
-
           <TextInput
             onChangeText={password => this.setState({ password })}
             placeholder="Password"
+            placeholderStyle={{ color: colors.darkGrey }}
             ref="password"
             textContentType="password"
             secureTextEntry={true}
@@ -148,18 +130,24 @@ class Login extends React.Component {
           />
 
           {this.props.authentication.isLoading ? (
-            <Text>Loading...</Text>
+            <ActivityIndicator />
           ) : (
-            <Button
-              style={{
-                height: 80,
-                width: 300,
-                padding: 15,
-                marginBottom: 15
-              }}
+            <TouchableOpacity
+              style={styles.button}
               onPress={() => this.userLogin(this)}
-              title="Login"
-            />
+            >
+              <Text style={styles.buttonText}>LOG IN</Text>
+            </TouchableOpacity>
+            // <Button
+            //     style={{
+            //     height: 80,
+            //     width: 300,
+            //     padding: 15,
+            //     marginBottom: 15
+            //   }}
+            //   onPress={() => this.userLogin(this)}
+            //   title="Login"
+            // />
 
             // <TouchableOpacity style={{}} onPress={this.userLogin.bind(this)}>
             //   <Text
@@ -178,7 +166,7 @@ class Login extends React.Component {
             // </TouchableOpacity>
           )}
         </View>
-      </KeyboardAvoidingScrollView>
+      </KeyboardAwareScrollView>
     );
   }
 }
@@ -187,10 +175,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "space-between",
+    justifyContent: "flex-start",
     paddingHorizontal: 5,
     width: "100%",
-    paddingVertical: 10
+    paddingVertical: 10,
+    backgroundColor: colors.veryDarkGrey
   },
   slogan: {
     fontSize: 40,
@@ -223,10 +212,24 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: fontSizes.primary,
     borderWidth: 0.5,
-    borderColor: "#d6d7da",
+    borderColor: colors.grey,
     height: 50,
     width: 300,
-    flexDirection: "row"
+    flexDirection: "row",
+    backgroundColor: colors.white,
+    color: colors.veryDarkGrey,
+    borderRadius: 2
+  },
+  button: {
+    marginTop: 20,
+    paddingVertical: 20,
+    backgroundColor: colors.primaryBlue,
+    borderRadius: 3,
+    width: 300
+  },
+  buttonText: {
+    color: colors.white,
+    textAlign: "center"
   }
 });
 

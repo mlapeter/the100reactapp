@@ -5,18 +5,30 @@ export const colors = {
   secondary: "#929292",
   border: "#E4E4E4",
   tabPrimary: "#F7F9F9",
+  primaryBlue: "#4A90E2",
   white: "#fff",
   grey: "#43454a",
+  veryDarkGrey: "#23272A",
+  darkGrey: "#2C2F33",
   mediumGrey: "rgba(79,84,92,.9)",
   lightGrey: "#737f8d",
   lightestGrey: "#99aab5",
   veryLightestGrey: "#d6d7da",
   searchbar: "#ededed",
+  // dlight: #36393f
+  // primaryBlue: "#5a8cf0",
 
   /** Dark theme */
   strongBlack: "#18191b",
-  onboardingTitle: "#9ea0a9",
-  onboardingText: "#575a5f"
+  // onboardingTitle: "#fff",
+  // onboardingText: "#fff",
+  // onboardingTitle: "#9ea0a9",
+  // onboardingText: "#575a5f"
+  headlineOpacity: 0.95,
+  primaryOpacity: 0.85,
+  secondaryOpacity: 0.7,
+  hintOpacity: 0.5,
+  dividerOpacity: 0.12
 };
 
 export const fontSizes = {

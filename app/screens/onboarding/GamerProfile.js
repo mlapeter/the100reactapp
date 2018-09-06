@@ -116,7 +116,7 @@ class GamerProfile extends Component {
           </TouchableOpacity>
         </View> */}
         <View style={styles.inputRow}>
-          <Text style={styles.gamerLabel}>PlAY STYLE</Text>
+          <Text style={styles.gamerLabel}>PLAY STYLE</Text>
           <TouchableOpacity
             style={styles.selectBox}
             onPress={() => this.showPopover("playStyle")}
@@ -185,17 +185,19 @@ const styles = {
     justifyContent: "flex-start",
     alignItems: "flex-start",
     paddingHorizontal: 20,
-    backgroundColor: colors.strongBlack,
+    backgroundColor: colors.veryDarkGrey,
     paddingTop: 40
   },
   title: {
     fontSize: fontSizes.h2,
-    color: colors.onboardingTitle,
+    color: colors.white,
+    opacity: colors.headlineOpacity,
     textAlign: "left"
   },
   contentText: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.white,
+    opacity: colors.primaryOpacity,
     paddingVertical: 15
   },
   inputRow: {
@@ -206,16 +208,17 @@ const styles = {
     justifyContent: "space-between"
   },
   continueBtn: {
-    backgroundColor: "#6ba1fc",
+    backgroundColor: colors.primaryBlue,
     paddingHorizontal: 30,
     paddingVertical: 15
   },
   btnText: {
-    color: "#fff"
+    color: colors.white
   },
   gamerLabel: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText
+    color: colors.white,
+    opacity: colors.headlineOpacity
   },
   selectBox: {
     flexDirection: "row",

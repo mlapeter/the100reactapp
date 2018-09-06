@@ -77,7 +77,6 @@ class CreateCredential extends Component {
             <TextInput
               value={this.state.email}
               onChangeText={text => this.setState({ email: text })}
-              placeholder="INPUT EMAIL"
               style={styles.inputGamer}
               placeholderStyle={{ color: "#606060" }}
               underlineColorAndroid={"transparent"}
@@ -88,7 +87,6 @@ class CreateCredential extends Component {
             <TextInput
               value={this.state.password}
               onChangeText={text => this.setState({ password: text })}
-              placeholder="PASSWORD"
               style={styles.inputGamer}
               placeholderStyle={{ color: "#606060" }}
               underlineColorAndroid={"transparent"}
@@ -101,7 +99,8 @@ class CreateCredential extends Component {
             rightTextStyle={styles.contentText}
             isChecked={this.state.sendNotification}
             onClick={val =>
-              this.setState({ sendNotification: !this.state.sendNotification })}
+              this.setState({ sendNotification: !this.state.sendNotification })
+            }
           />
           <CheckBox
             checkBoxColor="#949599"
@@ -111,7 +110,8 @@ class CreateCredential extends Component {
             onClick={val =>
               this.setState({
                 tos_privacy_agreement: !this.state.tos_privacy_agreement
-              })}
+              })
+            }
           />
         </View>
         {this.state.email && this.state.password ? (
@@ -132,17 +132,19 @@ const styles = {
     justifyContent: "flex-start",
     alignItems: "flex-start",
     paddingHorizontal: 20,
-    backgroundColor: colors.strongBlack,
+    backgroundColor: colors.veryDarkGrey,
     paddingTop: 40
   },
   title: {
     fontSize: fontSizes.h1,
-    color: colors.onboardingTitle,
+    color: colors.white,
+    opacity: colors.headlineOpacity,
     textAlign: "left"
   },
   contentText: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.white,
+    opacity: colors.primaryOpacity,
     paddingVertical: 15
   },
   inputForm: {
@@ -155,28 +157,29 @@ const styles = {
     alignItems: "center"
   },
   continueBtn: {
-    backgroundColor: "#6ba1fc",
+    backgroundColor: colors.primaryBlue,
     paddingHorizontal: 30,
     paddingVertical: 15
   },
   btnText: {
-    color: "#fff"
+    color: colors.white
   },
   gamerLabel: {
     flex: 1,
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText
+    color: colors.white,
+    opacity: colors.headlineOpacity
   },
   inputGamer: {
     flex: 3,
     borderWidth: 1,
     borderColor: "#606060",
-    color: "#9fa0a4",
+    color: colors.white,
     flex: 1,
     height: 40,
     marginLeft: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#27292d"
+    backgroundColor: colors.darkGrey
   }
 };
 const mapStateToProps = state => ({

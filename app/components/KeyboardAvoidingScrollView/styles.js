@@ -1,21 +1,26 @@
 import EStyleSheet from "react-native-extended-stylesheet";
+import { colors, fontSizes, fontStyles } from "../../styles";
 
 export default EStyleSheet.create({
   keyboardAvoidingContainer: {
-    backgroundColor: "#fff",
+    backgroundColor: colors.darkGrey,
     alignSelf: "stretch"
   },
   containerAvoiding: {
-    alignSelf: "stretch"
+    alignSelf: "stretch",
+    backgroundColor: colors.darkGrey
   },
   scrollContainer: {
     alignItems: "center",
-    backgroundColor: "#fff"
+    backgroundColor: colors.darkGrey
   },
-  touchableContainer: {},
+  touchableContainer: {
+    backgroundColor: colors.darkGrey
+  },
   touchableView: {
     alignItems: "center",
     alignSelf: "stretch",
-    height: "100%"
+    height: "100%",
+    backgroundColor: colors.darkGrey
   }
 });

@@ -55,7 +55,7 @@ const styles = {
     justifyContent: "flex-start",
     alignItems: "center",
     paddingHorizontal: width * 0.1,
-    backgroundColor: colors.strongBlack
+    backgroundColor: colors.veryDarkGrey
   },
   logoImage: {
     marginVertical: height * 0.1,
@@ -64,14 +64,16 @@ const styles = {
   },
   loginButton: {
     paddingVertical: 20,
-    backgroundColor: "#25262a",
+    backgroundColor: colors.darkGrey,
     alignSelf: "stretch",
-    borderRadius: 3
+    borderRadius: 3,
+    borderColor: "#18191b",
+    borderWidth: 0.5
   },
   signupButton: {
     marginTop: 20,
     paddingVertical: 20,
-    backgroundColor: "#5a8cf0",
+    backgroundColor: colors.primaryBlue,
     alignSelf: "stretch",
     borderRadius: 3
   },

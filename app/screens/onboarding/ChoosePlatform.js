@@ -20,13 +20,13 @@ class ChoosePlatform extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.title}>Hello!</Text>
+        <Text style={styles.title}>Ready To Group Up?</Text>
         <Text style={styles.contentText}>
-          Welcome to the 100.io! To get started we will need to know a couple of
-          things about you to match you with the perfect group
+          Welcome to The100.io! You're 30 seconds away from a great group of
+          like-minded gamers.
         </Text>
         <Text style={styles.quote}>
-          First, choose the platform you most frequently will be gaming on
+          Choose the platform you most frequently game on:
         </Text>
         <View style={styles.osButtonGroup}>
           <TouchableOpacity
@@ -58,24 +58,27 @@ const styles = {
     justifyContent: "flex-start",
     alignItems: "flex-start",
     paddingHorizontal: 20,
-    backgroundColor: colors.strongBlack,
+    backgroundColor: colors.veryDarkGrey,
     paddingTop: 40
   },
   title: {
     fontSize: fontSizes.h1,
-    color: colors.onboardingTitle,
+    color: colors.white,
+    opacity: colors.headlineOpacity,
     textAlign: "left"
   },
   contentText: {
     fontSize: fontSizes.secondary,
-    color: colors.onboardingText,
+    color: colors.white,
+    opacity: colors.primaryOpacity,
     paddingVertical: 25
   },
   quote: {
     fontSize: fontSizes.secondary,
     fontFamily: fontStyles.primaryFont,
     fontWeight: "bold",
-    color: colors.onboardingTitle
+    color: colors.white,
+    opacity: colors.primaryOpacity
   },
   osButtonGroup: {
     paddingVertical: 20,

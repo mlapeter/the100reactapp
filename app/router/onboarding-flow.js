@@ -11,20 +11,21 @@ import { colors } from "../styles";
 
 const styles = {
   headerStyle: {
-    backgroundColor: colors.strongBlack,
+    backgroundColor: colors.veryDarkGrey,
     height: 80,
     paddingHorizontal: 20
   },
   headerTitleStyle: {
-    color: "#fff"
+    color: colors.white,
+    opacity: colors.headlineOpacity
   },
   backButtonStyle: {
     paddingVertical: 15,
     paddingHorizontal: 20,
-    backgroundColor: "#27282b"
+    backgroundColor: colors.darkGrey
   },
   backTitle: {
-    color: "#fff"
+    color: colors.white
   }
 };
 const BackButton = ({ onPress, title }) => (
