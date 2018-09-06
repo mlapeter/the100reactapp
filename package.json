@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "private": true,
   "devDependencies": {
+    "flow-bin": "^0.47.0",
     "jest-expo": "^28.0.0",
     "react-native-scripts": "^1.14.1",
     "react-test-renderer": "16.0.0-alpha.12",
