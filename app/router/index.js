@@ -125,13 +125,11 @@ const MenuDrawer = createDrawerNavigator(
       screen: UserEditStack,
       navigationOptions: ({ navigation }) => ({
         drawerIcon: () => (
-          <View style={styles.menuItem}>
-            <MaterialCommunityIcons
-              name="account-settings-variant"
-              size={24}
-              style={styles.icon}
-            />
-          </View>
+          <MaterialCommunityIcons
+            name="account-settings-variant"
+            size={24}
+            style={styles.icon}
+          />
         )
       })
     },
@@ -154,7 +152,12 @@ const MenuDrawer = createDrawerNavigator(
       activeTintColor: colors.veryDarkGrey,
       inactiveTintColor: colors.white,
       activeBackgroundColor: "#E8EAF6",
-      iconContainerStyle: { opacity: 1 }
+      itemsContainerStyle: {
+        opacity: colors.primaryOpacity
+      },
+      iconContainerStyle: {
+        opacity: colors.primaryOpacity
+      }
     },
 
     // drawerBackgroundColor: colors.blue,
@@ -316,14 +319,18 @@ const styles = StyleSheet.create({
     backgroundColor: colors.veryDarkGrey
   },
   menuItem: {
-    padding: 15,
+    // padding: 15,
+    marginLeft: 15,
+    marginTop: 10,
     flexDirection: "row",
-    justifyContent: "flex-start"
+    justifyContent: "flex-start",
+    opacity: colors.primaryOpacity
   },
   icon: {
     width: 24,
     height: 24,
     color: colors.white
+    // opacity: colors.primaryOpacity
   },
   menuText: {
     fontWeight: "bold",

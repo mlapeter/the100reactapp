@@ -15,15 +15,19 @@ export const colors = {
   lightestGrey: "#99aab5",
   veryLightestGrey: "#d6d7da",
   searchbar: "#ededed",
-
   // dlight: #36393f
 
   /** Dark theme */
   strongBlack: "#18191b",
   onboardingTitle: "#fff",
-  onboardingText: "#fff"
+  onboardingText: "#fff",
   // onboardingTitle: "#9ea0a9",
   // onboardingText: "#575a5f"
+  fullOpacity: 1,
+  primaryOpacity: 0.85,
+  secondaryOpacity: 0.7,
+  hintOpacity: 0.5,
+  dividerOpacity: 0.12
 };
 
 export const fontSizes = {
