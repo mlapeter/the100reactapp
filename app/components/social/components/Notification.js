@@ -12,6 +12,7 @@ type NotificationProps = {
   avatar_url: string,
   notification_type: string,
   handleColor: string,
+  target_url_app: string,
   navigation: string
 };
 
@@ -30,9 +31,11 @@ export default class Notification extends React.PureComponent<
       id,
       handleColor,
       avatar_url,
-      notification_type
+      notification_type,
+      target_url_app
     } = this.props;
-
+    console.log("NAVIGATION: ");
+    console.log(navigation);
     if (avatar_url === "img/default-avatar.png") {
       avatar_url =
         "https://www.the100.io/assets/ghost-bdd6b51738dab38b1f760df958c62351d571d7cfa97690ea1f87744d35f62574.png";
@@ -40,7 +43,17 @@ export default class Notification extends React.PureComponent<
 
     return (
       <BaseCard
-        onPress={() => navigation && navigation.navigate("Message", { id })}
+        onPress={() =>
+          notification_type === "karma-received" ||
+          notification_type === "username-mentioned" ||
+          notification_type === "new-private-message"
+            ? navigation.navigate("Friend", {
+                userId: avatar_user_id
+              })
+            : navigation.navigate("GamingSession", {
+                gamingSessionId: target_url_app.replace(/\D/g, "")
+              })
+        }
       >
         <View style={styles.header}>
           <View style={styles.user}>

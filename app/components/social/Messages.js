@@ -5,6 +5,7 @@ type Props = {
   dispatch: Function
 };
 
+import autobind from "autobind-decorator";
 import * as React from "react";
 import { Feed } from "../components";
 import { Notification } from "./components";
@@ -17,8 +18,17 @@ class Messages extends React.Component<Props> {
     this.props.dispatch(fetchNotifications());
   }
 
+  @autobind
   renderItem(data): React.Node {
-    const { id, created_at, message, avatar_url, notification_type } = data;
+    const { navigation } = this.props;
+    const {
+      id,
+      created_at,
+      message,
+      avatar_url,
+      notification_type,
+      target_url_app
+    } = data;
     return (
       <Notification
         {...{
@@ -26,7 +36,9 @@ class Messages extends React.Component<Props> {
           created_at,
           id,
           avatar_url,
-          notification_type
+          notification_type,
+          target_url_app,
+          navigation
         }}
       />
     );
@@ -37,7 +49,7 @@ class Messages extends React.Component<Props> {
     const data = this.props.notifications;
     const navigation = this.props.navigation;
     const title = "Notifications";
-    return <Feed {...{ data, renderItem, title }} />;
+    return <Feed {...{ data, renderItem, title, navigation }} />;
   }
 }
 
