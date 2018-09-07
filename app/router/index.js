@@ -30,6 +30,8 @@ import GamingSessionEdit from "../screens/GamingSessionEdit";
 
 import Group from "../screens/Group/";
 import NotificationsList from "../screens/NotificationsList";
+import Messages from "../components/social/Messages";
+
 import FriendsList from "../screens/FriendsList";
 import User from "../screens/User";
 import UserEdit from "../screens/UserEdit";
@@ -64,7 +66,7 @@ const GroupStack = createStackNavigator({
 });
 
 const NotificationsStack = createStackNavigator({
-  NotificationsList: { screen: NotificationsList },
+  NotificationsList: { screen: Messages },
   GamingSession: { screen: GamingSession }
 });
 
@@ -233,6 +235,10 @@ Group.navigationOptions = {
 };
 
 NotificationsList.navigationOptions = {
+  header: null
+};
+
+Messages.navigationOptions = {
   header: null
 };
 

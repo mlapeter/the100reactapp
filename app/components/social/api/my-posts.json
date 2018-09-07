@@ -1,0 +1,28 @@
+[
+    {
+        "id": "dac724e3-a907-4633-af07-836e8e7e429c",
+        "user": "schavez",
+        "caption": "Just booked my flights to Reykjavik. I can’t wait! What should I go and check out?",
+        "timestamp": 1515700620,
+        "comments": [
+            "andrea.schmidt",
+            "monicaa",
+            "alexandergarcia",
+            "jmitch"
+        ]
+    },
+    {
+        "id": "7aa7f898-4c55-48b0-8fd5-a161f9ea0c8f",
+        "user": "schavez",
+        "caption": "Bring me back to the summer ☀️",
+        "timestamp": 1514754800,
+        "comments": [
+            "monicaa",
+            "jmitch"
+        ],
+        "picture": {
+            "uri": "https://firebasestorage.googleapis.com/v0/b/react-native-e.appspot.com/o/72ff09f7d384da5cd0645d2c2b008a2a1b9b294c.png?alt=media&token=e389a0d0-3aa6-4170-90a3-57952ac0e5e7",
+            "preview": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAYAAACNMs+9AAAAAXNSR0IArs4c6QAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAgICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYvMS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3JpZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpSREY+CjwveDp4bXBtZXRhPgpMwidZAAABdklEQVQYGQ3QvU8TcQDG8e/d/e56udJSUkpoWnmJxKGYYBHShASiqYlGdycJhD9AJzb8D1w7upk4wCaLm24kEMNbgZDQpdb2qldK3w64N297lif5PI9kf/sRqOUK9Y7Lg2sN7vpg1XjZbfIiZbBZ3mO9NYEoH1XJJeKkFZvTyTTBcBTVnWPYNBnyPD7HMqztJhBntzGeygGepDCbjEDSgHsX1FEsXeFTz2ChISEvGhK0O/iaihPGgePgCgWiBr7k89CyUQkQuh22Fx+hpFPYgz7NmxaZ+Ajc2nR/nrBV+s7Uuxjiy02X9+cV4p5P1LlnWpFDhgyXTVKta2a2TXr5COJj+ZSjnSveTI5C12ZuKUc+m8bcPWb/7QGs3GG0DKTx4oeg0TbBDSA0PglHrVZrHBRe8XVD4vVCCfFnHmG1/5KJGEQ0H12ROBx0OHxWCN3LZK0m7r/HPM+GPzIUpd7vIQsN1/dI6Rpjvovze4/OrzoXDZ2JYo3/ICGQQuTQQukAAAAASUVORK5CYII="
+        }
+    }
+]
