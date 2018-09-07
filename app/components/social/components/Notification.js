@@ -1,33 +1,32 @@
 // @flow
 import * as React from "react";
 import { StyleSheet, View } from "react-native";
-import moment from "moment";
 import TimeAgo from "../../TimeAgo";
 
 import { Avatar, StyleGuide, Text, BaseCard } from "../../components";
-import SocialAPI from "../api";
 
-import Header from "./Header";
-
-import type { OptionalNavigationProps } from "../../components/Navigation";
-
-type MessageProps = OptionalNavigationProps & {
-  user: string,
+type NotificationProps = {
   message: string,
-  timestamp: number,
-  id?: string
+  created_at: string,
+  id?: string,
+  avatar_url: string,
+  notification_type: string,
+  handleColor: string,
+  navigation: string
 };
 
-export default class Notification extends React.PureComponent<MessageProps> {
+export default class Notification extends React.PureComponent<
+  NotificationProps
+> {
   static defaultProps = {
     handleColor: "black"
   };
 
   render(): React.Node {
     let {
+      navigation,
       message,
       created_at,
-      navigation,
       id,
       handleColor,
       avatar_url,
@@ -55,13 +54,11 @@ export default class Notification extends React.PureComponent<MessageProps> {
                 style={styles.footnote}
                 color={handleColor === "black" ? "#999999" : handleColor}
               >
-                @testy
+                <TimeAgo date={created_at} />
               </Text>
             </View>
           </View>
-          <Text type="footnote">
-            <TimeAgo date={created_at} />
-          </Text>
+          <Text type="footnote" />
         </View>
         <Text style={styles.text}>{message}</Text>
       </BaseCard>
