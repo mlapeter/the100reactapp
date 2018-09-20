@@ -19,7 +19,7 @@ import { fetchNotifications } from "../actions/notifications";
 import NotificationsItem from "../components/NotificationsItem/NotificationsItem";
 import TopNav from "../components/TopNav/TopNav";
 
-import { colors, fontSizes, fontStyles } from "../../app/styles";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../app/styles";
 
 class Notifications extends PureComponent {
   static propTypes = {
@@ -59,27 +59,29 @@ class Notifications extends PureComponent {
   };
 
   render() {
-    // if (this.props.isLoading) {
-    //   return (
-    //     <View style={styles.container}>
-    //       <ActivityIndicator />
-    //     </View>
-    //   );
-    // } else {
-    if (this.props.items.length < 1) {
+    if (this.props.isLoading) {
       return (
         <View style={styles.container}>
-          <TouchableOpacity
-            style={styles.buttonWrapper}
-            onPress={this.fetchNotificationsData}
-          >
-            <Text style={styles.buttonText}>
-              No Notifications yet! Tap to refresh.
-            </Text>
-          </TouchableOpacity>
+          <View style={styles.loading}>
+            <ActivityIndicator />
+          </View>
         </View>
       );
-      // }
+    } else if (this.props.items.length < 1) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.loading}>
+            <TouchableOpacity
+              style={styles.buttonWrapper}
+              onPress={this.fetchNotificationsData}
+            >
+              <Text style={styles.buttonText}>
+                No Notifications yet! Tap to refresh.
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
     }
     return (
       <View style={styles.container}>
@@ -107,26 +109,15 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
-    padding: 5,
-    // paddingTop: 25,
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    backgroundColor: colors.white
+    paddingBottom: styleSheet.spacing.small,
+    backgroundColor: colors.lightGray
   },
-  // container: {
-  //   paddingTop: 35,
-  //   padding: 5,
-  //   margin: 3,
-  //   flex: 1,
-  //   flexDirection: "column",
-  //   justifyContent: "center",
-  //   backgroundColor: colors.white
-  // },
   loading: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
-    margin: 10
+    padding: 10
   },
   buttonWrapper: {
     padding: 10

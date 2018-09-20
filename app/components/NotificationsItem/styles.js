@@ -1,7 +1,31 @@
 import { StyleSheet } from "react-native";
-import { colors, fontSizes, fontStyles } from "../../styles";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
 export default (styles = StyleSheet.create({
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    padding: styleSheet.spacing.tiny
+  },
+  text: {
+    padding: styleSheet.spacing.tiny
+  },
+  user: {
+    flexDirection: "row",
+    alignItems: "stretch"
+  },
+  username: {
+    justifyContent: "space-between",
+    marginLeft: styleSheet.spacing.tiny
+  },
+  headline: {
+    lineHeight: 17
+  },
+  footnote: {
+    lineHeight: 13
+  },
+
   defaultText: {
     color: colors.white
   },
@@ -50,9 +74,10 @@ export default (styles = StyleSheet.create({
     flex: 1.1
   },
   avatarMini: {
-    height: 40,
-    width: 40,
-    borderRadius: 20
+    height: 36,
+    width: 36,
+    borderRadius: 18,
+    alignSelf: "center"
   },
   message: {
     color: colors.grey,

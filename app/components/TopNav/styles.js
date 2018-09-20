@@ -6,7 +6,8 @@ export default (styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 6
+    paddingVertical: 8,
+    backgroundColor: colors.white
   },
 
   menu: {

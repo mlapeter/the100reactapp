@@ -23,7 +23,11 @@ class AuthLoading extends React.Component {
 
   bootstrap = () => {
     console.log("Starting App");
+
     Font.loadAsync({
+      "SFProText-Bold": require("../../app/assets/fonts/SF-Pro-Text-Bold.otf"),
+      "SFProText-Semibold": require("../../app/assets/fonts/SF-Pro-Text-Semibold.otf"),
+      "SFProText-Regular": require("../../app/assets/fonts/SF-Pro-Text-Regular.otf"),
       Lato: require("../../app/assets/fonts/Lato-Bold.ttf"),
       Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
     }).then(result => {
