@@ -2,6 +2,7 @@ import React, { PureComponent } from "react";
 import { Image, View, Text, TouchableHighlight } from "react-native";
 import TimeAgo from "../TimeAgo";
 import styles from "./styles";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
 import Card from "../Card";
 
@@ -36,44 +37,30 @@ export default class NotificationsItem extends PureComponent {
               }
             />
             <View style={styles.username}>
-              <Text type="headline" style={styles.headline} color={"black"}>
+              <Text
+                type="headline"
+                style={[styles.headline, styleSheet.typography["headline"]]}
+                color={"black"}
+              >
                 {this.props.item.notification_type
                   .replace("-", " ")
                   .replace("-", " ")}
               </Text>
-              <Text type="footnote" style={styles.footnote} color={"black"}>
+              <Text
+                type="footnote"
+                style={[styles.footnote, styleSheet.typography["footnote"]]}
+                color={"#999999"}
+              >
                 <TimeAgo date={this.props.item.created_at} />
               </Text>
             </View>
           </View>
           <Text type="footnote" />
         </View>
-        <Text style={styles.text}>{this.props.item.message}</Text>
+        <Text style={[styles.text, styleSheet.typography["body"]]}>
+          {this.props.item.message}
+        </Text>
       </Card>
-
-      // <View style={styles.box}>
-      //   <View style={styles.leftBox}>
-      //     <Image
-      //       style={styles.avatarMini}
-      //       source={
-      //         this.props.item.avatar_url === null ||
-      //         this.props.item.avatar_url === "img/default-avatar.png"
-      //           ? require("../../assets/images/default-avatar.png")
-      //           : { uri: this.props.item.avatar_url }
-      //       }
-      //     />
-      //   </View>
-      //   <View style={styles.middleBox}>
-      //     <View style={{ flexDirection: "row" }}>
-      //       <Text style={styles.time}>
-      //         {this.props.item.notification_type} -
-      //       </Text>
-      //       <TimeAgo style={styles.time} date={this.props.item.created_at} />
-      //     </View>
-      //     <Text style={styles.message}>{this.props.item.message}</Text>
-      //   </View>
-      // </View>
-      // </Card>
     );
   }
 }

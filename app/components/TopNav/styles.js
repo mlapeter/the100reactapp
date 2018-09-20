@@ -6,8 +6,11 @@ export default (styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 8,
-    backgroundColor: colors.white
+    paddingVertical: 12,
+    backgroundColor: colors.veryDarkGrey
+  },
+  title: {
+    color: colors.white
   },
 
   menu: {
@@ -23,7 +26,7 @@ export default (styles = StyleSheet.create({
     paddingVertical: 4,
     alignItems: "center",
     paddingHorizontal: 5,
-    backgroundColor: colors.white
+    backgroundColor: colors.veryDarkGrey
   },
   input: {
     flexDirection: "row",

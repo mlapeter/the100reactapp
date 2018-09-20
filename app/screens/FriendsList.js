@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
-    padding: 5,
+    // padding: 5,
     // paddingTop: 25,
     flex: 1,
     flexDirection: "column",

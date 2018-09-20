@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { colors, fontSizes, fontStyles } from "../../styles";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -82,7 +82,8 @@ export default class TopNav extends Component {
               <TextInput
                 value={this.props.searchText}
                 onChangeText={searchText =>
-                  this.props.setSearchText(searchText)}
+                  this.props.setSearchText(searchText)
+                }
                 onSubmitEditing={() => this.submitSearch()}
                 placeholder="Search Users"
                 underlineColorAndroid={"transparent"}
@@ -106,7 +107,9 @@ export default class TopNav extends Component {
             </View>
           ) : (
             <View style={styles.titleContainer}>
-              <Text style={styles.titleText}>{this.props.title}</Text>
+              <Text style={[styles.title, styleSheet.typography["title3"]]}>
+                {this.props.title}
+              </Text>
             </View>
           )}
         </View>

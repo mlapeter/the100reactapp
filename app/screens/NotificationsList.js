@@ -86,7 +86,7 @@ class Notifications extends PureComponent {
     return (
       <View style={styles.container}>
         <TopNav
-          title="NOTIFICATIONS"
+          title="Notifications"
           user={this.props.user}
           navigation={this.props.navigation}
         />
