@@ -15,6 +15,8 @@ import { changeSelectedGroupId, fetchGroup } from "../actions/group";
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 
+import { loadIcons } from "../components/Icon";
+
 class AuthLoading extends React.Component {
   constructor(props) {
     super(props);
@@ -23,6 +25,7 @@ class AuthLoading extends React.Component {
 
   bootstrap = () => {
     console.log("Starting App");
+    loadIcons();
 
     Font.loadAsync({
       "SFProText-Bold": require("../../app/assets/fonts/SF-Pro-Text-Bold.otf"),
