@@ -333,6 +333,24 @@ class Group extends React.Component {
   }
 }
 
+export function SmallIconBar(props) {
+  return (
+    <View style={styles.iconBar}>
+      <PlatformIcon platform={props.platform} />
+      <PlayerIcon usersCount={props.users_count} />
+      <Text style={styles.icon}>
+        <MaterialCommunityIcons
+          name="human-greeting"
+          size={14}
+          color={colors.grey}
+        />
+        <Text style={styles.icon}>{props.play_style}</Text>
+      </Text>
+      <PlayScheduleIcon playSchedule={props.play_schedule} />
+    </View>
+  );
+}
+
 function Toggle(props) {
   return (
     <View>

@@ -61,7 +61,7 @@ type IconProps = {
   primary?: boolean,
   secondary?: boolean,
   color: string,
-  size: number
+  size?: number
 };
 
 export const loadIcons = () => Font.loadAsync({ Icons });

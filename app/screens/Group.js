@@ -43,6 +43,8 @@ import IconBar from "../components/IconBar";
 import Header from "../components/Header";
 import Content from "../components/Content";
 import Card from "../components/Card";
+import NavigationBar from "../components/NavigationBar";
+import { SmallIconBar } from "./GroupOld";
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
@@ -111,7 +113,7 @@ class Group extends React.Component {
     Alert.alert("Group Auto Joined!");
   }
 
-  onShare() {
+  onShare = () => {
     Share.share(
       {
         message:
@@ -130,7 +132,7 @@ class Group extends React.Component {
         dialogTitle: "Share Group Link"
       }
     );
-  }
+  };
 
   postData(action) {
     this.setState({
@@ -203,33 +205,63 @@ class Group extends React.Component {
 
     let room = `group-${this.props.group.id}`;
     let url = `chat/groups/${room}`;
-
+    let navigation = this.props.navigation;
+    const rightAction = {
+      icon: "share",
+      onPress: this.onShare
+    };
     return (
       <View style={styles.container}>
         <Header
           title={this.props.group.name}
           picture={this.props.group.header_background_image_api}
+          heightRatio={0.5}
+        >
+          <NavigationBar type="transparent" {...{ navigation, rightAction }} />
+        </Header>
+        <SmallIconBar
+          platform={"PS4"}
+          users_count={this.props.group.users_count}
+          play_style={this.props.group.play_style}
+          play_schedule={this.props.group.play_schedule}
         />
-        <IconBar
-          details={[
-            { icon: "albums", caption: "PS4" },
-            {
-              icon: "account",
-              caption: this.props.group.users_count
-            },
-            { icon: "time", caption: "evenings" },
-            { icon: "share", caption: "share" }
-          ]}
-        />
+
         <Content style={styles.gutter}>
-          <Card>
+          <Card onPress={this.onShare}>
             <Panel text={this.props.group.description} numberOfLines={3} />
+          </Card>
+          <Card onPress={this.onShare}>
+            <ChatPreview
+              room={`group-${this.props.group.id}`}
+              url={`chat/groups/group-${this.props.group.id}`}
+              allowAnon={true}
+              onOpenChat={() =>
+                this.props.navigation.navigate("GroupChat", {
+                  title: `${this.props.group.name} Chat`,
+                  room: `group-${this.props.group.id}`,
+                  url: `chat/groups/group-${this.props.group.id}`,
+                  allowAnon: false
+                })
+              }
+            />
           </Card>
         </Content>
       </View>
     );
   }
 }
+
+// <IconBar
+//   details={[
+//     { icon: "albums", caption: "PS4" },
+//     {
+//       icon: "account",
+//       caption: this.props.group.users_count
+//     },
+//     { icon: "time", caption: "evenings" },
+//     { icon: "share", caption: "share" }
+//   ]}
+// />
 
 const styles = StyleSheet.create({
   gutter: {
