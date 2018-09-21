@@ -2,6 +2,7 @@ import React from "react";
 import {
   ActivityIndicator,
   AsyncStorage,
+  Platform,
   StatusBar,
   StyleSheet,
   View
@@ -26,7 +27,10 @@ class AuthLoading extends React.Component {
   bootstrap = () => {
     console.log("Starting App");
     loadIcons();
-
+    StatusBar.setBarStyle("light-content");
+    if (Platform.OS === "android") {
+      StatusBar.setBackgroundColor(colors.veryDarkGrey);
+    }
     Font.loadAsync({
       "SFProText-Bold": require("../../app/assets/fonts/SF-Pro-Text-Bold.otf"),
       "SFProText-Semibold": require("../../app/assets/fonts/SF-Pro-Text-Semibold.otf"),

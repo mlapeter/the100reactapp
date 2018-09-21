@@ -5,7 +5,6 @@ import {
   Image,
   AsyncStorage,
   TouchableOpacity,
-  StatusBar,
   Dimensions
 } from "react-native";
 import { Font } from "expo";
@@ -31,7 +30,6 @@ class AuthMainPage extends Component {
 
     return (
       <View style={styles.container}>
-        <StatusBar />
         <Image source={ImgLogo} style={styles.logoImage} />
         <TouchableOpacity
           style={styles.loginButton}

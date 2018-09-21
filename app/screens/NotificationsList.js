@@ -6,7 +6,6 @@ import {
   AsyncStorage,
   FlatList,
   Image,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
