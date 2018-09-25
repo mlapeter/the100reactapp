@@ -65,6 +65,7 @@ class Group extends React.Component {
   }
 
   componentWillMount() {
+    console.log("Mounting Group Screen");
     this.fetchGroupData();
   }
 
@@ -79,7 +80,9 @@ class Group extends React.Component {
 
   fetchGroupData = () => {
     console.log("Fetching Group");
-    this.props.dispatch(fetchGroup());
+    // this.props.dispatch(changeSelectedGroupId(this.groupId));
+    console.log("NAV PARAMS: ", this.props.navigation.state.params.groupId);
+    this.props.dispatch(fetchGroup(this.props.navigation.state.params.groupId));
   };
 
   toggleGroups() {
@@ -217,7 +220,11 @@ class Group extends React.Component {
           picture={this.props.group.header_background_image_api}
           heightRatio={0.5}
         >
-          <NavigationBar type="transparent" {...{ navigation, rightAction }} />
+          <NavigationBar
+            type="transparent"
+            back="Groups"
+            {...{ navigation, rightAction }}
+          />
         </Header>
         <SmallIconBar
           platform={"PS4"}
@@ -227,10 +234,17 @@ class Group extends React.Component {
         />
 
         <Content style={styles.gutter}>
-          <Card onPress={this.onShare}>
-            <Panel text={this.props.group.latest_news} numberOfLines={3} />
-            <Panel text={this.props.group.description} numberOfLines={3} />
-          </Card>
+          {this.props.group.latest_news ? (
+            <Card>
+              <Panel text={this.props.group.latest_news} numberOfLines={3} />
+            </Card>
+          ) : null}
+
+          {this.props.group.description ? (
+            <Card>
+              <Panel text={this.props.group.description} numberOfLines={3} />
+            </Card>
+          ) : null}
 
           <Card
             onPress={() =>

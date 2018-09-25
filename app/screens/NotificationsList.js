@@ -17,6 +17,7 @@ import { connect } from "react-redux";
 import { fetchNotifications } from "../actions/notifications";
 import NotificationsItem from "../components/NotificationsItem/NotificationsItem";
 import TopNav from "../components/TopNav/TopNav";
+import Card from "../components/Card";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../../app/styles";
 
@@ -57,7 +58,7 @@ class Notifications extends PureComponent {
     this.fetchNotificationsData();
   };
 
-  render() {
+  renderFooter = () => {
     if (this.props.isLoading) {
       return (
         <View style={styles.container}>
@@ -68,20 +69,18 @@ class Notifications extends PureComponent {
       );
     } else if (this.props.items.length < 1) {
       return (
-        <View style={styles.container}>
-          <View style={styles.loading}>
-            <TouchableOpacity
-              style={styles.buttonWrapper}
-              onPress={this.fetchNotificationsData}
-            >
-              <Text style={styles.buttonText}>
-                No Notifications yet! Tap to refresh.
-              </Text>
-            </TouchableOpacity>
-          </View>
+        <View>
+          <Card onPress={this.fetchNotificationsData}>
+            <Text>No Notifications yet! Tap to refresh.</Text>
+          </Card>
         </View>
       );
+    } else {
+      return null;
     }
+  };
+
+  render() {
     return (
       <View style={styles.container}>
         <TopNav
@@ -97,6 +96,7 @@ class Notifications extends PureComponent {
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.isLoading}
           onRefresh={this.handleRefresh}
+          ListFooterComponent={this.renderFooter}
         />
       </View>
     );

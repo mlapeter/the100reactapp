@@ -1,6 +1,7 @@
 // @flow
 import * as React from "react";
 import { StyleSheet, Text, View, TouchableHighlight } from "react-native";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
 import Icon, { type IconName } from "../Icon";
 
@@ -21,7 +22,7 @@ export default class LeftAction extends React.PureComponent<LeftActionProps> {
       >
         <View style={styles.backBtn}>
           <Icon color="white" {...{ name }} />
-          <Text color="white">{label}</Text>
+          <Text style={{ color: colors.white }}>{label}</Text>
         </View>
       </TouchableHighlight>
     );

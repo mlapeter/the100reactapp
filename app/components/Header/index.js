@@ -25,7 +25,8 @@ export default class Header extends React.PureComponent<HeaderProps> {
     return (
       <View style={{ height: width * heightRatio }}>
         <Image
-          style={styles.image}
+          style={[{ height: width * heightRatio }, styles.image]}
+          resizeMode="cover"
           source={
             picture === "img/default-group-header.jpg"
               ? defaultGroupHeaderBackground
@@ -34,7 +35,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
         />
         <LinearGradient
           style={styles.gradient}
-          colors={["rgba(0,0,0,0.8)", "transparent", "rgba(0,0,0,0.8)"]}
+          colors={["rgba(0,0,0,0.4)", "transparent", "rgba(0,0,0,0.4)"]}
         >
           {children}
           {title && (
@@ -51,7 +52,8 @@ export default class Header extends React.PureComponent<HeaderProps> {
 const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
   image: {
-    ...StyleSheet.absoluteFillObject
+    ...StyleSheet.absoluteFillObject,
+    width: width
   },
   gradient: {
     ...StyleSheet.absoluteFillObject,

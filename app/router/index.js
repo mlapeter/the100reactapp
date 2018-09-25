@@ -27,6 +27,7 @@ import GamingSession from "../screens/GamingSession";
 import GamingSessionCreate from "../screens/GamingSessionCreate";
 import GamingSessionEdit from "../screens/GamingSessionEdit";
 
+import Groups from "../screens/Groups/";
 import Group from "../screens/Group/";
 import NotificationsList from "../screens/NotificationsList";
 import FriendsList from "../screens/FriendsList";
@@ -57,7 +58,8 @@ const GamingSessionsStack = createStackNavigator({
   GamingSessionEdit: { screen: GamingSessionEdit }
 });
 
-const GroupStack = createStackNavigator({
+const GroupsStack = createStackNavigator({
+  Groups: { screen: Groups },
   Group: { screen: Group },
   GroupChat: { screen: Chatroom }
 });
@@ -78,7 +80,7 @@ const FriendsStack = createStackNavigator({
 const HomeTabs = createBottomTabNavigator(
   {
     Games: { screen: GamingSessionsStack },
-    Group: { screen: GroupStack },
+    Groups: { screen: GroupsStack },
     NotificationsList: { screen: NotificationsStack },
     FriendsList: { screen: FriendsStack }
   },
@@ -227,6 +229,10 @@ GamingSessionsList.navigationOptions = {
   header: null
 };
 
+Groups.navigationOptions = {
+  header: null
+};
+
 Group.navigationOptions = {
   header: null
 };
@@ -260,8 +266,8 @@ GamingSessionsStack.navigationOptions = {
   )
 };
 
-GroupStack.navigationOptions = {
-  tabBarLabel: "Group",
+GroupsStack.navigationOptions = {
+  tabBarLabel: "Groups",
   tabBarIcon: ({ tintColor, focused }) => (
     <MaterialCommunityIcons
       name={focused ? "account-multiple" : "account-multiple"}

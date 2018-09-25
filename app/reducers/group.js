@@ -17,7 +17,8 @@ export default (state = initialState, action) => {
     case FETCH_GROUP:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
+        selectedGroupId: action.groupId
       };
     case FETCH_GROUP_RESULT:
       return {

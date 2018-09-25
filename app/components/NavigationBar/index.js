@@ -1,4 +1,5 @@
 // @flow
+import autobind from "autobind-decorator";
 import * as React from "react";
 import {
   SafeAreaView,
@@ -41,8 +42,10 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
     expanded: false
   };
 
+  @autobind
   goBack() {
-    // this.props.navigation.goBack();
+    const { navigation } = this.props;
+    navigation.goBack();
   }
 
   render(): React.Node {
