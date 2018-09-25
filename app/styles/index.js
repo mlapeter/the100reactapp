@@ -3,6 +3,7 @@ export const colors = {
   red: "#FF6A60",
   primary: "#4E595D",
   secondary: "#929292",
+  active: "#4A90E2",
   border: "#E4E4E4",
   tabPrimary: "#F7F9F9",
   primaryBlue: "#4A90E2",

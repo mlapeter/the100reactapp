@@ -32,13 +32,17 @@ export default class Header extends React.PureComponent<HeaderProps> {
               : { uri: picture }
           }
         />
-
-        {children}
-        {title && (
-          <Text style={[styles.text, styleSheet.typography["title2"]]}>
-            {title}
-          </Text>
-        )}
+        <LinearGradient
+          style={styles.gradient}
+          colors={["rgba(0,0,0,0.8)", "transparent", "rgba(0,0,0,0.8)"]}
+        >
+          {children}
+          {title && (
+            <Text style={[styles.text, styleSheet.typography["title2"]]}>
+              {title}
+            </Text>
+          )}
+        </LinearGradient>
       </View>
     );
   }

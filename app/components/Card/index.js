@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { StyleSheet, TouchableWithoutFeedback, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
 type CardProps = {
@@ -12,9 +12,9 @@ export default class Card extends React.PureComponent<CardProps> {
   render(): React.Node {
     const { style, onPress, children } = this.props;
     return (
-      <TouchableWithoutFeedback {...{ onPress }}>
+      <TouchableOpacity {...{ onPress }}>
         <View style={[styles.card, style]}>{children}</View>
-      </TouchableWithoutFeedback>
+      </TouchableOpacity>
     );
   }
 }

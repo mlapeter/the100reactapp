@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import Icon, { type IconName } from "../Icon";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
@@ -8,26 +8,45 @@ import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 type Detail = {
   icon?: IconName,
   comp?: React.Node,
+  link?: string,
+  linkParams?: () => mixed,
   caption: string
 };
 
-type DetailsBarProps = {
+type IconBarProps = {
   details: Detail[]
 };
 
-export default class IconBar extends React.PureComponent<DetailsBarProps> {
+export default class IconBar extends React.PureComponent<IconBarProps> {
   render(): React.Node {
     return (
       <View style={styles.details}>
         {this.props.details.map((detail, key) => (
-          <View style={styles.item} {...{ key }}>
-            <View style={styles.icon}>
-              {detail.icon && <Icon name={detail.icon} primary />}
-              {detail.comp}
-            </View>
-            <Text type="caption" style={styles.caption} primary>
-              {detail.caption}
-            </Text>
+          <View style={{ flex: 1 }} {...{ key }}>
+            <TouchableOpacity
+              onPress={
+                detail.link
+                  ? () => {
+                      this.props.navigation.navigate(
+                        detail.link,
+                        detail.linkParams
+                      );
+                    }
+                  : detail.action
+                    ? detail.action
+                    : null
+              }
+            >
+              <View style={styles.item}>
+                <View style={styles.icon}>
+                  {detail.icon && <Icon name={detail.icon} primary />}
+                  {detail.comp}
+                </View>
+                <Text style={[{ color: colors.primary }, styles.caption]}>
+                  {detail.caption}
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         ))}
       </View>
@@ -42,7 +61,7 @@ const styles = StyleSheet.create({
     ...styleSheet.styles.shadow
   },
   item: {
-    flex: 1,
+    // flex: 1,
     alignItems: "center",
     padding: styleSheet.spacing.small
   },

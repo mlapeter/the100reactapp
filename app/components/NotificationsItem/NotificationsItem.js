@@ -38,7 +38,6 @@ export default class NotificationsItem extends PureComponent {
             />
             <View style={styles.username}>
               <Text
-                type="headline"
                 style={[styles.headline, styleSheet.typography["headline"]]}
                 color={"black"}
               >
@@ -47,7 +46,6 @@ export default class NotificationsItem extends PureComponent {
                   .replace("-", " ")}
               </Text>
               <Text
-                type="footnote"
                 style={[styles.footnote, styleSheet.typography["footnote"]]}
                 color={"#999999"}
               >
@@ -55,7 +53,6 @@ export default class NotificationsItem extends PureComponent {
               </Text>
             </View>
           </View>
-          <Text type="footnote" />
         </View>
         <Text style={[styles.text, styleSheet.typography["body"]]}>
           {this.props.item.message}

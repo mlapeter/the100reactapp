@@ -228,9 +228,23 @@ class Group extends React.Component {
 
         <Content style={styles.gutter}>
           <Card onPress={this.onShare}>
+            <Panel text={this.props.group.latest_news} numberOfLines={3} />
             <Panel text={this.props.group.description} numberOfLines={3} />
           </Card>
-          <Card onPress={this.onShare}>
+
+          <Card
+            onPress={() =>
+              this.props.navigation.navigate("GroupChat", {
+                title: `${this.props.group.name} Chat`,
+                room: `group-${this.props.group.id}`,
+                url: `chat/groups/group-${this.props.group.id}`,
+                allowAnon: false
+              })
+            }
+          >
+            <Text style={[styles.headline, styleSheet.typography["headline"]]}>
+              Latest Activity
+            </Text>
             <ChatPreview
               room={`group-${this.props.group.id}`}
               url={`chat/groups/group-${this.props.group.id}`}
@@ -253,14 +267,22 @@ class Group extends React.Component {
 
 // <IconBar
 //   details={[
-//     { icon: "albums", caption: "PS4" },
+//     { icon: "tick", caption: "Joined" },
 //     {
-//       icon: "account",
-//       caption: this.props.group.users_count
+//       icon: "ios-chatbubbles",
+//       caption: "Chat",
+//       link: "GroupChat",
+//       linkParams: {
+//         title: `${this.props.group.name} Chat`,
+//         room: `group-${this.props.group.id}`,
+//         url: `chat/groups/group-${this.props.group.id}`,
+//         allowAnon: false
+//       }
 //     },
-//     { icon: "time", caption: "evenings" },
-//     { icon: "share", caption: "share" }
+//     { icon: "ios-game-controller-b", caption: "Games" },
+//     { icon: "options", caption: "More", action: this.onShare }
 //   ]}
+//   {...{ navigation }}
 // />
 
 const styles = StyleSheet.create({

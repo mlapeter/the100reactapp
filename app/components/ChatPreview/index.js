@@ -16,12 +16,12 @@ export default class ChatPreview extends Component {
     return (
       <TouchableWithoutFeedback onPress={this.props.onOpenChat}>
         <View style={this.props.stype}>
-          <View style={{ paddingHorizontal: 12, paddingTop: 12 }} />
           <Chat
             room={this.props.room}
             url={this.props.url}
             allowAnon={this.props.allowAnon}
             preview={true}
+            onPress={this.props.onOpenChat}
           />
         </View>
       </TouchableWithoutFeedback>

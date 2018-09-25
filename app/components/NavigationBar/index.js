@@ -77,17 +77,16 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
             !expanded && (
               <View style={block}>
                 <AnimatedText
-                  type="headline"
                   color="white"
                   align="center"
-                  style={titleStyle}
+                  style={[titleStyle, styleSheet.typography["headline"]]}
                   numberOfLines={1}
                 >
                   {title}
                 </AnimatedText>
                 {subtitle && (
                   <Text
-                    type="footnote"
+                    style={[styleSheet.typography["footnote"]]}
                     color="white"
                     align="center"
                     numberOfLines={1}

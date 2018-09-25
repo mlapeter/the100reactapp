@@ -365,6 +365,7 @@ class Chat extends Component {
             <Message
               message={message}
               onLongPress={this.props.preview ? null : this.onMessageLongPress}
+              onPress={this.props.onPress}
             />
           )}
           keyExtractor={([key, message], index) => key}

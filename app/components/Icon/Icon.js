@@ -11,6 +11,8 @@ import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
 const Icon = createIconSetFromIcoMoon(icoMoonConfig, "Icons");
 
+import Ionicons from "react-native-vector-icons/Ionicons";
+
 export type IconName =
   | "arrow-up"
   | "arrow-right"
@@ -56,6 +58,52 @@ export type IconName =
   | "send"
   | "circle";
 
+const icons = [
+  "arrow-up",
+  "arrow-right",
+  "arrow-left",
+  "arrow-down",
+  "circle-empty",
+  "tick",
+  "shuffle",
+  "repeat",
+  "previous",
+  "next",
+  "pause",
+  "write",
+  "account",
+  "albums",
+  "photos",
+  "message",
+  "feed",
+  "music",
+  "hotel",
+  "time",
+  "restaurant",
+  "map",
+  "climate",
+  "cities",
+  "money",
+  "crop",
+  "flash",
+  "grid",
+  "filters",
+  "reverse",
+  "camera",
+  "heart",
+  "search",
+  "sign-out",
+  "share",
+  "options",
+  "play",
+  "bookmark",
+  "cross",
+  "minus",
+  "plus",
+  "send",
+  "circle"
+];
+
 type IconProps = {
   name: IconName,
   primary?: boolean,
@@ -82,7 +130,11 @@ class IconComp extends React.PureComponent<IconProps> {
     } else {
       iconColor = color;
     }
-    return <Icon color={iconColor} {...{ name, size }} />;
+    if (icons.includes(name)) {
+      return <Icon color={iconColor} {...{ name, size }} />;
+    } else {
+      return <Ionicons color={iconColor} name={name} size={size} />;
+    }
   }
 }
 
