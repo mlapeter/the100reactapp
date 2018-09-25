@@ -39,7 +39,6 @@ export default class NotificationsItem extends PureComponent {
             <View style={styles.username}>
               <Text
                 style={[styles.headline, styleSheet.typography["headline"]]}
-                color={"black"}
               >
                 {this.props.item.notification_type
                   .replace("-", " ")
@@ -47,7 +46,6 @@ export default class NotificationsItem extends PureComponent {
               </Text>
               <Text
                 style={[styles.footnote, styleSheet.typography["footnote"]]}
-                color={"#999999"}
               >
                 <TimeAgo date={this.props.item.created_at} />
               </Text>

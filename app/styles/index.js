@@ -76,7 +76,7 @@ const shadow = {
 export const styleSheet = {
   typography: {
     body: {
-      fontSize: 17,
+      fontSize: 15,
       lineHeight: 20,
       fontFamily: "SFProText-Regular"
     },

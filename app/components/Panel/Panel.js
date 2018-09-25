@@ -14,7 +14,7 @@ import {
   TouchableHighlight,
   View
 } from "react-native";
-import { colors, fontSizes, fontStyles } from "../../styles";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
 export default class Panel extends Component {
   constructor(props) {
@@ -65,7 +65,7 @@ export default class Panel extends Component {
             underlayColor={colors.white}
           >
             <Text
-              style={styles.description}
+              style={[styleSheet.typography["body"]]}
               numberOfLines={this.state.numberOfLines}
             >
               {this.props.text}
@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
     color: colors.grey,
     fontFamily: fontStyles.primaryFont,
     fontSize: fontSizes.primary
-  },
-  description: {
-    color: colors.lightGrey,
-    fontSize: fontSizes.secondary
   }
+  // description: {
+  //   color: colors.lightGrey,
+  //   fontSize: fontSizes.secondary
+  // }
 });

@@ -20,28 +20,36 @@ export default (styles = StyleSheet.create({
   },
   search: {
     flexDirection: "row",
-    flex: 10,
-    marginLeft: 25,
-    marginRight: 10,
-    paddingVertical: 4,
+    flex: 4,
+    // marginLeft: 5,
+    // marginRight: 5,
+    // paddingVertical: 4,
     alignItems: "center",
-    paddingHorizontal: 5,
+    paddingLeft: 15,
+    paddingRight: 0,
     backgroundColor: colors.veryDarkGrey
   },
   input: {
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
-    padding: 5,
-    borderRadius: 16,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderRadius: 15,
     borderWidth: 0.5,
     borderColor: "#e0e0e0",
     backgroundColor: colors.searchbar
   },
+  rightActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flex: 1,
+    padding: 5
+  },
   add: {
     flex: 1,
-    marginHorizontal: 10,
-    alignItems: "center"
+    // marginHorizontal: 2,
+    alignItems: "flex-start"
   },
   optionContainer: {
     paddingTop: 20,
@@ -59,7 +67,7 @@ export default (styles = StyleSheet.create({
     justifyContent: "center",
     flexDirection: "row",
     flex: 1,
-    padding: 5
+    paddingLeft: 8
   },
   titleText: {
     flex: 1,

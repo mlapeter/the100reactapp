@@ -109,7 +109,8 @@ class GamingSessionsFilter extends Component {
                   onPress={() =>
                     this.props.dispatch(
                       toggleNotFull(this.props.notFull === 1 ? 0 : 1)
-                    )}
+                    )
+                  }
                 />
 
                 {/* <Button
@@ -135,7 +136,8 @@ class GamingSessionsFilter extends Component {
                   style={styles.pickerStyle}
                   selectedValue={this.props.activity}
                   onValueChange={activity =>
-                    this.props.dispatch(changeActivity(activity))}
+                    this.props.dispatch(changeActivity(activity))
+                  }
                 >
                   <Picker.Item label="All" value="" />
                   {this.props.activities.map(activity => (
@@ -191,11 +193,12 @@ class GamingSessionsFilter extends Component {
         /> */}
 
         <TouchableOpacity
+          style={{ padding: 4 }}
           onPress={() => {
             this.setModalVisible(true);
           }}
         >
-          <Icon name="md-search" size={24} color={colors.mediumGrey} />
+          <Icon name="md-search" size={24} color={colors.lightGray} />
         </TouchableOpacity>
       </View>
     );

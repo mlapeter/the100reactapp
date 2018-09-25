@@ -232,6 +232,7 @@ class FriendsList extends Component {
             searchText={this.state.searchText}
             user={this.props.user}
             navigation={this.props.navigation}
+            rightAction={true}
             // style={{ flex: 1 }}
           />
         </TouchableWithoutFeedback>

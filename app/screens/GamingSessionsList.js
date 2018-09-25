@@ -21,7 +21,7 @@ import moment from "moment";
 import Environment from "../config/environment";
 import { registerForPushNotificationsAsync } from "../utils/expoPushNotifications";
 
-import { colors, fontSizes } from "../styles";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../app/styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
 import GamingSessionsFilter from "../components/GamingSessionsFilter/GamingSessionsFilter";
@@ -31,7 +31,7 @@ import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 // import { Icon } from "@expo/vector-icons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Octicons from "react-native-vector-icons/Octicons";
-
+import TopNav from "../components/TopNav/TopNav";
 import Tabs from "../components/Tabs/Tabs";
 
 import { connect } from "react-redux";
@@ -363,47 +363,15 @@ class GamingSessionsList extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.topContainer}>
-          <View style={styles.leftContainer}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.openDrawer()}
-            >
-              {this.props.user.computed_avatar_api &&
-              this.props.user.computed_avatar_api !==
-                "img/default-avatar.png" ? (
-                <Image
-                  style={styles.avatarMini}
-                  source={{ uri: this.props.user.computed_avatar_api }}
-                />
-              ) : (
-                <Image
-                  style={styles.avatarMini}
-                  source={require("../../app/assets/images/default-avatar.png")}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
-          <View style={styles.rightContainer}>
-            <View style={styles.searchOptions}>
-              <GamingSessionsFilter updateFilter={this.updateFilter} />
-            </View>
-            <View style={styles.newButton}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("GamingSessionCreate")
-                }
-              >
-                <MaterialIcons
-                  name="add-box"
-                  size={28}
-                  style={{
-                    color: colors.mediumGrey
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+        <TopNav
+          title="Games"
+          user={this.props.user}
+          navigation={this.props.navigation}
+          newGameButton={true}
+          searchButton={
+            <GamingSessionsFilter updateFilter={this.updateFilter} />
+          }
+        />
 
         <TouchableWithoutFeedback
           onPress={() => {
@@ -528,11 +496,8 @@ class GamingSessionsList extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 5,
-    // paddingTop: 25,
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
+    paddingBottom: styleSheet.spacing.small,
     backgroundColor: colors.white
   },
   topContainer: {

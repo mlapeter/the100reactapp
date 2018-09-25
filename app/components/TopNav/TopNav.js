@@ -10,6 +10,8 @@ import {
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/Ionicons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Octicons from "react-native-vector-icons/Octicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import styles from "./styles";
 
@@ -113,15 +115,35 @@ export default class TopNav extends Component {
             </View>
           )}
         </View>
-
         <View style={styles.add}>
-          <TouchableOpacity onPress={() => Alert.alert("Coming Soon")}>
-            <MaterialCommunityIcons
-              name="account-plus"
-              size={24}
-              style={{ color: colors.mediumGrey }}
-            />
-          </TouchableOpacity>
+          {this.props.searchButton ? this.props.searchButton : null}
+        </View>
+        <View style={styles.add}>
+          {this.props.newGameButton ? (
+            <TouchableOpacity
+              style={{ padding: 4 }}
+              onPress={() =>
+                this.props.navigation.navigate("GamingSessionCreate")
+              }
+            >
+              <MaterialIcons
+                name="add-box"
+                size={24}
+                style={{
+                  color: colors.lightGray
+                }}
+              />
+            </TouchableOpacity>
+          ) : null}
+          {this.props.rightAction ? (
+            <TouchableOpacity onPress={() => Alert.alert("Coming Soon")}>
+              <MaterialCommunityIcons
+                name="account-plus"
+                size={24}
+                style={{ color: colors.lightGray }}
+              />
+            </TouchableOpacity>
+          ) : null}
         </View>
       </View>
     );
