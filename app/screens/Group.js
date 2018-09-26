@@ -44,7 +44,9 @@ import Header from "../components/Header";
 import Content from "../components/Content";
 import Card from "../components/Card";
 import NavigationBar from "../components/NavigationBar";
-import { SmallIconBar } from "./GroupOld";
+import GroupIconBar from "../components/GroupIconBar";
+
+// import { SmallIconBar } from "./GroupOld";
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
@@ -219,6 +221,9 @@ class Group extends React.Component {
           title={this.props.group.name}
           picture={this.props.group.header_background_image_api}
           heightRatio={0.5}
+          topGradientTransparency={"rgba(0,0,0,0.3)"}
+          middleGradientTransparency={"rgba(0,0,0,0.0)"}
+          bottomGradientTransparency={"rgba(0,0,0,0.4)"}
         >
           <NavigationBar
             type="transparent"
@@ -226,7 +231,7 @@ class Group extends React.Component {
             {...{ navigation, rightAction }}
           />
         </Header>
-        <SmallIconBar
+        <GroupIconBar
           platform={"PS4"}
           users_count={this.props.group.users_count}
           play_style={this.props.group.play_style}
@@ -236,13 +241,21 @@ class Group extends React.Component {
         <Content style={styles.gutter}>
           {this.props.group.latest_news ? (
             <Card>
-              <Panel text={this.props.group.latest_news} numberOfLines={3} />
+              <Panel
+                text={this.props.group.latest_news}
+                numberOfLines={3}
+                style={[styleSheet.typography["body"]]}
+              />
             </Card>
           ) : null}
 
           {this.props.group.description ? (
             <Card>
-              <Panel text={this.props.group.description} numberOfLines={3} />
+              <Panel
+                text={this.props.group.description}
+                numberOfLines={3}
+                style={[styleSheet.typography["body"]]}
+              />
             </Card>
           ) : null}
 

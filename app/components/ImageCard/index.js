@@ -48,7 +48,10 @@ export default class ImageCard extends React.PureComponent<ImageCardProps> {
             <Image
               resizeMode="cover"
               blurRadius={Platform.OS === "android" ? 0.5 : 0}
-              style={[styles.image, { height: width * heightRatio }]}
+              style={[
+                styles.image,
+                { width: width, height: width * heightRatio }
+              ]}
               source={picture}
             />
           )}
@@ -86,7 +89,7 @@ export default class ImageCard extends React.PureComponent<ImageCardProps> {
   }
 }
 
-const topGradient = ["rgba(0,0,0,0.8)", "transparent"];
+const topGradient = ["rgba(0,0,0,0.7)", "transparent"];
 const bottomGradient = ["transparent", "rgba(0,0,0,0.8)"];
 const subtitle = "rgba(255, 255, 255, 0.7)";
 const { width } = Dimensions.get("window");

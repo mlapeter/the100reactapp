@@ -56,6 +56,8 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
       back,
       titleStyle,
       rightAction,
+      rightAction2,
+      rightAction3,
       withGradient,
       expanded,
       largeTitle
@@ -104,6 +106,20 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
               <TouchableOpacity onPress={rightAction.onPress}>
                 <View style={styles.rightAction}>
                   <Icon name={rightAction.icon} color={colors.white} />
+                </View>
+              </TouchableOpacity>
+            )}
+            {rightAction2 && (
+              <TouchableOpacity onPress={rightAction2.onPress}>
+                <View style={styles.rightAction}>
+                  <Icon name={rightAction2.icon} color={colors.white} />
+                </View>
+              </TouchableOpacity>
+            )}
+            {rightAction3 && (
+              <TouchableOpacity onPress={rightAction3.onPress}>
+                <View style={styles.rightAction}>
+                  <Icon name={rightAction3.icon} color={colors.white} />
                 </View>
               </TouchableOpacity>
             )}

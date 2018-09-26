@@ -18,7 +18,7 @@ import { connect } from "react-redux";
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import TopNav from "../components/TopNav/TopNav";
 import ImageCard from "../components/ImageCard";
-import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
+import defaultUserHeaderBackground from "../assets/images/d2-all.jpg";
 
 type GroupsProps = {
   name?: string
@@ -30,13 +30,13 @@ class Groups extends React.Component<GroupsProps<>> {
     const navigation = this.props.navigation;
     let picture =
       group.header_background_image_api === "img/default-group-header.jpg"
-        ? defaultGroupHeaderBackground
+        ? defaultUserHeaderBackground
         : { uri: picture };
 
     return (
       <ImageCard
         title={group.item.name}
-        picture={defaultGroupHeaderBackground}
+        picture={defaultUserHeaderBackground}
         heightRatio={0.4}
         onPress={() => navigation.navigate("Group", { groupId: group.item.id })}
         back={"Groups"}

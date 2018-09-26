@@ -62,10 +62,10 @@ export default class Panel extends Component {
         <View>
           <TouchableHighlight
             onPress={this.toggle.bind(this)}
-            underlayColor={colors.white}
+            underlayColor={"transparent"}
           >
             <Text
-              style={[styleSheet.typography["body"]]}
+              style={this.props.style}
               numberOfLines={this.state.numberOfLines}
             >
               {this.props.text}
@@ -88,20 +88,20 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
     backgroundColor: colors.white
-  },
-  titleBar: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "stretch",
-    padding: 5
-  },
-
-  title: {
-    padding: 5,
-    color: colors.grey,
-    fontFamily: fontStyles.primaryFont,
-    fontSize: fontSizes.primary
   }
+  // titleBar: {
+  //   flexDirection: "row",
+  //   justifyContent: "flex-start",
+  //   alignItems: "stretch",
+  //   padding: 5
+  // },
+  //
+  // title: {
+  //   padding: 5,
+  //   color: colors.grey,
+  //   fontFamily: fontStyles.primaryFont,
+  //   fontSize: fontSizes.primary
+  // }
   // description: {
   //   color: colors.lightGrey,
   //   fontSize: fontSizes.secondary

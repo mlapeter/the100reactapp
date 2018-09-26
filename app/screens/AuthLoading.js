@@ -16,7 +16,13 @@ import { changeSelectedGroupId, fetchGroup } from "../actions/group";
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 
-import { loadIcons } from "../components/Icon";
+import { loadIcons, loadCustomIcons } from "../components/Icon";
+
+import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
+import defaultUserHeaderBackground from "../assets/images/d2-all.jpg";
+import hunterHeader from "../assets/images/d2-hunter.jpg";
+import titanHeader from "../assets/images/d2-titan.jpg";
+import warlockHeader from "../assets/images/d2-warlock.jpg";
 
 class AuthLoading extends React.Component {
   constructor(props) {
@@ -27,6 +33,15 @@ class AuthLoading extends React.Component {
   bootstrap = () => {
     console.log("Starting App");
     loadIcons();
+    loadCustomIcons();
+    Expo.Asset.loadAsync([
+      defaultGroupHeaderBackground,
+      defaultUserHeaderBackground,
+      hunterHeader,
+      titanHeader,
+      warlockHeader
+    ]);
+
     StatusBar.setBarStyle("light-content");
     if (Platform.OS === "android") {
       StatusBar.setBackgroundColor(colors.veryDarkGrey);

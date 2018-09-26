@@ -245,6 +245,10 @@ FriendsList.navigationOptions = {
   header: null
 };
 
+User.navigationOptions = {
+  header: null
+};
+
 AuthMainPage.navigationOptions = {
   header: null
 };
@@ -299,17 +303,17 @@ FriendsStack.navigationOptions = {
   )
 };
 
-User.navigationOptions = {
-  tabBarLabel: "User",
-  // headerRight: <Button title="Add Friend" />,
-  tabBarIcon: ({ tintColor, focused }) => (
-    <MaterialCommunityIcons
-      name={focused ? "account" : "account"}
-      size={26}
-      style={{ color: tintColor }}
-    />
-  )
-};
+// User.navigationOptions = {
+//   tabBarLabel: "User",
+//   // headerRight: <Button title="Add Friend" />,
+//   tabBarIcon: ({ tintColor, focused }) => (
+//     <MaterialCommunityIcons
+//       name={focused ? "account" : "account"}
+//       size={26}
+//       style={{ color: tintColor }}
+//     />
+//   )
+// };
 
 const BackButton = ({ onPress, title }) => (
   <TouchableOpacity onPress={onPress} style={styles.backButtonStyle}>

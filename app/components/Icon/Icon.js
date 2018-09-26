@@ -4,14 +4,19 @@ import { Font } from "expo";
 import { createIconSetFromIcoMoon } from "@expo/vector-icons";
 
 import icoMoonConfig from "./config.json";
+import icoMoonConfig2 from "./selection.json";
 
 import Icons from "./icons.ttf";
+import CustomIcons from "./icomoon.ttf";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
 const Icon = createIconSetFromIcoMoon(icoMoonConfig, "Icons");
+const CustomIcon = createIconSetFromIcoMoon(icoMoonConfig2, "CustomIcons");
 
 import Ionicons from "react-native-vector-icons/Ionicons";
+
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
 export type IconName =
   | "arrow-up"
@@ -57,6 +62,10 @@ export type IconName =
   | "plus"
   | "send"
   | "circle";
+
+const customIcons = ["outline-person_add-24px"];
+
+const materialIcons = ["star-border", "chat-bubble-outline"];
 
 const icons = [
   "arrow-up",
@@ -113,6 +122,7 @@ type IconProps = {
 };
 
 export const loadIcons = () => Font.loadAsync({ Icons });
+export const loadCustomIcons = () => Font.loadAsync({ CustomIcons });
 
 class IconComp extends React.PureComponent<IconProps> {
   static defaultProps = {
@@ -132,6 +142,10 @@ class IconComp extends React.PureComponent<IconProps> {
     }
     if (icons.includes(name)) {
       return <Icon color={iconColor} {...{ name, size }} />;
+    } else if (customIcons.includes(name)) {
+      return <CustomIcon color={iconColor} {...{ name, size }} />;
+    } else if (materialIcons.includes(name)) {
+      return <MaterialIcons color={iconColor} name={name} size={size} />;
     } else {
       return <Ionicons color={iconColor} name={name} size={size} />;
     }

@@ -56,10 +56,10 @@ export default (styles = StyleSheet.create({
     paddingBottom: 10
   },
   avatarMini: {
-    height: 32,
-    width: 32,
-    borderRadius: 16,
-    borderWidth: 1,
+    height: 34,
+    width: 34,
+    borderRadius: 18,
+    borderWidth: 0.5,
     borderColor: colors.lightGrey
   },
   titleContainer: {
