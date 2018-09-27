@@ -52,7 +52,7 @@ export default class NotificationsItem extends PureComponent {
             </View>
           </View>
         </View>
-        <Text style={[styles.text, styleSheet.typography["body"]]}>
+        <Text style={[styles.text, styleSheet.typography["summary"]]}>
           {this.props.item.message}
         </Text>
       </Card>

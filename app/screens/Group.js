@@ -227,7 +227,7 @@ class Group extends React.Component {
         >
           <NavigationBar
             type="transparent"
-            back="Groups"
+            back="Back"
             {...{ navigation, rightAction }}
           />
         </Header>

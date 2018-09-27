@@ -1,49 +1,18 @@
 // @flow
 import autobind from "autobind-decorator";
 import * as React from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  AsyncStorage,
-  FlatList,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View
-} from "react-native";
-import { NavigationActions } from "react-navigation";
+import { Alert, Image, StyleSheet, View } from "react-native";
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import TopNav from "../components/TopNav/TopNav";
-import ImageCard from "../components/ImageCard";
-import defaultUserHeaderBackground from "../assets/images/d2-all.jpg";
+import GroupsList from "../components/GroupsList";
 
 type GroupsProps = {
   name?: string
 };
 
 class Groups extends React.Component<GroupsProps<>> {
-  @autobind
-  renderItem(group: string): React.Node {
-    const navigation = this.props.navigation;
-    let picture =
-      group.header_background_image_api === "img/default-group-header.jpg"
-        ? defaultUserHeaderBackground
-        : { uri: picture };
-
-    return (
-      <ImageCard
-        title={group.item.name}
-        picture={defaultUserHeaderBackground}
-        heightRatio={0.4}
-        onPress={() => navigation.navigate("Group", { groupId: group.item.id })}
-        back={"Groups"}
-      />
-    );
-  }
-
   render() {
     return (
       <View style={styles.container}>
@@ -52,11 +21,10 @@ class Groups extends React.Component<GroupsProps<>> {
           user={this.props.user}
           navigation={this.props.navigation}
         />
-        <FlatList
-          data={this.props.groups}
-          renderItem={this.renderItem}
-          keyExtractor={(item, index) => index.toString()}
-          refreshing={this.props.isLoading}
+
+        <GroupsList
+          groups={this.props.groups}
+          navigation={this.props.navigation}
         />
       </View>
     );
@@ -68,12 +36,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: styleSheet.spacing.small,
     backgroundColor: colors.lightGray
-  },
-  loading: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 10
   }
 });
 

@@ -78,6 +78,24 @@ class GamingSession extends React.Component {
     this.postData("/leave");
   };
 
+  postTransaction = () => {
+    fetch("https://www.bungie.net/Platform", {
+      method: "POST",
+      headers: {
+        "X-API-KEY": ""
+      },
+      body: JSON.stringify({
+        package_id: this.props.navigation.state.params.packageId
+      })
+    })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        alert(error);
+      });
+  };
+
   postData(action) {
     this.setState({
       isLoading: true

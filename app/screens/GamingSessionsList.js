@@ -5,13 +5,11 @@ import {
   Alert,
   AsyncStorage,
   FlatList,
-  Image,
   Keyboard,
   SectionList,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from "react-native";
@@ -22,24 +20,17 @@ import Environment from "../config/environment";
 import { registerForPushNotificationsAsync } from "../utils/expoPushNotifications";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../../app/styles";
-import PreSplash from "../components/PreSplash/PreSplash";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
 import GamingSessionsFilter from "../components/GamingSessionsFilter/GamingSessionsFilter";
-
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-// import { Icon } from "@expo/vector-icons";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Octicons from "react-native-vector-icons/Octicons";
 import TopNav from "../components/TopNav/TopNav";
 import Tabs from "../components/Tabs/Tabs";
-
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
-
 import { fetchGames } from "../actions/search";
 import { changeGamingSessionsPage, changePlatform } from "../actions/search";
-
+import { updateUserPushToken } from "../actions/users";
+import { removeToken } from "../actions/authentication";
 import {
   fetchGamingSessions,
   refreshGamingSessions,
@@ -54,9 +45,6 @@ import {
   refreshRecentGamingSessions,
   loadMoreRecentGamingSessions
 } from "../actions/gamingSessions";
-
-import { updateUserPushToken } from "../actions/users";
-import { removeToken } from "../actions/authentication";
 
 class GamingSessionsList extends PureComponent {
   static propTypes = {
@@ -81,10 +69,6 @@ class GamingSessionsList extends PureComponent {
   state = {
     notification: {}
   };
-
-  // static navigationOptions = {
-  //   header: null
-  // };
 
   componentDidMount() {
     // Todo: save search settings in local storage and retrieve
@@ -388,7 +372,13 @@ class GamingSessionsList extends PureComponent {
                   />
                 )}
                 renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                  <View
+                    style={{
+                      padding: 5,
+                      paddingTop: 15,
+                      backgroundColor: colors.lightGray
+                    }}
+                  >
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
@@ -417,7 +407,13 @@ class GamingSessionsList extends PureComponent {
                   />
                 )}
                 renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                  <View
+                    style={{
+                      padding: 5,
+                      paddingTop: 15,
+                      backgroundColor: colors.lightGray
+                    }}
+                  >
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
@@ -445,7 +441,13 @@ class GamingSessionsList extends PureComponent {
                   />
                 )}
                 renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                  <View
+                    style={{
+                      padding: 5,
+                      paddingTop: 15,
+                      backgroundColor: colors.lightGray
+                    }}
+                  >
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
@@ -470,7 +472,13 @@ class GamingSessionsList extends PureComponent {
                   />
                 )}
                 renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                  <View
+                    style={{
+                      padding: 5,
+                      paddingTop: 15,
+                      backgroundColor: colors.lightGray
+                    }}
+                  >
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
@@ -498,42 +506,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingBottom: styleSheet.spacing.small,
-    backgroundColor: colors.white
-  },
-  topContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10
-  },
-  leftContainer: {},
-  middleContainer: {
-    padding: 5,
-    justifyContent: "center"
-  },
-  announcementText: {
-    color: colors.lightGrey
-  },
-  rightContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  newButton: {
-    paddingHorizontal: 10
-  },
-  searchOptions: {
-    paddingHorizontal: 10
-  },
-  avatarMini: {
-    marginBottom: 6,
-    height: 32,
-    width: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.lightGrey
+    backgroundColor: colors.lightGray
   },
   content: {
     flex: 1,
-    backgroundColor: colors.white
+    backgroundColor: colors.lightGray
   },
   alertView: {
     flexDirection: "row",

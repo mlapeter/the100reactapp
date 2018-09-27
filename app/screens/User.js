@@ -49,6 +49,7 @@ import Card from "../components/Card";
 import NavigationBar from "../components/NavigationBar";
 import SegmentedControl from "../components/SegmentedControl";
 import UserIconBar from "../components/UserIconBar";
+import GroupsList from "../components/GroupsList";
 
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 
@@ -71,7 +72,8 @@ export class User extends React.Component {
       refreshing: false,
       gameData: "",
       viewStats: false,
-      conversation: this.findConversation(this.props)
+      conversation: this.findConversation(this.props),
+      selectedIndex: 0
     };
 
     userId = this.props.navigation.state.params.userId;
@@ -190,18 +192,21 @@ export class User extends React.Component {
     this.props.alertWithType("info", "", "Gamertag copied to clipboard!");
   };
 
-  onChange(index) {
-    this.selectedIndex = index;
-  }
+  onChange = index => {
+    this.setState({
+      selectedIndex: index
+    });
+  };
 
   render() {
     const { params } = this.props.navigation.state;
     const navigation = this.props.navigation;
     const onChange = this.onChange;
+    const selectedIndex = this.state.selectedIndex;
     const rightAction = {
       icon: "chat-bubble-outline",
       onPress: () => {
-        alert("clicked");
+        alert("Private Chat coming soon for supporters!");
       }
     };
     const rightAction2 = {
@@ -272,7 +277,7 @@ export class User extends React.Component {
 
             <SegmentedControl
               transparent
-              values={["About", "Games", "Groups"]}
+              values={["Details", "Groups", "Games"]}
               {...{ selectedIndex, onChange }}
             />
           </View>
@@ -284,13 +289,53 @@ export class User extends React.Component {
           playSchedule={this.props.user.play_schedule}
         />
 
-        <Content style={styles.content}>
-          {this.props.user.description ? (
-            <Card>
-              <Panel text={this.props.user.description} numberOfLines={3} />
+        {this.state.selectedIndex === 0 ? (
+          <Content style={styles.content}>
+            {this.props.user.description ? (
+              <Card>
+                <Panel text={this.props.user.description} numberOfLines={3} />
+              </Card>
+            ) : null}
+
+            <Card
+              onPress={() =>
+                Linking.openURL(this.props.user.destiny_status_link)
+              }
+            >
+              <Text
+                style={[{ textAlign: "center" }, styleSheet.typography["body"]]}
+              >
+                View Destiny Status &raquo;
+              </Text>
             </Card>
-          ) : null}
-        </Content>
+            <Card
+              onPress={() =>
+                Linking.openURL(this.props.user.destiny_tracker_link)
+              }
+            >
+              <Text
+                style={[{ textAlign: "center" }, styleSheet.typography["body"]]}
+              >
+                View Destiny Tracker &raquo;
+              </Text>
+            </Card>
+          </Content>
+        ) : null}
+        {this.state.selectedIndex === 1 ? (
+          <Content style={styles.content}>
+            <GroupsList
+              groups={this.props.user.groups}
+              navigation={this.props.navigation}
+            />
+          </Content>
+        ) : null}
+        {this.state.selectedIndex === 2 ? (
+          <Content style={styles.content}>
+            <Card>
+              <Panel text={"Games Coming Soon..."} numberOfLines={3} />
+            </Card>
+          </Content>
+        ) : null}
       </View>
     );
   }

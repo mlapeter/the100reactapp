@@ -75,6 +75,11 @@ const shadow = {
 
 export const styleSheet = {
   typography: {
+    summary: {
+      fontSize: 14,
+      lineHeight: 20,
+      fontFamily: "SFProText-Regular"
+    },
     body: {
       fontSize: 15,
       lineHeight: 20,
@@ -98,6 +103,11 @@ export const styleSheet = {
     },
     headline: {
       fontSize: 17,
+      lineHeight: 22,
+      fontFamily: "SFProText-Semibold"
+    },
+    headline2: {
+      fontSize: 16,
       lineHeight: 22,
       fontFamily: "SFProText-Semibold"
     },

@@ -53,6 +53,7 @@ const GamingSessionsStack = createStackNavigator({
   GamingSessionsList: { screen: GamingSessionsList },
   GamingSession: { screen: GamingSession },
   Player: { screen: User },
+  Group: { screen: Group },
   GamingSessionChat: { screen: Chatroom },
   GamingSessionCreate: { screen: GamingSessionCreate },
   GamingSessionEdit: { screen: GamingSessionEdit }
@@ -72,6 +73,7 @@ const NotificationsStack = createStackNavigator({
 const FriendsStack = createStackNavigator({
   FriendsList: { screen: FriendsList },
   Friend: { screen: User },
+  Group: { screen: Group },
   Conversation: { screen: Chatroom }
 });
 
@@ -118,8 +120,10 @@ const MenuDrawer = createDrawerNavigator(
     Home: {
       screen: HomeTabs,
       navigationOptions: ({ navigation }) => ({
-        title: "Home",
-        drawerIcon: () => <MaterialCommunityIcons name="home" size={24} />
+        title: "The100.io",
+        drawerIcon: () => (
+          <MaterialCommunityIcons name="menu" size={24} style={styles.icon} />
+        )
       })
     },
     "Edit Profile": {
@@ -147,12 +151,13 @@ const MenuDrawer = createDrawerNavigator(
       })
     }
   },
+
   {
     initialRouteName: "Home",
     contentOptions: {
-      activeTintColor: colors.veryDarkGrey,
+      activeTintColor: colors.white,
       inactiveTintColor: colors.white,
-      activeBackgroundColor: "#E8EAF6",
+      // activeBackgroundColor: "#E8EAF6",
       itemsContainerStyle: {
         opacity: colors.primaryOpacity
       },
@@ -166,20 +171,43 @@ const MenuDrawer = createDrawerNavigator(
     contentComponent: props => (
       <View style={styles.container}>
         <DrawerItems {...props} />
-
-        <View style={styles.menuItem}>
-          <MaterialCommunityIcons
-            name="alert-circle"
-            size={24}
-            style={styles.icon}
-          />
-          <Text style={styles.menuText}>More Coming Soon</Text>
-        </View>
+        <TouchableOpacity
+          onPress={() => {
+            navigateTo(props.navigation, "Edit Profile");
+          }}
+        >
+          <View style={styles.menuItem}>
+            <MaterialCommunityIcons
+              name="account-settings-variant"
+              size={24}
+              style={styles.icon}
+            />
+            <Text style={styles.menuText}>Edit Profile</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            navigateTo(props.navigation, "HelpChat");
+          }}
+        >
+          <View style={styles.menuItem}>
+            <MaterialCommunityIcons
+              name="help-circle"
+              size={24}
+              style={styles.icon}
+            />
+            <Text style={styles.menuText}>Help Chat</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     )
   }
 );
 
+navigateTo = (navigation, route) => {
+  navigation.navigate(route);
+  navigation.closeDrawer();
+};
 // Login/ New User stack if not already logged in
 
 const AuthStack = createStackNavigator({
@@ -303,18 +331,6 @@ FriendsStack.navigationOptions = {
   )
 };
 
-// User.navigationOptions = {
-//   tabBarLabel: "User",
-//   // headerRight: <Button title="Add Friend" />,
-//   tabBarIcon: ({ tintColor, focused }) => (
-//     <MaterialCommunityIcons
-//       name={focused ? "account" : "account"}
-//       size={26}
-//       style={{ color: tintColor }}
-//     />
-//   )
-// };
-
 const BackButton = ({ onPress, title }) => (
   <TouchableOpacity onPress={onPress} style={styles.backButtonStyle}>
     <Text style={styles.backTitle}>{title}</Text>
@@ -330,7 +346,7 @@ const styles = StyleSheet.create({
   menuItem: {
     // padding: 15,
     marginLeft: 15,
-    marginTop: 10,
+    marginVertical: 10,
     flexDirection: "row",
     justifyContent: "flex-start",
     opacity: colors.primaryOpacity
