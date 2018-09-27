@@ -21,7 +21,8 @@ export default function PlayersItem(props) {
       onPress={() =>
         props.navigation.navigate("Player", {
           userId: props.user.id
-        })}
+        })
+      }
       underlayColor="white"
     >
       <View style={styles.container}>
@@ -64,8 +65,9 @@ export default function PlayersItem(props) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 5,
-    margin: 1
+    // padding: 5,
+    margin: 1,
+    flex: 1
   },
   profileAvatar: {
     height: 40,
@@ -75,7 +77,8 @@ const styles = StyleSheet.create({
   profileBox: {
     padding: 1,
     flexDirection: "row",
-    width: 160
+    minWidth: 150,
+    flex: 1
   },
   profileText: {
     flexDirection: "column",
@@ -88,6 +91,7 @@ const styles = StyleSheet.create({
   },
   iconText: {
     fontSize: fontSizes.small,
+    paddingLeft: 5,
     color: colors.mediumGrey
   }
 });

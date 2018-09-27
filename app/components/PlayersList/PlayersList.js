@@ -25,10 +25,9 @@ export default function PlayersList(props) {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 5,
+    paddingVertical: 5,
     flexDirection: "row",
     flexWrap: "wrap",
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#d6d7da"
+    alignContent: "stretch"
   }
 });
