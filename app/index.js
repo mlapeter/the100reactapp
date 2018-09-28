@@ -21,7 +21,7 @@ export default function App(props) {
     <Provider store={store}>
       <AlertProvider>
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.veryDarkGrey }}>
-          <StatusBar translucent backgroundColor={colors.veryDarkGrey} />
+          <StatusBar backgroundColor={colors.veryDarkGrey} />
           <Navigator onNavigationStateChange={null} />
         </SafeAreaView>
       </AlertProvider>
