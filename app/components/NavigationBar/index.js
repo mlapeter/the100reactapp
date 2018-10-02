@@ -19,16 +19,21 @@ import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
 type Action = {
   onPress: () => mixed,
-  icon: IconName
+  onLongPress: () => mixed,
+  icon: IconName,
+  text?: string
 };
 
 type NavigationBarProps = {
+  navigation: string,
   title: string,
   subtitle?: string,
   type: "opaque" | "transparent",
   titleStyle?: string,
   back?: string,
   rightAction?: Action,
+  rightAction2?: Action,
+  rightAction3?: Action,
   withGradient: boolean,
   expanded: boolean,
   largeTitle: boolean
@@ -103,23 +108,65 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
             )}
           <View style={styles.rightBlock}>
             {rightAction && (
-              <TouchableOpacity onPress={rightAction.onPress}>
+              <TouchableOpacity
+                onPress={rightAction.onPress}
+                onLongPress={rightAction.onLongPress}
+              >
                 <View style={styles.rightAction}>
                   <Icon name={rightAction.icon} color={colors.white} />
+                  {rightAction.text && (
+                    <Text
+                      style={[
+                        { color: colors.white },
+                        styles.rightActionText,
+                        styleSheet.typography["headline"]
+                      ]}
+                    >
+                      {rightAction.text}
+                    </Text>
+                  )}
                 </View>
               </TouchableOpacity>
             )}
             {rightAction2 && (
-              <TouchableOpacity onPress={rightAction2.onPress}>
+              <TouchableOpacity
+                onPress={rightAction2.onPress}
+                onLongPress={rightAction2.onLongPress}
+              >
                 <View style={styles.rightAction}>
                   <Icon name={rightAction2.icon} color={colors.white} />
+                  {rightAction2.text && (
+                    <Text
+                      style={[
+                        { color: colors.white },
+                        styles.rightActionText,
+                        styleSheet.typography["headline"]
+                      ]}
+                    >
+                      {rightAction2.text}
+                    </Text>
+                  )}
                 </View>
               </TouchableOpacity>
             )}
             {rightAction3 && (
-              <TouchableOpacity onPress={rightAction3.onPress}>
+              <TouchableOpacity
+                onPress={rightAction3.onPress}
+                onLongPress={rightAction3.onLongPress}
+              >
                 <View style={styles.rightAction}>
                   <Icon name={rightAction3.icon} color={colors.white} />
+                  {rightAction3.text && (
+                    <Text
+                      style={[
+                        { color: colors.white },
+                        styles.rightActionText,
+                        styleSheet.typography["headline"]
+                      ]}
+                    >
+                      {rightAction3.text}
+                    </Text>
+                  )}
                 </View>
               </TouchableOpacity>
             )}
@@ -165,7 +212,12 @@ const styles = StyleSheet.create({
     padding: styleSheet.spacing.small
   },
   rightAction: {
-    marginRight: styleSheet.spacing.small
+    marginRight: styleSheet.spacing.small,
+    flexDirection: "row"
+  },
+  rightActionText: {
+    alignSelf: "center",
+    marginLeft: styleSheet.spacing.tiny
   },
   backBtn: {
     flexDirection: "row",

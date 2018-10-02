@@ -56,11 +56,11 @@ export default (styles = StyleSheet.create({
     paddingBottom: 10
   },
   avatarMini: {
-    height: 34,
-    width: 34,
-    borderRadius: 18,
-    borderWidth: 0.5,
-    borderColor: colors.lightGrey
+    height: 40,
+    width: 40,
+    borderRadius: 20,
+    borderWidth: 0.75,
+    borderColor: colors.white
   },
   titleContainer: {
     alignItems: "center",
@@ -74,5 +74,9 @@ export default (styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: fontStyles.lato,
     fontSize: fontSizes.h5
+  },
+  image: {
+    resizeMode: "contain",
+    height: 40
   }
 }));

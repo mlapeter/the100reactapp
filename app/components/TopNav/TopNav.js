@@ -107,11 +107,18 @@ export default class TopNav extends Component {
                 />
               </TouchableOpacity>
             </View>
-          ) : (
+          ) : this.props.title ? (
             <View style={styles.titleContainer}>
               <Text style={[styles.title, styleSheet.typography["title3"]]}>
                 {this.props.title}
               </Text>
+            </View>
+          ) : (
+            <View style={styles.titleContainer}>
+              <Image
+                style={styles.image}
+                source={require("../../assets/images/the-100-logo.png")}
+              />
             </View>
           )}
         </View>

@@ -348,7 +348,6 @@ class GamingSessionsList extends PureComponent {
     return (
       <View style={styles.container}>
         <TopNav
-          title="Games"
           user={this.props.user}
           navigation={this.props.navigation}
           newGameButton={true}

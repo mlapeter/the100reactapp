@@ -1,5 +1,3 @@
-import * as _ from "lodash";
-
 import React, { Component } from "react";
 import {
   ActivityIndicator,
@@ -17,49 +15,29 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
-  View
+  View,
+  Vibration
 } from "react-native";
-import CustomButton from "../components/CustomButton";
-import Touchable from "react-native-platform-touchable";
 import Environment from "../config/environment";
 import ChatPreview from "../components/ChatPreview";
 import Panel from "../components/Panel/Panel";
 import PlayersList from "../components/PlayersList/PlayersList";
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
-import Moment from "../../node_modules/react-moment";
-import { FontAwesome } from "@expo/vector-icons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import {
   fetchGamingSession,
-  fetchGamingSessions,
   fetchMyGamingSessions,
-  fetchGroupGamingSessions,
-  refreshMyGamingSessions
+  fetchGroupGamingSessions
 } from "../actions/gamingSessions";
-
 import Header from "../components/Header";
 import Content from "../components/Content";
 import Card from "../components/Card";
 import NavigationBar from "../components/NavigationBar";
-import SegmentedControl from "../components/SegmentedControl";
-import UserIconBar from "../components/UserIconBar";
-import GroupsList from "../components/GroupsList";
-import SketchButton from "../components/SketchButton";
 import GamingSessionIconBar from "../components/GamingSessionIconBar";
-
-import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 import destinyActivities from "../utils/destinyActivities.json";
-// Moment.globalFormat = "h:mm";
-Moment.globalLocale = "en";
 
 class GamingSession extends React.Component {
-  static navigationOptions = () => {
-    // headerTitle: "Game";
-    // Not Working
-  };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -92,6 +70,14 @@ class GamingSession extends React.Component {
     this.postData("/leave");
   };
 
+  onLongPress = () => {
+    Vibration.vibrate(20);
+    this.setState({
+      reserveButtonVisible: !this.state.reserveButtonVisible
+    });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+  };
+
   fetchBungieImage = name => {
     let formattedName = name;
     let imageUrl = null;
@@ -118,7 +104,6 @@ class GamingSession extends React.Component {
       var result = destinyActivities.find(obj => {
         return obj.name === formattedName;
       });
-      console.log(result);
       return "https://www.bungie.net" + result.pgcrImage;
     }
   };
@@ -146,13 +131,8 @@ class GamingSession extends React.Component {
         .then(responseJson => {
           if (action === "/join" || action === "/join?join_as_reserve=true") {
             this.fetchGamingSessionData();
-            console.log("GAME JOINED");
-            // this.setState({
-            //   isLoading: false
-            // });
           } else {
             this.props.navigation.navigate("GamingSessionsList");
-            console.log("GAME LEFT");
           }
           setTimeout(() => {
             this.props.dispatch(fetchMyGamingSessions());
@@ -160,7 +140,7 @@ class GamingSession extends React.Component {
             this.setState({
               isLoading: false
             });
-          }, 500);
+          }, 300);
         })
         .catch(error => {
           console.error(error);
@@ -173,12 +153,12 @@ class GamingSession extends React.Component {
       {
         message:
           Platform.OS === "android"
-            ? "New game, join up! " +
+            ? "Join my game: " +
               this.props.gamingSession.category.toString() +
               " " +
               "https://the100.io/game/" +
               this.props.gamingSession.id
-            : "New game, join up! " +
+            : "Join my game: " +
               this.props.gamingSession.category.toString() +
               " ",
         url: "https://the100.io/game/" + this.props.gamingSession.id,
@@ -191,29 +171,9 @@ class GamingSession extends React.Component {
     );
   }
 
-  onLongPress = () => {
-    this.setState({
-      reserveButtonVisible: !this.state.reserveButtonVisible
-    });
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-  };
-
   render() {
     const { params } = this.props.navigation.state;
     const navigation = this.props.navigation;
-
-    const rightAction = {
-      icon: "outline-person_add-24px",
-      onPress: () => {
-        alert("Private Chat coming soon for supporters!");
-      }
-    };
-    const rightAction2 = {
-      icon: "share",
-      onPress: () => {
-        this.onShare();
-      }
-    };
 
     if (
       this.state.isLoading ||
@@ -222,18 +182,75 @@ class GamingSession extends React.Component {
     ) {
       return (
         <View style={styles.container}>
-          <ActivityIndicator />
+          <Header
+            title={"..."}
+            picture={"img/default-user-header.jpg"}
+            heightRatio={0.5}
+            topGradientTransparency={"rgba(0,0,0,0.9)"}
+            middleGradientTransparency={"rgba(0,0,0,0.9)"}
+            bottomGradientTransparency={"rgba(0,0,0,0.9)"}
+          >
+            <NavigationBar
+              back="Games"
+              type="transparent"
+              {...{ navigation }}
+            />
+          </Header>
+          <Content>
+            <ActivityIndicator style={styles.loading} />
+          </Content>
         </View>
       );
     }
 
-    let room = `game-${this.props.gamingSession.id}`;
-    let url = `chat/gaming_sessions/${room}`;
-
-    var userIds = [];
+    let userIds = [];
     this.props.gamingSession.confirmed_sessions.map(confirmedSession =>
       userIds.push(confirmedSession.user_id)
     );
+
+    const rightAction =
+      this.state.reserveButtonVisible === true
+        ? null
+        : {
+            icon: "share",
+            onPress: () => {
+              this.onShare();
+            }
+          };
+    const rightAction2 = userIds.includes(this.props.user.user_id)
+      ? {
+          icon: "cancel",
+          text: "Leave",
+          onPress: () => {
+            this.leaveGame();
+          }
+        }
+      : {
+          icon: "outline-person_add-24px",
+          text: "Join",
+          onPress: () => {
+            this.joinGame();
+          },
+          onLongPress: () => {
+            this.onLongPress();
+          }
+        };
+    const rightAction3 =
+      this.state.reserveButtonVisible === true
+        ? {
+            icon: "outline-person_add-24px",
+            text: "Join as Reserve",
+            onPress: () => {
+              this.joinGameAsReserve();
+            },
+            onLongPress: () => {
+              this.onLongPress();
+            }
+          }
+        : null;
+
+    let room = `game-${this.props.gamingSession.id}`;
+    let url = `chat/gaming_sessions/${room}`;
 
     return (
       <View style={styles.container}>
@@ -241,14 +258,14 @@ class GamingSession extends React.Component {
           title={this.props.gamingSession.category}
           picture={this.fetchBungieImage(this.props.gamingSession.category)}
           heightRatio={0.5}
-          topGradientTransparency={"rgba(0,0,0,0.3)"}
+          topGradientTransparency={"rgba(0,0,0,0.4)"}
           middleGradientTransparency={"rgba(0,0,0,0.1)"}
           bottomGradientTransparency={"rgba(0,0,0,0.6)"}
         >
           <NavigationBar
             back="Games"
             type="transparent"
-            {...{ navigation, rightAction, rightAction2 }}
+            {...{ navigation, rightAction, rightAction2, rightAction3 }}
           />
         </Header>
         <GamingSessionIconBar
@@ -304,69 +321,15 @@ class GamingSession extends React.Component {
   }
 }
 
-// <View style={styles.buttons}>
-//   <View style={styles.leftButton}>
-//     <SketchButton
-//       label="Join"
-//       icon="restaurant"
-//       onPress={this.goToRestaurant}
-//       primary
-//     />
-//   </View>
-//   <View style={styles.RightButton}>
-//     <SketchButton
-//       label="Leave"
-//       icon="hotel"
-//       onPress={this.goToHotels}
-//       primary
-//     />
-//   </View>
-// </View>
-
-export function JoinLeaveButton(props) {
-  if (props.hasJoined) {
-    return (
-      <CustomButton
-        style={{
-          height: 30,
-          width: 180,
-          marginBottom: 15
-        }}
-        title="Leave"
-        onPress={() => props.leaveGame()}
-      />
-    );
-  } else {
-    return (
-      <CustomButton
-        style={{
-          height: 30,
-          width: 180,
-          marginBottom: 15
-        }}
-        title="Join"
-        onPress={() => props.joinGame()}
-        onLongPress={() => props.onLongPress()}
-      />
-    );
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1
   },
-  buttons: {
-    flexDirection: "row",
-    paddingTop: styleSheet.spacing.small,
-    paddingHorizontal: styleSheet.spacing.small
-  },
-  leftButton: {
+  loading: {
     flex: 1,
-    marginRight: styleSheet.spacing.tiny
-  },
-  RightButton: {
-    flex: 1
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });
 
