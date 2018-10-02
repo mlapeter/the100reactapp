@@ -56,9 +56,10 @@ export default (styles = StyleSheet.create({
     paddingBottom: 10
   },
   avatarMini: {
-    height: 40,
-    width: 40,
-    borderRadius: 20,
+    height: 36,
+    width: 36,
+    margin: 2,
+    borderRadius: 18,
     borderWidth: 0.75,
     borderColor: colors.white
   },

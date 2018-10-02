@@ -17,6 +17,7 @@ import {
   FETCH_GAMING_SESSIONS_RESULT,
   FETCH_GAMING_SESSIONS_ERROR,
   FETCH_GAMING_SESSIONS_NO_DATA,
+  FETCH_GAMING_SESSIONS_NO_SEARCH_RESULTS,
   REFRESH_GAMING_SESSIONS,
   LOAD_MORE_GAMING_SESSIONS,
   LOAD_MORE_GAMING_SESSIONS_RESULT,
@@ -190,6 +191,13 @@ export default (state = initialState, action) => {
     case FETCH_GAMING_SESSIONS_NO_DATA:
       return {
         ...state,
+        moreGamingSessionsAvailable: false,
+        gamingSessionsRefreshing: false
+      };
+    case FETCH_GAMING_SESSIONS_NO_SEARCH_RESULTS:
+      return {
+        ...state,
+        gamingSessions: [],
         moreGamingSessionsAvailable: false,
         gamingSessionsRefreshing: false
       };

@@ -21,9 +21,9 @@ export default class TouchableItem extends PureComponent {
 
   onPress = () => {
     if (this.props.onPress) {
-      if (this.props.vibrate) {
-        Vibration.vibrate(10);
-      }
+      // if (this.props.vibrate) {
+      //   Vibration.vibrate(10);
+      // }
       this.props.onPress();
     }
   };

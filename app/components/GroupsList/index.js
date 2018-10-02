@@ -14,15 +14,15 @@ export default class GroupsList extends React.Component<GroupsListProps<>> {
   @autobind
   renderItem(group: string): React.Node {
     const navigation = this.props.navigation;
-    let picture =
-      group.header_background_image_api === "img/default-group-header.jpg"
+    const picture =
+      group.item.header_background_image_api === "img/default-group-header.jpg"
         ? defaultUserHeaderBackground
-        : { uri: picture };
+        : { uri: group.item.header_background_image_api };
 
     return (
       <ImageCard
         title={group.item.name}
-        picture={defaultUserHeaderBackground}
+        picture={picture}
         heightRatio={0.4}
         onPress={() => navigation.navigate("Group", { groupId: group.item.id })}
       />

@@ -232,7 +232,7 @@ class Group extends React.Component {
           />
         </Header>
         <GroupIconBar
-          platform={"PS4"}
+          platform={this.props.group.platform}
           users_count={this.props.group.users_count}
           play_style={this.props.group.play_style}
           play_schedule={this.props.group.play_schedule}

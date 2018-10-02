@@ -95,6 +95,7 @@ import {
   FETCH_GAMING_SESSIONS_RESULT,
   FETCH_GAMING_SESSIONS_ERROR,
   FETCH_GAMING_SESSIONS_NO_DATA,
+  FETCH_GAMING_SESSIONS_NO_SEARCH_RESULTS,
   REFRESH_GAMING_SESSIONS,
   LOAD_MORE_GAMING_SESSIONS,
   LOAD_MORE_GAMING_SESSIONS_RESULT,
@@ -842,7 +843,7 @@ function* fetchGamingSessions() {
       current_page,
       FETCH_GAMING_SESSIONS_RESULT,
       FETCH_GAMING_SESSIONS_ERROR,
-      FETCH_GAMING_SESSIONS_RESULT
+      FETCH_GAMING_SESSIONS_NO_SEARCH_RESULTS
     );
   } catch (e) {
     yield put({ type: FETCH_GAMING_SESSIONS_ERROR, error: e.message });
@@ -1050,6 +1051,8 @@ function* loadMoreRecentGamingSessions() {
 function* createUser() {
   try {
     let userInfo = yield select(state => state.onboarding);
+    console.log("USER INFO: ");
+    console.log(userInfo);
     const response = yield fetch(
       Environment["API_BASE_URL"] + Environment["API_VERSION"] + "users/",
       {

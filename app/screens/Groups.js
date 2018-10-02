@@ -1,5 +1,5 @@
 // @flow
-import autobind from "autobind-decorator";
+// import autobind from "autobind-decorator";
 import * as React from "react";
 import { Alert, Image, StyleSheet, View } from "react-native";
 import { connectAlert } from "../components/Alert";

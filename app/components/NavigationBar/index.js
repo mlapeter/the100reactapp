@@ -44,7 +44,8 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
     type: "opaque",
     title: "",
     withGradient: false,
-    expanded: false
+    expanded: false,
+    color: "white"
   };
 
   @autobind
@@ -113,7 +114,11 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
                 onLongPress={rightAction.onLongPress}
               >
                 <View style={styles.rightAction}>
-                  <Icon name={rightAction.icon} color={colors.white} />
+                  <Icon
+                    name={rightAction.icon}
+                    color={colors.white}
+                    size={rightAction.size}
+                  />
                   {rightAction.text && (
                     <Text
                       style={[
@@ -134,7 +139,11 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
                 onLongPress={rightAction2.onLongPress}
               >
                 <View style={styles.rightAction}>
-                  <Icon name={rightAction2.icon} color={colors.white} />
+                  <Icon
+                    name={rightAction2.icon}
+                    color={colors.white}
+                    size={rightAction2.size}
+                  />
                   {rightAction2.text && (
                     <Text
                       style={[
@@ -155,7 +164,11 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
                 onLongPress={rightAction3.onLongPress}
               >
                 <View style={styles.rightAction}>
-                  <Icon name={rightAction3.icon} color={colors.white} />
+                  <Icon
+                    name={rightAction3.icon}
+                    color={colors.white}
+                    size={rightAction3.size}
+                  />
                   {rightAction3.text && (
                     <Text
                       style={[
@@ -206,7 +219,8 @@ const styles = StyleSheet.create({
   rightBlock: {
     flex: 1,
     flexDirection: "row",
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
+    alignItems: "center"
   },
   header: {
     padding: styleSheet.spacing.small

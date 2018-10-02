@@ -19,8 +19,8 @@ export default class Chatroom extends Component {
   };
 
   static navigationOptions = ({ navigation }) => ({
-    title: navigation.state.params ? navigation.state.params.title : "Chatroom",
-    headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />
+    title: navigation.state.params ? navigation.state.params.title : "Chatroom"
+    // headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} />
   });
 
   render() {

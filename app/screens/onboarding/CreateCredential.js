@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  ActivityIndicator,
   View,
   Text,
   Dimensions,
@@ -25,7 +26,8 @@ class CreateCredential extends Component {
       email: "",
       password: "",
       sendNotification: true,
-      tos_privacy_agreement: true
+      tos_privacy_agreement: true,
+      loading: false
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -49,6 +51,8 @@ class CreateCredential extends Component {
   }
   sendUserInfo = () => {
     console.log("submitting user info");
+    console.log(this.state);
+    this.setState({ loading: true });
     this.props.dispatch(
       createUser(
         this.state.email,
@@ -57,6 +61,11 @@ class CreateCredential extends Component {
         this.state.tos_privacy_agreement
       )
     );
+    setTimeout(() => {
+      this.setState({
+        loading: false
+      });
+    }, 5000);
   };
   render() {
     return (
@@ -80,6 +89,7 @@ class CreateCredential extends Component {
               style={styles.inputGamer}
               placeholderStyle={{ color: "#606060" }}
               underlineColorAndroid={"transparent"}
+              keyboardType={"email-address"}
             />
           </View>
           <View style={styles.inputRow}>
@@ -114,7 +124,12 @@ class CreateCredential extends Component {
             }
           />
         </View>
-        {this.state.email && this.state.password ? (
+        {this.state.loading ? (
+          <TouchableOpacity style={styles.continueBtn}>
+            <ActivityIndicator size={"small"} style={{ marginRight: 8 }} />
+            <Text style={styles.btnText}>CREATING...</Text>
+          </TouchableOpacity>
+        ) : this.state.email && this.state.password ? (
           <TouchableOpacity
             style={styles.continueBtn}
             onPress={this.sendUserInfo}
@@ -157,6 +172,7 @@ const styles = {
     alignItems: "center"
   },
   continueBtn: {
+    flexDirection: "row",
     backgroundColor: colors.primaryBlue,
     paddingHorizontal: 30,
     paddingVertical: 15

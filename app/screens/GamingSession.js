@@ -1,27 +1,16 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
-  Alert,
   AsyncStorage,
-  Button,
-  Image,
-  KeyboardAvoidingView,
   LayoutAnimation,
-  ListView,
   Platform,
-  ScrollView,
   Share,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
   Vibration
 } from "react-native";
 import Environment from "../config/environment";
-import ChatPreview from "../components/ChatPreview";
-import Panel from "../components/Panel/Panel";
-import PlayersList from "../components/PlayersList/PlayersList";
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -30,20 +19,20 @@ import {
   fetchMyGamingSessions,
   fetchGroupGamingSessions
 } from "../actions/gamingSessions";
+import ChatPreview from "../components/ChatPreview";
+import Panel from "../components/Panel/Panel";
+import PlayersList from "../components/PlayersList/PlayersList";
 import Header from "../components/Header";
 import Content from "../components/Content";
 import Card from "../components/Card";
 import NavigationBar from "../components/NavigationBar";
 import GamingSessionIconBar from "../components/GamingSessionIconBar";
-import destinyActivities from "../utils/destinyActivities.json";
+import { fetchBungieImage } from "../utils/destinyActivities";
 
 class GamingSession extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      hasJoined: false,
-      refreshing: false,
-      gameData: "",
       reserveButtonVisible: false
     };
     gamingSessionId = this.props.navigation.state.params.gamingSessionId;
@@ -76,36 +65,6 @@ class GamingSession extends React.Component {
       reserveButtonVisible: !this.state.reserveButtonVisible
     });
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-  };
-
-  fetchBungieImage = name => {
-    let formattedName = name;
-    let imageUrl = null;
-    if (name.includes("Spire of Stars")) {
-      formattedName = "Leviathan, Spire of Stars: Normal";
-    } else if (name.includes("Last Wish")) {
-      formattedName = "Last Wish: Normal";
-    } else if (name.includes("Eater of Worlds")) {
-      formattedName = "Leviathan, Eater of Worlds";
-    } else if (name.includes("Leviathan")) {
-      formattedName = "Leviathan";
-    } else if (name.includes("Shattered Throne")) {
-      formattedName = "The Shattered Throne";
-    } else if (name.includes("Whisper of the Worm")) {
-      imageUrl =
-        "https://www.bungie.net/img/destiny_content/pgcr/patrol_io.jpg";
-    } else {
-      imageUrl =
-        "https://www.bungie.net/img/theme/destiny/bgs/pgcrs/placeholder.jpg";
-    }
-    if (imageUrl) {
-      return imageUrl;
-    } else {
-      var result = destinyActivities.find(obj => {
-        return obj.name === formattedName;
-      });
-      return "https://www.bungie.net" + result.pgcrImage;
-    }
   };
 
   postData(action) {
@@ -213,6 +172,7 @@ class GamingSession extends React.Component {
         ? null
         : {
             icon: "share",
+            size: 24,
             onPress: () => {
               this.onShare();
             }
@@ -221,6 +181,7 @@ class GamingSession extends React.Component {
       ? {
           icon: "cancel",
           text: "Leave",
+          size: 24,
           onPress: () => {
             this.leaveGame();
           }
@@ -228,6 +189,7 @@ class GamingSession extends React.Component {
       : {
           icon: "outline-person_add-24px",
           text: "Join",
+          size: 24,
           onPress: () => {
             this.joinGame();
           },
@@ -236,18 +198,29 @@ class GamingSession extends React.Component {
           }
         };
     const rightAction3 =
-      this.state.reserveButtonVisible === true
+      userIds.includes(this.props.user.user_id) &&
+      this.props.user.user_id === this.props.gamingSession.creator_id
         ? {
-            icon: "outline-person_add-24px",
-            text: "Join as Reserve",
+            icon: "edit",
+            text: "Edit",
+            size: 24,
             onPress: () => {
-              this.joinGameAsReserve();
-            },
-            onLongPress: () => {
-              this.onLongPress();
+              this.props.navigation.navigate("GamingSessionEdit");
             }
           }
-        : null;
+        : this.state.reserveButtonVisible === true
+          ? {
+              icon: "outline-person_add-24px",
+              text: "Join as Reserve",
+              size: 24,
+              onPress: () => {
+                this.joinGameAsReserve();
+              },
+              onLongPress: () => {
+                this.onLongPress();
+              }
+            }
+          : null;
 
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;
@@ -256,7 +229,7 @@ class GamingSession extends React.Component {
       <View style={styles.container}>
         <Header
           title={this.props.gamingSession.category}
-          picture={this.fetchBungieImage(this.props.gamingSession.category)}
+          picture={fetchBungieImage(this.props.gamingSession.category)}
           heightRatio={0.5}
           topGradientTransparency={"rgba(0,0,0,0.4)"}
           middleGradientTransparency={"rgba(0,0,0,0.1)"}

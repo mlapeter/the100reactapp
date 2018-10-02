@@ -29,21 +29,13 @@ var playScheduleOptions = [
   "Weekday Evenings and Weekends",
   "Weekdays Latenight and Weekends"
 ];
-let groupOptions = [
-  "No Preference",
-  "Parents",
-  "College Students",
-  ,
-  "No Profanity",
-  "PvP Only"
-];
+let groupOptions = ["No Preference", "Parents", "College Students"];
 
 class GamerProfile extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      timezone: "EST",
       playStyle: "casual",
       age: 25,
       playSchedule: "Weekday Evenings and Weekends",

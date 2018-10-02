@@ -126,19 +126,16 @@ export class User extends React.Component {
 
   giveKarma() {
     this.postData("/give_karma");
-    this.props.navigation.navigate("Games");
     this.props.alertWithType("success", "Success", "Karma Given!!");
   }
 
   addFriend() {
     this.postData("/add_friend");
-    this.props.navigation.navigate("FriendsList");
     this.props.alertWithType("success", "Success", "Friend Request Sent!");
   }
 
   acceptFriend() {
     this.postData("/add_friend");
-    this.props.navigation.navigate("FriendsList");
     this.props.alertWithType("success", "Success", "Friend Request Accepted!");
   }
 
@@ -160,6 +157,7 @@ export class User extends React.Component {
       )
         .then(response => response.json())
         .then(responseJson => {
+          this.props.dispatch(fetchUser(userId));
           this.props.dispatch(fetchFriends());
           this.props.dispatch(fetchGroupMembers());
           this.props.dispatch(fetchPendingFriends());
@@ -206,21 +204,39 @@ export class User extends React.Component {
     const rightAction = {
       icon: "chat-bubble-outline",
       onPress: () => {
-        alert("Private Chat coming soon for supporters!");
+        Alert.alert("Coming Soon", "Private Chat coming soon for supporters!");
       }
     };
-    const rightAction2 = {
-      icon: "star-border",
-      onPress: () => {
-        this.giveKarma();
-      }
-    };
-    const rightAction3 = {
-      icon: "outline-person_add-24px",
-      onPress: () => {
-        this.addFriend();
-      }
-    };
+    const rightAction2 =
+      this.props.user.karma_status === "given"
+        ? {
+            icon: "star"
+          }
+        : {
+            icon: "star-border",
+            onPress: () => {
+              this.giveKarma();
+            }
+          };
+    const rightAction3 =
+      this.props.user.friendship_status === "Friends" ||
+      this.props.user.friendship_status === "Pending"
+        ? {
+            icon: "person-add"
+          }
+        : this.props.user.friendship_status === "Confirm Friend"
+          ? {
+              icon: "outline-person_add-24px",
+              onPress: () => {
+                this.acceptFriend();
+              }
+            }
+          : {
+              icon: "outline-person_add-24px",
+              onPress: () => {
+                this.addFriend();
+              }
+            };
 
     if (this.props.userLoading || this.state.isLoading) {
       return (
@@ -291,6 +307,23 @@ export class User extends React.Component {
 
         {this.state.selectedIndex === 0 ? (
           <Content style={styles.content}>
+            {this.props.user.friendship_status === "Confirm Friend" ? (
+              <Card
+                onPress={() => {
+                  this.acceptFriend();
+                }}
+              >
+                <Text
+                  style={[
+                    { textAlign: "center", color: colors.primaryBlue },
+                    styleSheet.typography["headline"]
+                  ]}
+                >
+                  Accept Friend Request &raquo;
+                </Text>
+              </Card>
+            ) : null}
+
             {this.props.user.description ? (
               <Card>
                 <Panel text={this.props.user.description} numberOfLines={3} />

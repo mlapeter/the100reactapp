@@ -54,6 +54,7 @@ const GamingSessionsStack = createStackNavigator({
   GamingSession: { screen: GamingSession },
   Player: { screen: User },
   Group: { screen: Group },
+  GroupChat: { screen: Chatroom },
   GamingSessionChat: { screen: Chatroom },
   GamingSessionCreate: { screen: GamingSessionCreate },
   GamingSessionEdit: { screen: GamingSessionEdit }
@@ -74,6 +75,7 @@ const FriendsStack = createStackNavigator({
   FriendsList: { screen: FriendsList },
   Friend: { screen: User },
   Group: { screen: Group },
+  GroupChat: { screen: Chatroom },
   Conversation: { screen: Chatroom }
 });
 
@@ -171,38 +173,26 @@ const MenuDrawer = createDrawerNavigator(
     contentComponent: props => (
       <View style={styles.container}>
         <DrawerItems {...props} />
-        <TouchableOpacity
-          onPress={() => {
-            navigateTo(props.navigation, "Edit Profile");
-          }}
-        >
-          <View style={styles.menuItem}>
-            <MaterialCommunityIcons
-              name="account-settings-variant"
-              size={24}
-              style={styles.icon}
-            />
-            <Text style={styles.menuText}>Edit Profile</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            navigateTo(props.navigation, "HelpChat");
-          }}
-        >
-          <View style={styles.menuItem}>
-            <MaterialCommunityIcons
-              name="help-circle"
-              size={24}
-              style={styles.icon}
-            />
-            <Text style={styles.menuText}>Help Chat</Text>
-          </View>
-        </TouchableOpacity>
       </View>
     )
   }
 );
+
+// Additional Custom Menu Items
+// <TouchableOpacity
+//   onPress={() => {
+//     navigateTo(props.navigation, "HelpChat");
+//   }}
+// >
+//   <View style={styles.menuItem}>
+//     <MaterialCommunityIcons
+//       name="help-circle"
+//       size={24}
+//       style={styles.icon}
+//     />
+//     <Text style={styles.menuText}>Help Chat</Text>
+//   </View>
+// </TouchableOpacity>
 
 navigateTo = (navigation, route) => {
   navigation.navigate(route);

@@ -65,7 +65,14 @@ export type IconName =
 
 const customIcons = ["outline-person_add-24px"];
 
-const materialIcons = ["star-border", "chat-bubble-outline", "cancel"];
+const materialIcons = [
+  "person-add",
+  "star",
+  "star-border",
+  "chat-bubble-outline",
+  "cancel",
+  "edit"
+];
 
 const icons = [
   "arrow-up",
