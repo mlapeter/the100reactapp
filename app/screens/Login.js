@@ -76,16 +76,16 @@ class Login extends React.Component {
       username: "",
       password: ""
     });
-    setTimeout(() => {
-      AsyncStorage.getItem("default_group_id").then(groupId => {
-        console.log("default_group_id: ", groupId);
-        if (groupId) {
-          this.props.dispatch(changeSelectedGroupId(groupId));
-        } else {
-          this.props.dispatch(fetchGroup());
-        }
-      });
-    }, 2000);
+    // setTimeout(() => {
+    //   AsyncStorage.getItem("default_group_id").then(groupId => {
+    //     console.log("default_group_id: ", groupId);
+    //     if (groupId) {
+    //       this.props.dispatch(changeSelectedGroupId(groupId));
+    //     } else {
+    //       this.props.dispatch(fetchGroup());
+    //     }
+    //   });
+    // }, 2000);
   }
 
   render() {

@@ -1113,6 +1113,8 @@ function* fetchConversations() {
 }
 
 export default function* rootSaga() {
+  yield takeEvery(CREATE_USER, createUser);
+
   yield takeEvery(FETCH_TOKEN, fetchToken);
   yield takeEvery(FETCH_TOKEN_RESULT, decodeToken);
   yield takeEvery(DECODE_TOKEN, decodeToken);
@@ -1176,8 +1178,6 @@ export default function* rootSaga() {
     LOAD_MORE_RECENT_GAMING_SESSIONS,
     loadMoreRecentGamingSessions
   );
-
-  yield takeEvery(CREATE_USER, createUser);
 
   yield takeEvery(FETCH_CONVERSATIONS, fetchConversations);
 }

@@ -32,10 +32,8 @@ import Panel from "../components/Panel/Panel";
 
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
-import { fetchGroup, changeSelectedGroupId } from "../actions/group";
-
-import { firebaseSignOut } from "../utils/user";
-import { removeToken } from "../actions/authentication";
+import { fetchGroup } from "../actions/group";
+import { fetchCurrentUser } from "../actions/users";
 
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 import IconBar from "../components/IconBar";
@@ -61,8 +59,7 @@ class Group extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      viewGroups: false
-      // isLoading: true
+      isLoading: false
     };
   }
 
@@ -81,41 +78,39 @@ class Group extends React.Component {
   }
 
   fetchGroupData = () => {
-    console.log("Fetching Group");
-    // this.props.dispatch(changeSelectedGroupId(this.groupId));
-    console.log("NAV PARAMS: ", this.props.navigation.state.params.groupId);
     this.props.dispatch(fetchGroup(this.props.navigation.state.params.groupId));
+    this.props.dispatch(fetchCurrentUser());
   };
 
-  toggleGroups() {
-    this.setState({
-      viewGroups: !this.state.viewGroups
-    });
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-  }
-
-  userHasJoined() {
+  userHasJoined = () => {
     let joined = this.props.groups.find(group => {
       return group.id === this.props.group.id;
     });
     return joined;
-  }
+  };
 
   joinGroup() {
     this.postData(this.props.group.id + "/join");
-    this.fetchGroupData();
     Alert.alert("Group Joined!");
   }
 
   leaveGroup() {
-    this.postData(this.props.group.id + "/leave");
-    this.fetchGroupData();
-    Alert.alert("Group Left.");
-  }
-
-  autoJoinGroup() {
-    this.postData("autojoin");
-    Alert.alert("Group Auto Joined!");
+    Alert.alert(
+      "Leave Group",
+      "Are you sure you want to leave this group?",
+      [
+        {
+          text: "Leave Group",
+          onPress: () => this.postData(this.props.group.id + "/leave")
+        },
+        {
+          text: "Cancel",
+          onPress: () => null,
+          style: "cancel"
+        }
+      ],
+      { cancelable: false }
+    );
   }
 
   onShare = () => {
@@ -156,15 +151,11 @@ class Group extends React.Component {
             "Content-Type": "application/json",
             Authorization: "Bearer " + token
           },
-          body: JSON.stringify({
-            // group_id: this.props.group.id
-          })
+          body: JSON.stringify({})
         }
       )
         .then(response => response.json())
         .then(responseJson => {
-          console.log("ACTION POSTED");
-          console.log(responseJson);
           this.fetchGroupData();
           this.setState({
             isLoading: false
@@ -177,44 +168,41 @@ class Group extends React.Component {
   }
 
   render() {
-    function AutoJoinButton(props) {
-      return (
-        <View style={styles.icon}>
-          <TouchableHighlight onPress={props.onPress} underlayColor="white">
-            <Text style={styles.iconText}>
-              <MaterialCommunityIcons
-                name="account-plus"
-                size={18}
-                color={colors.mediumGrey}
-              />{" "}
-              Automatically Join A Matching Group
-            </Text>
-          </TouchableHighlight>
-        </View>
-      );
-    }
-
-    if (this.props.isLoading || this.state.isLoading) {
+    if (this.props.group.isLoading || this.state.isLoading) {
+      console.log("group loading");
       return (
         <View style={styles.container}>
-          <ActivityIndicator />
-        </View>
-      );
-    } else if (!this.props.group) {
-      return (
-        <View style={styles.container}>
-          <AutoJoinButton onPress={() => this.autoJoinGroup()} />
+          <Content style={styles.gutter}>
+            <ActivityIndicator style={styles.loading} />
+          </Content>
         </View>
       );
     }
 
     let room = `group-${this.props.group.id}`;
-    let url = `chat/groups/${room}`;
+    let url = `chat/groups/group-${this.props.group.id}`;
     let navigation = this.props.navigation;
     const rightAction = {
       icon: "share",
       onPress: this.onShare
     };
+    const rightAction2 = this.userHasJoined()
+      ? {
+          icon: "cancel",
+          text: "Leave",
+          size: 24,
+          onPress: () => {
+            this.leaveGroup();
+          }
+        }
+      : {
+          icon: "outline-person_add-24px",
+          text: "Join",
+          size: 24,
+          onPress: () => {
+            this.joinGroup();
+          }
+        };
     return (
       <View style={styles.container}>
         <Header
@@ -228,7 +216,7 @@ class Group extends React.Component {
           <NavigationBar
             type="transparent"
             back="Back"
-            {...{ navigation, rightAction }}
+            {...{ navigation, rightAction, rightAction2 }}
           />
         </Header>
         <GroupIconBar
@@ -262,9 +250,9 @@ class Group extends React.Component {
           <Card
             onPress={() =>
               this.props.navigation.navigate("GroupChat", {
-                title: `${this.props.group.name} Chat`,
-                room: `group-${this.props.group.id}`,
-                url: `chat/groups/group-${this.props.group.id}`,
+                title: "Group Chat",
+                room: room,
+                url: url,
                 allowAnon: false
               })
             }
@@ -273,15 +261,15 @@ class Group extends React.Component {
               Latest Activity
             </Text>
             <ChatPreview
-              room={`group-${this.props.group.id}`}
-              url={`chat/groups/group-${this.props.group.id}`}
+              room={room}
+              url={url}
               allowAnon={true}
               onOpenChat={() =>
                 this.props.navigation.navigate("GroupChat", {
-                  title: `${this.props.group.name} Chat`,
-                  room: `group-${this.props.group.id}`,
-                  url: `chat/groups/group-${this.props.group.id}`,
-                  allowAnon: false
+                  title: "Group Chat",
+                  room: room,
+                  url: url,
+                  allowAnon: true
                 })
               }
             />
@@ -316,9 +304,14 @@ const styles = StyleSheet.create({
   gutter: {
     padding: styleSheet.spacing.tiny
   },
-
   container: {
     flex: 1
+  },
+  loading: {
+    flex: 1,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center"
   }
 });
 
@@ -328,7 +321,6 @@ const mapStateToProps = state => {
     isLoading: state.group.isLoading,
     groupError: state.group.error,
     groups: state.users.currentUser.groups,
-    selectedGroupId: state.group.selectedGroupId,
     user: state.users.currentUser
   };
 };
