@@ -23,6 +23,7 @@ import defaultUserHeaderBackground from "../assets/images/d2-all.jpg";
 import hunterHeader from "../assets/images/d2-hunter.jpg";
 import titanHeader from "../assets/images/d2-titan.jpg";
 import warlockHeader from "../assets/images/d2-warlock.jpg";
+import defaultGamingSessionHeaderBackground from "../assets/images/bungie-placeholder.jpg";
 
 class AuthLoading extends React.Component {
   constructor(props) {
@@ -39,7 +40,8 @@ class AuthLoading extends React.Component {
       defaultUserHeaderBackground,
       hunterHeader,
       titanHeader,
-      warlockHeader
+      warlockHeader,
+      defaultGamingSessionHeaderBackground
     ]);
 
     StatusBar.setBarStyle("light-content");

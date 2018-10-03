@@ -59,13 +59,18 @@ class Group extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: false
+      isLoading: true
     };
   }
 
   componentWillMount() {
     console.log("Mounting Group Screen");
     this.fetchGroupData();
+    setTimeout(() => {
+      this.setState({
+        isLoading: false
+      });
+    }, 500);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -172,6 +177,16 @@ class Group extends React.Component {
       console.log("group loading");
       return (
         <View style={styles.container}>
+          <Header
+            title={"..."}
+            picture={"img/default-user-header.jpg"}
+            heightRatio={0.5}
+            topGradientTransparency={"rgba(0,0,0,0.9)"}
+            middleGradientTransparency={"rgba(0,0,0,0.9)"}
+            bottomGradientTransparency={"rgba(0,0,0,0.9)"}
+          >
+            <NavigationBar back="Back" type="transparent" {...{ navigation }} />
+          </Header>
           <Content style={styles.gutter}>
             <ActivityIndicator style={styles.loading} />
           </Content>
@@ -179,8 +194,8 @@ class Group extends React.Component {
       );
     }
 
-    let room = `group-${this.props.group.id}`;
-    let url = `chat/groups/group-${this.props.group.id}`;
+    const room = `group-${this.props.group.id}`;
+    const url = `chat/groups/group-${this.props.group.id}`;
     let navigation = this.props.navigation;
     const rightAction = {
       icon: "share",
@@ -198,7 +213,7 @@ class Group extends React.Component {
       : {
           icon: "outline-person_add-24px",
           text: "Join",
-          size: 24,
+          size: 26,
           onPress: () => {
             this.joinGroup();
           }
@@ -250,26 +265,27 @@ class Group extends React.Component {
           <Card
             onPress={() =>
               this.props.navigation.navigate("GroupChat", {
-                title: "Group Chat",
-                room: room,
-                url: url,
+                title: `${this.props.group.name} Chat`,
+                room: `group-${this.props.group.id}`,
+                url: `chat/groups/group-${this.props.group.id}`,
                 allowAnon: false
               })
             }
           >
             <Text style={[styles.headline, styleSheet.typography["headline"]]}>
-              Latest Activity
+              Latest Activity &raquo;
             </Text>
+
             <ChatPreview
               room={room}
               url={url}
               allowAnon={true}
               onOpenChat={() =>
                 this.props.navigation.navigate("GroupChat", {
-                  title: "Group Chat",
-                  room: room,
-                  url: url,
-                  allowAnon: true
+                  title: `${this.props.group.name} Chat`,
+                  room: `group-${this.props.group.id}`,
+                  url: `chat/groups/group-${this.props.group.id}`,
+                  allowAnon: false
                 })
               }
             />

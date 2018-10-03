@@ -1,12 +1,5 @@
 import React, { Component } from "react";
-import {
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  View
-} from "react-native";
-// import EStylesheet from "react-native-extended-stylesheet";
+import { SafeAreaView, StatusBar, View } from "react-native";
 import { colors, fontSizes, fontStyles, styleSheet } from "./styles";
 
 import { AlertProvider } from "./components/Alert";

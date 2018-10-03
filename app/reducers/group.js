@@ -7,7 +7,7 @@ import {
 } from "../actions/group";
 
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   group: null,
   selectedGroupId: null
 };

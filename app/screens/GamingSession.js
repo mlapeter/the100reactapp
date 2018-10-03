@@ -33,9 +33,18 @@ class GamingSession extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      reserveButtonVisible: false
+      reserveButtonVisible: false,
+      isLoading: true
     };
     gamingSessionId = this.props.navigation.state.params.gamingSessionId;
+  }
+
+  componentWillMount() {
+    setTimeout(() => {
+      this.setState({
+        isLoading: false
+      });
+    }, 800);
   }
 
   componentDidMount() {
@@ -143,7 +152,7 @@ class GamingSession extends React.Component {
         <View style={styles.container}>
           <Header
             title={"..."}
-            picture={"img/default-user-header.jpg"}
+            picture={"img/default-gaming-session-header.jpg"}
             heightRatio={0.5}
             topGradientTransparency={"rgba(0,0,0,0.9)"}
             middleGradientTransparency={"rgba(0,0,0,0.9)"}

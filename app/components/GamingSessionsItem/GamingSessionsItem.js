@@ -26,8 +26,6 @@ Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
 class GamingSessionItem extends PureComponent {
-  // export default function GamingSessionItem(this.props) {
-
   render() {
     return (
       <Card
@@ -98,14 +96,6 @@ class GamingSessionItem extends PureComponent {
 }
 
 const styles = StyleSheet.create({
-  defaultText: {
-    color: colors.white
-  },
-  loading: {
-    alignItems: "center",
-    justifyContent: "center",
-    margin: 10
-  },
   box: {
     paddingVertical: 5,
     flexDirection: "row",
@@ -131,14 +121,6 @@ const styles = StyleSheet.create({
     height: 40,
     width: 40,
     borderRadius: 20
-  },
-  gamingSessionTitle: {
-    fontSize: 15,
-    color: colors.grey,
-    fontFamily: fontStyles.gameHeaderFont
-  },
-  gamingSessionDescription: {
-    color: colors.lightGrey
   },
   iconText: {
     fontSize: fontSizes.small,

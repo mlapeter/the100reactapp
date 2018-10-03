@@ -15,15 +15,13 @@ import {
   FETCH_ACTIVITIES_RESULT
 } from "../actions/search";
 
-// NOTE: CHANGE gameID to 13 for staging and 23 for production
-
 const initialState = {
   activity: "",
   gameId: Environment["DEFAULT_GAME_ID"],
   games: [],
   game: {},
   activities: [],
-  notFull: 1,
+  notFull: 0,
   gamingSessionsPage: 1,
   myGamingSessionsPage: 1,
   groupGamingSessionsPage: 1,

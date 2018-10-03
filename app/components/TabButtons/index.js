@@ -4,16 +4,16 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
-type SegmentedControlProps = {
+type TabButtonsProps = {
   values: string[],
   selectedIndex: number,
   onChange: number => mixed,
   transparent?: boolean
 };
 
-class SegmentedControl extends React.PureComponent<SegmentedControlProps> {
+class TabButtons extends React.PureComponent<TabButtonsProps> {
   render(): React.Node {
-    const { theme, values, transparent, selectedIndex, onChange } = this.props;
+    const { values, transparent, selectedIndex, onChange } = this.props;
     return (
       <View style={styles.container}>
         {values.map((value, key) => {
@@ -27,18 +27,18 @@ class SegmentedControl extends React.PureComponent<SegmentedControlProps> {
           } else if (transparent) {
             color = "black";
           } else {
-            color = theme.palette.primary;
+            color = colors.primary;
           }
           if (isSelected) {
             if (transparent) {
               backgroundColor = "rgba(0, 0, 0, 0.5)";
             } else {
-              backgroundColor = theme.palette.primary;
+              backgroundColor = colors.primary;
             }
           } else if (transparent) {
             backgroundColor = "rgba(255, 255, 255, 0.5)";
           } else {
-            backgroundColor = theme.palette.secondary;
+            backgroundColor = colors.secondary;
           }
           const style = [styles.control, { backgroundColor }];
           if (isFirst) {
@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default SegmentedControl;
+export default TabButtons;

@@ -8,10 +8,8 @@ import {
   View
 } from "react-native";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
-import Ionicons from "react-native-vector-icons/Ionicons";
 import Icon from "react-native-vector-icons/Ionicons";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Octicons from "react-native-vector-icons/Octicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import styles from "./styles";
 
@@ -26,31 +24,6 @@ export default class TopNav extends Component {
       searchText: "SUBMITTED"
     });
   }
-
-  // setSearchText(text) {
-  //   this.setState({
-  //     searchText: text
-  //   });
-  //   this.filterNotes(text);
-  // }
-  //
-  // filterNotes(searchText) {
-  //   var words = [
-  //     "spray",
-  //     "limit",
-  //     "elite",
-  //     "exuberant",
-  //     "destruction",
-  //     "present"
-  //   ];
-  //   let text = searchText.toLowerCase();
-  //
-  //   let result = words.filter(word => {
-  //     if (word.search(text) !== -1) {
-  //       Alert.alert(word);
-  //     }
-  //   });
-  // }
 
   render() {
     return (

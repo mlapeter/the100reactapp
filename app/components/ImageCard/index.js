@@ -50,7 +50,10 @@ export default class ImageCard extends React.PureComponent<ImageCardProps> {
               blurRadius={Platform.OS === "android" ? 0.5 : 0}
               style={[
                 styles.image,
-                { width: width, height: width * heightRatio }
+                {
+                  width: width - 2 * styleSheet.spacing.small,
+                  height: (width - 2 * styleSheet.spacing.small) * heightRatio
+                }
               ]}
               source={picture}
             />
@@ -100,8 +103,8 @@ const styles = StyleSheet.create({
     marginTop: styleSheet.spacing.small,
     marginHorizontal: styleSheet.spacing.small,
     backgroundColor: colors.darkGray,
-    flex: 1,
-    overflow: "hidden"
+    flex: 1
+    // overflow: "hidden"
   },
   image: {
     ...styleSheet.styles.borderRadius,

@@ -168,15 +168,12 @@ class Chat extends Component {
   }
 
   componentDidMount() {
-    console.log("Mounting Chat");
     firebaseSignIn(
       this.props.firebaseToken,
       this.props.allowAnon,
       this.props.authedUser
     )
       .then(user => {
-        // this setState is triggering warning for setState on unmounted component
-
         this.setState({
           uid: user.uid,
           username: user.username,

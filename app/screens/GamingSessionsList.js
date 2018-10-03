@@ -350,6 +350,7 @@ class GamingSessionsList extends PureComponent {
         <TopNav
           user={this.props.user}
           navigation={this.props.navigation}
+          title={"Games"}
           newGameButton={true}
           searchButton={
             <GamingSessionsFilter updateFilter={this.updateFilter} />

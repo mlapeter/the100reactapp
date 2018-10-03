@@ -21,9 +21,6 @@ export default (styles = StyleSheet.create({
   search: {
     flexDirection: "row",
     flex: 4,
-    // marginLeft: 5,
-    // marginRight: 5,
-    // paddingVertical: 4,
     alignItems: "center",
     paddingLeft: 15,
     paddingRight: 0,
@@ -48,7 +45,6 @@ export default (styles = StyleSheet.create({
   },
   add: {
     flex: 1,
-    // marginHorizontal: 2,
     alignItems: "flex-start"
   },
   optionContainer: {

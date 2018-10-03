@@ -28,5 +28,3 @@ export default class ChatPreview extends Component {
     );
   }
 }
-
-// <Button onPress={this.props.onOpenChat} title="View Chat" />

@@ -47,7 +47,7 @@ import Header from "../components/Header";
 import Content from "../components/Content";
 import Card from "../components/Card";
 import NavigationBar from "../components/NavigationBar";
-import SegmentedControl from "../components/SegmentedControl";
+import TabButtons from "../components/TabButtons";
 import UserIconBar from "../components/UserIconBar";
 import GroupsList from "../components/GroupsList";
 
@@ -291,7 +291,7 @@ export class User extends React.Component {
               style={[styles.text, styleSheet.typography["callout"]]}
             />
 
-            <SegmentedControl
+            <TabButtons
               transparent
               values={["Details", "Groups", "Games"]}
               {...{ selectedIndex, onChange }}
