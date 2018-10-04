@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
+  AppState,
   AsyncStorage,
   FlatList,
   Keyboard,
@@ -79,6 +80,7 @@ class GamingSessionsList extends PureComponent {
     //   }
     // });
     this.fetchGamingSessionsData();
+    this.listenforUpdate();
 
     registerForPushNotificationsAsync().then(token => {
       if (
@@ -111,6 +113,33 @@ class GamingSessionsList extends PureComponent {
     } else {
       this.props.alertWithType("info", "", notification.data.message);
     }
+  };
+
+  listenforUpdate = () => {
+    console.log("LISTENTING FOR UPDATE");
+    AppState.addEventListener("change", async () => {
+      try {
+        const { isAvailable } = await Expo.Updates.checkForUpdateAsync();
+        if (isAvailable) {
+          this.props.alertWithType(
+            "info",
+            "",
+            "Updating App, please standby..."
+          );
+          await Expo.Updates.fetchUpdateAsync();
+          Expo.Updates.reloadFromCache();
+        } else {
+          console.log("NO UPDATE FOUND");
+          this.props.alertWithType(
+            "info",
+            "",
+            "You're running the latest version!"
+          );
+        }
+      } catch (e) {
+        console.log("ERROR LISTENING FOR UPDATE: ", e);
+      }
+    });
   };
 
   fetchGamesData() {
