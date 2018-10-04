@@ -36,7 +36,7 @@ export default class Header extends React.PureComponent<HeaderProps> {
     children: undefined
   };
 
-  computedPicture(picture) {
+  computedPicture(picture: string) {
     console.log(picture);
     if (picture === "img/default-user-header.jpg") {
       return defaultUserHeaderBackground;

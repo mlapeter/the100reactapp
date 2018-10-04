@@ -15,7 +15,13 @@ import BackButton from "./BackButton";
 import Icon from "../Icon";
 import type { IconName } from "../Icon";
 
-import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
+import {
+  colors,
+  fontSizes,
+  fontStyles,
+  styleSheet,
+  StyleProps
+} from "../../styles";
 
 type Action = {
   onPress: () => mixed,
@@ -24,7 +30,7 @@ type Action = {
   text?: string
 };
 
-type NavigationBarProps = {
+type NavigationBarProps = StyleProps & {
   navigation: string,
   title: string,
   subtitle?: string,

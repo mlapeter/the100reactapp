@@ -1,5 +1,4 @@
 // @flow
-// import autobind from "autobind-decorator";
 import * as React from "react";
 import { Alert, Image, StyleSheet, View } from "react-native";
 import { connectAlert } from "../components/Alert";
@@ -7,12 +6,29 @@ import { connect } from "react-redux";
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import TopNav from "../components/TopNav/TopNav";
 import GroupsList from "../components/GroupsList";
+import {
+  type NavigationNavigatorProps,
+  type NavigationScreenProp
+} from "react-navigation";
 
-type GroupsProps = {
-  name?: string
+type Group = {
+  id: number,
+  name: string,
+  header_background_image_api: string
 };
 
-class Groups extends React.Component<GroupsProps<>> {
+type User = {
+  id: number
+};
+
+type GroupsProps = {
+  groups: Array<Group>,
+  user: User,
+  isLoading: boolean,
+  navigation: NavigationScreenProp<{}>
+};
+
+class Groups extends React.Component<GroupsProps> {
   render() {
     return (
       <View style={styles.container}>
@@ -25,6 +41,7 @@ class Groups extends React.Component<GroupsProps<>> {
         <GroupsList
           groups={this.props.groups}
           navigation={this.props.navigation}
+          isLoading={this.props.isLoading}
         />
       </View>
     );

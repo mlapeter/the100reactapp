@@ -1,3 +1,9 @@
+import type { StyleObj } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+
+export type StyleProps = {
+  style?: StyleObj
+};
+
 export const colors = {
   blue: "#4A90E2",
   red: "#FF6A60",

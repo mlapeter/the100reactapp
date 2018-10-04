@@ -16,7 +16,7 @@ type GamingSessionIconBarProps = {
 };
 
 export default class GamingSessionIconBar extends React.PureComponent<
-  GamingSessionIconBar
+  GamingSessionIconBarProps
 > {
   render(): React.Node {
     const {

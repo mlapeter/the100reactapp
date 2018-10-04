@@ -1,33 +1,45 @@
 // @flow
-import autobind from "autobind-decorator";
 import * as React from "react";
 import { FlatList, Image, View } from "react-native";
+import {
+  type NavigationNavigatorProps,
+  type NavigationScreenProp
+} from "react-navigation";
 
 import ImageCard from "../ImageCard";
 import defaultUserHeaderBackground from "../../assets/images/d2-all.jpg";
 
-type GroupsListProps = {
-  groups?: array
+type Item = {
+  item: Group
 };
 
-export default class GroupsList extends React.Component<GroupsListProps<>> {
-  @autobind
-  renderItem(group: string): React.Node {
-    const navigation = this.props.navigation;
-    const picture =
-      group.item.header_background_image_api === "img/default-group-header.jpg"
-        ? defaultUserHeaderBackground
-        : { uri: group.item.header_background_image_api };
+type Group = {
+  id: number,
+  name: string,
+  header_background_image_api: string
+};
 
-    return (
-      <ImageCard
-        title={group.item.name}
-        picture={picture}
-        heightRatio={0.4}
-        onPress={() => navigation.navigate("Group", { groupId: group.item.id })}
-      />
-    );
-  }
+type GroupsListProps = {
+  groups: Array<Group>,
+  isLoading: boolean,
+  navigation: NavigationScreenProp<{}>
+};
+
+export default class GroupsList extends React.Component<GroupsListProps> {
+  renderItem = ({ item }: Item) => (
+    <ImageCard
+      title={item.name}
+      picture={
+        item.header_background_image_api === "img/default-group-header.jpg"
+          ? defaultUserHeaderBackground
+          : { uri: item.header_background_image_api }
+      }
+      heightRatio={0.4}
+      onPress={() =>
+        this.props.navigation.navigate("Group", { groupId: item.id })
+      }
+    />
+  );
 
   render() {
     return (
@@ -40,3 +52,9 @@ export default class GroupsList extends React.Component<GroupsListProps<>> {
     );
   }
 }
+//
+// picture={
+//   item.header_background_image_api === "img/default-group-header.jpg"
+//     ? defaultUserHeaderBackground
+//     : { uri: item.header_background_image_api }
+// }

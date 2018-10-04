@@ -11,13 +11,19 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo";
 
-import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
+import {
+  colors,
+  fontSizes,
+  fontStyles,
+  styleSheet,
+  StyleProps
+} from "../../styles";
 
-type ImageCardProps = {
+type ImageCardProps = StyleProps & {
   title: string,
   subtitle?: string,
-  description?: string | React.Node,
-  picture?: string,
+  description?: string,
+  picture?: React.Node | { uri: string },
   height?: number,
   onPress: () => mixed,
   children?: React.Node
@@ -82,7 +88,7 @@ export default class ImageCard extends React.PureComponent<ImageCardProps> {
                 {typeof description === "string" && (
                   <Text style={{ color: colors.white }}>{description}</Text>
                 )}
-                {typeof description !== "string" && description}
+                // {typeof description !== "string" && description}
               </LinearGradient>
             )}
           </View>

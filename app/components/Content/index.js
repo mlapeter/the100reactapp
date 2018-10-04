@@ -3,9 +3,11 @@ import * as React from "react";
 import { StyleSheet, ScrollView } from "react-native";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
+import type { StyleProps } from "../../styles";
 
 type ContentProps = {
-  children: React.Node
+  children: React.Node,
+  style?: StyleProps
 };
 
 export default class Content extends React.PureComponent<ContentProps> {

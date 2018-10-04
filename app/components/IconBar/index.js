@@ -4,6 +4,10 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 import Icon, { type IconName } from "../Icon";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
+import {
+  type NavigationNavigatorProps,
+  type NavigationScreenProp
+} from "react-navigation";
 
 type Detail = {
   icon?: IconName,
@@ -14,7 +18,8 @@ type Detail = {
 };
 
 type IconBarProps = {
-  details: Detail[]
+  details: Detail[],
+  navigation: NavigationScreenProp<{}>
 };
 
 export default class IconBar extends React.PureComponent<IconBarProps> {
