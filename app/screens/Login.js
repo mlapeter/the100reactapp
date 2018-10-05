@@ -16,7 +16,6 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback
 } from "react-native";
-// import { Analytics, PageHit } from "expo-analytics";
 import { Container } from "../components/Container";
 
 // import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
