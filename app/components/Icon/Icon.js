@@ -18,50 +18,7 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-export type IconName =
-  | "arrow-up"
-  | "arrow-right"
-  | "arrow-left"
-  | "arrow-down"
-  | "circle-empty"
-  | "tick"
-  | "shuffle"
-  | "repeat"
-  | "previous"
-  | "next"
-  | "pause"
-  | "write"
-  | "account"
-  | "albums"
-  | "photos"
-  | "message"
-  | "feed"
-  | "music"
-  | "hotel"
-  | "time"
-  | "restaurant"
-  | "map"
-  | "climate"
-  | "cities"
-  | "money"
-  | "crop"
-  | "flash"
-  | "grid"
-  | "filters"
-  | "reverse"
-  | "camera"
-  | "heart"
-  | "search"
-  | "sign-out"
-  | "share"
-  | "options"
-  | "play"
-  | "bookmark"
-  | "cross"
-  | "minus"
-  | "plus"
-  | "send"
-  | "circle";
+export type IconName = "arrow-left" | "share";
 
 const customIcons = ["outline-person_add-24px"];
 
@@ -74,51 +31,7 @@ const materialIcons = [
   "edit"
 ];
 
-const icons = [
-  "arrow-up",
-  "arrow-right",
-  "arrow-left",
-  "arrow-down",
-  "circle-empty",
-  "tick",
-  "shuffle",
-  "repeat",
-  "previous",
-  "next",
-  "pause",
-  "write",
-  "account",
-  "albums",
-  "photos",
-  "message",
-  "feed",
-  "music",
-  "hotel",
-  "time",
-  "restaurant",
-  "map",
-  "climate",
-  "cities",
-  "money",
-  "crop",
-  "flash",
-  "grid",
-  "filters",
-  "reverse",
-  "camera",
-  "heart",
-  "search",
-  "sign-out",
-  "share",
-  "options",
-  "play",
-  "bookmark",
-  "cross",
-  "minus",
-  "plus",
-  "send",
-  "circle"
-];
+const icons = ["arrow-left", "share"];
 
 type IconProps = {
   name: IconName,

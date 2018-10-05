@@ -1,17 +1,14 @@
 // @flow
 import * as React from "react";
-import * as _ from "lodash";
 import { Image, StyleSheet, Text, View, Dimensions } from "react-native";
 import { LinearGradient } from "expo";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
-import defaultGroupHeaderBackground from "../../assets/images/destiny-wallpaper-1.jpg";
 import defaultUserHeaderBackground from "../../assets/images/d2-all.jpg";
 import hunterHeader from "../../assets/images/d2-hunter.jpg";
 import titanHeader from "../../assets/images/d2-titan.jpg";
 import warlockHeader from "../../assets/images/d2-warlock.jpg";
 import defaultGamingSessionHeaderBackground from "../../assets/images/bungie-placeholder.jpg";
-
 // import hunterHeader from "../../assets/images/nightstalker-hunter.jpg";
 // import titanHeader from "../../assets/images/sunbreaker-titan.jpg";
 // import warlockHeader from "../../assets/images/stormcaller-warlock.jpg";

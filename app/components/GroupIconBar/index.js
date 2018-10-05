@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 

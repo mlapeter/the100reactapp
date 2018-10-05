@@ -1,11 +1,7 @@
 // @flow
 import * as React from "react";
 import { FlatList, Image, View } from "react-native";
-import {
-  type NavigationNavigatorProps,
-  type NavigationScreenProp
-} from "react-navigation";
-
+import { type NavigationScreenProp } from "react-navigation";
 import ImageCard from "../ImageCard";
 import defaultUserHeaderBackground from "../../assets/images/d2-all.jpg";
 
@@ -52,9 +48,3 @@ export default class GroupsList extends React.Component<GroupsListProps> {
     );
   }
 }
-//
-// picture={
-//   item.header_background_image_api === "img/default-group-header.jpg"
-//     ? defaultUserHeaderBackground
-//     : { uri: item.header_background_image_api }
-// }

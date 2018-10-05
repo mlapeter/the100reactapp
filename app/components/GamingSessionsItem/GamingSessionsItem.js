@@ -1,27 +1,9 @@
 import React, { Component, PureComponent } from "react";
-import {
-  ActivityIndicator,
-  Button,
-  FlatList,
-  Image,
-  ListView,
-  TouchableHighlight,
-  RefreshControl,
-  StyleSheet,
-  Text,
-  TextInput,
-  View
-} from "react-native";
-import { StackNavigator } from "react-navigation";
-
-import PreSplash from "../../components/PreSplash/PreSplash";
+import { Image, StyleSheet, Text, View } from "react-native";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
-import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import JoinLeaveButton from "../../screens/GamingSession";
 import Card from "../../components/Card";
-
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
