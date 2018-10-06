@@ -25,7 +25,6 @@ class CreateCredential extends Component {
     this.state = {
       email: "",
       password: "",
-      sendNotification: true,
       tos_privacy_agreement: true,
       loading: false
     };
@@ -57,7 +56,6 @@ class CreateCredential extends Component {
       createUser(
         this.state.email,
         this.state.password,
-        this.state.sendNotification,
         this.state.tos_privacy_agreement
       )
     );
@@ -65,7 +63,7 @@ class CreateCredential extends Component {
       this.setState({
         loading: false
       });
-    }, 5000);
+    }, 1500);
   };
   render() {
     return (
@@ -90,6 +88,7 @@ class CreateCredential extends Component {
               placeholderStyle={{ color: "#606060" }}
               underlineColorAndroid={"transparent"}
               keyboardType={"email-address"}
+              autoCapitalize="none"
             />
           </View>
           <View style={styles.inputRow}>
@@ -103,15 +102,7 @@ class CreateCredential extends Component {
               secureTextEntry
             />
           </View>
-          <CheckBox
-            checkBoxColor="#949599"
-            rightText="Send notifications about my group"
-            rightTextStyle={styles.contentText}
-            isChecked={this.state.sendNotification}
-            onClick={val =>
-              this.setState({ sendNotification: !this.state.sendNotification })
-            }
-          />
+
           <CheckBox
             checkBoxColor="#949599"
             rightText="I agree to privacy policy and terms of service"

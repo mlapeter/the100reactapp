@@ -51,6 +51,7 @@ class CreateGamer extends Component {
             style={styles.inputGamer}
             placeholderStyle={{ color: colors.grey }}
             underlineColorAndroid={"transparent"}
+            autoCapitalize="none"
           />
         </View>
         {this.state.gamertag ? (

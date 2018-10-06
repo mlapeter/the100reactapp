@@ -173,7 +173,7 @@ class Group extends React.Component {
   }
 
   render() {
-    if (this.props.group.isLoading || this.state.isLoading) {
+    if (this.props.isLoading || this.state.isLoading) {
       console.log("group loading");
       return (
         <View style={styles.container}>

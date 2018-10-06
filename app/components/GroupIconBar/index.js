@@ -62,10 +62,11 @@ function PlatformIcon(props) {
 }
 
 function PlayScheduleIcon(props) {
-  var schedule = props.playSchedule
-    .split(" ")
-    .slice(0, 2)
-    .join(" ");
+  var schedule =
+    props.playSchedule
+      .split(" ")
+      .slice(0, 2)
+      .join(" ") + " UTC";
 
   return (
     <Text style={styles.icon}>
