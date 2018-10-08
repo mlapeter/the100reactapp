@@ -196,6 +196,16 @@ class Group extends React.Component {
 
     const room = `group-${this.props.group.id}`;
     const url = `chat/groups/group-${this.props.group.id}`;
+    let openChat = () =>
+      this.userHasJoined()
+        ? this.props.navigation.navigate("GroupChat", {
+            title: `${this.props.group.name} Chat`,
+            room: `group-${this.props.group.id}`,
+            url: `chat/groups/group-${this.props.group.id}`,
+            allowAnon: false
+          })
+        : Alert.alert("", "Join this group first to get full acess to chat!");
+
     let navigation = this.props.navigation;
     const rightAction = {
       icon: "share",
@@ -262,16 +272,7 @@ class Group extends React.Component {
             </Card>
           ) : null}
 
-          <Card
-            onPress={() =>
-              this.props.navigation.navigate("GroupChat", {
-                title: `${this.props.group.name} Chat`,
-                room: `group-${this.props.group.id}`,
-                url: `chat/groups/group-${this.props.group.id}`,
-                allowAnon: false
-              })
-            }
-          >
+          <Card onPress={openChat}>
             <Text style={[styles.headline, styleSheet.typography["headline"]]}>
               Latest Activity &raquo;
             </Text>
@@ -280,14 +281,7 @@ class Group extends React.Component {
               room={room}
               url={url}
               allowAnon={true}
-              onOpenChat={() =>
-                this.props.navigation.navigate("GroupChat", {
-                  title: `${this.props.group.name} Chat`,
-                  room: `group-${this.props.group.id}`,
-                  url: `chat/groups/group-${this.props.group.id}`,
-                  allowAnon: false
-                })
-              }
+              onOpenChat={openChat}
             />
           </Card>
         </Content>
