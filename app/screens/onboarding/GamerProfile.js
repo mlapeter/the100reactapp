@@ -49,7 +49,6 @@ class GamerProfile extends Component {
   componentDidMount() {
     const time = jstz.determine();
     this.setState({ timezone: time.name() });
-
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics.hit(new PageHit("App - Onboarding Screen 3"));
   }
