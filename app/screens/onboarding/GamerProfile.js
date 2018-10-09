@@ -14,6 +14,8 @@ import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
 import { setProfileInfo } from "../../actions/onboarding";
 import ListPopover from "../../components/ListPopover";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../../config/environment";
 
 import { colors, fontSizes, fontStyles } from "../../styles";
 import jstz from "jstz";
@@ -47,6 +49,9 @@ class GamerProfile extends Component {
   componentDidMount() {
     const time = jstz.determine();
     this.setState({ timezone: time.name() });
+
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Onboarding Screen 3"));
   }
   showPopover = option => {
     this.setState({ option: option });

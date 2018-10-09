@@ -19,6 +19,7 @@ import {
   TouchableHighlight,
   View
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
 import PreSplash from "../components/PreSplash/PreSplash";
 import ChatPreview from "../components/ChatPreview";
 import Environment from "../config/environment";
@@ -71,6 +72,8 @@ class Group extends React.Component {
         isLoading: false
       });
     }, 500);
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Group"));
   }
 
   componentWillReceiveProps(nextProps) {

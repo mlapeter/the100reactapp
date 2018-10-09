@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { HeaderBackButton } from "react-navigation";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
 
 import Chat from "../components/Chat";
 
@@ -17,6 +19,11 @@ export default class Chatroom extends Component {
       }).isRequired
     }).isRequired
   };
+
+  componentDidMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Chatroom"));
+  }
 
   static navigationOptions = ({ navigation }) => ({
     title: navigation.state.params ? navigation.state.params.title : "Chatroom"

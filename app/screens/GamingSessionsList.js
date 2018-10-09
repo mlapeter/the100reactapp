@@ -19,6 +19,7 @@ import { Notifications } from "expo";
 import moment from "moment";
 import Environment from "../config/environment";
 import { registerForPushNotificationsAsync } from "../utils/expoPushNotifications";
+import { Analytics, PageHit } from "expo-analytics";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../../app/styles";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
@@ -72,6 +73,8 @@ class GamingSessionsList extends PureComponent {
   };
 
   componentDidMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Gaming Sessions List"));
     // Todo: save search settings in local storage and retrieve
     // AsyncStorage.getItem("search_platform").then(platform => {
     //   if (platform) {

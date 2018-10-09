@@ -10,6 +10,8 @@ import {
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
 import { createUser } from "../../actions/onboarding";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../../config/environment";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CheckBox from "react-native-check-box";
@@ -29,6 +31,12 @@ class CreateCredential extends Component {
       loading: false
     };
   }
+
+  componentDidMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Onboarding Screen 4"));
+  }
+
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.onboarding.error &&

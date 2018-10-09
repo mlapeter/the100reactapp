@@ -13,6 +13,9 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 import { connect } from "react-redux";
 import { colors, fontSizes } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -66,6 +69,8 @@ class FriendsList extends Component {
 
   componentWillMount() {
     this.fetchAllData();
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Friends List"));
   }
 
   componentWillReceiveProps(nextProps) {

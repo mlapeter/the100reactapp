@@ -17,6 +17,9 @@ import {
   TouchableHighlight,
   TouchableWithoutFeedback
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 var t = require("tcomb-form-native");
 
 import { colors, fontSizes, fontStyles } from "../styles";
@@ -64,6 +67,8 @@ class UserEdit extends React.Component {
         this.userLogout();
       }
     }, 5000);
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - User Edit"));
   }
 
   componentWillReceiveProps(nextProps) {

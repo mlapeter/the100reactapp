@@ -1,6 +1,9 @@
 // @flow
 import * as React from "react";
 import { Alert, Image, StyleSheet, View } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
@@ -29,6 +32,11 @@ type GroupsProps = {
 };
 
 class Groups extends React.Component<GroupsProps> {
+  componentWillMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Groups"));
+  }
+
   render() {
     return (
       <View style={styles.container}>

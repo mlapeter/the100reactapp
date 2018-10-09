@@ -10,7 +10,9 @@ import {
   View,
   Vibration
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
+
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -49,6 +51,8 @@ class GamingSession extends React.Component {
 
   componentDidMount() {
     this.fetchGamingSessionData();
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Gaming Session"));
   }
 
   fetchGamingSessionData() {

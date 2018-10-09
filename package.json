@@ -29,6 +29,7 @@
     "autobind-decorator": "^2.1.0",
     "babel-preset-es2015": "^6.24.1",
     "expo": "^28.0.0",
+    "expo-analytics": "^1.0.7",
     "firebase": "^4.4.0",
     "hoist-non-react-statics": "^2.3.1",
     "install": "^0.10.1",

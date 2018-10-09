@@ -20,10 +20,12 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 import PreSplash from "../components/PreSplash/PreSplash";
 import ChatPreview from "../components/ChatPreview";
 import Panel from "../components/Panel/Panel";
-import Environment from "../config/environment";
 
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -84,8 +86,9 @@ export class User extends React.Component {
     // this.fetchUserData();
     console.log("fetchuser: ", userId);
     this.props.dispatch(fetchUser(userId));
-
     this.props.dispatch(fetchConversations());
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - User Profile"));
   }
 
   componentWillReceiveProps(nextProps) {

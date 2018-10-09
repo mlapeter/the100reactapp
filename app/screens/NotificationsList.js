@@ -11,6 +11,9 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 import { NavigationActions } from "react-navigation";
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
@@ -39,6 +42,9 @@ class Notifications extends PureComponent {
 
   componentWillMount() {
     this.fetchNotificationsData();
+
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Notifications"));
   }
 
   componentWillReceiveProps(nextProps) {

@@ -23,7 +23,7 @@ import defaultUserHeaderBackground from "../assets/images/d2-all.jpg";
 import hunterHeader from "../assets/images/d2-hunter.jpg";
 import titanHeader from "../assets/images/d2-titan.jpg";
 import warlockHeader from "../assets/images/d2-warlock.jpg";
-import defaultGamingSessionHeaderBackground from "../assets/images/bungie-placeholder.jpg";
+import defaultGamingSessionHeaderBackground from "../assets/images/activity-placeholder.jpg";
 
 class AuthLoading extends React.Component {
   constructor(props) {

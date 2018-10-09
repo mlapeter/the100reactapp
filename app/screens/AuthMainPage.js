@@ -10,6 +10,8 @@ import {
 import { Font } from "expo";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
 
 import { decodeToken, setFirebaseToken } from "../actions/authentication";
 import PreSplash from "../components/PreSplash/PreSplash";
@@ -21,6 +23,11 @@ const { width, height } = Dimensions.get("window");
 class AuthMainPage extends Component {
   constructor(props) {
     super(props);
+  }
+
+  componentDidMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Auth Main Page"));
   }
 
   render() {

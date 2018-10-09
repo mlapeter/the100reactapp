@@ -16,10 +16,10 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 import { Container } from "../components/Container";
-
-// import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
-
 import PreSplash from "../components/PreSplash/PreSplash";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { connect } from "react-redux";
@@ -50,7 +50,10 @@ class Login extends React.Component {
     }
   }
 
-  componentWillMount() {}
+  componentWillMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Login"));
+  }
 
   componentWillReceiveProps(nextProps) {
     if (
