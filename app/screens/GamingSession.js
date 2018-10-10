@@ -1,64 +1,58 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
-  Alert,
   AsyncStorage,
-  Button,
-  Image,
-  KeyboardAvoidingView,
   LayoutAnimation,
-  ListView,
   Platform,
-  ScrollView,
   Share,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
-  View
+  View,
+  Vibration
 } from "react-native";
-import CustomButton from "../components/CustomButton";
-import Touchable from "react-native-platform-touchable";
+import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
-import ChatPreview from "../components/ChatPreview";
-import Panel from "../components/Panel/Panel";
-import PlayersList from "../components/PlayersList/PlayersList";
-import { colors, fontSizes, fontStyles } from "../styles";
-import Moment from "../../node_modules/react-moment";
-import { FontAwesome } from "@expo/vector-icons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import {
   fetchGamingSession,
-  fetchGamingSessions,
   fetchMyGamingSessions,
-  fetchGroupGamingSessions,
-  refreshMyGamingSessions
+  fetchGroupGamingSessions
 } from "../actions/gamingSessions";
-
-// Moment.globalFormat = "h:mm";
-Moment.globalLocale = "en";
+import ChatPreview from "../components/ChatPreview";
+import Panel from "../components/Panel/Panel";
+import PlayersList from "../components/PlayersList/PlayersList";
+import Header from "../components/Header";
+import Content from "../components/Content";
+import Card from "../components/Card";
+import NavigationBar from "../components/NavigationBar";
+import GamingSessionIconBar from "../components/GamingSessionIconBar";
+import { fetchBungieImage } from "../utils/destinyActivities";
 
 class GamingSession extends React.Component {
-  static navigationOptions = () => {
-    // headerTitle: "Game";
-    // Not Working
-  };
-
   constructor(props) {
     super(props);
     this.state = {
-      hasJoined: false,
-      refreshing: false,
-      gameData: "",
-      reserveButtonVisible: false
+      reserveButtonVisible: false,
+      isLoading: true
     };
     gamingSessionId = this.props.navigation.state.params.gamingSessionId;
   }
 
+  componentWillMount() {
+    setTimeout(() => {
+      this.setState({
+        isLoading: false
+      });
+    }, 800);
+  }
+
   componentDidMount() {
     this.fetchGamingSessionData();
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Gaming Session"));
   }
 
   fetchGamingSessionData() {
@@ -76,6 +70,14 @@ class GamingSession extends React.Component {
 
   leaveGame = () => {
     this.postData("/leave");
+  };
+
+  onLongPress = () => {
+    Vibration.vibrate(20);
+    this.setState({
+      reserveButtonVisible: !this.state.reserveButtonVisible
+    });
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   };
 
   postData(action) {
@@ -101,13 +103,8 @@ class GamingSession extends React.Component {
         .then(responseJson => {
           if (action === "/join" || action === "/join?join_as_reserve=true") {
             this.fetchGamingSessionData();
-            console.log("GAME JOINED");
-            // this.setState({
-            //   isLoading: false
-            // });
           } else {
             this.props.navigation.navigate("GamingSessionsList");
-            console.log("GAME LEFT");
           }
           setTimeout(() => {
             this.props.dispatch(fetchMyGamingSessions());
@@ -115,7 +112,7 @@ class GamingSession extends React.Component {
             this.setState({
               isLoading: false
             });
-          }, 500);
+          }, 300);
         })
         .catch(error => {
           console.error(error);
@@ -128,12 +125,12 @@ class GamingSession extends React.Component {
       {
         message:
           Platform.OS === "android"
-            ? "New game, join up! " +
+            ? "Join my game: " +
               this.props.gamingSession.category.toString() +
               " " +
               "https://the100.io/game/" +
               this.props.gamingSession.id
-            : "New game, join up! " +
+            : "Join my game: " +
               this.props.gamingSession.category.toString() +
               " ",
         url: "https://the100.io/game/" + this.props.gamingSession.id,
@@ -146,15 +143,9 @@ class GamingSession extends React.Component {
     );
   }
 
-  onLongPress = () => {
-    this.setState({
-      reserveButtonVisible: !this.state.reserveButtonVisible
-    });
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
-  };
-
   render() {
     const { params } = this.props.navigation.state;
+    const navigation = this.props.navigation;
 
     if (
       this.state.isLoading ||
@@ -163,109 +154,128 @@ class GamingSession extends React.Component {
     ) {
       return (
         <View style={styles.container}>
-          <ActivityIndicator />
+          <Header
+            title={"..."}
+            picture={"img/default-gaming-session-header.jpg"}
+            heightRatio={0.5}
+            topGradientTransparency={"rgba(0,0,0,0.9)"}
+            middleGradientTransparency={"rgba(0,0,0,0.9)"}
+            bottomGradientTransparency={"rgba(0,0,0,0.9)"}
+          >
+            <NavigationBar
+              back="Games"
+              type="transparent"
+              {...{ navigation }}
+            />
+          </Header>
+          <Content>
+            <ActivityIndicator style={styles.loading} />
+          </Content>
         </View>
       );
     }
 
-    let room = `game-${this.props.gamingSession.id}`;
-    let url = `chat/gaming_sessions/${room}`;
-
-    var userIds = [];
+    let userIds = [];
     this.props.gamingSession.confirmed_sessions.map(confirmedSession =>
       userIds.push(confirmedSession.user_id)
     );
+
+    const rightAction =
+      this.state.reserveButtonVisible === true
+        ? null
+        : {
+            icon: "share",
+            size: 24,
+            onPress: () => {
+              this.onShare();
+            }
+          };
+    const rightAction2 = userIds.includes(this.props.user.user_id)
+      ? {
+          icon: "cancel",
+          text: "Leave",
+          size: 24,
+          onPress: () => {
+            this.leaveGame();
+          }
+        }
+      : {
+          icon: "outline-person_add-24px",
+          text: "Join",
+          size: 24,
+          onPress: () => {
+            this.joinGame();
+          },
+          onLongPress: () => {
+            this.onLongPress();
+          }
+        };
+    const rightAction3 =
+      userIds.includes(this.props.user.user_id) &&
+      this.props.user.user_id === this.props.gamingSession.creator_id
+        ? {
+            icon: "edit",
+            text: "Edit",
+            size: 24,
+            onPress: () => {
+              this.props.navigation.navigate("GamingSessionEdit");
+            }
+          }
+        : this.state.reserveButtonVisible === true
+          ? {
+              icon: "outline-person_add-24px",
+              text: "Join as Reserve",
+              size: 24,
+              onPress: () => {
+                this.joinGameAsReserve();
+              },
+              onLongPress: () => {
+                this.onLongPress();
+              }
+            }
+          : null;
+
+    let room = `game-${this.props.gamingSession.id}`;
+    let url = `chat/gaming_sessions/${room}`;
+
     return (
       <View style={styles.container}>
-        {this.state.reserveButtonVisible ? (
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "flex-end"
-            }}
-          >
-            <Button
-              style={{
-                height: 30,
-                marginBottom: 15
-              }}
-              onPress={() => this.joinGameAsReserve()}
-              title="Join As Reserve"
+        <Header
+          title={this.props.gamingSession.category}
+          picture={fetchBungieImage(this.props.gamingSession.category)}
+          heightRatio={0.5}
+          topGradientTransparency={"rgba(0,0,0,0.4)"}
+          middleGradientTransparency={"rgba(0,0,0,0.1)"}
+          bottomGradientTransparency={"rgba(0,0,0,0.6)"}
+        >
+          <NavigationBar
+            back="Games"
+            type="transparent"
+            {...{ navigation, rightAction, rightAction2, rightAction3 }}
+          />
+        </Header>
+        <GamingSessionIconBar
+          startTime={this.props.gamingSession.start_time}
+          platform={this.props.gamingSession.platform}
+          primaryUsersCount={this.props.gamingSession.primary_users_count}
+          teamSize={this.props.gamingSession.team_size}
+          lightLevel={this.props.gamingSession.light_level}
+          sherpaLed={this.props.gamingSession.sherpa_led}
+        />
+        <Content>
+          {this.props.gamingSession.name ? (
+            <Card>
+              <Panel text={this.props.gamingSession.name} numberOfLines={5} />
+            </Card>
+          ) : null}
+          <Card>
+            <PlayersList
+              confirmedSessions={this.props.gamingSession.confirmed_sessions}
+              navigation={this.props.navigation}
             />
-          </View>
-        ) : null}
-        <View style={styles.titleBar}>
-          <View style={styles.titleContainer}>
-            <Text style={styles.title}>
-              {this.props.gamingSession.category != null
-                ? this.props.gamingSession.category.toString()
-                : ""}
-            </Text>
-          </View>
-          <View style={styles.buttonsContainer}>
-            {this.props.user.user_id === this.props.gamingSession.creator_id ? (
-              <View style={{ marginBottom: 10 }}>
-                <Button
-                  style={{
-                    height: 25,
-                    width: 180
-                  }}
-                  onPress={() =>
-                    this.props.navigation.navigate("GamingSessionEdit")
-                  }
-                  title="Edit"
-                />
-              </View>
-            ) : null}
-            <JoinLeaveButton
-              hasJoined={userIds.includes(this.props.user.user_id)}
-              leaveGame={this.leaveGame.bind(this)}
-              joinGame={this.joinGame}
-              onLongPress={this.onLongPress}
-            />
-
-            <View style={{ marginTop: 10 }}>
-              <Button
-                style={{
-                  height: 30,
-                  width: 180,
-                  marginBottom: 15
-                }}
-                onPress={() => this.onShare()}
-                title="Share"
-              />
-            </View>
-          </View>
-        </View>
-        {this.props.gamingSession.name != null ? (
-          <Panel
-            text={this.props.gamingSession.name.toString()}
-            numberOfLines={3}
-          />
-        ) : null}
-
-        <View style={styles.iconBar}>
-          <TimeIcon startTime={this.props.gamingSession.start_time} />
-          <PlatformIcon platform={this.props.gamingSession.platform} />
-          <PlayerIcon
-            primaryUsersCount={this.props.gamingSession.primary_users_count}
-            teamSize={this.props.gamingSession.team_size}
-          />
-          <PowerIcon lightLevel={this.props.gamingSession.light_level} />
-          <SherpaIcon sherpaLed={this.props.gamingSession.sherpa_led} />
-        </View>
-        <ScrollView>
-          <Text style={styles.sectionHeader}>Players:</Text>
-          <PlayersList
-            confirmedSessions={this.props.gamingSession.confirmed_sessions}
-            navigation={this.props.navigation}
-          />
-          <Text style={styles.sectionHeader}>Chat:</Text>
-          <ChatPreview
-            room={room}
-            url={url}
-            allowAnon={true}
-            onOpenChat={() =>
+          </Card>
+          <Card
+            onPress={() =>
               this.props.navigation.navigate("GamingSessionChat", {
                 title: "Gaming Session Chat",
                 room: room,
@@ -273,195 +283,39 @@ class GamingSession extends React.Component {
                 allowAnon: true
               })
             }
-          />
-        </ScrollView>
+          >
+            <Text style={[styles.headline, styleSheet.typography["headline"]]}>
+              Player Chat &raquo;
+            </Text>
+            <ChatPreview
+              room={room}
+              url={url}
+              allowAnon={true}
+              onOpenChat={() =>
+                this.props.navigation.navigate("GamingSessionChat", {
+                  title: "Gaming Session Chat",
+                  room: room,
+                  url: url,
+                  allowAnon: true
+                })
+              }
+            />
+          </Card>
+        </Content>
       </View>
     );
   }
 }
 
-export function JoinLeaveButton(props) {
-  if (props.hasJoined) {
-    return (
-      <CustomButton
-        style={{
-          height: 30,
-          width: 180,
-          marginBottom: 15
-        }}
-        title="Leave"
-        onPress={() => props.leaveGame()}
-      />
-    );
-  } else {
-    return (
-      <CustomButton
-        style={{
-          height: 30,
-          width: 180,
-          marginBottom: 15
-        }}
-        title="Join"
-        onPress={() => props.joinGame()}
-        onLongPress={() => props.onLongPress()}
-      />
-    );
-  }
-}
-
-function PlatformIcon(props) {
-  if (props.platform === "ps4") {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons
-          name="playstation"
-          size={14}
-          color={colors.grey}
-        />
-        PS4
-      </Text>
-    );
-  } else if (props.platform === "xbox-one") {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons name="xbox" size={14} color={colors.grey} />
-        XBOX
-      </Text>
-    );
-  } else {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons
-          name="microsoft"
-          size={14}
-          color={colors.grey}
-        />
-        PC
-      </Text>
-    );
-  }
-}
-
-function TimeIcon(props) {
-  return (
-    <Text style={styles.icon}>
-      <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
-
-      <Moment format="hh:mm A  MM/DD/YY" element={Text}>
-        {props.startTime.toString()}
-      </Moment>
-    </Text>
-  );
-}
-
-function PlayerIcon(props) {
-  return (
-    <Text style={styles.icon}>
-      <MaterialCommunityIcons name="account" size={14} color={colors.grey} />
-      {props.primaryUsersCount}/{props.teamSize}
-    </Text>
-  );
-}
-
-function PowerIcon(props) {
-  if (props.lightLevel) {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons name="gauge" size={14} color={colors.grey} />
-        {props.lightLevel}
-      </Text>
-    );
-  }
-  return (
-    <Text style={styles.icon}>
-      <MaterialCommunityIcons name="gauge" size={14} color={colors.grey} />
-      Any
-    </Text>
-  );
-}
-
-function SherpaIcon(props) {
-  if (props.sherpaLed) {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons name="security" size={14} color={colors.grey} />
-        Sherpa-Led
-      </Text>
-    );
-  }
-  return null;
-}
-
 const styles = StyleSheet.create({
-  defaultText: {
-    color: colors.white
-  },
-  keyboardView: {
-    paddingTop: 30,
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    backgroundColor: colors.grey
-  },
   container: {
-    padding: 5,
-    paddingTop: 10,
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    backgroundColor: colors.white
+    flex: 1
   },
   loading: {
+    flex: 1,
+    padding: 20,
     alignItems: "center",
     justifyContent: "center"
-  },
-  iconBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "stretch",
-    padding: 5,
-    borderTopWidth: 0.5,
-    borderTopColor: "#d6d7da",
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#d6d7da",
-    backgroundColor: colors.white
-  },
-  icon: {
-    padding: 2,
-    margin: 2,
-    backgroundColor: colors.white
-  },
-  titleBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "stretch",
-    padding: 5
-  },
-
-  title: {
-    padding: 5,
-    color: colors.grey,
-    fontFamily: fontStyles.gameHeaderFont,
-    fontSize: fontSizes.primary
-  },
-  description: {
-    padding: 5,
-    color: colors.lightGrey,
-    fontSize: fontSizes.secondary
-  },
-  sectionHeader: {
-    marginTop: 8,
-    marginHorizontal: 8,
-    fontWeight: "bold"
-  },
-  titleContainer: {
-    flex: 4,
-    justifyContent: "center"
-  },
-  buttonsContainer: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "space-between"
   }
 });
 

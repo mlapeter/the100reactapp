@@ -50,6 +50,7 @@ export default class Message extends PureComponent {
         noVisualFeedback={true}
         vibrate={true}
         onLongPress={this.onLongPress}
+        onPress={this.props.onPress}
       >
         <View style={styles.box}>
           <View style={styles.leftBox}>

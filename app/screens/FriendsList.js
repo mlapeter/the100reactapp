@@ -13,6 +13,9 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 import { connect } from "react-redux";
 import { colors, fontSizes } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -66,6 +69,8 @@ class FriendsList extends Component {
 
   componentWillMount() {
     this.fetchAllData();
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Friends List"));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -232,7 +237,7 @@ class FriendsList extends Component {
             searchText={this.state.searchText}
             user={this.props.user}
             navigation={this.props.navigation}
-            // style={{ flex: 1 }}
+            rightAction={true}
           />
         </TouchableWithoutFeedback>
 
@@ -304,23 +309,11 @@ const styles = StyleSheet.create({
     color: colors.white
   },
   container: {
-    padding: 5,
-    // paddingTop: 25,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",
     backgroundColor: colors.white
   },
-  // container: {
-  //   padding: 5,
-  //   paddingTop: 30,
-  //   margin: 3,
-  //   flex: 1,
-  //   flexDirection: "column",
-  //   justifyContent: "center",
-  //   backgroundColor: colors.white,
-  //   flex: 1
-  // },
   loading: {
     alignItems: "center",
     justifyContent: "center",
@@ -331,8 +324,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    // justifyContent: "center",
-    // alignItems: "center",
+    paddingHorizontal: 5,
     backgroundColor: colors.white
   },
   alertView: {

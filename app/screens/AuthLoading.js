@@ -2,6 +2,7 @@ import React from "react";
 import {
   ActivityIndicator,
   AsyncStorage,
+  Platform,
   StatusBar,
   StyleSheet,
   View
@@ -15,6 +16,15 @@ import { changeSelectedGroupId, fetchGroup } from "../actions/group";
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 
+import { loadIcons, loadCustomIcons } from "../components/Icon";
+
+import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
+import defaultUserHeaderBackground from "../assets/images/d2-all.jpg";
+import hunterHeader from "../assets/images/d2-hunter.jpg";
+import titanHeader from "../assets/images/d2-titan.jpg";
+import warlockHeader from "../assets/images/d2-warlock.jpg";
+import defaultGamingSessionHeaderBackground from "../assets/images/activity-placeholder.jpg";
+
 class AuthLoading extends React.Component {
   constructor(props) {
     super(props);
@@ -23,7 +33,25 @@ class AuthLoading extends React.Component {
 
   bootstrap = () => {
     console.log("Starting App");
+    loadIcons();
+    loadCustomIcons();
+    Expo.Asset.loadAsync([
+      defaultGroupHeaderBackground,
+      defaultUserHeaderBackground,
+      hunterHeader,
+      titanHeader,
+      warlockHeader,
+      defaultGamingSessionHeaderBackground
+    ]);
+
+    StatusBar.setBarStyle("light-content");
+    if (Platform.OS === "android") {
+      StatusBar.setBackgroundColor(colors.veryDarkGrey);
+    }
     Font.loadAsync({
+      "SFProText-Bold": require("../../app/assets/fonts/SF-Pro-Text-Bold.otf"),
+      "SFProText-Semibold": require("../../app/assets/fonts/SF-Pro-Text-Semibold.otf"),
+      "SFProText-Regular": require("../../app/assets/fonts/SF-Pro-Text-Regular.otf"),
       Lato: require("../../app/assets/fonts/Lato-Bold.ttf"),
       Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
     }).then(result => {

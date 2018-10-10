@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { SafeAreaView } from "react-native";
-// import EStylesheet from "react-native-extended-stylesheet";
+import { SafeAreaView, StatusBar, View } from "react-native";
+import { colors, fontSizes, fontStyles, styleSheet } from "./styles";
+
 import { AlertProvider } from "./components/Alert";
 import Navigator from "./router";
 
@@ -12,7 +13,8 @@ export default function App(props) {
   return (
     <Provider store={store}>
       <AlertProvider>
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: colors.veryDarkGrey }}>
+          <StatusBar backgroundColor={colors.veryDarkGrey} />
           <Navigator onNavigationStateChange={null} />
         </SafeAreaView>
       </AlertProvider>

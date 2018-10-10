@@ -21,7 +21,7 @@ var environments = {
     FIREBASE_PROJECT_ID: "the100-staging-42536",
     FIREBASE_STORAGE_BUCKET: "the100-staging-42536.appspot.com",
     FIREBASE_MESSAGING_SENDER_ID: "",
-    GOOGLE_ANALYTICS_ID: "UA-55503040-1"
+    GOOGLE_ANALYTICS_ID: ""
   }
 };
 
@@ -30,7 +30,7 @@ function getReleaseChannel() {
   if (releaseChannel === undefined) {
     return "production";
   } else if (releaseChannel === "staging") {
-    return "staging";
+    return "production";
   } else {
     return "production";
   }

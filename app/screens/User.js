@@ -20,10 +20,12 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 import PreSplash from "../components/PreSplash/PreSplash";
 import ChatPreview from "../components/ChatPreview";
 import Panel from "../components/Panel/Panel";
-import Environment from "../config/environment";
 
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -35,13 +37,23 @@ import {
 } from "../actions/users";
 import { fetchConversations } from "../actions/conversations";
 
-import { colors, fontSizes, fontStyles } from "../styles";
+import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import Moment from "../../node_modules/react-moment";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Octicons from "react-native-vector-icons/Octicons";
 
 import { StackNavigator } from "react-navigation";
+
+import Header from "../components/Header";
+import Content from "../components/Content";
+import Card from "../components/Card";
+import NavigationBar from "../components/NavigationBar";
+import TabButtons from "../components/TabButtons";
+import UserIconBar from "../components/UserIconBar";
+import GroupsList from "../components/GroupsList";
+
+import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
@@ -62,7 +74,8 @@ export class User extends React.Component {
       refreshing: false,
       gameData: "",
       viewStats: false,
-      conversation: this.findConversation(this.props)
+      conversation: this.findConversation(this.props),
+      selectedIndex: 0
     };
 
     userId = this.props.navigation.state.params.userId;
@@ -73,8 +86,9 @@ export class User extends React.Component {
     // this.fetchUserData();
     console.log("fetchuser: ", userId);
     this.props.dispatch(fetchUser(userId));
-
     this.props.dispatch(fetchConversations());
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - User Profile"));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -115,20 +129,47 @@ export class User extends React.Component {
 
   giveKarma() {
     this.postData("/give_karma");
-    this.props.navigation.navigate("Games");
     this.props.alertWithType("success", "Success", "Karma Given!!");
   }
 
   addFriend() {
     this.postData("/add_friend");
-    this.props.navigation.navigate("FriendsList");
     this.props.alertWithType("success", "Success", "Friend Request Sent!");
   }
 
   acceptFriend() {
     this.postData("/add_friend");
-    this.props.navigation.navigate("FriendsList");
     this.props.alertWithType("success", "Success", "Friend Request Accepted!");
+  }
+
+  postData(action) {
+    AsyncStorage.getItem("id_token").then(token => {
+      fetch(
+        Environment["API_BASE_URL"] +
+          Environment["API_VERSION"] +
+          "users/" +
+          userId +
+          action,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
+          }
+        }
+      )
+        .then(response => response.json())
+        .then(responseJson => {
+          this.props.dispatch(fetchUser(userId));
+          this.props.dispatch(fetchFriends());
+          this.props.dispatch(fetchGroupMembers());
+          this.props.dispatch(fetchPendingFriends());
+          console.log("ACTION POSTED");
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    });
   }
 
   toggleStats() {
@@ -152,56 +193,53 @@ export class User extends React.Component {
     this.props.alertWithType("info", "", "Gamertag copied to clipboard!");
   };
 
-  openChat = () => {
-    if (this.state.conversation) {
-      let room = `conversation-${this.state.conversation.id}`;
-      let url = `chat/conversations/${room}`;
-      this.props.navigation.navigate("Conversation", {
-        title: `Conversation with ${this.props.user.gamertag}`,
-        url: url,
-        room: room,
-        allowAnon: false
-      });
-    }
-  };
-
-  postData(action) {
-    // this.setState({
-    //   isLoading: true
-    // });
-    AsyncStorage.getItem("id_token").then(token => {
-      fetch(
-        Environment["API_BASE_URL"] +
-          Environment["API_VERSION"] +
-          "users/" +
-          userId +
-          action,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token
-          }
-        }
-      )
-        .then(response => response.json())
-        .then(responseJson => {
-          // this.fetchUserData();
-
-          this.props.dispatch(fetchFriends());
-          this.props.dispatch(fetchGroupMembers());
-          this.props.dispatch(fetchPendingFriends());
-
-          console.log("ACTION POSTED");
-        })
-        .catch(error => {
-          console.error(error);
-        });
+  onChange = index => {
+    this.setState({
+      selectedIndex: index
     });
-  }
+  };
 
   render() {
     const { params } = this.props.navigation.state;
+    const navigation = this.props.navigation;
+    const onChange = this.onChange;
+    const selectedIndex = this.state.selectedIndex;
+    const rightAction = {
+      icon: "chat-bubble-outline",
+      onPress: () => {
+        Alert.alert("Coming Soon", "Private Chat coming soon for supporters!");
+      }
+    };
+    const rightAction2 =
+      this.props.user.karma_status === "given"
+        ? {
+            icon: "star"
+          }
+        : {
+            icon: "star-border",
+            onPress: () => {
+              this.giveKarma();
+            }
+          };
+    const rightAction3 =
+      this.props.user.friendship_status === "Friends" ||
+      this.props.user.friendship_status === "Pending"
+        ? {
+            icon: "person-add"
+          }
+        : this.props.user.friendship_status === "Confirm Friend"
+          ? {
+              icon: "outline-person_add-24px",
+              onPress: () => {
+                this.acceptFriend();
+              }
+            }
+          : {
+              icon: "outline-person_add-24px",
+              onPress: () => {
+                this.addFriend();
+              }
+            };
 
     if (this.props.userLoading || this.state.isLoading) {
       return (
@@ -211,452 +249,177 @@ export class User extends React.Component {
       );
     }
 
-    if (this.state.viewStats) {
-      stats = (
-        <View style={styles.statsContainer}>
-          <View style={styles.statsLink}>
-            <TouchableHighlight
-              onPress={() =>
-                Linking.openURL(this.props.user.destiny_status_link)
-              }
-              underlayColor="white"
-            >
-              <Text>Destiny Status</Text>
-            </TouchableHighlight>
-          </View>
-          <View style={styles.statsLink}>
-            <TouchableHighlight
-              onPress={() =>
-                Linking.openURL(this.props.user.destiny_tracker_link)
-              }
-              underlayColor="white"
-            >
-              <Text>Destiny Tracker</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-      );
-    } else {
-      stats = null;
-    }
-
-    if (this.props.user.tag_list.length > 0) {
-      tags = (
-        <View style={styles.tagList}>
-          <MaterialCommunityIcons name="tag" size={14} color={colors.grey} />
-          <Panel
-            text={this.props.user.tag_list.map(tag => tag + " ")}
-            numberOfLines={1}
-          />
-        </View>
-      );
-    } else {
-      tags = null;
-    }
-
     return (
-      <View style={styles.container}>
-        <View style={styles.titleBar}>
-          <Image
-            style={styles.profileAvatar}
-            source={
-              this.props.user.computed_avatar_api === "img/default-avatar.png"
-                ? require("../assets/images/default-avatar.png")
-                : { uri: this.props.user.computed_avatar_api }
-            }
+      <View style={styles.outerContainer}>
+        <Header
+          picture={this.props.user.header_background_image_api}
+          heightRatio={0.8}
+          topGradientTransparency={"rgba(0,0,0,0.7)"}
+          middleGradientTransparency={"rgba(0,0,0,0.2)"}
+          bottomGradientTransparency={"rgba(0,0,0,0.7)"}
+        >
+          <NavigationBar
+            back="Back"
+            type="transparent"
+            {...{ navigation, rightAction, rightAction2, rightAction3 }}
           />
-          <View style={styles.titleAndTags}>
+          <View style={styles.container}>
+            <Image
+              style={styles.avatar}
+              source={
+                this.props.user.computed_avatar_api === "img/default-avatar.png"
+                  ? require("../assets/images/default-avatar.png")
+                  : { uri: this.props.user.computed_avatar_api }
+              }
+            />
             <TouchableOpacity
               onLongPress={() => this.copyToClipboard(this.props.user.gamertag)}
               activeOpacity={0.6}
             >
-              <Text style={styles.title}>{this.props.user.gamertag}</Text>
+              <Text
+                color="white"
+                style={[styles.text, styleSheet.typography["title3"]]}
+              >
+                {this.props.user.gamertag}
+              </Text>
             </TouchableOpacity>
-            <SupporterBadge supporter={this.props.user.supporter} />
+
+            <Panel
+              text={
+                this.props.user.tag_list.length > 0
+                  ? this.props.user.tag_list.map(tag => tag + " ")
+                  : null
+              }
+              numberOfLines={2}
+              style={[styles.text, styleSheet.typography["callout"]]}
+            />
+
+            <TabButtons
+              transparent
+              values={["Details", "Groups", "Games"]}
+              {...{ selectedIndex, onChange }}
+            />
           </View>
-          <View style={styles.actionButtons}>
-            <FriendButton
-              friendshipStatus={this.props.user.friendship_status}
-              addFriend={() => this.addFriend()}
-              acceptFriend={() => this.acceptFriend()}
-            />
-            <KarmaButton
-              karmaStatus={this.props.user.karma_status}
-              karmaReceivedFrom={this.props.user.karma_received_from}
-              currentUser={this.props.currentUser}
-              giveKarma={() => this.giveKarma()}
-            />
-            <StatsButton
-              toggleStats={() => this.toggleStats()}
-              destinyStatusLink={() => this.destinyStatusLink()}
-            />
-            {this.state.conversation && <ChatButton onPress={this.openChat} />}
-          </View>
-        </View>
-        <View>{stats}</View>
-        <View style={{ marginRight: 4, paddingRight: 4 }}>{tags}</View>
-        <Panel text={this.props.user.description} numberOfLines={3} />
-        <View style={styles.iconBar}>
-          <PlatformIcon platform={this.props.user.platform} />
-          <PowerIcon lightLevel={this.props.user.light_level} />
-          <KarmaIcon karmasCount={this.props.user.karmas_count} />
-          <PlayScheduleIcon playSchedule={this.props.user.play_schedule} />
-        </View>
-        <View
-          style={{
-            alignItems: "center",
-            flexDirection: "row",
-            justifyContent: "center",
-            padding: 15,
-            paddingTop: 30
-          }}
-        >
-          <Text style={{ color: colors.grey }}>
-            Coming Soon: User Chat/ Direct Messaging
-          </Text>
-        </View>
-        {this.state.conversation && (
-          <ChatPreview
-            room={`conversation-${this.state.conversation.id}`}
-            url={`chat/conversations/conversation-${
-              this.state.conversation.id
-            }`}
-            allowAnon={true}
-            onOpenChat={this.openChat}
-          />
-        )}
-      </View>
-    );
-  }
-}
-
-function KarmaButton(props) {
-  if (props.karmaStatus === "given") {
-    return (
-      <View style={styles.icon}>
-        <TouchableHighlight onPress={null} underlayColor="white">
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="star"
-              size={18}
-              color={colors.mediumGrey}
-            />{" "}
-            Karma Given
-          </Text>
-        </TouchableHighlight>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.icon}>
-        <TouchableHighlight onPress={props.giveKarma} underlayColor="white">
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="star"
-              size={18}
-              color={colors.mediumGrey}
-            />{" "}
-            Give Karma
-          </Text>
-        </TouchableHighlight>
-      </View>
-    );
-  }
-}
-
-function FriendButton(props) {
-  if (
-    props.friendshipStatus === "Friends" ||
-    props.friendshipStatus === "Pending"
-  ) {
-    return (
-      <View style={styles.icon}>
-        <TouchableHighlight onPress={null} underlayColor="white">
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="account-plus"
-              size={18}
-              color={colors.mediumGrey}
-            />{" "}
-            {props.friendshipStatus}
-          </Text>
-        </TouchableHighlight>
-      </View>
-    );
-  } else if (props.friendshipStatus === "Confirm Friend") {
-    return (
-      <View style={styles.icon}>
-        <TouchableHighlight onPress={props.acceptFriend} underlayColor="white">
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="account-plus"
-              size={18}
-              color={colors.mediumGrey}
-            />{" "}
-            Accept Invite
-          </Text>
-        </TouchableHighlight>
-      </View>
-    );
-  } else {
-    return (
-      <View style={styles.icon}>
-        <TouchableHighlight onPress={props.addFriend} underlayColor="white">
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="account-plus"
-              size={18}
-              color={colors.mediumGrey}
-            />{" "}
-            Add Friend
-          </Text>
-        </TouchableHighlight>
-      </View>
-    );
-  }
-}
-
-function StatsButton(props) {
-  return (
-    <View style={styles.icon}>
-      <TouchableHighlight onPress={props.toggleStats} underlayColor="white">
-        <Text style={styles.iconText}>
-          <MaterialCommunityIcons
-            name="chart-bar"
-            size={18}
-            color={colors.mediumGrey}
-          />{" "}
-          View Stats
-        </Text>
-      </TouchableHighlight>
-    </View>
-  );
-}
-
-class ChatButton extends PureComponent {
-  static propTypes = {
-    onPress: PropTypes.func.isRequired
-  };
-
-  render() {
-    return (
-      <View style={styles.icon}>
-        <TouchableHighlight onPress={this.props.onPress} underlayColor="white">
-          <Text style={styles.iconText}>
-            <MaterialCommunityIcons
-              name="forum"
-              size={18}
-              color={colors.mediumGrey}
-            />{" "}
-            Message
-          </Text>
-        </TouchableHighlight>
-      </View>
-    );
-  }
-}
-
-function PlatformIcon(props) {
-  if (props.platform === "ps4") {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons
-          name="playstation"
-          size={14}
-          color={colors.grey}
+        </Header>
+        <UserIconBar
+          platform={this.props.user.platform}
+          lightLevel={this.props.user.light_level}
+          karmasCount={this.props.user.karmas_count}
+          playSchedule={this.props.user.play_schedule}
         />
-        PS4
-      </Text>
-    );
-  } else if (props.platform === "xbox-one") {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons name="xbox" size={14} color={colors.grey} />
-        XBOX
-      </Text>
-    );
-  } else {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons
-          name="microsoft"
-          size={14}
-          color={colors.grey}
-        />
-        PC
-      </Text>
-    );
-  }
-}
 
-function PlayScheduleIcon(props) {
-  var schedule = props.playSchedule
-    .split(" ")
-    .slice(0, 2)
-    .join(" ");
+        {this.state.selectedIndex === 0 ? (
+          <Content style={styles.content}>
+            {this.props.user.friendship_status === "Confirm Friend" ? (
+              <Card
+                onPress={() => {
+                  this.acceptFriend();
+                }}
+              >
+                <Text
+                  style={[
+                    { textAlign: "center", color: colors.primaryBlue },
+                    styleSheet.typography["headline"]
+                  ]}
+                >
+                  Accept Friend Request &raquo;
+                </Text>
+              </Card>
+            ) : null}
 
-  return (
-    <Text style={styles.icon}>
-      <MaterialCommunityIcons name="calendar" size={14} color={colors.grey} />
-      <Text style={styles.icon}>{schedule}</Text>
-    </Text>
-  );
-}
+            {this.props.user.description ? (
+              <Card>
+                <Panel text={this.props.user.description} numberOfLines={3} />
+              </Card>
+            ) : null}
 
-function PowerIcon(props) {
-  if (props.lightLevel) {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons name="gauge" size={14} color={colors.grey} />
-        {props.lightLevel}
-      </Text>
-    );
-  }
-  return (
-    <Text style={styles.icon}>
-      <MaterialCommunityIcons name="gauge" size={14} color={colors.grey} />
-      Any
-    </Text>
-  );
-}
-
-function KarmaIcon(props) {
-  if (props.karmasCount) {
-    return (
-      <Text style={styles.icon}>
-        <MaterialCommunityIcons name="star" size={14} color={colors.grey} />
-        {props.karmasCount}
-      </Text>
-    );
-  }
-  return (
-    <Text style={styles.icon}>
-      <MaterialCommunityIcons name="star" size={14} color={colors.grey} />
-      New!
-    </Text>
-  );
-}
-
-function SupporterBadge(props) {
-  if (props.supporter) {
-    return (
-      <View style={styles.supporterBadge}>
-        <Text style={styles.supporterText}>
-          <Octicons name="flame" size={14} color={colors.white} />
-          SUPPORTER
-        </Text>
+            <Card
+              onPress={() =>
+                Linking.openURL(this.props.user.destiny_status_link)
+              }
+            >
+              <Text
+                style={[{ textAlign: "center" }, styleSheet.typography["body"]]}
+              >
+                View Destiny Status &raquo;
+              </Text>
+            </Card>
+            <Card
+              onPress={() =>
+                Linking.openURL(this.props.user.destiny_tracker_link)
+              }
+            >
+              <Text
+                style={[{ textAlign: "center" }, styleSheet.typography["body"]]}
+              >
+                View Destiny Tracker &raquo;
+              </Text>
+            </Card>
+          </Content>
+        ) : null}
+        {this.state.selectedIndex === 1 ? (
+          <Content style={styles.content}>
+            <GroupsList
+              groups={this.props.user.groups}
+              navigation={this.props.navigation}
+            />
+          </Content>
+        ) : null}
+        {this.state.selectedIndex === 2 ? (
+          <Content style={styles.content}>
+            <Card>
+              <Panel text={"Games Coming Soon..."} numberOfLines={3} />
+            </Card>
+          </Content>
+        ) : null}
       </View>
     );
-  } else {
-    return null;
   }
 }
+
+//
+// <Text
+//   color="white"
+//   style={[styles.text, styleSheet.typography["callout"]]}
+//   numberOfLines={3}
+// >
+//   {this.props.user.tag_list.length > 0
+//     ? this.props.user.tag_list.map(tag => tag + " ")
+//     : null}
+// </Text>
 
 const styles = StyleSheet.create({
   defaultText: {
     color: colors.white
   },
-  container: {
-    padding: 5,
-    paddingTop: 20,
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "flex-start",
-    backgroundColor: colors.white
-  },
-  actionButtons: {
-    flexDirection: "column",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    // marginBottom: 5,
-    flex: 1.3
+  outerContainer: {
+    flex: 1
   },
   loading: {
     alignItems: "center",
     justifyContent: "center"
   },
-  iconBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "stretch",
-    padding: 5,
-    borderTopWidth: 0.5,
-    borderTopColor: "#d6d7da",
-    borderBottomWidth: 0.5,
-    borderBottomColor: "#d6d7da",
-    backgroundColor: colors.white
+  container: {
+    marginHorizontal: styleSheet.spacing.small,
+    flex: 1,
+    justifyContent: "center"
   },
-  icon: {
-    padding: 3,
-    margin: 2,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center"
+  avatar: {
+    borderRadius: 45,
+    borderWidth: 3,
+    borderColor: colors.white,
+    marginVertical: styleSheet.spacing.tiny,
+    height: 90,
+    width: 90,
+    alignSelf: "center"
   },
-  iconText: {
-    marginLeft: 3,
-    fontSize: fontSizes.small,
-    color: colors.mediumGrey
-  },
-  supporterText: {
-    padding: 3,
-    margin: 2,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    fontSize: fontSizes.small,
+  text: {
+    textAlign: "center",
+    marginBottom: styleSheet.spacing.tiny,
     color: colors.white
   },
-  supporterBadge: {
-    margin: 5,
-    backgroundColor: colors.blue,
-    width: 100,
-    alignItems: "center",
-    borderRadius: 3
-  },
-  profileAvatar: {
-    height: 80,
-    width: 80,
-    borderRadius: 40
-    // flex: 1
-  },
-  titleBar: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "stretch",
-    padding: 5
-  },
-
-  title: {
-    padding: 5,
-    color: colors.grey,
-    fontFamily: fontStyles.primaryFont,
-    fontSize: fontSizes.primary
-  },
-  statsContainer: {
-    margin: 5,
-    padding: 5,
-    justifyContent: "center",
-    alignItems: "center"
-  },
-  statsLink: {
-    margin: 5,
-    padding: 5
-  },
-  description: {
-    color: colors.lightGrey,
-    fontSize: fontSizes.secondary
-  },
-  tagList: {
-    flexDirection: "row",
-    alignItems: "center"
-    // paddingBottom: 10
-    // color: colors.lightGrey,
-    // fontSize: fontSizes.secondary
-  },
-  titleAndTags: {
-    flexDirection: "column",
-    flex: 2
+  content: {
+    paddingBottom: styleSheet.spacing.small
   }
 });
 
@@ -679,16 +442,5 @@ const mapStateToProps = state => {
     conversations
   };
 };
-
-// const mapStateToProps = state => {
-//   return {
-//     currentUser: state.users.currentUser,
-//     user: state.users.user,
-//     userLoading: state.users.userLoading,
-//     userError: state.users.error,
-//     conversationsLoading: state.conversations.isLoading;
-//     conversations: state.conversations.conversations
-//   };
-// };
 
 export default connect(mapStateToProps)(connectAlert(User));

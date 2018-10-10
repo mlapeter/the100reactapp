@@ -5,6 +5,7 @@ export async function firebaseSignOut() {
 }
 
 export async function firebaseSignIn(token, allowAnon = false, authedUser) {
+  console.log("firebaseSignIn authedUser groups: ", authedUser.groups);
   let uid = null;
   let anon = false;
 
@@ -27,6 +28,9 @@ export async function firebaseSignIn(token, allowAnon = false, authedUser) {
       avatar: authedUser.computed_avatar_api,
       groups: authedUser.rooms
     };
+
+    console.log("authedUserData: ");
+    console.log(authedUserData);
 
     await firebase
       .database()

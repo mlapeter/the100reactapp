@@ -7,7 +7,7 @@ import {
 } from "../actions/group";
 
 const initialState = {
-  isLoading: false,
+  isLoading: true,
   group: null,
   selectedGroupId: null
 };
@@ -17,7 +17,8 @@ export default (state = initialState, action) => {
     case FETCH_GROUP:
       return {
         ...state,
-        isLoading: true
+        isLoading: true,
+        selectedGroupId: action.groupId
       };
     case FETCH_GROUP_RESULT:
       return {

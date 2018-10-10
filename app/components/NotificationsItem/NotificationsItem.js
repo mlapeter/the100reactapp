@@ -2,11 +2,14 @@ import React, { PureComponent } from "react";
 import { Image, View, Text, TouchableHighlight } from "react-native";
 import TimeAgo from "../TimeAgo";
 import styles from "./styles";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
+
+import Card from "../Card";
 
 export default class NotificationsItem extends PureComponent {
   render() {
     return (
-      <TouchableHighlight
+      <Card
         onPress={() =>
           this.props.item.notification_type === "karma-received" ||
           this.props.item.notification_type === "username-mentioned" ||
@@ -19,11 +22,11 @@ export default class NotificationsItem extends PureComponent {
                   /\D/g,
                   ""
                 )
-              })}
-        underlayColor="white"
+              })
+        }
       >
-        <View style={styles.box}>
-          <View style={styles.leftBox}>
+        <View style={styles.header}>
+          <View style={styles.user}>
             <Image
               style={styles.avatarMini}
               source={
@@ -33,18 +36,22 @@ export default class NotificationsItem extends PureComponent {
                   : { uri: this.props.item.avatar_url }
               }
             />
-          </View>
-          <View style={styles.middleBox}>
-            <View style={{ flexDirection: "row" }}>
-              <Text style={styles.time}>
-                {this.props.item.notification_type} -
+            <View style={styles.username}>
+              <Text style={[styleSheet.typography["headline"]]}>
+                {this.props.item.notification_type
+                  .replace("-", " ")
+                  .replace("-", " ")}
               </Text>
-              <TimeAgo style={styles.time} date={this.props.item.created_at} />
+              <Text style={[styleSheet.typography["footnote"]]}>
+                <TimeAgo date={this.props.item.created_at} />
+              </Text>
             </View>
-            <Text style={styles.message}>{this.props.item.message}</Text>
           </View>
         </View>
-      </TouchableHighlight>
+        <Text style={[styles.text, styleSheet.typography["summary"]]}>
+          {this.props.item.message}
+        </Text>
+      </Card>
     );
   }
 }

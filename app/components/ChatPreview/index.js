@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { Button, View } from "react-native";
+import { Button, Text, TouchableWithoutFeedback, View } from "react-native";
 
 import Chat from "../../components/Chat";
 
@@ -14,17 +14,17 @@ export default class ChatPreview extends Component {
 
   render() {
     return (
-      <View style={this.props.stype}>
-        <View style={{ paddingHorizontal: 12, paddingTop: 12 }}>
-          <Button onPress={this.props.onOpenChat} title="View Chat" />
+      <TouchableWithoutFeedback onPress={this.props.onOpenChat}>
+        <View style={this.props.stype}>
+          <Chat
+            room={this.props.room}
+            url={this.props.url}
+            allowAnon={this.props.allowAnon}
+            preview={true}
+            onPress={this.props.onOpenChat}
+          />
         </View>
-        <Chat
-          room={this.props.room}
-          url={this.props.url}
-          allowAnon={this.props.allowAnon}
-          preview={true}
-        />
-      </View>
+      </TouchableWithoutFeedback>
     );
   }
 }

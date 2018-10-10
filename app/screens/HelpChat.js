@@ -1,9 +1,15 @@
 import React, { Component } from "react";
+import { Analytics, PageHit } from "expo-analytics";
 import { HeaderBackButton, DrawerItems } from "react-navigation";
+import Environment from "../config/environment";
 
 import Chat from "../components/Chat";
 
 export default class HelpChat extends Component {
+  componentWillMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Help Chat"));
+  }
   // static navigationOptions = {
   //   headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} />
   // };

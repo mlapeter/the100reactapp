@@ -7,21 +7,38 @@
     "description":
       "The official mobile app for The100.io. Please leave any feedback or bugs you find in our discord: https://discord.gg/cWDAt4Z thanks!",
     "icon": "./app/assets/images/icon.png",
-    "version": "2.0.3",
+    "version": "2.0.4",
     "slug": "the100",
     "androidStatusBarColor": "#334393",
     "androidStatusBar": {
       "barStyle": "light-content",
       "backgroundColor": "#334393"
     },
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "resizeMode": "contain",
+      "image": "./app/assets/images/logo-splash.png"
+    },
     "ios": {
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.0.1",
       "bundleIdentifier": "io.the100.mobile",
       "supportsTablet": true
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20005
+      "versionCode": 20006
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "the100io",
+            "project": "the100",
+            "authToken": ""
+          }
+        }
+      ]
     }
   }
 }

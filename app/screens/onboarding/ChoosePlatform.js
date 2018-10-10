@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { View, Text, Dimensions, TouchableOpacity, Image } from "react-native";
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../../config/environment";
 
 import { setPlatform } from "../../actions/onboarding";
 
@@ -13,6 +15,11 @@ import ICWindows from "../../assets/images/ic-windows.png";
 
 const { width, height } = Dimensions.get("window");
 class ChoosePlatform extends Component {
+  componentDidMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Onboarding Screen 1"));
+  }
+
   selectPlatform(platform) {
     this.props.dispatch(setPlatform(platform));
     this.props.navigation.navigate("CreateGamer", { platform: platform });

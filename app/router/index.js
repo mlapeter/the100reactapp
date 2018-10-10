@@ -4,7 +4,6 @@ import {
   Button,
   Platform,
   ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -28,6 +27,7 @@ import GamingSession from "../screens/GamingSession";
 import GamingSessionCreate from "../screens/GamingSessionCreate";
 import GamingSessionEdit from "../screens/GamingSessionEdit";
 
+import Groups from "../screens/Groups/";
 import Group from "../screens/Group/";
 import NotificationsList from "../screens/NotificationsList";
 import FriendsList from "../screens/FriendsList";
@@ -53,12 +53,15 @@ const GamingSessionsStack = createStackNavigator({
   GamingSessionsList: { screen: GamingSessionsList },
   GamingSession: { screen: GamingSession },
   Player: { screen: User },
+  Group: { screen: Group },
+  GroupChat: { screen: Chatroom },
   GamingSessionChat: { screen: Chatroom },
   GamingSessionCreate: { screen: GamingSessionCreate },
   GamingSessionEdit: { screen: GamingSessionEdit }
 });
 
-const GroupStack = createStackNavigator({
+const GroupsStack = createStackNavigator({
+  Groups: { screen: Groups },
   Group: { screen: Group },
   GroupChat: { screen: Chatroom }
 });
@@ -71,6 +74,8 @@ const NotificationsStack = createStackNavigator({
 const FriendsStack = createStackNavigator({
   FriendsList: { screen: FriendsList },
   Friend: { screen: User },
+  Group: { screen: Group },
+  GroupChat: { screen: Chatroom },
   Conversation: { screen: Chatroom }
 });
 
@@ -79,7 +84,7 @@ const FriendsStack = createStackNavigator({
 const HomeTabs = createBottomTabNavigator(
   {
     Games: { screen: GamingSessionsStack },
-    Group: { screen: GroupStack },
+    Groups: { screen: GroupsStack },
     NotificationsList: { screen: NotificationsStack },
     FriendsList: { screen: FriendsStack }
   },
@@ -117,8 +122,10 @@ const MenuDrawer = createDrawerNavigator(
     Home: {
       screen: HomeTabs,
       navigationOptions: ({ navigation }) => ({
-        title: "Home",
-        drawerIcon: () => <MaterialCommunityIcons name="home" size={24} />
+        title: "The100.io",
+        drawerIcon: () => (
+          <MaterialCommunityIcons name="menu" size={24} style={styles.icon} />
+        )
       })
     },
     "Edit Profile": {
@@ -146,12 +153,13 @@ const MenuDrawer = createDrawerNavigator(
       })
     }
   },
+
   {
     initialRouteName: "Home",
     contentOptions: {
-      activeTintColor: colors.veryDarkGrey,
+      activeTintColor: colors.white,
       inactiveTintColor: colors.white,
-      activeBackgroundColor: "#E8EAF6",
+      // activeBackgroundColor: "#E8EAF6",
       itemsContainerStyle: {
         opacity: colors.primaryOpacity
       },
@@ -165,20 +173,31 @@ const MenuDrawer = createDrawerNavigator(
     contentComponent: props => (
       <View style={styles.container}>
         <DrawerItems {...props} />
-
-        <View style={styles.menuItem}>
-          <MaterialCommunityIcons
-            name="alert-circle"
-            size={24}
-            style={styles.icon}
-          />
-          <Text style={styles.menuText}>More Coming Soon</Text>
-        </View>
       </View>
     )
   }
 );
 
+// Additional Custom Menu Items
+// <TouchableOpacity
+//   onPress={() => {
+//     navigateTo(props.navigation, "HelpChat");
+//   }}
+// >
+//   <View style={styles.menuItem}>
+//     <MaterialCommunityIcons
+//       name="help-circle"
+//       size={24}
+//       style={styles.icon}
+//     />
+//     <Text style={styles.menuText}>Help Chat</Text>
+//   </View>
+// </TouchableOpacity>
+
+navigateTo = (navigation, route) => {
+  navigation.navigate(route);
+  navigation.closeDrawer();
+};
 // Login/ New User stack if not already logged in
 
 const AuthStack = createStackNavigator({
@@ -224,7 +243,15 @@ GamingSessionEdit.navigationOptions = {
   headerTitle: "Edit Gaming Session"
 };
 
+GamingSession.navigationOptions = {
+  header: null
+};
+
 GamingSessionsList.navigationOptions = {
+  header: null
+};
+
+Groups.navigationOptions = {
   header: null
 };
 
@@ -237,6 +264,10 @@ NotificationsList.navigationOptions = {
 };
 
 FriendsList.navigationOptions = {
+  header: null
+};
+
+User.navigationOptions = {
   header: null
 };
 
@@ -261,8 +292,8 @@ GamingSessionsStack.navigationOptions = {
   )
 };
 
-GroupStack.navigationOptions = {
-  tabBarLabel: "Group",
+GroupsStack.navigationOptions = {
+  tabBarLabel: "Groups",
   tabBarIcon: ({ tintColor, focused }) => (
     <MaterialCommunityIcons
       name={focused ? "account-multiple" : "account-multiple"}
@@ -294,18 +325,6 @@ FriendsStack.navigationOptions = {
   )
 };
 
-User.navigationOptions = {
-  tabBarLabel: "User",
-  // headerRight: <Button title="Add Friend" />,
-  tabBarIcon: ({ tintColor, focused }) => (
-    <MaterialCommunityIcons
-      name={focused ? "account" : "account"}
-      size={26}
-      style={{ color: tintColor }}
-    />
-  )
-};
-
 const BackButton = ({ onPress, title }) => (
   <TouchableOpacity onPress={onPress} style={styles.backButtonStyle}>
     <Text style={styles.backTitle}>{title}</Text>
@@ -321,7 +340,7 @@ const styles = StyleSheet.create({
   menuItem: {
     // padding: 15,
     marginLeft: 15,
-    marginTop: 10,
+    marginVertical: 10,
     flexDirection: "row",
     justifyContent: "flex-start",
     opacity: colors.primaryOpacity

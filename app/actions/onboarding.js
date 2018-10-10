@@ -26,15 +26,9 @@ export const setProfileInfo = (
   playSchedule,
   group
 });
-export const createUser = (
-  email,
-  password,
-  sendNotification,
-  tos_privacy_agreement
-) => ({
+export const createUser = (email, password, tos_privacy_agreement) => ({
   type: CREATE_USER,
   email,
   password,
-  sendNotification,
   tos_privacy_agreement
 });

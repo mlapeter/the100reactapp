@@ -5,12 +5,13 @@ import {
   Image,
   AsyncStorage,
   TouchableOpacity,
-  StatusBar,
   Dimensions
 } from "react-native";
 import { Font } from "expo";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
 
 import { decodeToken, setFirebaseToken } from "../actions/authentication";
 import PreSplash from "../components/PreSplash/PreSplash";
@@ -24,6 +25,11 @@ class AuthMainPage extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Auth Main Page"));
+  }
+
   render() {
     if (this.props.authentication.isLoading) {
       return <PreSplash />;
@@ -31,7 +37,6 @@ class AuthMainPage extends Component {
 
     return (
       <View style={styles.container}>
-        <StatusBar />
         <Image source={ImgLogo} style={styles.logoImage} />
         <TouchableOpacity
           style={styles.loginButton}

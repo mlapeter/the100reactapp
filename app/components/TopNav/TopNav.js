@@ -7,9 +7,9 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
-import { colors, fontSizes, fontStyles } from "../../styles";
-import Ionicons from "react-native-vector-icons/Ionicons";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 import Icon from "react-native-vector-icons/Ionicons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import styles from "./styles";
 
@@ -24,31 +24,6 @@ export default class TopNav extends Component {
       searchText: "SUBMITTED"
     });
   }
-
-  // setSearchText(text) {
-  //   this.setState({
-  //     searchText: text
-  //   });
-  //   this.filterNotes(text);
-  // }
-  //
-  // filterNotes(searchText) {
-  //   var words = [
-  //     "spray",
-  //     "limit",
-  //     "elite",
-  //     "exuberant",
-  //     "destruction",
-  //     "present"
-  //   ];
-  //   let text = searchText.toLowerCase();
-  //
-  //   let result = words.filter(word => {
-  //     if (word.search(text) !== -1) {
-  //       Alert.alert(word);
-  //     }
-  //   });
-  // }
 
   render() {
     return (
@@ -82,7 +57,8 @@ export default class TopNav extends Component {
               <TextInput
                 value={this.props.searchText}
                 onChangeText={searchText =>
-                  this.props.setSearchText(searchText)}
+                  this.props.setSearchText(searchText)
+                }
                 onSubmitEditing={() => this.submitSearch()}
                 placeholder="Search Users"
                 underlineColorAndroid={"transparent"}
@@ -104,21 +80,50 @@ export default class TopNav extends Component {
                 />
               </TouchableOpacity>
             </View>
+          ) : this.props.title ? (
+            <View style={styles.titleContainer}>
+              <Text style={[styles.title, styleSheet.typography["title3"]]}>
+                {this.props.title}
+              </Text>
+            </View>
           ) : (
             <View style={styles.titleContainer}>
-              <Text style={styles.titleText}>{this.props.title}</Text>
+              <Image
+                style={styles.image}
+                source={require("../../assets/images/the-100-logo.png")}
+              />
             </View>
           )}
         </View>
-
         <View style={styles.add}>
-          <TouchableOpacity onPress={() => Alert.alert("Coming Soon")}>
-            <MaterialCommunityIcons
-              name="account-plus"
-              size={24}
-              style={{ color: colors.mediumGrey }}
-            />
-          </TouchableOpacity>
+          {this.props.searchButton ? this.props.searchButton : null}
+        </View>
+        <View style={styles.add}>
+          {this.props.newGameButton ? (
+            <TouchableOpacity
+              style={{ padding: 4 }}
+              onPress={() =>
+                this.props.navigation.navigate("GamingSessionCreate")
+              }
+            >
+              <MaterialIcons
+                name="add-box"
+                size={24}
+                style={{
+                  color: colors.lightGray
+                }}
+              />
+            </TouchableOpacity>
+          ) : null}
+          {this.props.rightAction ? (
+            <TouchableOpacity onPress={() => Alert.alert("Coming Soon")}>
+              <MaterialCommunityIcons
+                name="account-plus"
+                size={24}
+                style={{ color: colors.lightGray }}
+              />
+            </TouchableOpacity>
+          ) : null}
         </View>
       </View>
     );

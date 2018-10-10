@@ -16,7 +16,6 @@ const initialState = {
   play_schedule: "",
   play_style: "",
   group: "",
-  sendNotification: false,
   tos_privacy_agreement: false
 };
 
@@ -40,7 +39,7 @@ export default (state = initialState, action) => {
         age: action.age,
         play_schedule: action.playSchedule,
         play_style: action.playStyle,
-        timezone: action.timezone,
+        time_zone: action.timezone,
         group: action.group
       };
       break;
@@ -49,7 +48,6 @@ export default (state = initialState, action) => {
         ...state,
         email: action.email,
         password: action.password,
-        sendNotification: action.sendNotification,
         tos_privacy_agreement: action.tos_privacy_agreement
       };
       break;

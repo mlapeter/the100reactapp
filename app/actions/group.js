@@ -5,8 +5,9 @@ export const FETCH_GROUP_EMPTY = "FETCH_GROUP_EMPTY";
 
 export const CHANGE_GROUP = "CHANGE_GROUP";
 
-export const fetchGroup = () => ({
-  type: FETCH_GROUP
+export const fetchGroup = groupId => ({
+  type: FETCH_GROUP,
+  groupId
 });
 
 export const changeSelectedGroupId = groupId => ({

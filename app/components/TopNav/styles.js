@@ -6,7 +6,11 @@ export default (styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginVertical: 6
+    paddingVertical: 12,
+    backgroundColor: colors.veryDarkGrey
+  },
+  title: {
+    color: colors.white
   },
 
   menu: {
@@ -16,51 +20,60 @@ export default (styles = StyleSheet.create({
   },
   search: {
     flexDirection: "row",
-    flex: 10,
-    marginLeft: 25,
-    marginRight: 10,
-    paddingVertical: 4,
+    flex: 4,
     alignItems: "center",
-    paddingHorizontal: 5,
-    backgroundColor: colors.white
+    paddingLeft: 15,
+    paddingRight: 0,
+    backgroundColor: colors.veryDarkGrey
   },
   input: {
     flexDirection: "row",
     justifyContent: "space-between",
     flex: 1,
-    padding: 5,
-    borderRadius: 16,
+    paddingHorizontal: 5,
+    paddingVertical: 3,
+    borderRadius: 15,
     borderWidth: 0.5,
     borderColor: "#e0e0e0",
     backgroundColor: colors.searchbar
   },
+  rightActions: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    flex: 1,
+    padding: 5
+  },
   add: {
     flex: 1,
-    marginHorizontal: 10,
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   optionContainer: {
     paddingTop: 20,
     paddingBottom: 10
   },
   avatarMini: {
-    height: 32,
-    width: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.lightGrey
+    height: 36,
+    width: 36,
+    margin: 2,
+    borderRadius: 18,
+    borderWidth: 0.75,
+    borderColor: colors.white
   },
   titleContainer: {
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
     flex: 1,
-    padding: 5
+    paddingLeft: 8
   },
   titleText: {
     flex: 1,
     textAlign: "center",
     fontFamily: fontStyles.lato,
     fontSize: fontSizes.h5
+  },
+  image: {
+    resizeMode: "contain",
+    height: 40
   }
 }));

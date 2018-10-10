@@ -8,6 +8,9 @@ import {
   TouchableWithoutFeedback,
   View
 } from "react-native";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 import GamingSessionForm from "../components/GamingSessionForm/GamingSessionForm";
 import { colors, fontSizes, fontStyles } from "../styles";
 import { connect } from "react-redux";
@@ -23,6 +26,11 @@ class GamingSessionEdit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
+  }
+
+  componentWillMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Gaming Session Edit"));
   }
 
   componentWillReceiveProps(nextProps) {

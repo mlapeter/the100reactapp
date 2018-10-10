@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../config/environment";
+
 import { ActivityIndicator, AsyncStorage, View } from "react-native";
 import GamingSessionForm from "../components/GamingSessionForm/GamingSessionForm";
 import { connect } from "react-redux";
@@ -18,6 +21,8 @@ class GamingSessionCreate extends React.Component {
 
   componentWillMount() {
     this.props.dispatch(fetchGroup());
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Gaming Session Create"));
   }
 
   componentWillReceiveProps(nextProps) {

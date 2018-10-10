@@ -3,15 +3,14 @@ import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
+  AppState,
   AsyncStorage,
   FlatList,
-  Image,
   Keyboard,
   SectionList,
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from "react-native";
@@ -20,26 +19,20 @@ import { Notifications } from "expo";
 import moment from "moment";
 import Environment from "../config/environment";
 import { registerForPushNotificationsAsync } from "../utils/expoPushNotifications";
+import { Analytics, PageHit } from "expo-analytics";
 
-import { colors, fontSizes } from "../styles";
-import PreSplash from "../components/PreSplash/PreSplash";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../app/styles";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
 import GamingSessionsFilter from "../components/GamingSessionsFilter/GamingSessionsFilter";
-
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-// import { Icon } from "@expo/vector-icons";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import Octicons from "react-native-vector-icons/Octicons";
-
+import TopNav from "../components/TopNav/TopNav";
 import Tabs from "../components/Tabs/Tabs";
-
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
-
 import { fetchGames } from "../actions/search";
 import { changeGamingSessionsPage, changePlatform } from "../actions/search";
-
+import { updateUserPushToken } from "../actions/users";
+import { removeToken } from "../actions/authentication";
 import {
   fetchGamingSessions,
   refreshGamingSessions,
@@ -54,9 +47,6 @@ import {
   refreshRecentGamingSessions,
   loadMoreRecentGamingSessions
 } from "../actions/gamingSessions";
-
-import { updateUserPushToken } from "../actions/users";
-import { removeToken } from "../actions/authentication";
 
 class GamingSessionsList extends PureComponent {
   static propTypes = {
@@ -82,11 +72,9 @@ class GamingSessionsList extends PureComponent {
     notification: {}
   };
 
-  // static navigationOptions = {
-  //   header: null
-  // };
-
   componentDidMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Gaming Sessions List"));
     // Todo: save search settings in local storage and retrieve
     // AsyncStorage.getItem("search_platform").then(platform => {
     //   if (platform) {
@@ -95,6 +83,7 @@ class GamingSessionsList extends PureComponent {
     //   }
     // });
     this.fetchGamingSessionsData();
+    this.listenforUpdate();
 
     registerForPushNotificationsAsync().then(token => {
       if (
@@ -127,6 +116,33 @@ class GamingSessionsList extends PureComponent {
     } else {
       this.props.alertWithType("info", "", notification.data.message);
     }
+  };
+
+  listenforUpdate = () => {
+    console.log("LISTENTING FOR UPDATE");
+    AppState.addEventListener("change", async () => {
+      try {
+        const { isAvailable } = await Expo.Updates.checkForUpdateAsync();
+        if (isAvailable) {
+          this.props.alertWithType(
+            "info",
+            "",
+            "Updating App, please standby..."
+          );
+          await Expo.Updates.fetchUpdateAsync();
+          Expo.Updates.reloadFromCache();
+        } else {
+          console.log("NO UPDATE FOUND");
+          // this.props.alertWithType(
+          //   "info",
+          //   "",
+          //   "You're running the latest version!"
+          // );
+        }
+      } catch (e) {
+        console.log("ERROR LISTENING FOR UPDATE: ", e);
+      }
+    });
   };
 
   fetchGamesData() {
@@ -363,47 +379,15 @@ class GamingSessionsList extends PureComponent {
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.topContainer}>
-          <View style={styles.leftContainer}>
-            <TouchableOpacity
-              onPress={() => this.props.navigation.openDrawer()}
-            >
-              {this.props.user.computed_avatar_api &&
-              this.props.user.computed_avatar_api !==
-                "img/default-avatar.png" ? (
-                <Image
-                  style={styles.avatarMini}
-                  source={{ uri: this.props.user.computed_avatar_api }}
-                />
-              ) : (
-                <Image
-                  style={styles.avatarMini}
-                  source={require("../../app/assets/images/default-avatar.png")}
-                />
-              )}
-            </TouchableOpacity>
-          </View>
-          <View style={styles.rightContainer}>
-            <View style={styles.searchOptions}>
-              <GamingSessionsFilter updateFilter={this.updateFilter} />
-            </View>
-            <View style={styles.newButton}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate("GamingSessionCreate")
-                }
-              >
-                <MaterialIcons
-                  name="add-box"
-                  size={28}
-                  style={{
-                    color: colors.mediumGrey
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
+        <TopNav
+          user={this.props.user}
+          navigation={this.props.navigation}
+          title={"Games"}
+          newGameButton={true}
+          searchButton={
+            <GamingSessionsFilter updateFilter={this.updateFilter} />
+          }
+        />
 
         <TouchableWithoutFeedback
           onPress={() => {
@@ -420,7 +404,13 @@ class GamingSessionsList extends PureComponent {
                   />
                 )}
                 renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                  <View
+                    style={{
+                      padding: 5,
+                      paddingTop: 15,
+                      backgroundColor: colors.lightGray
+                    }}
+                  >
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
@@ -449,7 +439,13 @@ class GamingSessionsList extends PureComponent {
                   />
                 )}
                 renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                  <View
+                    style={{
+                      padding: 5,
+                      paddingTop: 15,
+                      backgroundColor: colors.lightGray
+                    }}
+                  >
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
@@ -477,7 +473,13 @@ class GamingSessionsList extends PureComponent {
                   />
                 )}
                 renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                  <View
+                    style={{
+                      padding: 5,
+                      paddingTop: 15,
+                      backgroundColor: colors.lightGray
+                    }}
+                  >
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
@@ -502,7 +504,13 @@ class GamingSessionsList extends PureComponent {
                   />
                 )}
                 renderSectionHeader={({ section: { title } }) => (
-                  <View style={{ padding: 5, backgroundColor: "white" }}>
+                  <View
+                    style={{
+                      padding: 5,
+                      paddingTop: 15,
+                      backgroundColor: colors.lightGray
+                    }}
+                  >
                     <Text style={{ fontWeight: "bold" }}>{title}</Text>
                   </View>
                 )}
@@ -528,47 +536,13 @@ class GamingSessionsList extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    padding: 5,
-    // paddingTop: 25,
     flex: 1,
-    flexDirection: "column",
-    justifyContent: "center",
-    backgroundColor: colors.white
-  },
-  topContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10
-  },
-  leftContainer: {},
-  middleContainer: {
-    padding: 5,
-    justifyContent: "center"
-  },
-  announcementText: {
-    color: colors.lightGrey
-  },
-  rightContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  newButton: {
-    paddingHorizontal: 10
-  },
-  searchOptions: {
-    paddingHorizontal: 10
-  },
-  avatarMini: {
-    marginBottom: 6,
-    height: 32,
-    width: 32,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: colors.lightGrey
+    paddingBottom: styleSheet.spacing.small,
+    backgroundColor: colors.lightGray
   },
   content: {
     flex: 1,
-    backgroundColor: colors.white
+    backgroundColor: colors.lightGray
   },
   alertView: {
     flexDirection: "row",

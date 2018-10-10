@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {
+  ActivityIndicator,
   View,
   Text,
   Dimensions,
@@ -9,6 +10,8 @@ import {
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
 import { createUser } from "../../actions/onboarding";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../../config/environment";
 
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CheckBox from "react-native-check-box";
@@ -24,10 +27,16 @@ class CreateCredential extends Component {
     this.state = {
       email: "",
       password: "",
-      sendNotification: true,
-      tos_privacy_agreement: true
+      tos_privacy_agreement: true,
+      loading: false
     };
   }
+
+  componentDidMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Onboarding Screen 4"));
+  }
+
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.onboarding.error &&
@@ -49,14 +58,20 @@ class CreateCredential extends Component {
   }
   sendUserInfo = () => {
     console.log("submitting user info");
+    console.log(this.state);
+    this.setState({ loading: true });
     this.props.dispatch(
       createUser(
         this.state.email,
         this.state.password,
-        this.state.sendNotification,
         this.state.tos_privacy_agreement
       )
     );
+    setTimeout(() => {
+      this.setState({
+        loading: false
+      });
+    }, 1500);
   };
   render() {
     return (
@@ -80,6 +95,8 @@ class CreateCredential extends Component {
               style={styles.inputGamer}
               placeholderStyle={{ color: "#606060" }}
               underlineColorAndroid={"transparent"}
+              keyboardType={"email-address"}
+              autoCapitalize="none"
             />
           </View>
           <View style={styles.inputRow}>
@@ -93,15 +110,7 @@ class CreateCredential extends Component {
               secureTextEntry
             />
           </View>
-          <CheckBox
-            checkBoxColor="#949599"
-            rightText="Send notifications about my group"
-            rightTextStyle={styles.contentText}
-            isChecked={this.state.sendNotification}
-            onClick={val =>
-              this.setState({ sendNotification: !this.state.sendNotification })
-            }
-          />
+
           <CheckBox
             checkBoxColor="#949599"
             rightText="I agree to privacy policy and terms of service"
@@ -114,7 +123,12 @@ class CreateCredential extends Component {
             }
           />
         </View>
-        {this.state.email && this.state.password ? (
+        {this.state.loading ? (
+          <TouchableOpacity style={styles.continueBtn}>
+            <ActivityIndicator size={"small"} style={{ marginRight: 8 }} />
+            <Text style={styles.btnText}>CREATING...</Text>
+          </TouchableOpacity>
+        ) : this.state.email && this.state.password ? (
           <TouchableOpacity
             style={styles.continueBtn}
             onPress={this.sendUserInfo}
@@ -157,6 +171,7 @@ const styles = {
     alignItems: "center"
   },
   continueBtn: {
+    flexDirection: "row",
     backgroundColor: colors.primaryBlue,
     paddingHorizontal: 30,
     paddingVertical: 15

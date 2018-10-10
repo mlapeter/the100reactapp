@@ -8,11 +8,11 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
+import { Analytics, PageHit } from "expo-analytics";
+import Environment from "../../config/environment";
 
 import { setGammerTag, setGamertag } from "../../actions/onboarding";
-
 import { colors, fontSizes, fontStyles } from "../../styles";
-
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const { width, height } = Dimensions.get("window");
@@ -23,6 +23,11 @@ class CreateGamer extends Component {
     this.state = {
       gamertag: ""
     };
+  }
+
+  componentDidMount() {
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Onboarding Screen 2"));
   }
   setGammerTag = () => {
     this.props.dispatch(setGamertag(this.state.gamertag));
@@ -51,6 +56,7 @@ class CreateGamer extends Component {
             style={styles.inputGamer}
             placeholderStyle={{ color: colors.grey }}
             underlineColorAndroid={"transparent"}
+            autoCapitalize="none"
           />
         </View>
         {this.state.gamertag ? (

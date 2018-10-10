@@ -174,7 +174,6 @@ class Chat extends Component {
       this.props.authedUser
     )
       .then(user => {
-        // this setState is triggering warning for setState on unmounted component
         this.setState({
           uid: user.uid,
           username: user.username,
@@ -365,6 +364,7 @@ class Chat extends Component {
             <Message
               message={message}
               onLongPress={this.props.preview ? null : this.onMessageLongPress}
+              onPress={this.props.onPress}
             />
           )}
           keyExtractor={([key, message], index) => key}
