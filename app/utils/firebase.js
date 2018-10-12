@@ -2,6 +2,8 @@ import Environment from "../config/environment";
 
 import * as firebase from "firebase";
 
+// import * as firebase from "../../node_modules/firebase";
+
 firebase.initializeApp({
   apiKey: Environment["FIREBASE_API_KEY"],
   authDomain: Environment["FIREBASE_AUTH_DOMAIN"],
