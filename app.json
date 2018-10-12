@@ -26,7 +26,8 @@
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20006
+      "versionCode": 20006,
+      "googleServicesFile": "./google-services.json"
     },
     "hooks": {
       "postPublish": [
