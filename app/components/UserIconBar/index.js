@@ -27,6 +27,9 @@ export default class UserIconBar extends React.PureComponent<UserIconBarProps> {
 }
 
 function PlatformIcon(props) {
+  if (props.platform == null) {
+    return null;
+  }
   if (props.platform === "ps4") {
     return (
       <Text style={styles.icon}>
@@ -60,6 +63,9 @@ function PlatformIcon(props) {
 }
 
 function PlayScheduleIcon(props) {
+  if (props.playSchedule == null) {
+    return null;
+  }
   var schedule = props.playSchedule
     .split(" ")
     .slice(0, 2)
@@ -74,6 +80,9 @@ function PlayScheduleIcon(props) {
 }
 
 function PowerIcon(props) {
+  if (props.lightLevel == null) {
+    return null;
+  }
   if (props.lightLevel) {
     return (
       <Text style={styles.icon}>
@@ -91,6 +100,9 @@ function PowerIcon(props) {
 }
 
 function KarmaIcon(props) {
+  if (props.karmasCount == null) {
+    return null;
+  }
   if (props.karmasCount) {
     return (
       <Text style={styles.icon}>

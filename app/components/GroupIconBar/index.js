@@ -29,6 +29,9 @@ export default class GroupIconBar extends React.PureComponent<
 }
 
 function PlatformIcon(props) {
+  if (props.platform == null) {
+    return null;
+  }
   if (props.platform === "ps4") {
     return (
       <Text style={styles.icon}>
@@ -62,6 +65,9 @@ function PlatformIcon(props) {
 }
 
 function PlayScheduleIcon(props) {
+  if (props.playSchedule == null) {
+    return null;
+  }
   var schedule =
     props.playSchedule
       .split(" ")
@@ -77,6 +83,9 @@ function PlayScheduleIcon(props) {
 }
 
 function PlayerIcon(props) {
+  if (props.usersCount == null) {
+    return null;
+  }
   return (
     <Text style={styles.icon}>
       <MaterialCommunityIcons name="account" size={14} color={colors.grey} />
@@ -86,6 +95,9 @@ function PlayerIcon(props) {
 }
 
 function PlayStyleIcon(props) {
+  if (props.play_style == null) {
+    return null;
+  }
   return (
     <Text style={styles.icon}>
       <MaterialCommunityIcons
