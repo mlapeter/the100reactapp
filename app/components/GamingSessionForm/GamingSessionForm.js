@@ -160,7 +160,9 @@ export default class GamingSessionForm extends React.Component {
         created_by: "mobile-app"
       };
     } else if (this.props.gamingSession) {
-      console.log("GAMING SESSION FOUND:");
+      console.log(
+        `EDITING EXISTING GAMING SESSION: ${this.props.gamingSession.id}`
+      );
       // If user is editing existing gaming session
       var value = {
         game_id: this.state.game.id,
