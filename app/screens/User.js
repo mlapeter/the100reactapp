@@ -286,6 +286,7 @@ export class User extends React.Component {
 
             <Panel
               text={
+                this.props.user.tag_list != null &&
                 this.props.user.tag_list.length > 0
                   ? this.props.user.tag_list.map(tag => tag + " ")
                   : null
@@ -376,17 +377,6 @@ export class User extends React.Component {
     );
   }
 }
-
-//
-// <Text
-//   color="white"
-//   style={[styles.text, styleSheet.typography["callout"]]}
-//   numberOfLines={3}
-// >
-//   {this.props.user.tag_list.length > 0
-//     ? this.props.user.tag_list.map(tag => tag + " ")
-//     : null}
-// </Text>
 
 const styles = StyleSheet.create({
   defaultText: {

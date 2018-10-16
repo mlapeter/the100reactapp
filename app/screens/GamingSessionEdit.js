@@ -65,6 +65,8 @@ class GamingSessionEdit extends React.Component {
 
   handlePress = formValue => {
     if (formValue) {
+      console.log("Gaming Session Form Submitted");
+      console.log(formValue);
       this.props.dispatch(editGamingSession(formValue));
     }
   };
