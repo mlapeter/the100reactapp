@@ -88,7 +88,9 @@ export class User extends React.Component {
     this.props.dispatch(fetchUser(userId));
     this.props.dispatch(fetchConversations());
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - User Profile"));
+    analytics
+      .hit(new PageHit("App - User Profile"))
+      .catch(e => console.log(e.message));
   }
 
   componentWillReceiveProps(nextProps) {

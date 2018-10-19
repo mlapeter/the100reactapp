@@ -57,7 +57,9 @@ export default class GamingSessionForm extends React.Component {
     this.setState({
       loading: true
     });
-
+    if (this.props.games == null) {
+      this.fetchActivities(this.props.gameId);
+    }
     let game = this.props.games.find(function(game) {
       return game.id === gameId;
     });

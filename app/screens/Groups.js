@@ -34,7 +34,9 @@ type GroupsProps = {
 class Groups extends React.Component<GroupsProps> {
   componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Groups"));
+    analytics
+      .hit(new PageHit("App - Groups"))
+      .catch(e => console.log(e.message));
   }
 
   render() {

@@ -44,7 +44,9 @@ class Notifications extends PureComponent {
     this.fetchNotificationsData();
 
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Notifications"));
+    analytics
+      .hit(new PageHit("App - Notifications"))
+      .catch(e => console.log(e.message));
   }
 
   componentWillReceiveProps(nextProps) {

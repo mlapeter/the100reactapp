@@ -27,7 +27,9 @@ class CreateGamer extends Component {
 
   componentDidMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Onboarding Screen 2"));
+    analytics
+      .hit(new PageHit("App - Onboarding Screen 2"))
+      .catch(e => console.log(e.message));
   }
   setGammerTag = () => {
     this.props.dispatch(setGamertag(this.state.gamertag));

@@ -17,7 +17,9 @@ const { width, height } = Dimensions.get("window");
 class ChoosePlatform extends Component {
   componentDidMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Onboarding Screen 1"));
+    analytics
+      .hit(new PageHit("App - Onboarding Screen 1"))
+      .catch(e => console.log(e.message));
   }
 
   selectPlatform(platform) {

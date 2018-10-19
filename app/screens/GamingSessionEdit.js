@@ -30,7 +30,9 @@ class GamingSessionEdit extends React.Component {
 
   componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Gaming Session Edit"));
+    analytics
+      .hit(new PageHit("App - Gaming Session Edit"))
+      .catch(e => console.log(e.message));
   }
 
   componentWillReceiveProps(nextProps) {

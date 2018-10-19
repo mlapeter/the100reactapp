@@ -34,7 +34,9 @@ class CreateCredential extends Component {
 
   componentDidMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Onboarding Screen 4"));
+    analytics
+      .hit(new PageHit("App - Onboarding Screen 4"))
+      .catch(e => console.log(e.message));
   }
 
   componentWillReceiveProps(nextProps) {

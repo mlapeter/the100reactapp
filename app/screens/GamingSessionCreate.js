@@ -22,7 +22,9 @@ class GamingSessionCreate extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchGroup());
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Gaming Session Create"));
+    analytics
+      .hit(new PageHit("App - Gaming Session Create"))
+      .catch(e => console.log(e.message));
   }
 
   componentWillReceiveProps(nextProps) {

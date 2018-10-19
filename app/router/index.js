@@ -122,7 +122,7 @@ const MenuDrawer = createDrawerNavigator(
     Home: {
       screen: HomeTabs,
       navigationOptions: ({ navigation }) => ({
-        title: "The100.io",
+        title: "The100.io v" + Expo.Constants.manifest.version,
         drawerIcon: () => (
           <MaterialCommunityIcons name="menu" size={24} style={styles.icon} />
         )

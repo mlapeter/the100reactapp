@@ -31,6 +31,13 @@ class AuthLoading extends React.Component {
     this.bootstrap();
   }
 
+  componentWillUnmount() {
+    console.log("UNMOUNTING AUTHLOADING SCREEN");
+    if (this.authTimer) {
+      clearTimeout(this.authTimer);
+    }
+  }
+
   bootstrap = () => {
     console.log("Starting App");
     loadIcons();
@@ -61,18 +68,7 @@ class AuthLoading extends React.Component {
       AsyncStorage.getItem("id_token").then(token => {
         this.props.dispatch(decodeToken(token));
 
-        // setTimeout(() => {
-        //   if (
-        //     this.props.authentication.isAuthed === true &&
-        //     this.props.users.currentUser.gamertag != null
-        //   ) {
-        //     this.props.navigation.navigate("App");
-        //   } else {
-        //     this.props.navigation.navigate("Auth");
-        //   }
-        // }, 3000);
-
-        setTimeout(() => {
+        this.authTimer = setTimeout(() => {
           if (
             !this.props.users.currentUser ||
             this.props.users.currentUser.gamertag == null ||
@@ -80,14 +76,14 @@ class AuthLoading extends React.Component {
           ) {
             this.props.navigation.navigate("Auth");
           } else {
-            AsyncStorage.getItem("default_group_id").then(groupId => {
-              console.log("default_group_id: ", groupId);
-              if (groupId) {
-                this.props.dispatch(changeSelectedGroupId(groupId));
-              } else {
-                this.props.dispatch(fetchGroup());
-              }
-            });
+            // AsyncStorage.getItem("default_group_id").then(groupId => {
+            //   console.log("default_group_id: ", groupId);
+            //   if (groupId) {
+            //     this.props.dispatch(changeSelectedGroupId(groupId));
+            //   } else {
+            //     this.props.dispatch(fetchGroup());
+            //   }
+            // });
             this.props.navigation.navigate("App");
           }
         }, 3000);

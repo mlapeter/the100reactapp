@@ -13,7 +13,6 @@ import { connectAlert } from "../components/Alert";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
 
-import { decodeToken, setFirebaseToken } from "../actions/authentication";
 import PreSplash from "../components/PreSplash/PreSplash";
 import { colors } from "../styles";
 import ImgLogo from "../assets/images/logo.png";
@@ -27,7 +26,9 @@ class AuthMainPage extends Component {
 
   componentDidMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Auth Main Page"));
+    analytics
+      .hit(new PageHit("App - Auth Main Page"))
+      .catch(e => console.log(e.message));
   }
 
   render() {

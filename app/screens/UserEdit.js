@@ -68,7 +68,9 @@ class UserEdit extends React.Component {
       }
     }, 5000);
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - User Edit"));
+    analytics
+      .hit(new PageHit("App - User Edit"))
+      .catch(e => console.log(e.message));
   }
 
   componentWillReceiveProps(nextProps) {
