@@ -52,7 +52,9 @@ class GamingSession extends React.Component {
   componentDidMount() {
     this.fetchGamingSessionData();
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Gaming Session"));
+    analytics
+      .hit(new PageHit("App - Gaming Session"))
+      .catch(e => console.log(e.message));
   }
 
   fetchGamingSessionData() {

@@ -70,7 +70,9 @@ class FriendsList extends Component {
   componentWillMount() {
     this.fetchAllData();
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Friends List"));
+    analytics
+      .hit(new PageHit("App - Friends List"))
+      .catch(e => console.log(e.message));
   }
 
   componentWillReceiveProps(nextProps) {

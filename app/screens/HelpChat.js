@@ -8,7 +8,9 @@ import Chat from "../components/Chat";
 export default class HelpChat extends Component {
   componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Help Chat"));
+    analytics
+      .hit(new PageHit("App - Help Chat"))
+      .catch(e => console.log(e.message));
   }
   // static navigationOptions = {
   //   headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} />

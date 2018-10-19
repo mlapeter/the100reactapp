@@ -14,6 +14,9 @@
       "barStyle": "light-content",
       "backgroundColor": "#334393"
     },
+    "updates": {
+      "checkAutomatically": "ON_ERROR_RECOVERY"
+    },
     "splash": {
       "backgroundColor": "#ffffff",
       "resizeMode": "contain",

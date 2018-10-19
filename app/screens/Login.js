@@ -25,7 +25,6 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { fetchToken } from "../actions/authentication";
-import { decodeToken } from "../actions/authentication";
 import { setFirebaseToken } from "../actions/authentication";
 import { changeSelectedGroupId, fetchGroup } from "../actions/group";
 
@@ -52,7 +51,9 @@ class Login extends React.Component {
 
   componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Login"));
+    analytics
+      .hit(new PageHit("App - Login"))
+      .catch(e => console.log(e.message));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -78,16 +79,6 @@ class Login extends React.Component {
       username: "",
       password: ""
     });
-    // setTimeout(() => {
-    //   AsyncStorage.getItem("default_group_id").then(groupId => {
-    //     console.log("default_group_id: ", groupId);
-    //     if (groupId) {
-    //       this.props.dispatch(changeSelectedGroupId(groupId));
-    //     } else {
-    //       this.props.dispatch(fetchGroup());
-    //     }
-    //   });
-    // }, 2000);
   }
 
   render() {

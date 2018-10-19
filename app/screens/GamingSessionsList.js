@@ -74,7 +74,9 @@ class GamingSessionsList extends PureComponent {
 
   componentDidMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Gaming Sessions List"));
+    analytics
+      .hit(new PageHit("App - Gaming Sessions List"))
+      .catch(e => console.log(e.message));
     // Todo: save search settings in local storage and retrieve
     // AsyncStorage.getItem("search_platform").then(platform => {
     //   if (platform) {
@@ -119,11 +121,13 @@ class GamingSessionsList extends PureComponent {
   };
 
   listenforUpdate = () => {
-    console.log("LISTENTING FOR UPDATE");
+    let version = Expo.Constants.manifest.version;
+    console.log("version: ", version);
+    console.log("LISTENING FOR UPDATE");
     AppState.addEventListener("change", async () => {
       try {
-        const { isAvailable } = await Expo.Updates.checkForUpdateAsync();
-        if (isAvailable) {
+        const update = await Expo.Updates.checkForUpdateAsync();
+        if (update.isAvailable && update.manifest.version !== version) {
           this.props.alertWithType(
             "info",
             "",
@@ -133,11 +137,11 @@ class GamingSessionsList extends PureComponent {
           Expo.Updates.reloadFromCache();
         } else {
           console.log("NO UPDATE FOUND");
-          // this.props.alertWithType(
-          //   "info",
-          //   "",
-          //   "You're running the latest version!"
-          // );
+          this.props.alertWithType(
+            "info",
+            "",
+            "You're running the latest version: " + version
+          );
         }
       } catch (e) {
         console.log("ERROR LISTENING FOR UPDATE: ", e);

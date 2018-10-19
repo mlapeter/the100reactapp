@@ -73,7 +73,9 @@ class Group extends React.Component {
       });
     }, 500);
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Group"));
+    analytics
+      .hit(new PageHit("App - Group"))
+      .catch(e => console.log(e.message));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -176,7 +178,12 @@ class Group extends React.Component {
   }
 
   render() {
-    if (this.props.isLoading || this.state.isLoading) {
+    let navigation = this.props.navigation;
+    if (
+      this.props.isLoading ||
+      this.state.isLoading ||
+      this.props.group == null
+    ) {
       console.log("group loading");
       return (
         <View style={styles.container}>
@@ -209,7 +216,6 @@ class Group extends React.Component {
           })
         : Alert.alert("", "Join this group first to get full acess to chat!");
 
-    let navigation = this.props.navigation;
     const rightAction = {
       icon: "share",
       onPress: this.onShare

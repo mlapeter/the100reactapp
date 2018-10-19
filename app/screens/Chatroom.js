@@ -22,7 +22,9 @@ export default class Chatroom extends Component {
 
   componentDidMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics.hit(new PageHit("App - Chatroom"));
+    analytics
+      .hit(new PageHit("App - Chatroom"))
+      .catch(e => console.log(e.message));
   }
 
   static navigationOptions = ({ navigation }) => ({
