@@ -137,11 +137,11 @@ class GamingSessionsList extends PureComponent {
           Expo.Updates.reloadFromCache();
         } else {
           console.log("NO UPDATE FOUND");
-          this.props.alertWithType(
-            "info",
-            "",
-            "You're running the latest version: " + version
-          );
+          // this.props.alertWithType(
+          //   "info",
+          //   "",
+          //   "You're running the latest version: " + version
+          // );
         }
       } catch (e) {
         console.log("ERROR LISTENING FOR UPDATE: ", e);

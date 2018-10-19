@@ -7,7 +7,7 @@
     "description":
       "The official mobile app for The100.io. Please leave any feedback or bugs you find in our discord: https://discord.gg/cWDAt4Z thanks!",
     "icon": "./app/assets/images/icon.png",
-    "version": "2.0.41",
+    "version": "2.0.42",
     "slug": "the100",
     "androidStatusBarColor": "#334393",
     "androidStatusBar": {
@@ -39,7 +39,8 @@
           "config": {
             "organization": "the100io",
             "project": "the100",
-            "authToken": ""
+            "authToken":
+              "83d76ee7f8c14efdbba1bc3e8cc6006faef66e810b2149b58f72c02e7f36185f"
           }
         }
       ]
