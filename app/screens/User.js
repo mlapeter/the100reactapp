@@ -186,28 +186,16 @@ export class User extends React.Component {
   }
 
   platformIds = () => {
-    platformsText = "";
-    if (this.props.user.xbox_live_id) {
-      platformsText += `Xbox: ${this.props.user.xbox_live_id}   `;
+    if (
+      this.props.user.xbox_live_id ||
+      this.props.user.psn_id ||
+      this.props.user.xbox_windows_id ||
+      this.props.user.steam_id ||
+      this.props.user.battle_net_id ||
+      this.props.user.uplay_id
+    ) {
+      return true;
     }
-    if (this.props.user.psn_id) {
-      platformsText += `PSN: ${this.props.user.psn_id}   `;
-    }
-    if (this.props.user.xbox_windows_id) {
-      platformsText += `Xbox PC: ${this.props.user.xbox_windows_id}   `;
-    }
-    if (this.props.user.steam_id) {
-      platformsText += `Steam: ${this.props.user.steam_id}   `;
-    }
-    if (this.props.user.battle_net_id) {
-      platformsText += `Battlenet: ${this.props.user.battle_net_id}   `;
-    }
-    if (this.props.user.uplay_id) {
-      platformsText += `Uplay: ${this.props.user.uplay_id}   `;
-    }
-    console.log("PLATFORMS: ");
-    console.log(platformsText);
-    return platformsText;
   };
 
   checkFriendStatus() {
