@@ -52,7 +52,7 @@ import NavigationBar from "../components/NavigationBar";
 import TabButtons from "../components/TabButtons";
 import UserIconBar from "../components/UserIconBar";
 import GroupsList from "../components/GroupsList";
-
+import UserPlatforms from "../components/UserPlatforms";
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 
 Moment.globalFormat = "h:mm";
@@ -184,6 +184,31 @@ export class User extends React.Component {
   destinyStatusLink() {
     Linking.openURL(this.props.user.destiny_status_link);
   }
+
+  platformIds = () => {
+    platformsText = "";
+    if (this.props.user.xbox_live_id) {
+      platformsText += `Xbox: ${this.props.user.xbox_live_id}   `;
+    }
+    if (this.props.user.psn_id) {
+      platformsText += `PSN: ${this.props.user.psn_id}   `;
+    }
+    if (this.props.user.xbox_windows_id) {
+      platformsText += `Xbox PC: ${this.props.user.xbox_windows_id}   `;
+    }
+    if (this.props.user.steam_id) {
+      platformsText += `Steam: ${this.props.user.steam_id}   `;
+    }
+    if (this.props.user.battle_net_id) {
+      platformsText += `Battlenet: ${this.props.user.battle_net_id}   `;
+    }
+    if (this.props.user.uplay_id) {
+      platformsText += `Uplay: ${this.props.user.uplay_id}   `;
+    }
+    console.log("PLATFORMS: ");
+    console.log(platformsText);
+    return platformsText;
+  };
 
   checkFriendStatus() {
     this.postData("/add_friend");
@@ -329,7 +354,19 @@ export class User extends React.Component {
                 </Text>
               </Card>
             ) : null}
-
+            {this.platformIds() ? (
+              <Card>
+                <UserPlatforms
+                  onLongPress={() => this.copyToClipboard()}
+                  xbox_live_id={this.props.user.xbox_live_id}
+                  psn_id={this.props.user.psn_id}
+                  xbox_windows_id={this.props.user.xbox_windows_id}
+                  steam_id={this.props.user.steam_id}
+                  battle_net_id={this.props.user.battle_net_id}
+                  uplay_id={this.props.user.uplay_id}
+                />
+              </Card>
+            ) : null}
             {this.props.user.description ? (
               <Card>
                 <Panel text={this.props.user.description} numberOfLines={3} />

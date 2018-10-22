@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
+  AsyncStorage,
   Button,
   FlatList,
   Image,
@@ -16,6 +17,8 @@ import {
   UIManager,
   View
 } from "react-native";
+import Environment from "../../config/environment";
+
 import Modal from "react-native-modal";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
@@ -209,22 +212,45 @@ class Chat extends Component {
       this.messagesRef
         .push(newMessage)
         .then(() => {
-          // let match = text.match(
-          //   /\B@([a-z0-9_\-#]+?\b|\[[a-z0-9_\-# ]+?\]\B)/gim
-          // );
-          // if (match) {
-          //   let recipientUsername = match[0].replace(/[@\[\]]/gim, "");
-          //   api
-          //     .postUsernameMention(
-          //       this.props.url,
-          //       this.state.username,
-          //       recipientUsername,
-          //       text
-          //     )
-          //     .catch(error => {
-          //       console.error("Failed to post username mention: " + error);
-          //     });
-          // }
+          let match = text.match(
+            /\B@([a-z0-9_\-#]+?\b|\[[a-z0-9_\-# ]+?\]\B)/gim
+          );
+          if (match) {
+            let recipientUsername = match[0].replace(/[@\[\]]/gim, "");
+            console.log("USERNAME MENTIONED");
+            console.log("message: ", text);
+            console.log("chatroom: ", this.props.url);
+            console.log("sender_username: ", this.state.username);
+            console.log("recipient_username: ", recipientUsername);
+
+            AsyncStorage.getItem("id_token").then(token => {
+              fetch(
+                Environment["API_BASE_URL"] +
+                  Environment["API_VERSION"] +
+                  "chatrooms",
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                    Authorization: "Bearer " + token
+                  },
+                  body: JSON.stringify({
+                    message: text,
+                    chatroom: this.props.url,
+                    sender_username: this.state.username,
+                    recipient_username: recipientUsername
+                  })
+                }
+              )
+                .then(response => response.json())
+                .then(responseJson => {
+                  console.log(responseJson);
+                })
+                .catch(error => {
+                  console.error("Failed to post username mention: " + error);
+                });
+            });
+          }
         })
         .catch(error => {
           console.error("Failed to send message: " + error);
@@ -472,7 +498,7 @@ class MessageCreateInput extends PureComponent {
 
   autofillUsername = username => {
     this.setState({
-      text: "@" + username + " ",
+      text: "@[" + username + "] ",
       usernameResults: []
     });
     this.chatInput.focus();
