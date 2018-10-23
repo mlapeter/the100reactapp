@@ -153,6 +153,7 @@ class GamingSession extends React.Component {
     if (
       this.state.isLoading ||
       this.props.gamingSessionLoading ||
+      !this.props.gamingSession ||
       !this.props.gamingSession.confirmed_sessions
     ) {
       return (

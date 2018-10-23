@@ -66,12 +66,6 @@ export default (styles = StyleSheet.create({
     flex: 1,
     paddingLeft: 8
   },
-  titleText: {
-    flex: 1,
-    textAlign: "center",
-    fontFamily: fontStyles.lato,
-    fontSize: fontSizes.h5
-  },
   image: {
     resizeMode: "contain",
     height: 40

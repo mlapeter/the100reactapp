@@ -121,12 +121,12 @@ class GamingSessionsList extends PureComponent {
 
   listenforUpdate = () => {
     let version = Expo.Constants.manifest.version;
-    console.log("version: ", version);
-    console.log("LISTENING FOR UPDATE");
+    console.log("App Version: ", version);
     AppState.addEventListener("change", async () => {
       try {
         const update = await Expo.Updates.checkForUpdateAsync();
         if (update.isAvailable && update.manifest.version !== version) {
+          console.log("Updating App");
           this.props.alertWithType(
             "info",
             "",
@@ -135,12 +135,7 @@ class GamingSessionsList extends PureComponent {
           await Expo.Updates.fetchUpdateAsync();
           Expo.Updates.reloadFromCache();
         } else {
-          console.log("NO UPDATE FOUND");
-          // this.props.alertWithType(
-          //   "info",
-          //   "",
-          //   "You're running the latest version: " + version
-          // );
+          console.log("No Update Found");
         }
       } catch (e) {
         console.log("ERROR LISTENING FOR UPDATE: ", e);
