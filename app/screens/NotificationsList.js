@@ -60,6 +60,7 @@ class Notifications extends PureComponent {
 
   fetchNotificationsData = () => {
     this.props.dispatch(fetchNotifications());
+    Expo.Notifications.setBadgeNumberAsync(0);
   };
 
   handleRefresh = () => {

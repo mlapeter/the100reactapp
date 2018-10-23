@@ -99,7 +99,6 @@ class GamingSessionsList extends PureComponent {
         this._handleNotification
       );
     });
-    Notifications.setBadgeNumberAsync(0);
   }
 
   componentWillReceiveProps(nextProps) {

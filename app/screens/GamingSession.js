@@ -23,12 +23,13 @@ import {
 } from "../actions/gamingSessions";
 import ChatPreview from "../components/ChatPreview";
 import Panel from "../components/Panel/Panel";
-import PlayersList from "../components/PlayersList/PlayersList";
+import PlayersList from "../components/PlayersList";
 import Header from "../components/Header";
 import Content from "../components/Content";
 import Card from "../components/Card";
 import NavigationBar from "../components/NavigationBar";
 import GamingSessionIconBar from "../components/GamingSessionIconBar";
+import GroupsList from "../components/GroupsList";
 import { fetchBungieImage } from "../utils/destinyActivities";
 
 class GamingSession extends React.Component {
@@ -274,6 +275,7 @@ class GamingSession extends React.Component {
             <PlayersList
               confirmedSessions={this.props.gamingSession.confirmed_sessions}
               navigation={this.props.navigation}
+              platform={this.props.gamingSession.platform}
             />
           </Card>
           <Card
@@ -303,6 +305,13 @@ class GamingSession extends React.Component {
               }
             />
           </Card>
+
+          {this.props.gamingSession.group_id == null ? null : (
+            <GroupsList
+              groups={[this.props.gamingSession.group]}
+              navigation={this.props.navigation}
+            />
+          )}
         </Content>
       </View>
     );

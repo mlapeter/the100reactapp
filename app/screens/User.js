@@ -52,7 +52,7 @@ import NavigationBar from "../components/NavigationBar";
 import TabButtons from "../components/TabButtons";
 import UserIconBar from "../components/UserIconBar";
 import GroupsList from "../components/GroupsList";
-
+import UserPlatforms from "../components/UserPlatforms";
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 
 Moment.globalFormat = "h:mm";
@@ -184,6 +184,19 @@ export class User extends React.Component {
   destinyStatusLink() {
     Linking.openURL(this.props.user.destiny_status_link);
   }
+
+  platformIds = () => {
+    if (
+      this.props.user.xbox_live_id ||
+      this.props.user.psn_id ||
+      this.props.user.xbox_windows_id ||
+      this.props.user.steam_id ||
+      this.props.user.battle_net_id ||
+      this.props.user.uplay_id
+    ) {
+      return true;
+    }
+  };
 
   checkFriendStatus() {
     this.postData("/add_friend");
@@ -329,7 +342,19 @@ export class User extends React.Component {
                 </Text>
               </Card>
             ) : null}
-
+            {this.platformIds() ? (
+              <Card>
+                <UserPlatforms
+                  onLongPress={() => this.copyToClipboard()}
+                  xbox_live_id={this.props.user.xbox_live_id}
+                  psn_id={this.props.user.psn_id}
+                  xbox_windows_id={this.props.user.xbox_windows_id}
+                  steam_id={this.props.user.steam_id}
+                  battle_net_id={this.props.user.battle_net_id}
+                  uplay_id={this.props.user.uplay_id}
+                />
+              </Card>
+            ) : null}
             {this.props.user.description ? (
               <Card>
                 <Panel text={this.props.user.description} numberOfLines={3} />

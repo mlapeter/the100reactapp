@@ -15,6 +15,24 @@ PlayersItem.propTypes = {
   user: PropTypes.object.isRequired
 };
 
+function PlatformId(props) {
+  if (props.platform == "xbox-one" && props.user.xbox_live_id) {
+    return props.user.xbox_live_id;
+  } else if (props.platform == "ps4" && props.user.psn_id) {
+    return props.user.psn_id;
+  } else if (props.platform == "pc" && props.user.xbox_windows_id) {
+    return props.user.xbox_windows_id;
+  } else if (props.platform == "steam" && props.user.steam_id) {
+    return props.user.steam_id;
+  } else if (props.platform == "battle-net" && props.user.battle_net_id) {
+    return props.user.battle_net_id;
+  } else if (props.platform == "uplay" && props.user.uplay_id) {
+    return props.user.uplay_id;
+  } else {
+    return props.user.gamertag;
+  }
+}
+
 export default function PlayersItem(props) {
   return (
     <TouchableHighlight
@@ -37,7 +55,7 @@ export default function PlayersItem(props) {
           />
 
           <View style={styles.profileText}>
-            <Text style={styles.gamertag}>{props.user.gamertag}</Text>
+            <Text style={styles.gamertag}>{PlatformId(props)}</Text>
             <Text style={styles.iconText}>
               <MaterialCommunityIcons
                 name="gauge"

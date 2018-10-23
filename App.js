@@ -2,7 +2,7 @@ import App from "./app/index";
 
 import Sentry from "sentry-expo";
 
-Sentry.enableInExpoDevelopment = true;
+// Sentry.enableInExpoDevelopment = true;
 
 // import { SentrySeverity, SentryLog } from 'react-native-sentry';
 

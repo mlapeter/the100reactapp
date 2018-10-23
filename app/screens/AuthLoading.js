@@ -16,7 +16,11 @@ import { changeSelectedGroupId, fetchGroup } from "../actions/group";
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
 
-import { loadIcons, loadCustomIcons } from "../components/Icon";
+import {
+  loadIcons,
+  loadCustomIcons,
+  loadPlatformIcons
+} from "../components/Icon";
 
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 import defaultUserHeaderBackground from "../assets/images/d2-all.jpg";
@@ -42,6 +46,8 @@ class AuthLoading extends React.Component {
     console.log("Starting App");
     loadIcons();
     loadCustomIcons();
+    loadPlatformIcons();
+
     Expo.Asset.loadAsync([
       defaultGroupHeaderBackground,
       defaultUserHeaderBackground,
