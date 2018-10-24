@@ -37,7 +37,8 @@ class GamingSession extends React.Component {
     super(props);
     this.state = {
       reserveButtonVisible: false,
-      isLoading: true
+      isLoading: true,
+      gamingSessionErrorAt: null
     };
     gamingSessionId = this.props.navigation.state.params.gamingSessionId;
   }
@@ -66,12 +67,6 @@ class GamingSession extends React.Component {
     analytics
       .hit(new PageHit("App - Gaming Session"))
       .catch(e => console.log(e.message));
-  }
-
-  componentDidUpdate() {
-    if (this.props.gamingSessionError) {
-      this.props.alertWithType("error", "Error", this.props.gamingSessionError);
-    }
   }
 
   fetchGamingSessionData() {
@@ -352,13 +347,15 @@ const mapStateToProps = state => {
   const user = state.authentication.user;
   const gamingSessionLoading = state.gamingSessions.gamingSessionLoading;
   const gamingSession = state.gamingSessions.gamingSession;
-  const gamingSessionError = state.gamingSessions.error;
+  const gamingSessionsError = state.gamingSessions.error;
+  const gamingSessionsErrorAt = state.gamingSessions.errorAt;
 
   return {
     user,
     gamingSessionLoading,
     gamingSession,
-    gamingSessionError
+    gamingSessionsError,
+    gamingSessionsErrorAt
   };
 };
 

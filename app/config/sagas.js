@@ -211,7 +211,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
   try {
     let token = yield select(state => state.authentication.token);
     const response = yield requestTimeout(
-      10000,
+      8000,
       fetch(endpoint + "&page=" + page, {
         method: "GET",
         headers: { Authorization: "Bearer " + token }
