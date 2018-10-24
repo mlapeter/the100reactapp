@@ -23,13 +23,13 @@
       "image": "./app/assets/images/logo-splash.png"
     },
     "ios": {
-      "buildNumber": "1.0.1",
+      "buildNumber": "1.0.2",
       "bundleIdentifier": "io.the100.mobile",
       "supportsTablet": true
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20006,
+      "versionCode": 20007,
       "googleServicesFile": "./google-services.json"
     },
     "hooks": {
