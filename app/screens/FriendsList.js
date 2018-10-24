@@ -63,10 +63,6 @@ class FriendsList extends Component {
     super(props);
   }
 
-  // static navigationOptions = {
-  //   header: null
-  // };
-
   componentWillMount() {
     this.fetchAllData();
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);

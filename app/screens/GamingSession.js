@@ -43,11 +43,21 @@ class GamingSession extends React.Component {
   }
 
   componentWillMount() {
-    setTimeout(() => {
+    this.loadingTimer = setTimeout(() => {
       this.setState({
         isLoading: false
       });
     }, 800);
+  }
+
+  componentWillUnmount() {
+    console.log("UNMOUNTING GAMING SESSION");
+    if (this.loadingTimer) {
+      clearTimeout(this.loadingTimer);
+    }
+    if (this.updateTimer) {
+      clearTimeout(this.updateTimer);
+    }
   }
 
   componentDidMount() {
@@ -56,6 +66,12 @@ class GamingSession extends React.Component {
     analytics
       .hit(new PageHit("App - Gaming Session"))
       .catch(e => console.log(e.message));
+  }
+
+  componentDidUpdate() {
+    if (this.props.gamingSessionError) {
+      this.props.alertWithType("error", "Error", this.props.gamingSessionError);
+    }
   }
 
   fetchGamingSessionData() {
@@ -109,7 +125,7 @@ class GamingSession extends React.Component {
           } else {
             this.props.navigation.navigate("GamingSessionsList");
           }
-          setTimeout(() => {
+          this.updateTimer = setTimeout(() => {
             this.props.dispatch(fetchMyGamingSessions());
             this.props.dispatch(fetchGroupGamingSessions());
             this.setState({
@@ -154,7 +170,8 @@ class GamingSession extends React.Component {
       this.state.isLoading ||
       this.props.gamingSessionLoading ||
       !this.props.gamingSession ||
-      !this.props.gamingSession.confirmed_sessions
+      !this.props.gamingSession.confirmed_sessions ||
+      !this.props.user
     ) {
       return (
         <View style={styles.container}>
@@ -335,11 +352,13 @@ const mapStateToProps = state => {
   const user = state.authentication.user;
   const gamingSessionLoading = state.gamingSessions.gamingSessionLoading;
   const gamingSession = state.gamingSessions.gamingSession;
+  const gamingSessionError = state.gamingSessions.error;
 
   return {
     user,
     gamingSessionLoading,
-    gamingSession
+    gamingSession,
+    gamingSessionError
   };
 };
 

@@ -133,6 +133,18 @@ import {
   FETCH_CONVERSATIONS_ERROR
 } from "../actions/conversations";
 
+const requestTimeout = (time, promise) =>
+  new Promise((resolve, reject) => {
+    setTimeout(
+      () =>
+        reject(
+          new Error("Request timed out. Try going back or restarting app.")
+        ),
+      time
+    );
+    promise.then(resolve, reject);
+  });
+
 function* fetchToken() {
   console.log("FETCHING TOKEN");
   try {
@@ -152,6 +164,7 @@ function* fetchToken() {
         })
       }
     );
+
     const result = yield response.json();
 
     if (result.error) {
@@ -197,10 +210,13 @@ function* removeToken() {
 function* fetchData(endpoint, page, success, failure, noData) {
   try {
     let token = yield select(state => state.authentication.token);
-    const response = yield fetch(endpoint + "&page=" + page, {
-      method: "GET",
-      headers: { Authorization: "Bearer " + token }
-    });
+    const response = yield requestTimeout(
+      10000,
+      fetch(endpoint + "&page=" + page, {
+        method: "GET",
+        headers: { Authorization: "Bearer " + token }
+      })
+    );
     const result = yield response.json();
     console.log("FETCHING ENDPOINT: ", endpoint);
     if (result.error && result.error === "Not Authorized") {
@@ -218,7 +234,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
       yield put({ type: success, result });
     }
   } catch (e) {
-    console.log("error fetching data");
+    console.log("Error: " + e.message + " ", endpoint);
     yield put({ type: failure, error: e.message });
   }
 }
@@ -513,13 +529,13 @@ function* fetchNotifications() {
 }
 
 function* fetchGames() {
+  console.log("FETCHING GAMES");
   try {
     let endpoint =
       Environment["API_BASE_URL"] + Environment["API_VERSION"] + "games?";
     yield call(fetchData, endpoint, 1, FETCH_GAMES_RESULT, FETCH_GAMES_ERROR);
-    yield call(fetchActivities);
   } catch (e) {
-    yield put({ type: FETCH_GAMES_ERROR, error: e.message });
+    yield put({ type: FETCH_GAMES_ERROR, error: "fetchGames: " + e.message });
   }
 }
 
@@ -533,12 +549,14 @@ function* fetchActivities() {
       return game.id === gameId;
     });
 
-    console.log("GAME -------");
+    console.log("GAME: ", game.name);
     let activities = game.activities.sort((a, b) => a.localeCompare(b));
-
     yield put({ type: FETCH_ACTIVITIES_RESULT, activities });
   } catch (e) {
-    yield put({ type: FETCH_GAMES_ERROR, error: e.message });
+    yield put({
+      type: FETCH_GAMES_ERROR,
+      error: "fetchActivities: " + e.message
+    });
   }
 }
 
@@ -771,8 +789,6 @@ function* refreshGroupMembers() {
 function* fetchGroup() {
   console.log("STARTING FETCH GROUP");
   try {
-    // let userId = yield select(state => state.authentication.user.user_id);
-    // yield call(fetchCurrentUser);
     let user = yield select(state => state.users.currentUser);
     let selectedGroupId = yield select(state => state.group.selectedGroupId);
     let endpoint = "";
@@ -1120,7 +1136,7 @@ export default function* rootSaga() {
   yield takeEvery(DECODE_TOKEN, decodeToken);
 
   yield takeEvery(DECODE_TOKEN_RESULT, fetchCurrentUser);
-  yield takeEvery(DECODE_TOKEN_RESULT, fetchGames);
+  // yield takeEvery(DECODE_TOKEN_RESULT, fetchGames);
 
   // called from authloading.js because we need default group from AsyncStorage
   // yield takeEvery(FETCH_CURRENT_USER_RESULT, fetchGroup);
@@ -1158,7 +1174,7 @@ export default function* rootSaga() {
   yield takeEvery(DELETE_GAMING_SESSION, deleteGamingSession);
 
   yield takeEvery(FETCH_GAMES, fetchGames);
-
+  yield takeEvery(FETCH_GAMES_RESULT, fetchActivities);
   yield takeEvery(CHANGE_GAME, fetchActivities);
 
   yield takeEvery(FETCH_GAMING_SESSION, fetchGamingSession);

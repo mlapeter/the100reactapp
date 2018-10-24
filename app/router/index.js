@@ -358,8 +358,8 @@ const styles = StyleSheet.create({
   },
   headerStyle: {
     backgroundColor: colors.veryDarkGrey,
-    height: 60,
-    paddingHorizontal: 20
+    height: 60
+    // paddingHorizontal: 20
   },
   headerTitleStyle: {
     color: colors.white

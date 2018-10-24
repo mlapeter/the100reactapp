@@ -7,6 +7,7 @@ import {
   AsyncStorage,
   FlatList,
   Keyboard,
+  NetInfo,
   SectionList,
   StyleSheet,
   Text,
@@ -73,6 +74,7 @@ class GamingSessionsList extends PureComponent {
   };
 
   componentDidMount() {
+    console.log("Mounted GamingSessionsList Screen");
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
       .hit(new PageHit("App - Gaming Sessions List"))
@@ -86,6 +88,7 @@ class GamingSessionsList extends PureComponent {
     // });
     this.fetchGamingSessionsData();
     this.listenforUpdate();
+    NetInfo.addEventListener("connectionChange", this.handleConnectivityChange);
 
     registerForPushNotificationsAsync().then(token => {
       if (
@@ -95,10 +98,15 @@ class GamingSessionsList extends PureComponent {
       ) {
         this.props.dispatch(updateUserPushToken(token));
       }
-      this._notificationSubscription = Notifications.addListener(
-        this._handleNotification
+      this.notificationSubscription = Notifications.addListener(
+        this.handleNotification
       );
     });
+  }
+
+  componentWillUnmount() {
+    console.log("Unmounting GamingSessionsList Screen");
+    AppState.removeEventListener("change", this.checkForUpdate);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -110,7 +118,28 @@ class GamingSessionsList extends PureComponent {
     }
   }
 
-  _handleNotification = notification => {
+  handleConnectivityChange = connectionInfo => {
+    console.log(
+      "Connection type: " +
+        connectionInfo.type +
+        ", effectiveType: " +
+        connectionInfo.effectiveType
+    );
+    if (connectionInfo.type == "wifi" || connectionInfo.type == "cellular") {
+      // Connection good
+    } else {
+      this.props.alertWithType(
+        "error",
+        "Warning: Internet Connection Lost",
+        "Connection Status: " + connectionInfo.type
+      );
+      Sentry.captureMessage(
+        `User has no cellular or wifi connection while using app.`
+      );
+    }
+  };
+
+  handleNotification = notification => {
     console.log(notification);
     if (notification.origin === "selected") {
       this.props.navigation.navigate("NotificationsList");
@@ -120,32 +149,28 @@ class GamingSessionsList extends PureComponent {
   };
 
   listenforUpdate = () => {
-    let version = Expo.Constants.manifest.version;
-    console.log("App Version: ", version);
-    AppState.addEventListener("change", async () => {
-      try {
-        const update = await Expo.Updates.checkForUpdateAsync();
-        if (update.isAvailable && update.manifest.version !== version) {
-          console.log("Updating App");
-          this.props.alertWithType(
-            "info",
-            "",
-            "Updating App, please standby..."
-          );
-          await Expo.Updates.fetchUpdateAsync();
-          Expo.Updates.reloadFromCache();
-        } else {
-          console.log("No Update Found");
-        }
-      } catch (e) {
-        console.log("ERROR LISTENING FOR UPDATE: ", e);
-      }
-    });
+    console.log("App Version: ", Expo.Constants.manifest.version);
+    AppState.addEventListener("change", this.checkForUpdate);
   };
 
-  fetchGamesData() {
-    this.props.dispatch(fetchGames());
-  }
+  checkForUpdate = async () => {
+    try {
+      const update = await Expo.Updates.checkForUpdateAsync();
+      if (
+        update.isAvailable &&
+        update.manifest.version !== Expo.Constants.manifest.version
+      ) {
+        console.log("Updating App");
+        this.props.alertWithType("info", "", "Updating App, please standby...");
+        await Expo.Updates.fetchUpdateAsync();
+        Expo.Updates.reloadFromCache();
+      } else {
+        console.log("No Update Found");
+      }
+    } catch (e) {
+      console.log("ERROR LISTENING FOR UPDATE: ", e);
+    }
+  };
 
   updateFilter() {
     console.log(this.searchUrl());
@@ -165,7 +190,6 @@ class GamingSessionsList extends PureComponent {
       Environment["API_BASE_URL"] +
         Environment["API_VERSION"] +
         "gaming_sessions" +
-        // this.props.gamingSessionsPage +
         "?q[game_id_eq]=" +
         this.props.gameId +
         "&q[platform_cont]=" +
@@ -552,7 +576,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   const activity = state.search.activity;
   const gameId = state.search.gameId;
-  const game = state.search.games[gameId] || {};
+  // const game = state.search.games[gameId] || {};
   const notFull = state.search.notFull;
   const platform = state.search.platform;
 
@@ -579,11 +603,12 @@ const mapStateToProps = state => {
     state.gamingSessions.moreGroupGamingSessionsAvailable;
   const moreRecentGamingSessionsAvailable =
     state.gamingSessions.moreRecentGamingSessionsAvailable;
-
   const user = state.users.currentUser;
+  const gamingSessionsError = state.gamingSessions.error;
+
   return {
     activity,
-    game,
+    // game,
     gameId,
     platform,
     notFull,
@@ -605,7 +630,7 @@ const mapStateToProps = state => {
     moreGroupGamingSessionsAvailable,
     moreRecentGamingSessionsAvailable,
 
-    gamingSessionsError: state.gamingSessions.error
+    gamingSessionsError
   };
 };
 

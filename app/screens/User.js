@@ -35,7 +35,7 @@ import {
   fetchPendingFriends,
   fetchGroupMembers
 } from "../actions/users";
-import { fetchConversations } from "../actions/conversations";
+// import { fetchConversations } from "../actions/conversations";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import Moment from "../../node_modules/react-moment";
@@ -60,9 +60,9 @@ Moment.globalLocale = "en";
 
 export class User extends React.Component {
   static propTypes = {
-    navigation: PropTypes.object,
-    conversationsLoading: PropTypes.bool.isRequired,
-    conversations: PropTypes.arrayOf(PropTypes.object.isRequired)
+    navigation: PropTypes.object
+    // conversationsLoading: PropTypes.bool.isRequired,
+    // conversations: PropTypes.arrayOf(PropTypes.object.isRequired)
   };
 
   constructor(props) {
@@ -74,7 +74,7 @@ export class User extends React.Component {
       refreshing: false,
       gameData: "",
       viewStats: false,
-      conversation: this.findConversation(this.props),
+      // conversation: this.findConversation(this.props),
       selectedIndex: 0
     };
 
@@ -83,10 +83,9 @@ export class User extends React.Component {
   }
 
   componentDidMount() {
-    // this.fetchUserData();
     console.log("fetchuser: ", userId);
     this.props.dispatch(fetchUser(userId));
-    this.props.dispatch(fetchConversations());
+    // this.props.dispatch(fetchConversations());
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
       .hit(new PageHit("App - User Profile"))
@@ -102,31 +101,26 @@ export class User extends React.Component {
       );
     }
 
-    let conversation = this.findConversation(nextProps);
-    this.setState(prevState => {
-      if (prevState.conversation !== conversation) {
-        return { conversation: conversation };
-      }
-    });
+    // let conversation = this.findConversation(nextProps);
+    // this.setState(prevState => {
+    //   if (prevState.conversation !== conversation) {
+    //     return { conversation: conversation };
+    //   }
+    // });
   }
 
-  findConversation(props) {
-    if (
-      !props.conversationsLoading &&
-      props.conversations &&
-      props.conversations.length > 0
-    ) {
-      return props.conversations.find(
-        convo => convo.other_user.id === props.user.id
-      );
-    } else {
-      return null;
-    }
-  }
-
-  // fetchUserData() {
-  //   console.log("Fetching User");
-  //   this.props.dispatch(fetchUser(userId));
+  // findConversation(props) {
+  //   if (
+  //     !props.conversationsLoading &&
+  //     props.conversations &&
+  //     props.conversations.length > 0
+  //   ) {
+  //     return props.conversations.find(
+  //       convo => convo.other_user.id === props.user.id
+  //     );
+  //   } else {
+  //     return null;
+  //   }
   // }
 
   giveKarma() {
@@ -217,6 +211,13 @@ export class User extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
     const navigation = this.props.navigation;
+    if (this.props.userLoading || this.state.isLoading || !this.props.user) {
+      return (
+        <View style={styles.container}>
+          <ActivityIndicator />
+        </View>
+      );
+    }
     const onChange = this.onChange;
     const selectedIndex = this.state.selectedIndex;
     const rightAction = {
@@ -255,14 +256,6 @@ export class User extends React.Component {
                 this.addFriend();
               }
             };
-
-    if (this.props.userLoading || this.state.isLoading) {
-      return (
-        <View style={styles.container}>
-          <ActivityIndicator />
-        </View>
-      );
-    }
 
     return (
       <View style={styles.outerContainer}>
@@ -441,22 +434,22 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const currentUser = state.users.currentUser;
+  // const currentUser = state.users.currentUser;
   const user = state.users.user;
-  const users = state.users;
+  // const users = state.users;
   const isUpdating = state.users.isUpdating;
   const userLoading = state.users.userLoading;
-  const conversationsLoading = state.conversations.isLoading;
-  const conversations = state.conversations.conversations;
+  // const conversationsLoading = state.conversations.isLoading;
+  // const conversations = state.conversations.conversations;
 
   return {
-    currentUser,
+    // currentUser,
     user,
-    users,
+    // users,
     isUpdating,
-    userLoading,
-    conversationsLoading,
-    conversations
+    userLoading
+    // conversationsLoading,
+    // conversations
   };
 };
 

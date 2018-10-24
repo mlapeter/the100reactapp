@@ -39,6 +39,13 @@ class CreateCredential extends Component {
       .catch(e => console.log(e.message));
   }
 
+  componentWillUnmount() {
+    console.log("UNMOUNTING CREATE CREDENTIAL");
+    if (this.loadingTimer) {
+      clearTimeout(this.loadingTimer);
+    }
+  }
+
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.onboarding.error &&
@@ -69,7 +76,7 @@ class CreateCredential extends Component {
         this.state.tos_privacy_agreement
       )
     );
-    setTimeout(() => {
+    this.loadingTimer = setTimeout(() => {
       this.setState({
         loading: false
       });

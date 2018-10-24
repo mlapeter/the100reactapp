@@ -29,7 +29,7 @@ class Notifications extends PureComponent {
     navigation: PropTypes.object,
     alertWithType: PropTypes.func,
     notificationsError: PropTypes.string,
-    items: PropTypes.array
+    notifications: PropTypes.array
   };
 
   constructor(props) {
@@ -76,7 +76,10 @@ class Notifications extends PureComponent {
           </View>
         </View>
       );
-    } else if (this.props.items.length < 1) {
+    } else if (
+      !this.props.notifications ||
+      this.props.notifications.length < 1
+    ) {
       return (
         <View>
           <Card onPress={this.fetchNotificationsData}>
@@ -98,7 +101,7 @@ class Notifications extends PureComponent {
           navigation={this.props.navigation}
         />
         <FlatList
-          data={this.props.items}
+          data={this.props.notifications}
           renderItem={({ item }) => (
             <NotificationsItem item={item} navigation={this.props.navigation} />
           )}
@@ -133,12 +136,12 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const items = state.notifications.notifications;
+  const notifications = state.notifications.notifications;
   const isLoading = state.notifications.isLoading;
   const user = state.authentication.user;
 
   return {
-    items,
+    notifications,
     isLoading,
     notificationsError: state.notifications.error,
     user

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import {
+  ActivityIndicator,
   Button,
   ScrollView,
   StyleSheet,
@@ -15,9 +16,14 @@ import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/Ionicons";
 
-import { changePlatform } from "../../actions/search";
-import { changeGame } from "../../actions/search";
-import { changeActivity, toggleNotFull } from "../../actions/search";
+import {
+  changePlatform,
+  changeGame,
+  changeActivity,
+  toggleNotFull,
+  fetchGames
+} from "../../actions/search";
+
 import { connect } from "react-redux";
 import { ButtonGroup, CheckBox } from "react-native-elements";
 import { AsyncStorage } from "react-native";
@@ -49,9 +55,12 @@ class GamingSessionsFilter extends Component {
   }
 
   componentWillMount() {
+    if (!this.props.games) {
+      console.log("re-fetching games");
+      this.props.dispatch(fetchGames());
+    }
     console.log("platform: ", this.props.platform);
     selectedIndex = this.state.platforms.indexOf(this.props.platform);
-    console.log("selectedIndex: ", selectedIndex);
     this.setState({ selectedIndex: selectedIndex });
   }
 
@@ -62,8 +71,8 @@ class GamingSessionsFilter extends Component {
   }
 
   render() {
-    if (this.props.loading) {
-      return null;
+    if (!this.props.games) {
+      return <ActivityIndicator />;
     }
 
     const { selectedIndex } = this.state;
@@ -112,25 +121,6 @@ class GamingSessionsFilter extends Component {
                     )
                   }
                 />
-
-                {/* <Button
-                raised
-                icon={{ name: "home", size: 32 }}
-                buttonStyle={{ backgroundColor: "red", borderRadius: 10 }}
-                textStyle={{ textAlign: "center" }}
-                title={`Welcome to\nReact Native Elements`}
-              /> */}
-
-                {/* <Picker
-                style={styles.pickerStyle}
-                selectedValue={this.props.platform}
-                onValueChange={platform => {
-                  this.props.dispatch(changePlatform(platform));
-                }}
-              >
-                <Picker.Item label="Xbox One" value="xbox-one" />
-                <Picker.Item label="PS4" value="ps4" />
-              </Picker> */}
 
                 <Picker
                   style={styles.pickerStyle}

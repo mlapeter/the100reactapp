@@ -18,7 +18,7 @@ import {
 const initialState = {
   activity: "",
   gameId: Environment["DEFAULT_GAME_ID"],
-  games: [],
+  games: null,
   game: {},
   activities: [],
   notFull: 0,

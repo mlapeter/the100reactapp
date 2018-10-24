@@ -42,6 +42,12 @@ class AuthLoading extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.props.users.currentUser && this.props.users.currentUser.gamertag) {
+      this.props.navigation.navigate("App");
+    }
+  }
+
   bootstrap = () => {
     console.log("Starting App");
     loadIcons();
@@ -75,8 +81,11 @@ class AuthLoading extends React.Component {
       });
       console.log("Fetching ID Token From Local Storage");
       AsyncStorage.getItem("id_token").then(token => {
-        this.props.dispatch(decodeToken(token));
-
+        if (token) {
+          this.props.dispatch(decodeToken(token));
+        } else {
+          this.props.navigation.navigate("Auth");
+        }
         this.authTimer = setTimeout(() => {
           if (
             !this.props.users.currentUser ||
