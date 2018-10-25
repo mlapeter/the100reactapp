@@ -23,7 +23,7 @@
       "image": "./app/assets/images/logo-splash.png"
     },
     "ios": {
-      "buildNumber": "1.0.2",
+      "buildNumber": "1.0.3",
       "bundleIdentifier": "io.the100.mobile",
       "supportsTablet": true
     },
