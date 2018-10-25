@@ -16,6 +16,7 @@ import {
   View
 } from "react-native";
 import { Notifications } from "expo";
+import Sentry from "sentry-expo";
 
 import moment from "moment";
 import Environment from "../config/environment";
@@ -87,7 +88,7 @@ class GamingSessionsList extends PureComponent {
     //   }
     // });
     this.fetchGamingSessionsData();
-    this.listenforUpdate();
+    // this.listenforUpdate();
     NetInfo.addEventListener("connectionChange", this.handleConnectivityChange);
 
     registerForPushNotificationsAsync().then(token => {
@@ -131,7 +132,7 @@ class GamingSessionsList extends PureComponent {
       this.props.alertWithType(
         "error",
         "Warning: Internet Connection Lost",
-        "Connection Status: " + connectionInfo.type
+        ""
       );
       Sentry.captureMessage(
         `User has no cellular or wifi connection while using app.`
@@ -148,29 +149,29 @@ class GamingSessionsList extends PureComponent {
     }
   };
 
-  listenforUpdate = () => {
-    console.log("App Version: ", Expo.Constants.manifest.version);
-    AppState.addEventListener("change", this.checkForUpdate);
-  };
-
-  checkForUpdate = async () => {
-    try {
-      const update = await Expo.Updates.checkForUpdateAsync();
-      if (
-        update.isAvailable &&
-        update.manifest.version !== Expo.Constants.manifest.version
-      ) {
-        console.log("Updating App");
-        this.props.alertWithType("info", "", "Updating App, please standby...");
-        await Expo.Updates.fetchUpdateAsync();
-        Expo.Updates.reloadFromCache();
-      } else {
-        console.log("No Update Found");
-      }
-    } catch (e) {
-      console.log("ERROR LISTENING FOR UPDATE: ", e);
-    }
-  };
+  // listenforUpdate = () => {
+  //   console.log("App Version: ", Expo.Constants.manifest.version);
+  //   AppState.addEventListener("change", this.checkForUpdate);
+  // };
+  //
+  // checkForUpdate = async () => {
+  //   try {
+  //     const update = await Expo.Updates.checkForUpdateAsync();
+  //     if (
+  //       update.isAvailable &&
+  //       update.manifest.version !== Expo.Constants.manifest.version
+  //     ) {
+  //       console.log("Updating App");
+  //       this.props.alertWithType("info", "", "Updating App, please standby...");
+  //       await Expo.Updates.fetchUpdateAsync();
+  //       Expo.Updates.reloadFromCache();
+  //     } else {
+  //       console.log("No Update Found");
+  //     }
+  //   } catch (e) {
+  //     console.log("ERROR LISTENING FOR UPDATE: ", e);
+  //   }
+  // };
 
   updateFilter() {
     console.log(this.searchUrl());
