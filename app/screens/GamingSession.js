@@ -318,8 +318,8 @@ class GamingSession extends React.Component {
               }
             />
           </Card>
-
-          {this.props.gamingSession.group_id == null ? null : (
+          {this.props.gamingSession.group_id == null ||
+          this.props.gamingSession.group_id == 0 ? null : (
             <GroupsList
               groups={[this.props.gamingSession.group]}
               navigation={this.props.navigation}
