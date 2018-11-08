@@ -37,17 +37,28 @@ class GamingSession extends React.Component {
     super(props);
     this.state = {
       reserveButtonVisible: false,
-      isLoading: true
+      isLoading: true,
+      gamingSessionErrorAt: null
     };
     gamingSessionId = this.props.navigation.state.params.gamingSessionId;
   }
 
   componentWillMount() {
-    setTimeout(() => {
+    this.loadingTimer = setTimeout(() => {
       this.setState({
         isLoading: false
       });
     }, 800);
+  }
+
+  componentWillUnmount() {
+    console.log("UNMOUNTING GAMING SESSION");
+    if (this.loadingTimer) {
+      clearTimeout(this.loadingTimer);
+    }
+    if (this.updateTimer) {
+      clearTimeout(this.updateTimer);
+    }
   }
 
   componentDidMount() {
@@ -109,7 +120,7 @@ class GamingSession extends React.Component {
           } else {
             this.props.navigation.navigate("GamingSessionsList");
           }
-          setTimeout(() => {
+          this.updateTimer = setTimeout(() => {
             this.props.dispatch(fetchMyGamingSessions());
             this.props.dispatch(fetchGroupGamingSessions());
             this.setState({
@@ -153,7 +164,9 @@ class GamingSession extends React.Component {
     if (
       this.state.isLoading ||
       this.props.gamingSessionLoading ||
-      !this.props.gamingSession.confirmed_sessions
+      !this.props.gamingSession ||
+      !this.props.gamingSession.confirmed_sessions ||
+      !this.props.user
     ) {
       return (
         <View style={styles.container}>
@@ -334,11 +347,15 @@ const mapStateToProps = state => {
   const user = state.authentication.user;
   const gamingSessionLoading = state.gamingSessions.gamingSessionLoading;
   const gamingSession = state.gamingSessions.gamingSession;
+  const gamingSessionsError = state.gamingSessions.error;
+  const gamingSessionsErrorAt = state.gamingSessions.errorAt;
 
   return {
     user,
     gamingSessionLoading,
-    gamingSession
+    gamingSession,
+    gamingSessionsError,
+    gamingSessionsErrorAt
   };
 };
 

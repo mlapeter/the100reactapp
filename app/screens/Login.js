@@ -131,32 +131,6 @@ class Login extends React.Component {
             >
               <Text style={styles.buttonText}>LOG IN</Text>
             </TouchableOpacity>
-            // <Button
-            //     style={{
-            //     height: 80,
-            //     width: 300,
-            //     padding: 15,
-            //     marginBottom: 15
-            //   }}
-            //   onPress={() => this.userLogin(this)}
-            //   title="Login"
-            // />
-
-            // <TouchableOpacity style={{}} onPress={this.userLogin.bind(this)}>
-            //   <Text
-            //     style={{
-            //       textAlign: "center",
-            //       padding: 15,
-            //       fontFamily: fontStyles.primaryFont,
-            //       fontSize: fontSizes.primary,
-            //       height: 80,
-            //       width: 300,
-            //       marginBottom: 15
-            //     }}
-            //   >
-            //     Login
-            //   </Text>
-            // </TouchableOpacity>
           )}
         </View>
       </KeyboardAwareScrollView>

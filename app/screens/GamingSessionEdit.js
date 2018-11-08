@@ -20,7 +20,7 @@ import {
   editGamingSession,
   refreshMyGamingSessions
 } from "../actions/gamingSessions";
-import { changeGame } from "../actions/search";
+import { changeGame, fetchGames } from "../actions/search";
 
 class GamingSessionEdit extends React.Component {
   constructor(props) {
@@ -33,6 +33,11 @@ class GamingSessionEdit extends React.Component {
     analytics
       .hit(new PageHit("App - Gaming Session Edit"))
       .catch(e => console.log(e.message));
+
+    if (!this.props.games) {
+      console.log("re-fetching games");
+      this.props.dispatch(fetchGames());
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -75,6 +80,10 @@ class GamingSessionEdit extends React.Component {
 
   render() {
     if (
+      !this.props.user ||
+      !this.props.games ||
+      !this.props.gameId ||
+      !this.props.gamingSession ||
       !this.props.gamingSession.game_id ||
       this.props.gamingSessions.isLoading
     ) {

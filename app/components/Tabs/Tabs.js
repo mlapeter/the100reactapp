@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   // Tab text
   tabText: {
     color: colors.lightGrey,
-    fontFamily: "Nunito",
+    fontFamily: "SFProText-Bold",
     fontWeight: "bold",
     textAlign: "center"
   },

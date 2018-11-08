@@ -1,13 +1,13 @@
 {
   "expo": {
-    "sdkVersion": "28.0.0",
+    "sdkVersion": "29.0.0",
     "privacy": "public",
     "scheme": "the100",
     "name": "The100.io",
     "description":
       "The official mobile app for The100.io. Please leave any feedback or bugs you find in our discord: https://discord.gg/cWDAt4Z thanks!",
     "icon": "./app/assets/images/icon.png",
-    "version": "2.0.43",
+    "version": "2.0.45",
     "slug": "the100",
     "androidStatusBarColor": "#334393",
     "androidStatusBar": {
@@ -15,7 +15,7 @@
       "backgroundColor": "#334393"
     },
     "updates": {
-      "checkAutomatically": "ON_ERROR_RECOVERY"
+      "fallbackToCacheTimeout": 0
     },
     "splash": {
       "backgroundColor": "#ffffff",
@@ -23,13 +23,13 @@
       "image": "./app/assets/images/logo-splash.png"
     },
     "ios": {
-      "buildNumber": "1.0.1",
+      "buildNumber": "1.0.0",
       "bundleIdentifier": "io.the100.mobile",
       "supportsTablet": true
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20006,
+      "versionCode": 20008,
       "googleServicesFile": "./google-services.json"
     },
     "hooks": {

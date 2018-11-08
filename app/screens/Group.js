@@ -67,7 +67,7 @@ class Group extends React.Component {
   componentWillMount() {
     console.log("Mounting Group Screen");
     this.fetchGroupData();
-    setTimeout(() => {
+    this.loadingTimer = setTimeout(() => {
       this.setState({
         isLoading: false
       });
@@ -76,6 +76,13 @@ class Group extends React.Component {
     analytics
       .hit(new PageHit("App - Group"))
       .catch(e => console.log(e.message));
+  }
+
+  componentWillUnmount() {
+    console.log("UNMOUNTING GROUP");
+    if (this.loadingTimer) {
+      clearTimeout(this.loadingTimer);
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -182,7 +189,8 @@ class Group extends React.Component {
     if (
       this.props.isLoading ||
       this.state.isLoading ||
-      this.props.group == null
+      !this.props.group ||
+      !this.props.groups
     ) {
       console.log("group loading");
       return (
@@ -299,26 +307,6 @@ class Group extends React.Component {
   }
 }
 
-// <IconBar
-//   details={[
-//     { icon: "tick", caption: "Joined" },
-//     {
-//       icon: "ios-chatbubbles",
-//       caption: "Chat",
-//       link: "GroupChat",
-//       linkParams: {
-//         title: `${this.props.group.name} Chat`,
-//         room: `group-${this.props.group.id}`,
-//         url: `chat/groups/group-${this.props.group.id}`,
-//         allowAnon: false
-//       }
-//     },
-//     { icon: "ios-game-controller-b", caption: "Games" },
-//     { icon: "options", caption: "More", action: this.onShare }
-//   ]}
-//   {...{ navigation }}
-// />
-
 const styles = StyleSheet.create({
   gutter: {
     padding: styleSheet.spacing.tiny
@@ -339,8 +327,8 @@ const mapStateToProps = state => {
     group: state.group.group,
     isLoading: state.group.isLoading,
     groupError: state.group.error,
-    groups: state.users.currentUser.groups,
-    user: state.users.currentUser
+    groups: state.users.currentUser.groups
+    // user: state.users.currentUser
   };
 };
 

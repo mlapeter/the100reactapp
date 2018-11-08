@@ -58,11 +58,7 @@ export const fontSizes = {
 };
 
 export const fontStyles = {
-  primaryFont: "Nunito",
-  gameHeaderFont: "Lato",
-  nunito: "Nunito",
-  lato: "Lato",
-  alternateFont: "Helvetica Neue"
+  primaryFont: "SFProText-Regular"
 };
 
 const darkGray = "#999999";

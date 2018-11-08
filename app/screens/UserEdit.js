@@ -42,7 +42,6 @@ import {
 
 import { firebaseSignOut } from "../utils/user";
 
-// Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";
 
 var Form = t.form.Form;
@@ -54,11 +53,12 @@ class UserEdit extends React.Component {
   }
 
   componentWillMount() {
-    // this.fetchUserEditData(this.props.user);
+    console.log("MOUNTING USER EDIT");
+
     console.log(this.props.user);
     this.props.dispatch(fetchCurrentUser());
-    setTimeout(() => {
-      if (this.props.user.gamertag == null) {
+    this.userTimer = setTimeout(() => {
+      if (!this.props.user || this.props.user.gamertag == null) {
         this.props.alertWithType(
           "error",
           "Error",
@@ -73,15 +73,22 @@ class UserEdit extends React.Component {
       .catch(e => console.log(e.message));
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.users.error && nextProps.users.error === "Not Authorized") {
-      this.props.alertWithType(
-        "error",
-        "Error",
-        "Error connecting to server, please login again."
-      );
-      this.userLogout();
+  componentWillUnmount() {
+    console.log("UNMOUNTING USER EDIT");
+    if (this.userTimer) {
+      clearTimeout(this.userTimer);
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // if (nextProps.users.error && nextProps.users.error === "Not Authorized") {
+    //   this.props.alertWithType(
+    //     "error",
+    //     "Error",
+    //     "Error connecting to server, please login again."
+    //   );
+    //   this.userLogout();
+    // }
     if (
       nextProps.users.error &&
       nextProps.users.errorAt !== this.props.users.errorAt
@@ -96,11 +103,6 @@ class UserEdit extends React.Component {
       this.props.navigation.navigate("Home");
     }
   }
-
-  // fetchUserEditData() {
-  //   console.log("Fetching User");
-  //   this.props.dispatch(fetchCurrentUser());
-  // }
 
   handlePress() {
     console.log("pressed");
@@ -120,11 +122,15 @@ class UserEdit extends React.Component {
   }
 
   render() {
-    if (this.props.currentUserLoading || this.props.isUpdating) {
+    if (
+      this.props.currentUserLoading ||
+      this.props.isUpdating ||
+      !this.props.user
+    ) {
       return (
         <View style={styles.outerContainer}>
           <View style={styles.container}>
-            <PreSplash />
+            <ActivityIndicator />
           </View>
         </View>
       );
@@ -253,13 +259,7 @@ class UserEdit extends React.Component {
         }
       }
     };
-    // if (this.props.userLoading) {
-    //   return (
-    //     <View style={styles.container}>
-    //       <ActivityIndicator />
-    //     </View>
-    //   );
-    // }
+
     // if (this.props.isUpdating) {
     //   return (
     //     <View style={styles.container}>
@@ -267,6 +267,7 @@ class UserEdit extends React.Component {
     //     </View>
     //   );
     // }
+
     return (
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -366,22 +367,16 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  // const authedUser = state.authentication.user;
   const user = state.users.currentUser;
   const users = state.users;
   const isUpdating = state.users.isUpdating;
   const currentUserLoading = state.users.currentUserLoading;
 
-  // const isUpdating = state.users.isUpdating;
-
   return {
-    // authedUser,
     user,
     users,
     isUpdating,
     currentUserLoading
-    // userError: state.users.error,
-    // userUpdated: state.users.userUpdated
   };
 };
 

@@ -42,12 +42,19 @@ class AuthLoading extends React.Component {
     }
   }
 
+  componentDidUpdate() {
+    if (this.props.users.currentUser && this.props.users.currentUser.gamertag) {
+      this.props.navigation.navigate("App");
+    }
+  }
+
   bootstrap = () => {
     console.log("Starting App");
     loadIcons();
     loadCustomIcons();
     loadPlatformIcons();
 
+    console.log("Expo.Asset.loadAsync");
     Expo.Asset.loadAsync([
       defaultGroupHeaderBackground,
       defaultUserHeaderBackground,
@@ -61,50 +68,40 @@ class AuthLoading extends React.Component {
     if (Platform.OS === "android") {
       StatusBar.setBackgroundColor(colors.veryDarkGrey);
     }
+
+    console.log("Font.loadAsync");
     Font.loadAsync({
       "SFProText-Bold": require("../../app/assets/fonts/SF-Pro-Text-Bold.otf"),
       "SFProText-Semibold": require("../../app/assets/fonts/SF-Pro-Text-Semibold.otf"),
-      "SFProText-Regular": require("../../app/assets/fonts/SF-Pro-Text-Regular.otf"),
-      Lato: require("../../app/assets/fonts/Lato-Bold.ttf"),
-      Nunito: require("../../app/assets/fonts/Nunito-Bold.ttf")
+      "SFProText-Regular": require("../../app/assets/fonts/SF-Pro-Text-Regular.otf")
     }).then(result => {
+      console.log("Fetching Firebase Token From Local Storage");
       AsyncStorage.getItem("fb_token").then(token => {
         this.props.dispatch(setFirebaseToken(token));
       });
+      console.log("Fetching ID Token From Local Storage");
       AsyncStorage.getItem("id_token").then(token => {
-        this.props.dispatch(decodeToken(token));
-
+        if (token) {
+          this.props.dispatch(decodeToken(token));
+        } else {
+          this.props.navigation.navigate("Auth");
+        }
         this.authTimer = setTimeout(() => {
           if (
             !this.props.users.currentUser ||
             this.props.users.currentUser.gamertag == null ||
             this.props.authentication.isAuthed !== true
           ) {
+            console.log("Redirecting to Auth");
             this.props.navigation.navigate("Auth");
           } else {
-            // AsyncStorage.getItem("default_group_id").then(groupId => {
-            //   console.log("default_group_id: ", groupId);
-            //   if (groupId) {
-            //     this.props.dispatch(changeSelectedGroupId(groupId));
-            //   } else {
-            //     this.props.dispatch(fetchGroup());
-            //   }
-            // });
+            console.log("Redirecting to App");
             this.props.navigation.navigate("App");
           }
         }, 3000);
       });
     });
   };
-
-  // Fetch the token from storage then navigate to our appropriate place
-  // _bootstrapAsync = async () => {
-  //   const userToken = await AsyncStorage.getItem("userToken");
-  //
-  //   // This will switch to the App screen or Auth screen and this loading
-  //   // screen will be unmounted and thrown away.
-  //   this.props.navigation.navigate(userToken ? "App" : "Auth");
-  // };
 
   // Render any loading content that you like here
   render() {
@@ -119,7 +116,6 @@ class AuthLoading extends React.Component {
 const styles = StyleSheet.create({
   container: {
     padding: 5,
-    // paddingTop: 25,
     flex: 1,
     flexDirection: "column",
     justifyContent: "center",

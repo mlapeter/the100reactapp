@@ -54,15 +54,14 @@ export default class GamingSessionForm extends React.Component {
 
   fetchActivities = gameId => {
     console.log("FETCHING ACTIVITIES IN FORM, GAME ID: ", gameId);
+    console.log(this.props.games);
     this.setState({
       loading: true
     });
-    if (this.props.games == null) {
-      this.fetchActivities(this.props.gameId);
-    }
     let game = this.props.games.find(function(game) {
       return game.id === gameId;
     });
+    console.log("game: ", game.name);
     let activities = game.activities.sort((a, b) => a.localeCompare(b));
     this.setState(
       {

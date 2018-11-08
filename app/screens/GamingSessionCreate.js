@@ -2,7 +2,12 @@ import React, { Component } from "react";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
 
-import { ActivityIndicator, AsyncStorage, View } from "react-native";
+import {
+  ActivityIndicator,
+  AsyncStorage,
+  StyleSheet,
+  View
+} from "react-native";
 import GamingSessionForm from "../components/GamingSessionForm/GamingSessionForm";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -10,7 +15,7 @@ import {
   createGamingSession,
   refreshMyGamingSessions
 } from "../actions/gamingSessions";
-import { changeGame } from "../actions/search";
+import { changeGame, fetchGames } from "../actions/search";
 import { fetchGroup } from "../actions/group";
 
 class GamingSessionCreate extends React.Component {
@@ -25,6 +30,10 @@ class GamingSessionCreate extends React.Component {
     analytics
       .hit(new PageHit("App - Gaming Session Create"))
       .catch(e => console.log(e.message));
+    if (!this.props.games) {
+      console.log("re-fetching games");
+      this.props.dispatch(fetchGames());
+    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -55,17 +64,19 @@ class GamingSessionCreate extends React.Component {
   };
 
   render() {
-    if (!this.props.user) {
+    if (
+      this.props.user == null ||
+      this.props.games == null ||
+      this.props.gameId == null
+    ) {
       return (
-        <View style={styles.outerContainer}>
-          <View style={styles.container}>
-            <ActivityIndicator />
-          </View>
+        <View style={styles.container}>
+          <ActivityIndicator style={styles.loading} />
         </View>
       );
     }
     return (
-      <View style={{ flex: 1 }}>
+      <View style={styles.container}>
         <GamingSessionForm
           handlePress={this.handlePress}
           gameId={this.props.gameId}
@@ -78,6 +89,18 @@ class GamingSessionCreate extends React.Component {
     );
   }
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  loading: {
+    flex: 1,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center"
+  }
+});
 
 const mapStateToProps = state => {
   const gameId = state.search.gameId;

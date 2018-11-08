@@ -166,7 +166,7 @@ export default (state = initialState, action) => {
         ...state,
         error: action.error,
         errorAt: new Date(),
-        gamingSessionLoading: true
+        gamingSessionLoading: false
       };
     case FETCH_GAMING_SESSIONS:
       return {
@@ -185,6 +185,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorAt: new Date(),
         gamingSessionsRefreshing: false,
         moreGamingSessionsAvailable: false
       };
@@ -237,6 +238,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorAt: new Date(),
         myGamingSessionsRefreshing: false
       };
     case FETCH_MY_GAMING_SESSIONS_NO_DATA:
@@ -287,6 +289,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorAt: new Date(),
         groupGamingSessionsRefreshing: false
       };
     case FETCH_GROUP_GAMING_SESSIONS_NO_DATA:
@@ -337,6 +340,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorAt: new Date(),
         recentGamingSessionsRefreshing: false
       };
     case FETCH_RECENT_GAMING_SESSIONS_NO_DATA:
