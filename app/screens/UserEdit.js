@@ -58,7 +58,7 @@ class UserEdit extends React.Component {
     console.log(this.props.user);
     this.props.dispatch(fetchCurrentUser());
     this.userTimer = setTimeout(() => {
-      if (!this.props.user || this.props.user.gamertag == null) {
+      if (!this.props.user || !this.props.user.gamertag) {
         this.props.alertWithType(
           "error",
           "Error",

@@ -89,7 +89,7 @@ class AuthLoading extends React.Component {
         this.authTimer = setTimeout(() => {
           if (
             !this.props.users.currentUser ||
-            this.props.users.currentUser.gamertag == null ||
+            !this.props.users.currentUser.gamertag ||
             this.props.authentication.isAuthed !== true
           ) {
             console.log("Redirecting to Auth");

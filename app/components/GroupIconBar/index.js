@@ -29,7 +29,7 @@ export default class GroupIconBar extends React.PureComponent<
 }
 
 function PlatformIcon(props) {
-  if (props.platform == null) {
+  if (!props.platform) {
     return null;
   }
   if (props.platform === "ps4") {
@@ -65,7 +65,7 @@ function PlatformIcon(props) {
 }
 
 function PlayScheduleIcon(props) {
-  if (props.playSchedule == null) {
+  if (!props.playSchedule) {
     return null;
   }
   var schedule =
@@ -83,7 +83,7 @@ function PlayScheduleIcon(props) {
 }
 
 function PlayerIcon(props) {
-  if (props.usersCount == null) {
+  if (!props.usersCount) {
     return null;
   }
   return (
@@ -95,7 +95,7 @@ function PlayerIcon(props) {
 }
 
 function PlayStyleIcon(props) {
-  if (props.play_style == null) {
+  if (!props.play_style) {
     return null;
   }
   return (

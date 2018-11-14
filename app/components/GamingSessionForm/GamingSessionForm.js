@@ -112,7 +112,8 @@ export default class GamingSessionForm extends React.Component {
     let finalActivities = t.enums(newActivities);
 
     let newGroups = { "": "" };
-    if (this.props.groups) {
+
+    if (this.props.groups && this.props.groups.length != 0) {
       newGroups = toObject(this.props.groups);
     }
     const finalGroups = t.enums(newGroups);

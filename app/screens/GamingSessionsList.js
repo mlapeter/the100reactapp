@@ -94,7 +94,7 @@ class GamingSessionsList extends PureComponent {
     registerForPushNotificationsAsync().then(token => {
       if (
         token &&
-        (this.props.user.expo_push_token == null ||
+        (!this.props.user.expo_push_token ||
           this.props.user.expo_push_token !== token)
       ) {
         this.props.dispatch(updateUserPushToken(token));
@@ -182,7 +182,7 @@ class GamingSessionsList extends PureComponent {
     let platform = this.props.platform;
     console.log("PLATFORM: ", platform);
 
-    if (this.props.platform == null) {
+    if (!this.props.platform) {
       platform = this.props.user.platform;
     }
     console.log("PLATFORM: ", platform);
