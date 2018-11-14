@@ -66,7 +66,7 @@ class GamingSessionItem extends PureComponent {
                 size={14}
                 color={colors.mediumGrey}
               />{" "}
-              {this.props.data.light_level === null
+              {!this.props.data.light_level
                 ? " any"
                 : this.props.data.light_level}
             </Text>

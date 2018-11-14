@@ -55,7 +55,7 @@ export default class UserPlatforms extends React.Component<UserPlatformsProps> {
 
 function XboxLiveIcon(props) {
   console.log("props.xbox_live_id: ", props.xbox_live_id);
-  if (props.xbox_live_id == null) {
+  if (!props.xbox_live_id) {
     return null;
   }
 
@@ -78,7 +78,7 @@ function XboxLiveIcon(props) {
 }
 
 function PsnIcon(props) {
-  if (props.psn_id == null) {
+  if (!props.psn_id) {
     return null;
   }
   return (
@@ -100,7 +100,7 @@ function PsnIcon(props) {
 }
 
 function XboxPcIcon(props) {
-  if (props.xbox_windows_id == null) {
+  if (!props.xbox_windows_id) {
     return null;
   }
   return (
@@ -122,7 +122,7 @@ function XboxPcIcon(props) {
 }
 
 function SteamIcon(props) {
-  if (props.steam_id == null) {
+  if (!props.steam_id) {
     return null;
   }
   return (
@@ -144,7 +144,7 @@ function SteamIcon(props) {
 }
 
 function BnetIcon(props) {
-  if (props.battle_net_id == null) {
+  if (!props.battle_net_id) {
     return null;
   }
   return (
@@ -166,7 +166,7 @@ function BnetIcon(props) {
 }
 
 function UplayIcon(props) {
-  if (props.uplay_id == null) {
+  if (!props.uplay_id) {
     return null;
   }
   return (
