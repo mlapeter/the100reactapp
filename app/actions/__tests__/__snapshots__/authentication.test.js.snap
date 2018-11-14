@@ -1,0 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetchToken creates a properly formatted action 1`] = `
+Object {
+  "password": "12345",
+  "type": "FETCH_TOKEN",
+  "username": "user1",
+}
+`;

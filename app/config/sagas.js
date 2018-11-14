@@ -341,7 +341,9 @@ function* updateUser() {
   console.log("UPDATING USER");
   try {
     let token = yield select(state => state.authentication.token);
-    let userId = yield select(state => state.authentication.user.user_id);
+    // let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.state.users.currentUser.user_id);
+
     let user = yield select(state => state.users.currentUser);
 
     const response = yield fetch(

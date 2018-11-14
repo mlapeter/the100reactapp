@@ -47,7 +47,7 @@ import {
   LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT
 } from "../actions/gamingSessions";
 
-const initialState = {
+export const initialState = {
   endpoint:
     Environment["API_BASE_URL"] +
     Environment["API_VERSION"] +

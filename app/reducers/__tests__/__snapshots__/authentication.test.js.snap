@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`fetches token with valid username and password using snapshot 1`] = `
+Object {
+  "appLoading": true,
+  "firebaseToken": "",
+  "isAuthed": false,
+  "isLoading": true,
+  "password": "pw123",
+  "token": "",
+  "user": Object {},
+  "username": "user1",
+}
+`;
+
+exports[`sets initial state using snapshot 1`] = `
+Object {
+  "appLoading": true,
+  "firebaseToken": "",
+  "isAuthed": false,
+  "isLoading": false,
+  "token": "",
+  "user": Object {},
+}
+`;

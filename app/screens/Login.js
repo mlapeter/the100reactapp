@@ -21,6 +21,7 @@ import Environment from "../config/environment";
 
 import { Container } from "../components/Container";
 import PreSplash from "../components/PreSplash/PreSplash";
+import ErrorBoundary from "../components/ErrorBoundary";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";

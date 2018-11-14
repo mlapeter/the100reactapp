@@ -130,8 +130,8 @@ const mapStateToProps = state => {
 
   return {
     authentication,
-    users,
-    authenticationError: state.authentication.error
+    users
+    // authenticationError: state.authentication.error
   };
 };
 

@@ -5,11 +5,16 @@
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-preset-flow": "^6.23.0",
+    "enzyme": "3.7.0",
+    "enzyme-adapter-react-16": "1.7.0",
     "flow-bin": "^0.63.1",
     "flow-result-checker": "^0.3.0",
     "jest-expo": "^29.0.0",
+    "jest-fetch-mock": "1.7.4",
+    "react-dom": "16.6.3",
     "react-native-scripts": "^1.14.1",
     "react-test-renderer": "16.0.0-alpha.12",
+    "redux-mock-store": "1.5.3",
     "remote-redux-devtools": "^0.5.12"
   },
   "main": "./node_modules/react-native-scripts/build/bin/crna-entry.js",
@@ -22,7 +27,13 @@
     "flow": "flow check --show-all-errors | flow-result-checker"
   },
   "jest": {
-    "preset": "jest-expo"
+    "preset": "jest-expo",
+    "setupFiles": [
+      "./tests/setup.js"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!(jest-)?react-native|tcomb-form-native|react-native-aws3|sentry-expo|react-navigation|react-clone-referenced-element|expo|@expo/*|exponent|@exponent/*)"
+    ]
   },
   "dependencies": {
     "android-versions": "^1.2.1",

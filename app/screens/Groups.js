@@ -1,6 +1,6 @@
 // @flow
 import * as React from "react";
-import { Alert, Image, StyleSheet, View } from "react-native";
+import { Alert, Image, StyleSheet, Text, View } from "react-native";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
 
@@ -47,12 +47,18 @@ class Groups extends React.Component<GroupsProps> {
           user={this.props.user}
           navigation={this.props.navigation}
         />
-
-        <GroupsList
-          groups={this.props.groups}
-          navigation={this.props.navigation}
-          isLoading={this.props.isLoading}
-        />
+        {this.props.user.groups ? (
+          <GroupsList
+            groups={this.props.user.groups}
+            navigation={this.props.navigation}
+            // isLoading={this.props.isLoading}
+          />
+        ) : (
+          <Text>
+            You haven't joined any groups yet! You can join any group you like
+            by tapping the join icon at the top right of the group page.
+          </Text>
+        )}
       </View>
     );
   }
@@ -67,14 +73,13 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const groups = state.users.currentUser.groups;
-  const isLoading = state.group.isLoading;
-  const user = state.authentication.user;
+  // const groups = state.users.currentUser.groups;
+  // const isLoading = state.group.isLoading;
+  const user = state.users.currentUser;
 
   return {
-    groups,
-    isLoading,
-    groupsError: state.group.error,
+    // groups,
+    // isLoading,
     user
   };
 };

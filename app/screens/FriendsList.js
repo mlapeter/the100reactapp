@@ -346,7 +346,7 @@ const mapStateToProps = state => {
   const morePendingFriendsAvailable = state.users.morePendingFriendsAvailable;
   const isLoadingPendingFriends = state.users.isLoadingPendingFriends;
 
-  const user = state.authentication.user;
+  const user = state.users.currentUser;
 
   return {
     isLoadingFriends,

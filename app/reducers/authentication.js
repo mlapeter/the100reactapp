@@ -10,7 +10,7 @@ import {
   SET_FIREBASE_TOKEN
 } from "../actions/authentication";
 
-const initialState = {
+export const initialState = {
   appLoading: true,
   isLoading: false,
   isAuthed: false,
