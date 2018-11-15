@@ -192,7 +192,7 @@ class Group extends React.Component {
     }
 
     function JoinButton(props) {
-      if (props.joined == null) {
+      if (!props.joined) {
         return (
           <View style={styles.icon}>
             <TouchableHighlight onPress={props.joinGroup} underlayColor="white">

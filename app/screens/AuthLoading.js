@@ -100,6 +100,7 @@ class AuthLoading extends React.Component {
         //     this.props.navigation.navigate("App");
         //   }
         // }, 3000);
+
       });
     });
   };

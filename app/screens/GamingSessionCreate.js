@@ -64,11 +64,7 @@ class GamingSessionCreate extends React.Component {
   };
 
   render() {
-    if (
-      this.props.user == null ||
-      this.props.games == null ||
-      this.props.gameId == null
-    ) {
+    if (!this.props.user || !this.props.games || !this.props.gameId) {
       return (
         <View style={styles.container}>
           <ActivityIndicator style={styles.loading} />

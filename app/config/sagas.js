@@ -453,7 +453,7 @@ function* createGamingSession() {
           description: gamingSession.description,
           activity: gamingSession.activity,
           start_time: gamingSession.start_time,
-          group_name: gamingSession.group,
+          group_name: gamingSession.group ? gamingSession.group : null,
           friends_only: gamingSession.friends_only,
           group_only: gamingSession.group_only,
           make_auto_public: gamingSession.make_auto_public,
@@ -461,7 +461,8 @@ function* createGamingSession() {
           sherpa_requested: gamingSession.sherpa_requested,
           headset_required: gamingSession.mic_required,
           party_size: gamingSession.party_size,
-          platform: gamingSession.platform
+          platform: gamingSession.platform,
+          created_from: "mobile-app"
         })
       }
     );
@@ -826,7 +827,7 @@ function* fetchGroup() {
     let user = yield select(state => state.users.currentUser);
     let selectedGroupId = yield select(state => state.group.selectedGroupId);
     let endpoint = "";
-    if (selectedGroupId == null && user.groups && user.groups[0]) {
+    if (!selectedGroupId && user.groups && user.groups[0]) {
       endpoint =
         Environment["API_BASE_URL"] +
         Environment["API_VERSION"] +
@@ -835,7 +836,7 @@ function* fetchGroup() {
       console.log("FETCHING GROUP (no default group): ", endpoint);
 
       yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
-    } else if (selectedGroupId == null) {
+    } else if (!selectedGroupId) {
       console.log("FETCH GROUP - EMPTY");
       yield put({ type: FETCH_GROUP_EMPTY });
     } else {
