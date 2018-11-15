@@ -25,9 +25,8 @@ type User = {
 };
 
 type GroupsProps = {
-  groups: Array<Group>,
+  // groups: Array<Group>,
   user: User,
-  isLoading: boolean,
   navigation: NavigationScreenProp<{}>
 };
 
@@ -51,7 +50,6 @@ class Groups extends React.Component<GroupsProps> {
           <GroupsList
             groups={this.props.user.groups}
             navigation={this.props.navigation}
-            // isLoading={this.props.isLoading}
           />
         ) : (
           <Text>

@@ -8,6 +8,9 @@ export const DECODE_TOKEN_ERROR = "DECODE_TOKEN_ERROR";
 export const REMOVE_TOKEN = "REMOVE_TOKEN";
 export const REMOVE_TOKEN_ERROR = "REMOVE_TOKEN_ERROR";
 export const SET_FIREBASE_TOKEN = "SET_FIREBASE_TOKEN";
+export const RESET_PASSWORD = "RESET_PASSWORD";
+export const RESET_PASSWORD_RESULT = "RESET_PASSWORD_RESULT";
+export const RESET_PASSWORD_ERROR = "RESET_PASSWORD_ERROR";
 
 export const fetchToken = (username, password) => ({
   type: FETCH_TOKEN,
@@ -27,4 +30,9 @@ export const removeToken = () => ({
 export const setFirebaseToken = token => ({
   type: SET_FIREBASE_TOKEN,
   token
+});
+
+export const resetPassword = resetPasswordEmail => ({
+  type: RESET_PASSWORD,
+  resetPasswordEmail
 });

@@ -12,7 +12,10 @@ import {
   DECODE_TOKEN_RESULT,
   DECODE_TOKEN_ERROR,
   REMOVE_TOKEN,
-  REMOVE_TOKEN_ERROR
+  REMOVE_TOKEN_ERROR,
+  RESET_PASSWORD,
+  RESET_PASSWORD_RESULT,
+  RESET_PASSWORD_ERROR
 } from "../actions/authentication";
 
 import {
@@ -189,7 +192,6 @@ function* decodeToken() {
   try {
     let token = yield select(state => state.authentication.token);
     let result = jwtDecode(token);
-    // let userId = yield select(state => state.authentication.user.user_id);
     yield put({ type: DECODE_TOKEN_RESULT, result });
   } catch (e) {
     yield put({ type: DECODE_TOKEN_ERROR, error: e.message });
@@ -277,6 +279,36 @@ function* postData(method, endpoint, body, success, failure) {
   }
 }
 
+const resetPassword = function*() {
+  console.log("RESETTING PASSWORD -----------");
+  try {
+    let resetPasswordEmail = yield select(
+      state => state.authentication.resetPasswordEmail
+    );
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "password_resets";
+    let body = JSON.stringify({
+      email: resetPasswordEmail
+    });
+
+    yield call(
+      postData,
+      "POST",
+      endpoint,
+      body,
+      RESET_PASSWORD_RESULT,
+      RESET_PASSWORD_ERROR
+    );
+  } catch (e) {
+    yield put({
+      type: RESET_PASSWORD_ERROR,
+      error: "Error Resetting Password: " + e.message
+    });
+  }
+};
+
 function* deleteGamingSession() {
   console.log("DELETING GAMING SESSION");
   try {
@@ -312,7 +344,7 @@ function* updateUserPushToken() {
   console.log("UPDATING USER PUSH TOKEN");
   try {
     let token = yield select(state => state.authentication.token);
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let expoPushToken = yield select(state => state.users.expoPushToken);
 
     const response = yield fetch(
@@ -342,7 +374,7 @@ function* updateUser() {
   try {
     let token = yield select(state => state.authentication.token);
     // let userId = yield select(state => state.authentication.user.user_id);
-    let userId = yield select(state => state.state.users.currentUser.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
 
     let user = yield select(state => state.users.currentUser);
 
@@ -510,7 +542,7 @@ function* editGamingSession() {
 function* fetchNotifications() {
   console.log("FETCHING NOTIFICATIONS");
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let endpoint =
       Environment["API_BASE_URL"] +
       Environment["API_VERSION"] +
@@ -610,7 +642,7 @@ function* fetchFriends() {
   try {
     yield put({ type: CHANGE_FRIENDS_PAGE, page: 1 });
 
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     // let current_page = yield select(state => state.users.friendsPage);
 
     let endpoint =
@@ -634,7 +666,7 @@ function* fetchFriends() {
 
 function* loadMoreFriends() {
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(state => state.users.friendsPage);
     yield put({ type: CHANGE_FRIENDS_PAGE, page: current_page + 1 });
     let new_page = yield select(state => state.users.friendsPage);
@@ -662,7 +694,7 @@ function* fetchPendingFriends() {
   try {
     yield put({ type: CHANGE_PENDING_FRIENDS_PAGE, page: 1 });
 
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(state => state.users.pendingFriendsPage);
 
     let endpoint =
@@ -686,7 +718,7 @@ function* fetchPendingFriends() {
 
 function* loadMorePendingFriends() {
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(state => state.users.pendingFriendsPage);
     yield put({ type: CHANGE_PENDING_FRIENDS_PAGE, page: current_page + 1 });
     let new_page = yield select(state => state.users.pendingFriendsPage);
@@ -713,7 +745,7 @@ function* loadMorePendingFriends() {
 function* fetchGroupMembers() {
   console.log("FETCHING GROUP MEMBERS");
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(state => state.users.groupMembersPage);
 
     let endpoint =
@@ -739,7 +771,7 @@ function* fetchGroupMembers() {
 function* loadMoreGroupMembers() {
   console.log("LOAD MORE GROUP MEMBERS");
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(state => state.users.groupMembersPage);
     yield put({ type: CHANGE_GROUP_MEMBERS_PAGE, page: current_page + 1 });
     let new_page = yield select(state => state.users.groupMembersPage);
@@ -766,7 +798,7 @@ function* loadMoreGroupMembers() {
 function* refreshGroupMembers() {
   console.log("REFRESH GROUP MEMBERS");
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     yield put({ type: CHANGE_GROUP_MEMBERS_PAGE, page: 1 });
     let new_page = yield select(state => state.users.groupMembersPage);
     let endpoint =
@@ -895,7 +927,7 @@ function* fetchMyGamingSessions() {
     yield put({ type: CLEAR_MY_GAMING_SESSIONS });
     yield put({ type: CHANGE_MY_GAMING_SESSIONS_PAGE, page: 1 });
 
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(state => state.search.myGamingSessionsPage);
     let endpoint =
       Environment["API_BASE_URL"] +
@@ -920,7 +952,7 @@ function* fetchMyGamingSessions() {
 function* loadMoreMyGamingSessions() {
   console.log("LOAD MORE MY GAMING SESSIONS");
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(state => state.search.myGamingSessionsPage);
     yield put({ type: CHANGE_MY_GAMING_SESSIONS_PAGE, page: current_page + 1 });
     let new_page = yield select(state => state.search.myGamingSessionsPage);
@@ -949,7 +981,7 @@ function* fetchGroupGamingSessions() {
     yield put({ type: CLEAR_GROUP_GAMING_SESSIONS });
     yield put({ type: CHANGE_GROUP_GAMING_SESSIONS_PAGE, page: 1 });
 
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(
       state => state.search.groupGamingSessionsPage
     );
@@ -975,7 +1007,7 @@ function* fetchGroupGamingSessions() {
 function* loadMoreGroupGamingSessions() {
   console.log("LOAD MORE GROUP GAMING SESSIONS");
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(
       state => state.search.groupGamingSessionsPage
     );
@@ -1010,7 +1042,7 @@ function* fetchRecentGamingSessions() {
     yield put({ type: CLEAR_RECENT_GAMING_SESSIONS });
     yield put({ type: CHANGE_RECENT_GAMING_SESSIONS_PAGE, page: 1 });
 
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(
       state => state.search.recentGamingSessionsPage
     );
@@ -1037,7 +1069,7 @@ function* fetchRecentGamingSessions() {
 function* loadMoreRecentGamingSessions() {
   console.log("LOAD MORE RECENT GAMING SESSIONS");
   try {
-    let userId = yield select(state => state.authentication.user.user_id);
+    let userId = yield select(state => state.users.currentUser.id);
     let current_page = yield select(
       state => state.search.recentGamingSessionsPage
     );
@@ -1131,6 +1163,8 @@ function* fetchConversations() {
 }
 
 export default function* rootSaga() {
+  yield takeEvery(RESET_PASSWORD, resetPassword);
+
   yield takeEvery(CREATE_USER, createUser);
 
   yield takeEvery(FETCH_TOKEN, fetchToken);

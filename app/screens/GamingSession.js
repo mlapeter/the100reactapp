@@ -129,7 +129,7 @@ class GamingSession extends React.Component {
           }, 300);
         })
         .catch(error => {
-          console.error(error);
+          console.log(error);
         });
     });
   }

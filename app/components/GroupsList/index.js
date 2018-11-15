@@ -16,7 +16,7 @@ type Group = {
 };
 
 type GroupsListProps = {
-  groups: Array<Group>,
+  groups?: Array<Group>,
   navigation: NavigationScreenProp<{}>
 };
 

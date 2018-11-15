@@ -11,7 +11,7 @@ import { Linking, StyleSheet, Text } from "react-native";
 export default class Hyperlink extends PureComponent<Props> {
   onPress = () => {
     Linking.openURL(this.props.link).catch(e => {
-      console.error("Failed to open link: " + e);
+      console.log("Failed to open link: " + e);
     });
   };
 

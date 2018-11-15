@@ -86,24 +86,24 @@ class AuthLoading extends React.Component {
         } else {
           this.props.navigation.navigate("Auth");
         }
-        this.authTimer = setTimeout(() => {
-          if (
-            !this.props.users.currentUser ||
-            this.props.users.currentUser.gamertag == null ||
-            this.props.authentication.isAuthed !== true
-          ) {
-            console.log("Redirecting to Auth");
-            this.props.navigation.navigate("Auth");
-          } else {
-            console.log("Redirecting to App");
-            this.props.navigation.navigate("App");
-          }
-        }, 3000);
+
+        // this.authTimer = setTimeout(() => {
+        //   if (
+        //     !this.props.users.currentUser ||
+        //     this.props.users.currentUser.gamertag == null ||
+        //     this.props.authentication.isAuthed !== true
+        //   ) {
+        //     console.log("Redirecting to Auth");
+        //     this.props.navigation.navigate("Auth");
+        //   } else {
+        //     console.log("Redirecting to App");
+        //     this.props.navigation.navigate("App");
+        //   }
+        // }, 3000);
       });
     });
   };
 
-  // Render any loading content that you like here
   render() {
     return (
       <View style={styles.container}>
@@ -126,12 +126,10 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   const authentication = state.authentication;
   const users = state.users;
-  // const onAuthChange = state.authentication.onAuthChange(token);
 
   return {
     authentication,
     users
-    // authenticationError: state.authentication.error
   };
 };
 
