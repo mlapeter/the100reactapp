@@ -20,6 +20,7 @@ import {
 import AuthLoading from "../screens/AuthLoading";
 import OnboardingFlowStack from "./onboarding-flow";
 import Login from "../screens/Login";
+import ForgotPassword from "../screens/ForgotPassword";
 import AuthMainPage from "../screens/AuthMainPage";
 
 import GamingSessionsList from "../screens/GamingSessionsList";
@@ -203,6 +204,7 @@ navigateTo = (navigation, route) => {
 const AuthStack = createStackNavigator({
   AuthMainPage: AuthMainPage,
   Login: Login,
+  ForgotPassword: ForgotPassword,
   Onboarding: { screen: OnboardingFlowStack }
 });
 
@@ -222,6 +224,20 @@ const rootNavigator = createSwitchNavigator(
 // Screen Specific navigationOptions
 
 Login.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerTitle: "",
+  headerStyle: styles.headerStyle,
+  headerTitleStyle: styles.headerTitleStyle
+});
+
+ForgotPassword.navigationOptions = ({ navigation }) => ({
   headerLeft: (
     <BackButton
       title="BACK"

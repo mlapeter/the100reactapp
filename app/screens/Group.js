@@ -54,7 +54,6 @@ class Group extends React.Component {
   static propTypes = {
     navigation: PropTypes.object,
     alertWithType: PropTypes.func,
-    groupError: PropTypes.string,
     group: PropTypes.object
   };
   constructor(props) {
@@ -87,10 +86,10 @@ class Group extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     if (
-      nextProps.groupError &&
-      nextProps.groupError !== this.props.groupError
+      nextProps.group.error &&
+      nextProps.group.error !== this.props.group.error
     ) {
-      this.props.alertWithType("error", "Error", nextProps.groupError);
+      this.props.alertWithType("error", "Error", nextProps.group.error);
     }
   }
 
@@ -100,9 +99,12 @@ class Group extends React.Component {
   };
 
   userHasJoined = () => {
-    let joined = this.props.groups.find(group => {
-      return group.id === this.props.group.id;
-    });
+    let joined =
+      this.props.user &&
+      this.props.user.groups &&
+      this.props.user.groups.find(group => {
+        return group.id === this.props.group.id;
+      });
     return joined;
   };
 
@@ -179,7 +181,7 @@ class Group extends React.Component {
           });
         })
         .catch(error => {
-          console.error(error);
+          console.log(error);
         });
     });
   }
@@ -187,10 +189,10 @@ class Group extends React.Component {
   render() {
     let navigation = this.props.navigation;
     if (
-      this.props.isLoading ||
       this.state.isLoading ||
       !this.props.group ||
-      !this.props.groups
+      !this.props.user ||
+      this.props.group.isLoading
     ) {
       console.log("group loading");
       return (
@@ -325,10 +327,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     group: state.group.group,
-    isLoading: state.group.isLoading,
-    groupError: state.group.error,
-    groups: state.users.currentUser.groups
-    // user: state.users.currentUser
+    user: state.users.currentUser
   };
 };
 

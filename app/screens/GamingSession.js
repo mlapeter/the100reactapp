@@ -129,7 +129,7 @@ class GamingSession extends React.Component {
           }, 300);
         })
         .catch(error => {
-          console.error(error);
+          console.log(error);
         });
     });
   }
@@ -318,7 +318,8 @@ class GamingSession extends React.Component {
               }
             />
           </Card>
-          {!this.props.gamingSession.group_id ? null : (
+          {!this.props.gamingSession.group_id ||
+          !this.props.gamingSession.group ? null : (
             <GroupsList
               groups={[this.props.gamingSession.group]}
               navigation={this.props.navigation}
@@ -343,7 +344,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  const user = state.authentication.user;
+  const user = state.users.currentUser;
   const gamingSessionLoading = state.gamingSessions.gamingSessionLoading;
   const gamingSession = state.gamingSessions.gamingSession;
   const gamingSessionsError = state.gamingSessions.error;

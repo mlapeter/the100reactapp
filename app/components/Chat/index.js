@@ -161,6 +161,7 @@ class Chat extends Component {
   }
 
   componentWillUnmount() {
+    console.log("Unmounting Chat");
     if (Platform.OS === "ios") {
       Keyboard.removeListener("keyboardDidShow", this.onKeyboardShown);
       Keyboard.removeListener("keyboardDidHide", this.onKeyboardHidden);
@@ -188,7 +189,7 @@ class Chat extends Component {
         this.retrieveMessages();
       })
       .catch(error => {
-        console.error("An error occurred during sign in: " + error);
+        console.log("An error occurred during sign in: " + error);
       });
   }
 
@@ -247,13 +248,13 @@ class Chat extends Component {
                   console.log(responseJson);
                 })
                 .catch(error => {
-                  console.error("Failed to post username mention: " + error);
+                  console.log("Failed to post username mention: " + error);
                 });
             });
           }
         })
         .catch(error => {
-          console.error("Failed to send message: " + error);
+          console.log("Failed to send message: " + error);
         });
     }
   };
@@ -303,7 +304,7 @@ class Chat extends Component {
           editedAt: firebase.database.ServerValue.TIMESTAMP
         })
         .catch(error => {
-          console.error("Failed to edit message: " + error);
+          console.log("Failed to edit message: " + error);
         });
       this.setState({ editingKey: null });
     }
@@ -315,7 +316,7 @@ class Chat extends Component {
         .child(this.state.selectedKey)
         .remove()
         .catch(error => {
-          console.error("Failed to remove message: " + error);
+          console.log("Failed to remove message: " + error);
         });
 
       this.setState({ selectedKey: null, editingKey: null });
@@ -684,7 +685,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     firebaseToken: state.authentication.firebaseToken,
-    authedUser: state.authentication.user
+    // authedUser: state.authentication.user
+    authedUser: state.users.currentUser
   };
 };
 

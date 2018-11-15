@@ -6,9 +6,9 @@ import {
   CHANGE_GROUP
 } from "../actions/group";
 
-const initialState = {
+export const initialState = {
   isLoading: true,
-  group: null,
+  group: {},
   selectedGroupId: null
 };
 

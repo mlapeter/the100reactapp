@@ -1,0 +1,189 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`successfully renders 1`] = `
+ShallowWrapper {
+  Symbol(enzyme.__root__): [Circular],
+  Symbol(enzyme.__unrendered__): <Groups
+    dispatch={[Function]}
+    navigation={
+      Object {
+        "state": Object {
+          "params": Object {},
+        },
+      }
+    }
+    user={Object {}}
+  />,
+  Symbol(enzyme.__renderer__): Object {
+    "batchedUpdates": [Function],
+    "getNode": [Function],
+    "render": [Function],
+    "simulateError": [Function],
+    "simulateEvent": [Function],
+    "unmount": [Function],
+  },
+  Symbol(enzyme.__node__): Object {
+    "instance": null,
+    "key": undefined,
+    "nodeType": "class",
+    "props": Object {
+      "children": Array [
+        <TopNav
+          navigation={
+            Object {
+              "state": Object {
+                "params": Object {},
+              },
+            }
+          }
+          title="Groups"
+          user={Object {}}
+        />,
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+        >
+          You haven't joined any groups yet! You can join any group you like by tapping the join icon at the top right of the group page.
+        </Text>,
+      ],
+      "style": Object {
+        "backgroundColor": "#F3F3F3",
+        "flex": 1,
+        "paddingBottom": 16,
+      },
+    },
+    "ref": null,
+    "rendered": Array [
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "navigation": Object {
+            "state": Object {
+              "params": Object {},
+            },
+          },
+          "title": "Groups",
+          "user": Object {},
+        },
+        "ref": null,
+        "rendered": null,
+        "type": [Function],
+      },
+      Object {
+        "instance": null,
+        "key": undefined,
+        "nodeType": "class",
+        "props": Object {
+          "accessible": true,
+          "allowFontScaling": true,
+          "children": "You haven't joined any groups yet! You can join any group you like by tapping the join icon at the top right of the group page.",
+          "ellipsizeMode": "tail",
+        },
+        "ref": null,
+        "rendered": "You haven't joined any groups yet! You can join any group you like by tapping the join icon at the top right of the group page.",
+        "type": [Function],
+      },
+    ],
+    "type": [Function],
+  },
+  Symbol(enzyme.__nodes__): Array [
+    Object {
+      "instance": null,
+      "key": undefined,
+      "nodeType": "class",
+      "props": Object {
+        "children": Array [
+          <TopNav
+            navigation={
+              Object {
+                "state": Object {
+                  "params": Object {},
+                },
+              }
+            }
+            title="Groups"
+            user={Object {}}
+          />,
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+          >
+            You haven't joined any groups yet! You can join any group you like by tapping the join icon at the top right of the group page.
+          </Text>,
+        ],
+        "style": Object {
+          "backgroundColor": "#F3F3F3",
+          "flex": 1,
+          "paddingBottom": 16,
+        },
+      },
+      "ref": null,
+      "rendered": Array [
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "navigation": Object {
+              "state": Object {
+                "params": Object {},
+              },
+            },
+            "title": "Groups",
+            "user": Object {},
+          },
+          "ref": null,
+          "rendered": null,
+          "type": [Function],
+        },
+        Object {
+          "instance": null,
+          "key": undefined,
+          "nodeType": "class",
+          "props": Object {
+            "accessible": true,
+            "allowFontScaling": true,
+            "children": "You haven't joined any groups yet! You can join any group you like by tapping the join icon at the top right of the group page.",
+            "ellipsizeMode": "tail",
+          },
+          "ref": null,
+          "rendered": "You haven't joined any groups yet! You can join any group you like by tapping the join icon at the top right of the group page.",
+          "type": [Function],
+        },
+      ],
+      "type": [Function],
+    },
+  ],
+  Symbol(enzyme.__options__): Object {
+    "adapter": ReactSixteenAdapter {
+      "options": Object {
+        "enableComponentDidUpdateOnSetState": true,
+        "lifecycles": Object {
+          "componentDidUpdate": Object {
+            "onSetState": true,
+          },
+          "getDerivedStateFromProps": true,
+          "getSnapshotBeforeUpdate": true,
+          "setState": Object {
+            "skipsComponentDidUpdateOnNullish": true,
+          },
+        },
+      },
+    },
+    "context": Object {
+      "store": Object {
+        "clearActions": [Function],
+        "dispatch": [Function],
+        "getActions": [Function],
+        "getState": [Function],
+        "replaceReducer": [Function],
+        "subscribe": [Function],
+      },
+    },
+  },
+}
+`;

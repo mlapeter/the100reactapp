@@ -163,7 +163,7 @@ export class User extends React.Component {
           console.log("ACTION POSTED");
         })
         .catch(error => {
-          console.error(error);
+          console.log(error);
         });
     });
   }

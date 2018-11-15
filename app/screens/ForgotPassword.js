@@ -21,10 +21,11 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { fetchToken } from "../actions/authentication";
+import { resetPassword } from "../actions/authentication";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 
-class Login extends React.Component {
+class ForgotPassword extends React.Component {
   constructor(props) {
     super(props);
 
@@ -37,14 +38,8 @@ class Login extends React.Component {
   componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
-      .hit(new PageHit("App - Login"))
+      .hit(new PageHit("App - Forgot Password"))
       .catch(e => console.log(e.message));
-  }
-
-  componentDidUpdate() {
-    if (this.props.users.currentUser && this.props.users.currentUser.gamertag) {
-      this.props.navigation.navigate("App");
-    }
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,88 +53,56 @@ class Login extends React.Component {
         nextProps.authentication.error
       );
     }
-    if (
-      nextProps.authentication.success &&
-      nextProps.authentication.successAt !== this.props.authentication.successAt
-    ) {
-      this.props.alertWithType("success", "", nextProps.authentication.success);
-    }
   }
 
-  userLogin() {
-    if (!this.state.username || !this.state.password) return;
-    this.props.dispatch(fetchToken(this.state.username, this.state.password));
+  submitEmail = () => {
+    if (!this.state.email) return;
+    console.log("Submitting PW Reset");
+    this.props.dispatch(resetPassword(this.state.email));
     this.setState({
-      username: "",
-      password: ""
+      email: ""
     });
-  }
+    this.props.navigation.navigate("Login");
+  };
 
   render() {
-    return (
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.container}
-        getTextInputRefs={() => {
-          return [this._textInputRef];
-        }}
-      >
-        <View style={styles.container}>
-          <Image
-            style={styles.image}
-            source={require("../assets/images/logo.png")}
-          />
-          <TextInput
-            onChangeText={username => this.setState({ username })}
-            placeholder="Username"
-            placeholderStyle={{ color: colors.darkGrey }}
-            ref="username"
-            textContentType="username"
-            returnKeyType="next"
-            style={styles.input}
-            value={this.state.username}
-            underlineColorAndroid={"transparent"}
-            autoCapitalize="none"
-            onSubmitEditing={() => {
-              this.secondTextInput.focus();
-            }}
-            maxLength={100}
-          />
-          <TextInput
-            onChangeText={password => this.setState({ password })}
-            placeholder="Password"
-            placeholderStyle={{ color: colors.darkGrey }}
-            ref="password"
-            textContentType="password"
-            secureTextEntry={true}
-            style={styles.input}
-            value={this.state.password}
-            underlineColorAndroid={"transparent"}
-            autoCapitalize="none"
-            ref={input => {
-              this.secondTextInput = input;
-            }}
-            maxLength={100}
-          />
+    if (this.props.authentication.resettingPassword) {
+      return <ActivityIndicator />;
+    } else {
+      return (
+        <KeyboardAwareScrollView
+          contentContainerStyle={styles.container}
+          getTextInputRefs={() => {
+            return [this._textInputRef];
+          }}
+        >
+          <View style={styles.container}>
+            <Image
+              style={styles.image}
+              source={require("../assets/images/logo.png")}
+            />
+            <TextInput
+              onChangeText={email => this.setState({ email })}
+              placeholder="Email"
+              ref="email"
+              keyboardType="email-address"
+              autoCapitalize="none"
+              style={styles.input}
+              value={this.state.email}
+              underlineColorAndroid={"transparent"}
+              maxLength={100}
+            />
 
-          {this.props.authentication.isLoading ? (
-            <ActivityIndicator />
-          ) : (
             <TouchableOpacity
               style={styles.button}
-              onPress={() => this.userLogin(this)}
+              onPress={() => this.submitEmail()}
             >
-              <Text style={styles.buttonText}>LOG IN</Text>
+              <Text style={styles.buttonText}>Reset Password</Text>
             </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            style={styles.forgotButton}
-            onPress={() => this.props.navigation.navigate("ForgotPassword")}
-          >
-            <Text style={styles.buttonText}>forgot password?</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAwareScrollView>
-    );
+          </View>
+        </KeyboardAwareScrollView>
+      );
+    }
   }
 }
 
@@ -199,10 +162,6 @@ const styles = StyleSheet.create({
     borderRadius: 3,
     width: 300
   },
-  forgotButton: {
-    marginTop: 20,
-    paddingVertical: 20
-  },
   buttonText: {
     color: colors.white,
     textAlign: "center"
@@ -219,4 +178,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(connectAlert(Login));
+export default connect(mapStateToProps)(connectAlert(ForgotPassword));

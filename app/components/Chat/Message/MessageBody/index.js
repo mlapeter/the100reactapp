@@ -362,7 +362,7 @@ class MessageImage extends PureComponent {
 
   onLongPress = () => {
     Linking.openURL(this.props.source).catch(e => {
-      console.error("Failed to open MessageImage url: " + e);
+      console.log("Failed to open MessageImage url: " + e);
     });
   };
 
@@ -385,7 +385,7 @@ class Youtube extends PureComponent {
     Linking.openURL(
       "https://www.youtube.com/watch?v=" + this.props.videoId
     ).catch(e => {
-      console.error("Failed to open Youtube URL: " + e);
+      console.log("Failed to open Youtube URL: " + e);
     });
   };
 

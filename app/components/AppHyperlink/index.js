@@ -10,7 +10,7 @@ export default class AppHyperlink extends PureComponent {
 
   onPress = () => {
     Linking.openURL(this.props.link).catch(e => {
-      console.error("Failed to open link: " + e);
+      console.log("Failed to open link: " + e);
     });
   };
 

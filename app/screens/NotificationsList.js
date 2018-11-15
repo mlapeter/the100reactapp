@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   const notifications = state.notifications.notifications;
   const isLoading = state.notifications.isLoading;
-  const user = state.authentication.user;
+  const user = state.users.currentUser;
 
   return {
     notifications,

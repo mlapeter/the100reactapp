@@ -7,10 +7,13 @@ import {
   DECODE_TOKEN_ERROR,
   REMOVE_TOKEN,
   REMOVE_TOKEN_ERROR,
-  SET_FIREBASE_TOKEN
+  SET_FIREBASE_TOKEN,
+  RESET_PASSWORD,
+  RESET_PASSWORD_RESULT,
+  RESET_PASSWORD_ERROR
 } from "../actions/authentication";
 
-const initialState = {
+export const initialState = {
   appLoading: true,
   isLoading: false,
   isAuthed: false,
@@ -88,6 +91,27 @@ export default (state = initialState, action) => {
       return {
         ...state,
         firebaseToken: action.token
+      };
+    case RESET_PASSWORD:
+      return {
+        ...state,
+        resettingPassword: true,
+        resetPasswordEmail: action.resetPasswordEmail
+      };
+    case RESET_PASSWORD_RESULT:
+      return {
+        ...state,
+        resettingPassword: false,
+        success: "We've emailed you a link! Check your email to login.",
+        successAt: new Date()
+      };
+    case RESET_PASSWORD_ERROR:
+      return {
+        ...state,
+        resettingPassword: false,
+        error:
+          "An error occured. Please try again or contact us for assistance.",
+        errorAt: new Date()
       };
     default:
       return state;

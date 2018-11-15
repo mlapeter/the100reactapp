@@ -91,11 +91,9 @@ const styles = {
 
 const mapStateToProps = state => {
   const authentication = state.authentication;
-  // const onAuthChange = state.authentication.onAuthChange(token);
 
   return {
-    authentication,
-    authenticationError: state.authentication.error
+    authentication
   };
 };
 export default connect(mapStateToProps)(connectAlert(AuthMainPage));

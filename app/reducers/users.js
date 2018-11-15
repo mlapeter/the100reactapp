@@ -32,11 +32,11 @@ import {
   CHANGE_GROUP_MEMBERS_PAGE
 } from "../actions/users";
 
-const initialState = {
+export const initialState = {
   isUpdating: false,
   userLoading: true,
   user: {},
-  currentUser: null,
+  currentUser: {},
   friends: [],
   groupMembers: [],
   pendingFriends: [],

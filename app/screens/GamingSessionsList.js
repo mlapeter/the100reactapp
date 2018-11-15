@@ -180,7 +180,6 @@ class GamingSessionsList extends PureComponent {
 
   searchUrl() {
     let platform = this.props.platform;
-    console.log("PLATFORM: ", platform);
 
     if (!this.props.platform) {
       platform = this.props.user.platform;
