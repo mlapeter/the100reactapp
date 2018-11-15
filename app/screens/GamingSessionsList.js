@@ -202,6 +202,7 @@ class GamingSessionsList extends PureComponent {
   }
 
   fetchGamingSessionsData() {
+    console.log("fetching all gaming sessions");
     this.props.dispatch(fetchGamingSessions(this.searchUrl()));
     this.props.dispatch(fetchMyGamingSessions());
     this.props.dispatch(fetchGroupGamingSessions());

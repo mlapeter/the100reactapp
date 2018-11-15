@@ -685,8 +685,8 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   return {
     firebaseToken: state.authentication.firebaseToken,
-    // authedUser: state.authentication.user
-    authedUser: state.users.currentUser
+    authedUser: state.authentication.user
+    // authedUser: state.users.currentUser
   };
 };
 

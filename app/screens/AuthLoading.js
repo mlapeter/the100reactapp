@@ -36,7 +36,7 @@ class AuthLoading extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log("UNMOUNTING AUTHLOADING SCREEN");
+    console.log("UNMOUNTING AUTHLOADING SCREEN!!");
     if (this.authTimer) {
       clearTimeout(this.authTimer);
     }
@@ -100,7 +100,6 @@ class AuthLoading extends React.Component {
         //     this.props.navigation.navigate("App");
         //   }
         // }, 3000);
-
       });
     });
   };

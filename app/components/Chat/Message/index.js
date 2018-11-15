@@ -22,7 +22,10 @@ export default class Message extends PureComponent {
     super(props);
 
     this.state = {
-      avatarUrl: this.props.message.avatarUrl
+      avatarUrl:
+        this.props.message.avatarUrl === "img/default-avatar.png"
+          ? DEFAULT_AVATAR_IMG
+          : this.props.message.avatarUrl
     };
   }
 
@@ -38,12 +41,6 @@ export default class Message extends PureComponent {
     }
   };
 
-  onAvatarImgError = () => {
-    if (this.state.avatarUrl !== DEFAULT_AVATAR_IMG) {
-      this.setState({ avatarUrl: DEFAULT_AVATAR_IMG });
-    }
-  };
-
   render() {
     return (
       <TouchableItem
@@ -56,8 +53,11 @@ export default class Message extends PureComponent {
           <View style={styles.leftBox}>
             <Image
               style={styles.avatarMini}
-              source={{ uri: this.props.message.avatarUrl }}
-              onError={this.onAvatarImgError}
+              source={
+                this.props.message.avatarUrl === "img/default-avatar.png"
+                  ? require("../../../assets/images/default-avatar.png")
+                  : { uri: this.props.message.avatarUrl }
+              }
             />
           </View>
           <View style={styles.middleBox}>

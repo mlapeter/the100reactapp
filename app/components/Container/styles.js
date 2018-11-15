@@ -1,4 +1,5 @@
 import EStyleSheet from "react-native-extended-stylesheet";
+import { colors, fontSizes, fontStyles } from "../../styles";
 
 export default EStyleSheet.create({
   container: {
@@ -8,6 +9,7 @@ export default EStyleSheet.create({
     backgroundColor: "$bgColor",
     paddingHorizontal: 5,
     width: "100%",
-    paddingVertical: 10
+    paddingVertical: 10,
+    backgroundColor: colors.veryDarkGrey
   }
 });

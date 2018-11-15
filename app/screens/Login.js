@@ -17,7 +17,8 @@ import Environment from "../config/environment";
 
 import { Container } from "../components/Container";
 import PreSplash from "../components/PreSplash/PreSplash";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
+// import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { fetchToken } from "../actions/authentication";
@@ -77,81 +78,74 @@ class Login extends React.Component {
 
   render() {
     return (
-      <KeyboardAwareScrollView
-        contentContainerStyle={styles.container}
-        getTextInputRefs={() => {
-          return [this._textInputRef];
-        }}
-      >
-        <View style={styles.container}>
-          <Image
-            style={styles.image}
-            source={require("../assets/images/logo.png")}
-          />
-          <TextInput
-            onChangeText={username => this.setState({ username })}
-            placeholder="Username"
-            placeholderStyle={{ color: colors.darkGrey }}
-            ref="username"
-            textContentType="username"
-            returnKeyType="next"
-            style={styles.input}
-            value={this.state.username}
-            underlineColorAndroid={"transparent"}
-            autoCapitalize="none"
-            onSubmitEditing={() => {
-              this.secondTextInput.focus();
-            }}
-            maxLength={100}
-          />
-          <TextInput
-            onChangeText={password => this.setState({ password })}
-            placeholder="Password"
-            placeholderStyle={{ color: colors.darkGrey }}
-            ref="password"
-            textContentType="password"
-            secureTextEntry={true}
-            style={styles.input}
-            value={this.state.password}
-            underlineColorAndroid={"transparent"}
-            autoCapitalize="none"
-            ref={input => {
-              this.secondTextInput = input;
-            }}
-            maxLength={100}
-          />
+      <View style={styles.outerContainer}>
+        <KeyboardAvoidingScrollView>
+          <View style={styles.container}>
+            <TextInput
+              onChangeText={username => this.setState({ username })}
+              placeholder="Username"
+              placeholderStyle={{ color: colors.darkGrey }}
+              ref="username"
+              textContentType="username"
+              returnKeyType="next"
+              style={styles.input}
+              value={this.state.username}
+              underlineColorAndroid={"transparent"}
+              autoCapitalize="none"
+              onSubmitEditing={() => {
+                this.secondTextInput.focus();
+              }}
+              maxLength={100}
+            />
+            <TextInput
+              onChangeText={password => this.setState({ password })}
+              placeholder="Password"
+              placeholderStyle={{ color: colors.darkGrey }}
+              ref="password"
+              textContentType="password"
+              secureTextEntry={true}
+              style={styles.input}
+              value={this.state.password}
+              underlineColorAndroid={"transparent"}
+              autoCapitalize="none"
+              ref={input => {
+                this.secondTextInput = input;
+              }}
+              maxLength={100}
+            />
 
-          {this.props.authentication.isLoading ? (
-            <ActivityIndicator />
-          ) : (
+            {this.props.authentication.isLoading ? (
+              <ActivityIndicator />
+            ) : (
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => this.userLogin(this)}
+              >
+                <Text style={styles.buttonText}>LOG IN</Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.userLogin(this)}
+              style={styles.forgotButton}
+              onPress={() => this.props.navigation.navigate("ForgotPassword")}
             >
-              <Text style={styles.buttonText}>LOG IN</Text>
+              <Text style={styles.buttonText}>forgot password?</Text>
             </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            style={styles.forgotButton}
-            onPress={() => this.props.navigation.navigate("ForgotPassword")}
-          >
-            <Text style={styles.buttonText}>forgot password?</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAwareScrollView>
+          </View>
+        </KeyboardAvoidingScrollView>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: colors.veryDarkGrey
+  },
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
-    paddingHorizontal: 5,
-    width: "100%",
-    paddingVertical: 10,
-    backgroundColor: colors.veryDarkGrey
+    padding: 15
   },
   slogan: {
     fontSize: 40,
@@ -193,7 +187,8 @@ const styles = StyleSheet.create({
     borderRadius: 2
   },
   button: {
-    marginTop: 20,
+    margin: 15,
+    padding: 5,
     paddingVertical: 20,
     backgroundColor: colors.primaryBlue,
     borderRadius: 3,

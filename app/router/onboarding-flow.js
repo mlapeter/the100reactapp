@@ -12,8 +12,7 @@ import { colors } from "../styles";
 const styles = {
   headerStyle: {
     backgroundColor: colors.veryDarkGrey,
-    height: 80,
-    paddingHorizontal: 20
+    height: 80
   },
   headerTitleStyle: {
     color: colors.white,
@@ -22,6 +21,7 @@ const styles = {
   backButtonStyle: {
     paddingVertical: 15,
     paddingHorizontal: 20,
+    marginHorizontal: 15,
     backgroundColor: colors.darkGrey
   },
   backTitle: {
@@ -50,7 +50,6 @@ ChoosePlatform.navigationOptions = ({ navigation }) => ({
       }}
     />
   ),
-  headerTitle: "SIGN UP",
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
@@ -63,7 +62,6 @@ CreateGamer.navigationOptions = ({ navigation }) => ({
       }}
     />
   ),
-  headerTitle: "SIGN UP",
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
@@ -76,7 +74,6 @@ GamerProfile.navigationOptions = ({ navigation }) => ({
       }}
     />
   ),
-  headerTitle: "SIGN UP",
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
@@ -89,7 +86,6 @@ CreateCredential.navigationOptions = ({ navigation }) => ({
       }}
     />
   ),
-  headerTitle: "SIGN UP",
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
