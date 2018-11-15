@@ -7,30 +7,59 @@ export async function firebaseSignOut() {
 export async function firebaseSignIn(token, allowAnon = false, authedUser) {
   console.log("app authedUser: ", authedUser);
   console.log(authedUser);
-  let fbUser = await firebase.auth().signInWithCustomToken(token);
-  uid = fbUser.uid;
 
-  authedUserData = {
-    username: authedUser.username,
-    supporter: authedUser.supporter,
-    pwnmaster: authedUser.pwnmaster,
-    avatar: authedUser.computed_avatar_api,
-    groups: authedUser.rooms
-  };
-  console.log("authedUserData: ");
-  console.log(authedUserData);
+  // Check for already signed in user
+  let currentUser = await firebase.auth().currentUser;
+  if (currentUser) {
+    uid = currentUser.uid;
+    anon = currentUser.isAnonymous;
+    // Otherwise sign into firebase
+  } else if (token) {
+    let fbUser = await firebase.auth().signInWithCustomToken(token);
+    uid = fbUser.uid;
+    anon = false;
+    authedUserData = {
+      username: authedUser.username,
+      supporter: authedUser.supporter,
+      pwnmaster: authedUser.pwnmaster,
+      avatar: authedUser.computed_avatar_api,
+      groups: authedUser.rooms
+    };
+    console.log("authedUserData: ");
+    console.log(authedUserData);
+    await firebase
+      .database()
+      .ref("users/" + uid)
+      .set(authedUserData);
+    // Sign in anonymously to firebase
+  } else if (allowAnon) {
+    let authUser = await firebase.auth().signInAnonymously();
+    uid = authUser.uid;
+    anon = true;
+  } else {
+    throw new Error("Tried to sign-in without Token.");
+  }
 
-  await firebase
-    .database()
-    .ref("users/" + uid)
-    .set(authedUserData);
-
-  let userData = (await firebase
-    .database()
-    .ref("/users/" + uid)
-    .once("value")).val();
-  userData.uid = uid;
-  return userData;
+  if (anon) {
+    // Return anon user if chat allows anonymous users
+    return {
+      uid: uid,
+      avatar: "/default-avatar.png",
+      groups: {},
+      pwnmaster: false,
+      supporter: false,
+      username: "guest",
+      anon: true
+    };
+  } else {
+    // Or return user data to use for chat
+    let userData = (await firebase
+      .database()
+      .ref("/users/" + uid)
+      .once("value")).val();
+    userData.uid = uid;
+    return userData;
+  }
 }
 
 export function getUserChatRole(user, roomName, anonRole = "user") {
