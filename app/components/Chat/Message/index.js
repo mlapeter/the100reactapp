@@ -22,10 +22,7 @@ export default class Message extends PureComponent {
     super(props);
 
     this.state = {
-      avatarUrl:
-        this.props.message.avatarUrl === "img/default-avatar.png"
-          ? DEFAULT_AVATAR_IMG
-          : this.props.message.avatarUrl
+      avatarUrl: this.props.message.avatarUrl
     };
   }
 

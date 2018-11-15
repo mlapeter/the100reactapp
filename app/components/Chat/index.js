@@ -686,7 +686,6 @@ const mapStateToProps = state => {
   return {
     firebaseToken: state.authentication.firebaseToken,
     authedUser: state.authentication.user
-    // authedUser: state.users.currentUser
   };
 };
 
