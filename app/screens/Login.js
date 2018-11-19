@@ -113,7 +113,6 @@ class Login extends React.Component {
               }}
               maxLength={100}
             />
-
             {this.props.authentication.isLoading ? (
               <ActivityIndicator />
             ) : (

@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20008,
+      "versionCode": 20009,
       "googleServicesFile": "./google-services.json"
     },
     "hooks": {
