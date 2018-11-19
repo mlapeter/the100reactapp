@@ -5,22 +5,19 @@ export async function firebaseSignOut() {
 }
 
 export async function firebaseSignIn(token, allowAnon = false, authedUser) {
-  console.log("firebaseSignIn authedUser groups: ", authedUser.groups);
-  let uid = null;
-  let anon = false;
+  console.log("app authedUser: ", authedUser);
+  console.log(authedUser);
 
-  let currentUser = firebase.auth().currentUser;
-  // Causes error first time user tries to login to app
-  // if (currentUser && (!currentUser.isAnonymous || (allowAnon && !token))) {
-
+  // Check for already signed in user
+  let currentUser = await firebase.auth().currentUser;
   if (currentUser) {
     uid = currentUser.uid;
     anon = currentUser.isAnonymous;
+    // Otherwise sign into firebase
   } else if (token) {
-    let authUser = await firebase.auth().signInWithCustomToken(token);
-    uid = authUser.uid;
+    let fbUser = await firebase.auth().signInWithCustomToken(token);
+    uid = fbUser.uid;
     anon = false;
-
     authedUserData = {
       username: authedUser.username,
       supporter: authedUser.supporter,
@@ -28,14 +25,13 @@ export async function firebaseSignIn(token, allowAnon = false, authedUser) {
       avatar: authedUser.computed_avatar_api,
       groups: authedUser.rooms
     };
-
     console.log("authedUserData: ");
     console.log(authedUserData);
-
     await firebase
       .database()
       .ref("users/" + uid)
       .set(authedUserData);
+    // Sign in anonymously to firebase
   } else if (allowAnon) {
     let authUser = await firebase.auth().signInAnonymously();
     uid = authUser.uid;
@@ -45,6 +41,7 @@ export async function firebaseSignIn(token, allowAnon = false, authedUser) {
   }
 
   if (anon) {
+    // Return anon user if chat allows anonymous users
     return {
       uid: uid,
       avatar: "/default-avatar.png",
@@ -55,12 +52,12 @@ export async function firebaseSignIn(token, allowAnon = false, authedUser) {
       anon: true
     };
   } else {
+    // Or return user data to use for chat
     let userData = (await firebase
       .database()
       .ref("/users/" + uid)
       .once("value")).val();
     userData.uid = uid;
-    userData.anon = false;
     return userData;
   }
 }

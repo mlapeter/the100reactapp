@@ -17,7 +17,9 @@ import Environment from "../config/environment";
 
 import { Container } from "../components/Container";
 import PreSplash from "../components/PreSplash/PreSplash";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+// import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
+
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { fetchToken } from "../actions/authentication";
@@ -70,51 +72,44 @@ class ForgotPassword extends React.Component {
       return <ActivityIndicator />;
     } else {
       return (
-        <KeyboardAwareScrollView
-          contentContainerStyle={styles.container}
-          getTextInputRefs={() => {
-            return [this._textInputRef];
-          }}
-        >
-          <View style={styles.container}>
-            <Image
-              style={styles.image}
-              source={require("../assets/images/logo.png")}
-            />
-            <TextInput
-              onChangeText={email => this.setState({ email })}
-              placeholder="Email"
-              ref="email"
-              keyboardType="email-address"
-              autoCapitalize="none"
-              style={styles.input}
-              value={this.state.email}
-              underlineColorAndroid={"transparent"}
-              maxLength={100}
-            />
+        <View style={styles.outerContainer}>
+          <KeyboardAvoidingScrollView>
+            <View style={styles.container}>
+              <TextInput
+                onChangeText={email => this.setState({ email })}
+                placeholder="Email"
+                ref="email"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                style={styles.input}
+                value={this.state.email}
+                underlineColorAndroid={"transparent"}
+                maxLength={100}
+              />
 
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => this.submitEmail()}
-            >
-              <Text style={styles.buttonText}>Reset Password</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAwareScrollView>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => this.submitEmail()}
+              >
+                <Text style={styles.buttonText}>Reset Password</Text>
+              </TouchableOpacity>
+            </View>
+          </KeyboardAvoidingScrollView>
+        </View>
       );
     }
   }
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: colors.veryDarkGrey
+  },
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "flex-start",
-    paddingHorizontal: 5,
-    width: "100%",
-    paddingVertical: 10,
-    backgroundColor: colors.veryDarkGrey
+    padding: 15
   },
   slogan: {
     fontSize: 40,

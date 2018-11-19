@@ -206,7 +206,7 @@ class GamingSession extends React.Component {
               this.onShare();
             }
           };
-    const rightAction2 = userIds.includes(this.props.user.user_id)
+    const rightAction2 = userIds.includes(this.props.user.id)
       ? {
           icon: "cancel",
           text: "Leave",
@@ -227,8 +227,8 @@ class GamingSession extends React.Component {
           }
         };
     const rightAction3 =
-      userIds.includes(this.props.user.user_id) &&
-      this.props.user.user_id === this.props.gamingSession.creator_id
+      userIds.includes(this.props.user.id) &&
+      this.props.user.id === this.props.gamingSession.creator_id
         ? {
             icon: "edit",
             text: "Edit",

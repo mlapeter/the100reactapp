@@ -53,17 +53,10 @@ class CreateCredential extends Component {
     ) {
       this.props.alertWithType("error", "Error", nextProps.onboarding.error);
     }
-    if (
-      nextProps.users.currentUser
-      //  &&
-      // nextProps.users.successAt !== this.props.users.successAt
-    ) {
+    if (nextProps.users.userCreated) {
       this.props.alertWithType("success", "Success", "Account Created!");
       this.props.navigation.navigate("App");
     }
-    // if (nextProps.authentication.isAuthed) {
-    //   this.props.navigation.navigate("App");
-    // }
   }
   sendUserInfo = () => {
     console.log("submitting user info");

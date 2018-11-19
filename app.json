@@ -7,7 +7,7 @@
     "description":
       "The official mobile app for The100.io. Please leave any feedback or bugs you find in our discord: https://discord.gg/cWDAt4Z thanks!",
     "icon": "./app/assets/images/icon.png",
-    "version": "2.0.451",
+    "version": "2.0.46",
     "slug": "the100",
     "androidStatusBarColor": "#334393",
     "androidStatusBar": {
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20008,
+      "versionCode": 20009,
       "googleServicesFile": "./google-services.json"
     },
     "hooks": {
@@ -39,8 +39,7 @@
           "config": {
             "organization": "the100io",
             "project": "the100",
-            "authToken":
-              "b7b55d7c3a734fa5bc98cd4a8c7403bdcd7cc41c9b51418192b714ca0739be4f"
+            "authToken": ""
           }
         }
       ]

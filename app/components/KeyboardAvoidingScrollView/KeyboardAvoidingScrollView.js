@@ -20,22 +20,17 @@ class KeyboardAvoidingScrollView extends Component {
   render() {
     if (Platform.OS === "ios") {
       return (
-        <KeyboardAwareScrollView style={styles.scrollContainer}>
+        <KeyboardAwareScrollView contentContainerStyle={styles.scrollContainer}>
           {this.props.children}
         </KeyboardAwareScrollView>
       );
     } else {
       return (
         <KeyboardAvoidingView
-          behavior="padding"
-          style={styles.keyboardAvoidingContainer}
-          contentContainerStyle={styles.containerAvoiding}
-          keyboardVerticalOffset={105}
+          contentContainerStyle={styles.scrollContainer}
+          keyboardVerticalOffset={100}
         >
-          <ScrollView
-            keyboardShouldPersistTaps="always"
-            contentContainerStyle={styles.scrollContainer}
-          >
+          <ScrollView keyboardShouldPersistTaps="always">
             <TouchableWithoutFeedback
               onPress={Keyboard.dismiss}
               accessible={false}

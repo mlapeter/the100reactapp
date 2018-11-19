@@ -53,7 +53,6 @@ export default class ImageCard extends React.PureComponent<ImageCardProps> {
           {picture && (
             <Image
               resizeMode="cover"
-              blurRadius={Platform.OS === "android" ? 0.5 : 0}
               style={[
                 styles.image,
                 {

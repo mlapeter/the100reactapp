@@ -49,7 +49,8 @@ export const initialState = {
   friendsPage: 1,
   groupMembersPage: 1,
   pendingFriendsPage: 1,
-  expoPushToken: null
+  expoPushToken: null,
+  userCreated: false
 };
 
 export default (state = initialState, action) => {
@@ -111,7 +112,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         currentUser: action.result,
-        currentUserLoading: false
+        currentUserLoading: false,
+        userCreated: true
       };
     case CLEAR_CURRENT_USER:
       return {
