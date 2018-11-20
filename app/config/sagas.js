@@ -217,7 +217,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
   try {
     let token = yield select(state => state.authentication.token);
     const response = yield requestTimeout(
-      8000,
+      12000,
       fetch(endpoint + "&page=" + page, {
         method: "GET",
         headers: { Authorization: "Bearer " + token }
@@ -380,7 +380,7 @@ function* updateUser() {
     // let userId = yield select(state => state.authentication.user.user_id);
     let userId = yield select(state => state.users.currentUser.id);
 
-    let user = yield select(state => state.users.currentUser);
+    let user = yield select(state => state.users.updatedUserInfo);
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +

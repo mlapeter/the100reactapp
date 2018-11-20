@@ -7,6 +7,8 @@ import {
   StyleSheet,
   View
 } from "react-native";
+import Sentry from "sentry-expo";
+
 import { Font } from "expo";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
@@ -74,34 +76,40 @@ class AuthLoading extends React.Component {
       "SFProText-Bold": require("../../app/assets/fonts/SF-Pro-Text-Bold.otf"),
       "SFProText-Semibold": require("../../app/assets/fonts/SF-Pro-Text-Semibold.otf"),
       "SFProText-Regular": require("../../app/assets/fonts/SF-Pro-Text-Regular.otf")
-    }).then(result => {
-      console.log("Fetching Firebase Token From Local Storage");
-      AsyncStorage.getItem("fb_token").then(token => {
-        this.props.dispatch(setFirebaseToken(token));
-      });
-      console.log("Fetching ID Token From Local Storage");
-      AsyncStorage.getItem("id_token").then(token => {
-        if (token) {
-          this.props.dispatch(decodeToken(token));
-        } else {
-          this.props.navigation.navigate("Auth");
-        }
-
-        this.authTimer = setTimeout(() => {
-          if (
-            !this.props.users.currentUser ||
-            this.props.users.currentUser.gamertag == null ||
-            this.props.authentication.isAuthed !== true
-          ) {
-            console.log("Redirecting to Auth");
-            this.props.navigation.navigate("Auth");
+    })
+      .then(result => {
+        console.log("Fetching Firebase Token From Local Storage");
+        AsyncStorage.getItem("fb_token").then(token => {
+          this.props.dispatch(setFirebaseToken(token));
+        });
+        console.log("Fetching ID Token From Local Storage");
+        AsyncStorage.getItem("id_token").then(token => {
+          if (token) {
+            this.props.dispatch(decodeToken(token));
           } else {
-            console.log("Redirecting to App");
-            this.props.navigation.navigate("App");
+            this.props.navigation.navigate("Auth");
           }
-        }, 4000);
+
+          this.authTimer = setTimeout(() => {
+            if (
+              !this.props.users.currentUser ||
+              this.props.users.currentUser.gamertag == null ||
+              this.props.authentication.isAuthed !== true
+            ) {
+              console.log("Redirecting to Auth");
+              this.props.navigation.navigate("Auth");
+            } else {
+              console.log("Redirecting to App");
+              this.props.navigation.navigate("App");
+            }
+          }, 4000);
+        });
+      })
+      .catch(err => {
+        console.log("Authloading Error: ", err);
+        Sentry.captureMessage("Authloading Error: ", err);
+        this.props.navigation.navigate("Auth");
       });
-    });
   };
 
   render() {

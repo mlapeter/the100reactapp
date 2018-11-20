@@ -59,7 +59,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         isUpdating: true,
-        currentUser: action.currentUser
+        updatedUserInfo: action.updatedUserInfo
       };
     case UPDATE_USER_RESULT:
       return {

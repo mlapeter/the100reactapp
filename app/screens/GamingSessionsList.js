@@ -91,18 +91,25 @@ class GamingSessionsList extends PureComponent {
     // this.listenforUpdate();
     NetInfo.addEventListener("connectionChange", this.handleConnectivityChange);
 
-    registerForPushNotificationsAsync().then(token => {
-      if (
-        token &&
-        (!this.props.user.expo_push_token ||
-          this.props.user.expo_push_token !== token)
-      ) {
-        this.props.dispatch(updateUserPushToken(token));
-      }
-      this.notificationSubscription = Notifications.addListener(
-        this.handleNotification
-      );
-    });
+    registerForPushNotificationsAsync()
+      .then(token => {
+        if (
+          token &&
+          (!this.props.user.expo_push_token ||
+            this.props.user.expo_push_token !== token)
+        ) {
+          console.log("Updating user push token");
+          this.props.dispatch(updateUserPushToken(token));
+        } else if (token) {
+          this.notificationSubscription = Notifications.addListener(
+            this.handleNotification
+          );
+        }
+      })
+      .catch(err => {
+        console.log("Push Notifications Error: ", err);
+        Sentry.captureMessage("Push Notifications Error: ", err);
+      });
   }
 
   componentWillUnmount() {
