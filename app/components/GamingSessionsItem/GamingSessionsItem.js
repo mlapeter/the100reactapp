@@ -12,9 +12,6 @@ class GamingSessionItem extends PureComponent {
     return (
       <Card
         onPress={() => {
-          console.log("clicked ", this.props.data.category);
-          console.log("id: ", this.props.data.id);
-
           this.props.navigation.navigate({
             routeName: "GamingSession",
             params: {
