@@ -11,11 +11,18 @@ class GamingSessionItem extends PureComponent {
   render() {
     return (
       <Card
-        onPress={() =>
-          this.props.navigation.navigate("GamingSession", {
-            gamingSessionId: this.props.data.id
-          })
-        }
+        onPress={() => {
+          console.log("clicked ", this.props.data.category);
+          console.log("id: ", this.props.data.id);
+
+          this.props.navigation.navigate({
+            routeName: "GamingSession",
+            params: {
+              gamingSessionId: this.props.data.id
+            },
+            key: "gamingSession-" + this.props.data.id
+          });
+        }}
         underlayColor="white"
       >
         <View style={styles.box}>

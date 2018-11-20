@@ -5,9 +5,6 @@ export async function firebaseSignOut() {
 }
 
 export async function firebaseSignIn(token, allowAnon = false, authedUser) {
-  console.log("app authedUser: ", authedUser);
-  console.log(authedUser);
-
   // Check for already signed in user
   let currentUser = await firebase.auth().currentUser;
   if (currentUser) {

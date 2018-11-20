@@ -125,7 +125,11 @@ import {
   REFRESH_RECENT_GAMING_SESSIONS,
   CLEAR_RECENT_GAMING_SESSIONS,
   LOAD_MORE_RECENT_GAMING_SESSIONS,
-  LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT
+  LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT,
+  FETCH_PROFILE_GAMING_SESSIONS,
+  FETCH_PROFILE_GAMING_SESSIONS_RESULT,
+  FETCH_PROFILE_GAMING_SESSIONS_ERROR,
+  FETCH_PROFILE_GAMING_SESSIONS_NO_DATA
 } from "../actions/gamingSessions";
 
 import { CREATE_USER, CREATE_USER_ERROR } from "../actions/onboarding";
@@ -1099,11 +1103,33 @@ function* loadMoreRecentGamingSessions() {
   }
 }
 
+function* fetchProfileGamingSessions() {
+  try {
+    let userId = yield select(state => state.users.userId);
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId +
+      "/gaming_sessions?";
+
+    yield call(
+      fetchData,
+      endpoint,
+      1,
+      FETCH_PROFILE_GAMING_SESSIONS_RESULT,
+      FETCH_PROFILE_GAMING_SESSIONS_ERROR,
+      FETCH_PROFILE_GAMING_SESSIONS_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_PROFILE_GAMING_SESSIONS_ERROR, error: e.message });
+  }
+}
+
 function* createUser() {
   try {
     let userInfo = yield select(state => state.onboarding);
     console.log("USER INFO: ");
-    console.log(userInfo);
     const response = yield fetch(
       Environment["API_BASE_URL"] + Environment["API_VERSION"] + "users/",
       {
@@ -1231,6 +1257,8 @@ export default function* rootSaga() {
     LOAD_MORE_RECENT_GAMING_SESSIONS,
     loadMoreRecentGamingSessions
   );
+
+  yield takeEvery(FETCH_PROFILE_GAMING_SESSIONS, fetchProfileGamingSessions);
 
   yield takeEvery(FETCH_CONVERSATIONS, fetchConversations);
 }

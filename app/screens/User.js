@@ -7,6 +7,7 @@ import {
   AsyncStorage,
   Button,
   Clipboard,
+  FlatList,
   Image,
   Keyboard,
   LayoutAnimation,
@@ -35,6 +36,7 @@ import {
   fetchPendingFriends,
   fetchGroupMembers
 } from "../actions/users";
+import { fetchProfileGamingSessions } from "../actions/gamingSessions";
 // import { fetchConversations } from "../actions/conversations";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
@@ -53,6 +55,8 @@ import TabButtons from "../components/TabButtons";
 import UserIconBar from "../components/UserIconBar";
 import GroupsList from "../components/GroupsList";
 import UserPlatforms from "../components/UserPlatforms";
+import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
+
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 
 Moment.globalFormat = "h:mm";
@@ -85,6 +89,9 @@ export class User extends React.Component {
   componentDidMount() {
     console.log("fetchuser: ", userId);
     this.props.dispatch(fetchUser(userId));
+    console.log("fetchProfileGamingSessions");
+    this.props.dispatch(fetchProfileGamingSessions(userId));
+
     // this.props.dispatch(fetchConversations());
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
@@ -388,9 +395,27 @@ export class User extends React.Component {
         ) : null}
         {this.state.selectedIndex === 2 ? (
           <Content style={styles.content}>
-            <Card>
-              <Panel text={"Games Coming Soon..."} numberOfLines={3} />
-            </Card>
+            {!this.props.profileGamingSessions ||
+            !this.props.profileGamingSessions.length ? (
+              <Card>
+                <Panel
+                  text={"This user doesn't have any upcoming public games."}
+                  numberOfLines={3}
+                />
+              </Card>
+            ) : (
+              <FlatList
+                data={this.props.profileGamingSessions}
+                renderItem={({ item }) => (
+                  <GamingSessionsItem
+                    data={item}
+                    navigation={this.props.navigation}
+                  />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                refreshing={this.props.profileGamingSessionsRefreshing}
+              />
+            )}
           </Content>
         ) : null}
       </View>
@@ -439,6 +464,7 @@ const mapStateToProps = state => {
   // const users = state.users;
   const isUpdating = state.users.isUpdating;
   const userLoading = state.users.userLoading;
+  const profileGamingSessions = state.gamingSessions.profileGamingSessions;
   // const conversationsLoading = state.conversations.isLoading;
   // const conversations = state.conversations.conversations;
 
@@ -447,7 +473,8 @@ const mapStateToProps = state => {
     user,
     // users,
     isUpdating,
-    userLoading
+    userLoading,
+    profileGamingSessions
     // conversationsLoading,
     // conversations
   };

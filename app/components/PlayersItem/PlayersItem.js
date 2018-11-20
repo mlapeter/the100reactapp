@@ -37,8 +37,12 @@ export default function PlayersItem(props) {
   return (
     <TouchableHighlight
       onPress={() =>
-        props.navigation.navigate("Player", {
-          userId: props.user.id
+        props.navigation.navigate({
+          routeName: "Player",
+          params: {
+            userId: props.user.id
+          },
+          key: "user-" + props.user.id
         })
       }
       underlayColor="white"
