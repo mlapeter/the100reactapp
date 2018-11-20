@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
+import Sentry from "sentry-expo";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import { connect } from "react-redux";
@@ -98,40 +99,46 @@ class GamingSession extends React.Component {
     this.setState({
       isLoading: true
     });
-    AsyncStorage.getItem("id_token").then(token => {
-      fetch(
-        Environment["API_BASE_URL"] +
-          Environment["API_VERSION"] +
-          "gaming_sessions/" +
-          gamingSessionId +
-          action,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + token
+    AsyncStorage.getItem("id_token")
+      .then(token => {
+        fetch(
+          Environment["API_BASE_URL"] +
+            Environment["API_VERSION"] +
+            "gaming_sessions/" +
+            gamingSessionId +
+            action,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token
+            }
           }
-        }
-      )
-        .then(response => response.json())
-        .then(responseJson => {
-          if (action === "/join" || action === "/join?join_as_reserve=true") {
-            this.fetchGamingSessionData();
-          } else {
-            this.props.navigation.navigate("GamingSessionsList");
-          }
-          this.updateTimer = setTimeout(() => {
-            this.props.dispatch(fetchMyGamingSessions());
-            this.props.dispatch(fetchGroupGamingSessions());
-            this.setState({
-              isLoading: false
-            });
-          }, 300);
-        })
-        .catch(error => {
-          console.log(error);
-        });
-    });
+        )
+          .then(response => response.json())
+          .then(responseJson => {
+            if (action === "/join" || action === "/join?join_as_reserve=true") {
+              this.fetchGamingSessionData();
+            } else {
+              this.props.navigation.navigate("GamingSessionsList");
+            }
+            this.updateTimer = setTimeout(() => {
+              this.props.dispatch(fetchMyGamingSessions());
+              this.props.dispatch(fetchGroupGamingSessions());
+              this.setState({
+                isLoading: false
+              });
+            }, 300);
+          })
+          .catch(error => {
+            console.log("Gaming Session Post Error: ", error);
+            Sentry.captureMessage("Gaming Session Post Error: ", error);
+          });
+      })
+      .catch(error => {
+        console.log("Gaming Session Post Error: ", error);
+        Sentry.captureMessage("Gaming Session Post Error: ", error);
+      });
   }
 
   onShare() {

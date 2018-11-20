@@ -52,9 +52,9 @@ export const fetchCurrentUser = () => ({
   type: FETCH_CURRENT_USER
 });
 
-export const updateUser = currentUser => ({
+export const updateUser = updatedUserInfo => ({
   type: UPDATE_USER,
-  currentUser
+  updatedUserInfo
 });
 
 export const updateUserPushToken = token => ({
