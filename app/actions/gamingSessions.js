@@ -67,6 +67,14 @@ export const LOAD_MORE_RECENT_GAMING_SESSIONS =
 export const LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT =
   "LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT";
 
+export const FETCH_PROFILE_GAMING_SESSIONS = "FETCH_PROFILE_GAMING_SESSIONS";
+export const FETCH_PROFILE_GAMING_SESSIONS_RESULT =
+  "FETCH_PROFILE_GAMING_SESSIONS_RESULT";
+export const FETCH_PROFILE_GAMING_SESSIONS_ERROR =
+  "FETCH_PROFILE_GAMING_SESSIONS_ERROR";
+export const FETCH_PROFILE_GAMING_SESSIONS_NO_DATA =
+  "FETCH_PROFILE_GAMING_SESSIONS_NO_DATA";
+
 export const createGamingSession = gamingSession => ({
   type: CREATE_GAMING_SESSION,
   gamingSession
@@ -145,4 +153,8 @@ export const refreshRecentGamingSessions = endpoint => ({
 export const loadMoreRecentGamingSessions = endpoint => ({
   type: LOAD_MORE_RECENT_GAMING_SESSIONS,
   endpoint
+});
+
+export const fetchProfileGamingSessions = () => ({
+  type: FETCH_PROFILE_GAMING_SESSIONS
 });

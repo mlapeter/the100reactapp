@@ -44,7 +44,11 @@ import {
   CLEAR_RECENT_GAMING_SESSIONS,
   REFRESH_RECENT_GAMING_SESSIONS,
   LOAD_MORE_RECENT_GAMING_SESSIONS,
-  LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT
+  LOAD_MORE_RECENT_GAMING_SESSIONS_RESULT,
+  FETCH_PROFILE_GAMING_SESSIONS,
+  FETCH_PROFILE_GAMING_SESSIONS_RESULT,
+  FETCH_PROFILE_GAMING_SESSIONS_ERROR,
+  FETCH_PROFILE_GAMING_SESSIONS_NO_DATA
 } from "../actions/gamingSessions";
 
 export const initialState = {
@@ -74,7 +78,8 @@ export const initialState = {
   gamingSessions: [],
   myGamingSessions: [],
   groupGamingSessions: [],
-  recentGamingSessions: []
+  recentGamingSessions: [],
+  profileGamingSessions: []
 };
 
 export default (state = initialState, action) => {
@@ -375,6 +380,33 @@ export default (state = initialState, action) => {
         recentGamingSessions: [...state.recentGamingSessions, ...action.result],
         recentGamingSessionsRefreshing: false
       };
+
+    case FETCH_PROFILE_GAMING_SESSIONS:
+      return {
+        ...state,
+        profileGamingSessionsRefreshing: true
+      };
+
+    case FETCH_PROFILE_GAMING_SESSIONS_RESULT:
+      return {
+        ...state,
+        profileGamingSessions: action.result,
+        profileGamingSessionsRefreshing: false
+      };
+    case FETCH_PROFILE_GAMING_SESSIONS_ERROR:
+      return {
+        ...state,
+        error: action.error,
+        errorAt: new Date(),
+        profileGamingSessionsRefreshing: false
+      };
+    case FETCH_PROFILE_GAMING_SESSIONS_NO_DATA:
+      return {
+        ...state,
+        profileRecentGamingSessionsAvailable: false,
+        profileGamingSessionsRefreshing: false
+      };
+
     default:
       return state;
   }

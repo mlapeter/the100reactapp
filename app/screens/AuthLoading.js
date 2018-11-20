@@ -87,19 +87,19 @@ class AuthLoading extends React.Component {
           this.props.navigation.navigate("Auth");
         }
 
-        // this.authTimer = setTimeout(() => {
-        //   if (
-        //     !this.props.users.currentUser ||
-        //     this.props.users.currentUser.gamertag == null ||
-        //     this.props.authentication.isAuthed !== true
-        //   ) {
-        //     console.log("Redirecting to Auth");
-        //     this.props.navigation.navigate("Auth");
-        //   } else {
-        //     console.log("Redirecting to App");
-        //     this.props.navigation.navigate("App");
-        //   }
-        // }, 3000);
+        this.authTimer = setTimeout(() => {
+          if (
+            !this.props.users.currentUser ||
+            this.props.users.currentUser.gamertag == null ||
+            this.props.authentication.isAuthed !== true
+          ) {
+            console.log("Redirecting to Auth");
+            this.props.navigation.navigate("Auth");
+          } else {
+            console.log("Redirecting to App");
+            this.props.navigation.navigate("App");
+          }
+        }, 4000);
       });
     });
   };
