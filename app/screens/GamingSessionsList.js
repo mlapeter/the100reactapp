@@ -429,7 +429,10 @@ class GamingSessionsList extends PureComponent {
               <SectionList
                 renderItem={({ item }) => (
                   <GamingSessionsItem
-                    data={item}
+                    data={{
+                      ...item,
+                      currentUserId: this.props.user.id
+                    }}
                     navigation={this.props.navigation}
                   />
                 )}
@@ -464,7 +467,10 @@ class GamingSessionsList extends PureComponent {
                 // data={this.props.groupGamingSessions}
                 renderItem={({ item }) => (
                   <GamingSessionsItem
-                    data={item}
+                    data={{
+                      ...item,
+                      currentUserId: this.props.user.id
+                    }}
                     navigation={this.props.navigation}
                   />
                 )}
@@ -498,7 +504,10 @@ class GamingSessionsList extends PureComponent {
                 // data={this.props.myGamingSessions}
                 renderItem={({ item }) => (
                   <GamingSessionsItem
-                    data={item}
+                    data={{
+                      ...item,
+                      currentUserId: this.props.user.id
+                    }}
                     navigation={this.props.navigation}
                   />
                 )}
@@ -529,7 +538,10 @@ class GamingSessionsList extends PureComponent {
                 // data={this.props.myGamingSessions}
                 renderItem={({ item }) => (
                   <GamingSessionsItem
-                    data={item}
+                    data={{
+                      ...item,
+                      currentUserId: this.props.user.id
+                    }}
                     navigation={this.props.navigation}
                   />
                 )}
