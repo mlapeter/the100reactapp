@@ -27,13 +27,10 @@ class GamingSessionItem extends PureComponent {
         shadowOpacity: 0.8,
         shadowRadius: 3
       };
-    } else if (this.props.data.beginners_welcome) {
-      cardStyle = {
-        shadowColor: colors.blue,
-        shadowOpacity: 0.8,
-        shadowRadius: 3
-      };
-    } else if (this.props.data.new_member) {
+    } else if (
+      this.props.data.beginners_welcome ||
+      this.props.data.new_member
+    ) {
       cardStyle = {
         shadowColor: colors.blue,
         shadowOpacity: 0.8,
