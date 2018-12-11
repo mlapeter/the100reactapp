@@ -5,7 +5,8 @@ export type StyleProps = {
 };
 
 export const colors = {
-  blue: "#4A90E2",
+  // blue: "#4A90E2",
+  blue: "#428bca",
   red: "#FF6A60",
   primary: "#4E595D",
   secondary: "#929292",
@@ -42,7 +43,9 @@ export const colors = {
   transparent: "transparent",
   darkGray,
   gray,
-  lightGray: "#F3F3F3"
+  lightGray: "#F3F3F3",
+  orange: "#ff6d10",
+  green: "#5cb85c"
 };
 
 export const fontSizes = {

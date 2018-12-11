@@ -408,7 +408,10 @@ export class User extends React.Component {
                 data={this.props.profileGamingSessions}
                 renderItem={({ item }) => (
                   <GamingSessionsItem
-                    data={item}
+                    data={{
+                      ...item,
+                      currentUserId: this.props.currentUser.id
+                    }}
                     navigation={this.props.navigation}
                   />
                 )}
@@ -459,7 +462,7 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => {
-  // const currentUser = state.users.currentUser;
+  const currentUser = state.users.currentUser;
   const user = state.users.user;
   // const users = state.users;
   const isUpdating = state.users.isUpdating;
@@ -469,7 +472,7 @@ const mapStateToProps = state => {
   // const conversations = state.conversations.conversations;
 
   return {
-    // currentUser,
+    currentUser,
     user,
     // users,
     isUpdating,
