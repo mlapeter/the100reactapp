@@ -66,6 +66,7 @@
     "react-native-platform-touchable": "^1.1.1",
     "react-native-searchbar": "^1.15.0",
     "react-navigation": "^2.9.3",
+    "react-navigation-backhandler": "1.2.0",
     "react-redux": "^5.0.6",
     "react-string-replace-recursively": "^0.1.27",
     "reactotron-react-native": "^2.0.0",

@@ -13,6 +13,7 @@ import {
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
 import Sentry from "sentry-expo";
+import { StoreReview } from "expo";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import { connect } from "react-redux";
@@ -74,6 +75,15 @@ class GamingSession extends React.Component {
     this.props.dispatch(fetchGamingSession(gamingSessionId));
   }
 
+  checkAndDisplayReviewRequest = () => {
+    if (StoreReview.isSupported()) {
+      console.log("Displaying store review popup on ios");
+      StoreReview.requestReview();
+    } else {
+      console.log("Not Displaying store review popup");
+    }
+  };
+
   joinGame = () => {
     this.postData("/join");
   };
@@ -119,6 +129,7 @@ class GamingSession extends React.Component {
           .then(responseJson => {
             if (action === "/join" || action === "/join?join_as_reserve=true") {
               this.fetchGamingSessionData();
+              this.checkAndDisplayReviewRequest();
             } else {
               this.props.navigation.navigate("GamingSessionsList");
             }
@@ -256,7 +267,18 @@ class GamingSession extends React.Component {
                 this.onLongPress();
               }
             }
-          : null;
+          : userIds.includes(this.props.user.id)
+            ? null
+            : {
+                icon: "more-horiz",
+                size: 24,
+                onPress: () => {
+                  this.onLongPress();
+                },
+                onLongPress: () => {
+                  this.onLongPress();
+                }
+              };
 
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;

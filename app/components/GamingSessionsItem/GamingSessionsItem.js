@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -9,6 +9,40 @@ Moment.globalLocale = "en";
 
 class GamingSessionItem extends PureComponent {
   render() {
+    let cardStyle = {};
+    if (
+      this.props.data.currentUserId &&
+      this.props.data.confirmed_sessions.find(
+        session => session.user_id === this.props.data.currentUserId
+      )
+    ) {
+      cardStyle = {
+        shadowColor: colors.green,
+        shadowOpacity: 0.8,
+        shadowRadius: 3,
+        borderWidth: Platform.OS === "android" ? 0.75 : 0,
+        borderColor: colors.green
+      };
+    } else if (this.props.data.sherpa_requested) {
+      cardStyle = {
+        shadowColor: colors.orange,
+        shadowOpacity: 0.8,
+        shadowRadius: 3,
+        borderWidth: Platform.OS === "android" ? 0.75 : 0,
+        borderColor: colors.orange
+      };
+    } else if (
+      this.props.data.beginners_welcome ||
+      this.props.data.new_member
+    ) {
+      cardStyle = {
+        shadowColor: colors.blue,
+        shadowOpacity: 0.8,
+        shadowRadius: 3,
+        borderWidth: Platform.OS === "android" ? 0.75 : 0,
+        borderColor: colors.blue
+      };
+    }
     return (
       <Card
         onPress={() => {
@@ -21,6 +55,7 @@ class GamingSessionItem extends PureComponent {
           });
         }}
         underlayColor="white"
+        style={cardStyle}
       >
         <View style={styles.box}>
           <View style={styles.leftBox}>
@@ -42,6 +77,9 @@ class GamingSessionItem extends PureComponent {
               style={[{ color: colors.grey }, styleSheet.typography["summary"]]}
               numberOfLines={2}
             >
+              {this.props.data.new_member ? "New Member! " : null}
+              {this.props.data.sherpa_requested ? "Sherpa Requested! " : null}
+              {this.props.data.beginners_welcome ? "Beginners Welcome! " : null}
               {this.props.data.name}
             </Text>
           </View>
