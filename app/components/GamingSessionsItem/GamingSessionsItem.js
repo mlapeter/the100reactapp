@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from "react";
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, Platform, StyleSheet, Text, View } from "react-native";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 import Moment from "../../../node_modules/react-moment";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -19,13 +19,17 @@ class GamingSessionItem extends PureComponent {
       cardStyle = {
         shadowColor: colors.green,
         shadowOpacity: 0.8,
-        shadowRadius: 3
+        shadowRadius: 3,
+        borderWidth: Platform.OS === "android" ? 0.75 : 0,
+        borderColor: colors.green
       };
     } else if (this.props.data.sherpa_requested) {
       cardStyle = {
         shadowColor: colors.orange,
         shadowOpacity: 0.8,
-        shadowRadius: 3
+        shadowRadius: 3,
+        borderWidth: Platform.OS === "android" ? 0.75 : 0,
+        borderColor: colors.orange
       };
     } else if (
       this.props.data.beginners_welcome ||
@@ -34,7 +38,9 @@ class GamingSessionItem extends PureComponent {
       cardStyle = {
         shadowColor: colors.blue,
         shadowOpacity: 0.8,
-        shadowRadius: 3
+        shadowRadius: 3,
+        borderWidth: Platform.OS === "android" ? 0.75 : 0,
+        borderColor: colors.blue
       };
     }
     return (

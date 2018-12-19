@@ -267,7 +267,18 @@ class GamingSession extends React.Component {
                 this.onLongPress();
               }
             }
-          : null;
+          : userIds.includes(this.props.user.id)
+            ? null
+            : {
+                icon: "more-horiz",
+                size: 24,
+                onPress: () => {
+                  this.onLongPress();
+                },
+                onLongPress: () => {
+                  this.onLongPress();
+                }
+              };
 
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;

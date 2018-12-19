@@ -36,7 +36,8 @@ const materialIcons = [
   "star-border",
   "chat-bubble-outline",
   "cancel",
-  "edit"
+  "edit",
+  "more-horiz"
 ];
 
 const icons = ["arrow-left", "share"];

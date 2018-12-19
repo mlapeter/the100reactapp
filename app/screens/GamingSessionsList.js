@@ -22,6 +22,7 @@ import moment from "moment";
 import Environment from "../config/environment";
 import { registerForPushNotificationsAsync } from "../utils/expoPushNotifications";
 import { Analytics, PageHit } from "expo-analytics";
+import { AndroidBackHandler } from "react-navigation-backhandler";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../../app/styles";
 import GamingSessionsItem from "../components/GamingSessionsItem/GamingSessionsItem";
@@ -125,6 +126,11 @@ class GamingSessionsList extends PureComponent {
       this.props.alertWithType("error", "Error", nextProps.gamingSessionsError);
     }
   }
+
+  onBackButtonPressAndroid = () => {
+    this.fetchGamingSessionsData();
+    return true;
+  };
 
   handleConnectivityChange = connectionInfo => {
     console.log(
@@ -408,170 +414,174 @@ class GamingSessionsList extends PureComponent {
 
   render() {
     return (
-      <View style={styles.container}>
-        <TopNav
-          user={this.props.user}
-          navigation={this.props.navigation}
-          title={"Games"}
-          newGameButton={true}
-          searchButton={
-            <GamingSessionsFilter updateFilter={this.updateFilter} />
-          }
-        />
+      <AndroidBackHandler onBackPress={this.onBackButtonPressAndroid}>
+        <View style={styles.container}>
+          <TopNav
+            user={this.props.user}
+            navigation={this.props.navigation}
+            title={"Games"}
+            newGameButton={true}
+            searchButton={
+              <GamingSessionsFilter updateFilter={this.updateFilter} />
+            }
+          />
 
-        <TouchableWithoutFeedback
-          onPress={() => {
-            Keyboard.dismiss();
-          }}
-        >
-          <Tabs>
-            <View title="PUBLIC GAMES" style={styles.content}>
-              <SectionList
-                renderItem={({ item }) => (
-                  <GamingSessionsItem
-                    data={{
-                      ...item,
-                      currentUserId: this.props.user.id
-                    }}
-                    navigation={this.props.navigation}
-                  />
-                )}
-                renderSectionHeader={({ section: { title } }) => (
-                  <View
-                    style={{
-                      padding: 5,
-                      paddingTop: 15,
-                      backgroundColor: colors.lightGray
-                    }}
-                  >
-                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
-                  </View>
-                )}
-                sections={this.gamingSessionsArray(this.props.gamingSessions)}
-                ListHeaderComponent={this.renderEmpty}
-                ListFooterComponent={this.renderFooter}
-                ListEmptyComponent={this.renderEmpty}
-                extraData={this.props.gamingSessions}
-                // Getting errors using game id
-                // keyExtractor={item => item.id}
-                keyExtractor={(item, index) => index}
-                refreshing={this.props.gamingSessionsRefreshing}
-                onRefresh={this.refreshGames}
-                onEndReached={this.loadMoreGamingSessions}
-                onEndReachedThreshold={0.8}
-              />
-            </View>
+          <TouchableWithoutFeedback
+            onPress={() => {
+              Keyboard.dismiss();
+            }}
+          >
+            <Tabs>
+              <View title="PUBLIC GAMES" style={styles.content}>
+                <SectionList
+                  renderItem={({ item }) => (
+                    <GamingSessionsItem
+                      data={{
+                        ...item,
+                        currentUserId: this.props.user.id
+                      }}
+                      navigation={this.props.navigation}
+                    />
+                  )}
+                  renderSectionHeader={({ section: { title } }) => (
+                    <View
+                      style={{
+                        padding: 5,
+                        paddingTop: 15,
+                        backgroundColor: colors.lightGray
+                      }}
+                    >
+                      <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                    </View>
+                  )}
+                  sections={this.gamingSessionsArray(this.props.gamingSessions)}
+                  ListHeaderComponent={this.renderEmpty}
+                  ListFooterComponent={this.renderFooter}
+                  ListEmptyComponent={this.renderEmpty}
+                  extraData={this.props.gamingSessions}
+                  // Getting errors using game id
+                  // keyExtractor={item => item.id}
+                  keyExtractor={(item, index) => index}
+                  refreshing={this.props.gamingSessionsRefreshing}
+                  onRefresh={this.refreshGames}
+                  onEndReached={this.loadMoreGamingSessions}
+                  onEndReachedThreshold={0.8}
+                />
+              </View>
 
-            <View title="GROUP GAMES" style={styles.content}>
-              <SectionList
-                // data={this.props.groupGamingSessions}
-                renderItem={({ item }) => (
-                  <GamingSessionsItem
-                    data={{
-                      ...item,
-                      currentUserId: this.props.user.id
-                    }}
-                    navigation={this.props.navigation}
-                  />
-                )}
-                renderSectionHeader={({ section: { title } }) => (
-                  <View
-                    style={{
-                      padding: 5,
-                      paddingTop: 15,
-                      backgroundColor: colors.lightGray
-                    }}
-                  >
-                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
-                  </View>
-                )}
-                sections={this.gamingSessionsArray(
-                  this.props.groupGamingSessions
-                )}
-                ListHeaderComponent={this.renderEmpty}
-                ListFooterComponent={this.renderGroupFooter}
-                ListEmptyComponent={this.renderEmpty}
-                extraData={this.props}
-                keyExtractor={(item, index) => index}
-                refreshing={this.props.groupGamingSessionsRefreshing}
-                onRefresh={this.refreshGroupGames}
-                onEndReached={this.loadMoreGroupGamingSessions}
-                onEndReachedThreshold={0}
-              />
-            </View>
-            <View title="MY GAMES" style={styles.content}>
-              <SectionList
-                // data={this.props.myGamingSessions}
-                renderItem={({ item }) => (
-                  <GamingSessionsItem
-                    data={{
-                      ...item,
-                      currentUserId: this.props.user.id
-                    }}
-                    navigation={this.props.navigation}
-                  />
-                )}
-                renderSectionHeader={({ section: { title } }) => (
-                  <View
-                    style={{
-                      padding: 5,
-                      paddingTop: 15,
-                      backgroundColor: colors.lightGray
-                    }}
-                  >
-                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
-                  </View>
-                )}
-                sections={this.gamingSessionsArray(this.props.myGamingSessions)}
-                ListHeaderComponent={this.renderEmpty}
-                ListFooterComponent={this.renderMyFooter}
-                extraData={this.props.myGamingSessions}
-                keyExtractor={(item, index) => index}
-                refreshing={this.props.myGamingSessionsRefreshing}
-                onRefresh={this.refreshMyGames}
-                onEndReached={this.loadMoreMyGamingSessions}
-                onEndReachedThreshold={0}
-              />
-            </View>
-            <View title="RECENT GAMES" style={styles.content}>
-              <SectionList
-                // data={this.props.myGamingSessions}
-                renderItem={({ item }) => (
-                  <GamingSessionsItem
-                    data={{
-                      ...item,
-                      currentUserId: this.props.user.id
-                    }}
-                    navigation={this.props.navigation}
-                  />
-                )}
-                renderSectionHeader={({ section: { title } }) => (
-                  <View
-                    style={{
-                      padding: 5,
-                      paddingTop: 15,
-                      backgroundColor: colors.lightGray
-                    }}
-                  >
-                    <Text style={{ fontWeight: "bold" }}>{title}</Text>
-                  </View>
-                )}
-                sections={this.gamingSessionsArray(
-                  this.props.recentGamingSessions
-                )}
-                ListHeaderComponent={this.renderEmpty}
-                ListFooterComponent={this.renderRecentFooter}
-                extraData={this.props.recentGamingSessions}
-                keyExtractor={(item, index) => index}
-                refreshing={this.props.recentGamingSessionsRefreshing}
-                onRefresh={this.refreshRecentGames}
-                onEndReached={this.loadMoreRecentGamingSessions}
-                onEndReachedThreshold={0}
-              />
-            </View>
-          </Tabs>
-        </TouchableWithoutFeedback>
-      </View>
+              <View title="GROUP GAMES" style={styles.content}>
+                <SectionList
+                  // data={this.props.groupGamingSessions}
+                  renderItem={({ item }) => (
+                    <GamingSessionsItem
+                      data={{
+                        ...item,
+                        currentUserId: this.props.user.id
+                      }}
+                      navigation={this.props.navigation}
+                    />
+                  )}
+                  renderSectionHeader={({ section: { title } }) => (
+                    <View
+                      style={{
+                        padding: 5,
+                        paddingTop: 15,
+                        backgroundColor: colors.lightGray
+                      }}
+                    >
+                      <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                    </View>
+                  )}
+                  sections={this.gamingSessionsArray(
+                    this.props.groupGamingSessions
+                  )}
+                  ListHeaderComponent={this.renderEmpty}
+                  ListFooterComponent={this.renderGroupFooter}
+                  ListEmptyComponent={this.renderEmpty}
+                  extraData={this.props}
+                  keyExtractor={(item, index) => index}
+                  refreshing={this.props.groupGamingSessionsRefreshing}
+                  onRefresh={this.refreshGroupGames}
+                  onEndReached={this.loadMoreGroupGamingSessions}
+                  onEndReachedThreshold={0}
+                />
+              </View>
+              <View title="MY GAMES" style={styles.content}>
+                <SectionList
+                  // data={this.props.myGamingSessions}
+                  renderItem={({ item }) => (
+                    <GamingSessionsItem
+                      data={{
+                        ...item,
+                        currentUserId: this.props.user.id
+                      }}
+                      navigation={this.props.navigation}
+                    />
+                  )}
+                  renderSectionHeader={({ section: { title } }) => (
+                    <View
+                      style={{
+                        padding: 5,
+                        paddingTop: 15,
+                        backgroundColor: colors.lightGray
+                      }}
+                    >
+                      <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                    </View>
+                  )}
+                  sections={this.gamingSessionsArray(
+                    this.props.myGamingSessions
+                  )}
+                  ListHeaderComponent={this.renderEmpty}
+                  ListFooterComponent={this.renderMyFooter}
+                  extraData={this.props.myGamingSessions}
+                  keyExtractor={(item, index) => index}
+                  refreshing={this.props.myGamingSessionsRefreshing}
+                  onRefresh={this.refreshMyGames}
+                  onEndReached={this.loadMoreMyGamingSessions}
+                  onEndReachedThreshold={0}
+                />
+              </View>
+              <View title="RECENT GAMES" style={styles.content}>
+                <SectionList
+                  // data={this.props.myGamingSessions}
+                  renderItem={({ item }) => (
+                    <GamingSessionsItem
+                      data={{
+                        ...item,
+                        currentUserId: this.props.user.id
+                      }}
+                      navigation={this.props.navigation}
+                    />
+                  )}
+                  renderSectionHeader={({ section: { title } }) => (
+                    <View
+                      style={{
+                        padding: 5,
+                        paddingTop: 15,
+                        backgroundColor: colors.lightGray
+                      }}
+                    >
+                      <Text style={{ fontWeight: "bold" }}>{title}</Text>
+                    </View>
+                  )}
+                  sections={this.gamingSessionsArray(
+                    this.props.recentGamingSessions
+                  )}
+                  ListHeaderComponent={this.renderEmpty}
+                  ListFooterComponent={this.renderRecentFooter}
+                  extraData={this.props.recentGamingSessions}
+                  keyExtractor={(item, index) => index}
+                  refreshing={this.props.recentGamingSessionsRefreshing}
+                  onRefresh={this.refreshRecentGames}
+                  onEndReached={this.loadMoreRecentGamingSessions}
+                  onEndReachedThreshold={0}
+                />
+              </View>
+            </Tabs>
+          </TouchableWithoutFeedback>
+        </View>
+      </AndroidBackHandler>
     );
   }
 }
