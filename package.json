@@ -42,6 +42,7 @@
     "expo": "^29.0.0",
     "expo-analytics": "^1.0.7",
     "firebase": "^4.4.0",
+    "formik": "1.4.1",
     "hoist-non-react-statics": "^2.3.1",
     "install": "^0.10.1",
     "jstz": "^2.0.0",
