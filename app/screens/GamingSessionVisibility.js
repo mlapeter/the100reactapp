@@ -14,14 +14,18 @@ import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { setGamingSessionVisibility } from "../actions/gamingSessions";
 import Card from "../components/Card";
-import { FieldWrapper } from "../components/Forms";
+import { FieldWrapper, FieldWrapperSwitch } from "../components/Forms";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 
 const StyledSwitch = ({ formikKey, formikProps, label, ...rest }) => {
   return (
-    <FieldWrapper label={label} formikKey={formikKey} formikProps={formikProps}>
+    <FieldWrapperSwitch
+      label={label}
+      formikKey={formikKey}
+      formikProps={formikProps}
+    >
       <Switch
         style={{ transform: [{ scaleX: 1.2 }, { scaleY: 1.2 }] }}
         value={formikProps.values[formikKey]}
@@ -31,7 +35,7 @@ const StyledSwitch = ({ formikKey, formikProps, label, ...rest }) => {
         }}
         {...rest}
       />
-    </FieldWrapper>
+    </FieldWrapperSwitch>
   );
 };
 
