@@ -1,3 +1,5 @@
+export const SET_GAMING_SESSION_VISIBILITY = "SET_GAMING_SESSION_VISIBILITY";
+
 export const CREATE_GAMING_SESSION = "CREATE_GAMING_SESSION";
 export const CREATE_GAMING_SESSION_RESULT =
   "CREATE_GAMING_SESSION_ERROR_RESULT";
@@ -74,6 +76,11 @@ export const FETCH_PROFILE_GAMING_SESSIONS_ERROR =
   "FETCH_PROFILE_GAMING_SESSIONS_ERROR";
 export const FETCH_PROFILE_GAMING_SESSIONS_NO_DATA =
   "FETCH_PROFILE_GAMING_SESSIONS_NO_DATA";
+
+export const setGamingSessionVisibility = gamingSessionVisibility => ({
+  type: SET_GAMING_SESSION_VISIBILITY,
+  gamingSessionVisibility
+});
 
 export const createGamingSession = gamingSession => ({
   type: CREATE_GAMING_SESSION,

@@ -1,6 +1,7 @@
 import Environment from "../config/environment";
 
 import {
+  SET_GAMING_SESSION_VISIBILITY,
   CREATE_GAMING_SESSION,
   CREATE_GAMING_SESSION_RESULT,
   CREATE_GAMING_SESSION_ERROR,
@@ -63,6 +64,7 @@ export const initialState = {
   gameEdited: false,
   gamingSessionId: null,
   gamingSession: {},
+  gamingSessionVisibility: {},
   gamingSessionLoading: true,
 
   moreGamingSessionsAvailable: true,
@@ -84,6 +86,11 @@ export const initialState = {
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case SET_GAMING_SESSION_VISIBILITY:
+      return {
+        ...state,
+        gamingSessionVisibility: action.gamingSessionVisibility
+      };
     case CREATE_GAMING_SESSION:
       return {
         ...state,
@@ -120,7 +127,9 @@ export default (state = initialState, action) => {
         isLoading: false,
         gameEdited: true,
         successAt: new Date(),
-        gamingSession: action.result
+        gamingSession: {}
+
+        // gamingSession: action.result
       };
     case EDIT_GAMING_SESSION_ERROR:
       return {
