@@ -171,7 +171,10 @@ export default class GamingSessionForm extends React.Component {
         activity: this.state.selectedActivity,
         description: this.props.gamingSession.name,
         start_time: new Date(this.props.gamingSession.start_time),
-        group: this.props.gamingSession.group_name,
+        group:
+          this.props.groups && this.props.groups.length != 0
+            ? this.props.gamingSession.group_name
+            : null,
         // friends_only: this.props.gamingSession.friends_only,
         // group_only: this.props.gamingSession.group_only,
         make_auto_public: this.props.gamingSession.make_auto_public,
@@ -242,7 +245,8 @@ export default class GamingSessionForm extends React.Component {
       this.props.isCreating ||
       this.props.isEditing ||
       !this.props.user ||
-      this.state.loading
+      this.state.loading ||
+      !this.state.game
     ) {
       return (
         <View style={styles.outerContainer}>
@@ -257,11 +261,6 @@ export default class GamingSessionForm extends React.Component {
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Card>
-            {/* <TouchableWithoutFeedback
-            onPress={() => {
-              Keyboard.dismiss();
-            }}
-          > */}
             <View style={styles.container}>
               <Toggle
                 title={this.state.game.name}
@@ -305,7 +304,7 @@ export default class GamingSessionForm extends React.Component {
                 }}
                 underlayColor={colors.primaryBlue}
               >
-                <Text style={styles.buttonText}>Create Gaming Session</Text>
+                <Text style={styles.buttonText}>Submit</Text>
               </TouchableHighlight>
             </View>
             {/* </TouchableWithoutFeedback> */}

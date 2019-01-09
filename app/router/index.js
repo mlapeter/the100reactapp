@@ -335,9 +335,23 @@ GamingSessionCreate.navigationOptions = ({ navigation }) => ({
 //   headerTitle: "New Gaming Session"
 // };
 
-GamingSessionEdit.navigationOptions = {
-  headerTitle: "Edit Gaming Session"
-};
+GamingSessionEdit.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerTitle: "",
+  headerStyle: styles.headerStyle,
+  headerTitleStyle: styles.headerTitleStyle
+});
+
+// GamingSessionEdit.navigationOptions = {
+//   headerTitle: "Edit Gaming Session"
+// };
 
 GamingSession.navigationOptions = {
   header: null

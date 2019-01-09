@@ -36,7 +36,7 @@ export default (styles = StyleSheet.create({
 
   container: {
     flex: 1,
-    marginTop: 25,
+    marginTop: 5,
     padding: 5,
     margin: 3,
     flex: 1,

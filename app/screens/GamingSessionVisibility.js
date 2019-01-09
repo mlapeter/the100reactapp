@@ -18,7 +18,6 @@ import { FieldWrapper } from "../components/Forms";
 
 import { Formik } from "formik";
 import * as yup from "yup";
-import { form } from "tcomb-form-native/lib";
 
 const StyledSwitch = ({ formikKey, formikProps, label, ...rest }) => {
   return (
@@ -90,17 +89,6 @@ const validationSchema = yup.object().shape({
   //   .test("is-true", "Must agree to continue.", value => value === true)
 });
 
-const signUp = ({ email }) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (email === "a@a.com") {
-        reject(new Error("nope!"));
-      }
-      resolve(true);
-    }, 1000);
-  });
-};
-
 class GamingSessionVisibility extends React.Component {
   constructor(props) {
     super(props);
@@ -110,19 +98,41 @@ class GamingSessionVisibility extends React.Component {
   render() {
     return (
       <SafeAreaView style={styles.container}>
+        {this.props.navigation.state.params &&
+        this.props.navigation.state.params.gamingSessionId ? (
+          <View style={styles.logoutContainer}>
+            <Button
+              style={{
+                height: 25,
+                width: 180,
+                marginBottom: 25
+              }}
+              onPress={() =>
+                this.props.navigation.navigate({
+                  routeName: "GamingSessionEdit",
+                  params: {
+                    confirmDelete: true
+                  }
+                })
+              }
+              title="Delete"
+            />
+          </View>
+        ) : null}
         <Card>
           <Text
             style={[
               styles.headline,
               styleSheet.typography["headline"],
-              { marginVertical: 20 }
+              { marginVertical: 20, textAlign: "center" }
             ]}
           >
             Who Can View This Gaming Session?
           </Text>
           <Formik
             initialValues={
-              this.props.gamingSession.id
+              this.props.navigation.state.params &&
+              this.props.navigation.state.params.gamingSessionId
                 ? {
                     publicVisible: this.props.gamingSession.public_visible,
                     groupVisible: this.props.gamingSession.group_visible,
@@ -138,7 +148,10 @@ class GamingSessionVisibility extends React.Component {
             }
             onSubmit={(values, actions) => {
               this.props.dispatch(setGamingSessionVisibility(values));
-              if (this.props.gamingSession.id) {
+              if (
+                this.props.navigation.state.params &&
+                this.props.navigation.state.params.gamingSessionId
+              ) {
                 this.props.navigation.navigate("GamingSessionEdit");
               } else {
                 this.props.navigation.navigate("GamingSessionCreate");
@@ -197,6 +210,12 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     justifyContent: "center"
+  },
+  logoutContainer: {
+    flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    padding: 10
   }
 });
 

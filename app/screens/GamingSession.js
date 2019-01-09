@@ -252,7 +252,13 @@ class GamingSession extends React.Component {
             text: "Edit",
             size: 24,
             onPress: () => {
-              this.props.navigation.navigate("GamingSessionVisibility");
+              this.props.navigation.navigate({
+                routeName: "GamingSessionVisibility",
+                params: {
+                  gamingSessionId: this.props.gamingSession.id
+                },
+                key: "gamingSessionVisibility-" + this.props.gamingSession.id
+              });
             }
           }
         : this.state.reserveButtonVisible === true
