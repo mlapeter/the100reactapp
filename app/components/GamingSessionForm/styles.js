@@ -14,27 +14,29 @@ export default (styles = StyleSheet.create({
   },
   button: {
     height: 36,
-    backgroundColor: "#48BBEC",
+    backgroundColor: colors.blue,
     borderColor: "#48BBEC",
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
     alignSelf: "stretch",
-    justifyContent: "center"
+    justifyContent: "center",
+    paddingVertical: 5,
+    marginBottom: 15
   },
 
   scrollContainer: {
-    backgroundColor: colors.white
+    // backgroundColor: colors.white
   },
 
   outerContainer: {
-    flex: 1,
-    backgroundColor: colors.white
+    flex: 1
+    // backgroundColor: colors.white
   },
 
   container: {
     flex: 1,
-    marginTop: 25,
+    marginTop: 5,
     padding: 5,
     margin: 3,
     flex: 1,

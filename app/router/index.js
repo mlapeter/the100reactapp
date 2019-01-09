@@ -27,6 +27,7 @@ import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
 import GamingSessionCreate from "../screens/GamingSessionCreate";
 import GamingSessionEdit from "../screens/GamingSessionEdit";
+import GamingSessionVisibility from "../screens/GamingSessionVisibility";
 
 import Groups from "../screens/Groups/";
 import Group from "../screens/Group/";
@@ -48,6 +49,51 @@ import Chatroom from "../screens/Chatroom";
 
 // For navigation, start with rootNavigator around line 170
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingTop: 20,
+    backgroundColor: colors.veryDarkGrey
+  },
+  menuItem: {
+    // padding: 15,
+    marginLeft: 15,
+    marginVertical: 10,
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    opacity: colors.primaryOpacity
+  },
+  icon: {
+    width: 24,
+    height: 24,
+    color: colors.white
+    // opacity: colors.primaryOpacity
+  },
+  menuText: {
+    fontWeight: "bold",
+    marginLeft: 30,
+    color: colors.white
+  },
+  headerStyle: {
+    backgroundColor: colors.veryDarkGrey,
+    height: 40
+    // paddingHorizontal: 20
+  },
+  headerTitleStyle: {
+    color: colors.white
+  },
+  backButtonStyle: {
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    marginHorizontal: 15,
+    marginBottom: 5
+    // backgroundColor: colors.darkGrey
+  },
+  backTitle: {
+    color: colors.white
+  }
+});
+
 // StackNavigators for BottomTabNavigator items
 
 const GamingSessionsStack = createStackNavigator({
@@ -58,7 +104,8 @@ const GamingSessionsStack = createStackNavigator({
   GroupChat: { screen: Chatroom },
   GamingSessionChat: { screen: Chatroom },
   GamingSessionCreate: { screen: GamingSessionCreate },
-  GamingSessionEdit: { screen: GamingSessionEdit }
+  GamingSessionEdit: { screen: GamingSessionEdit },
+  GamingSessionVisibility: { screen: GamingSessionVisibility }
 });
 
 const GroupsStack = createStackNavigator({
@@ -201,12 +248,18 @@ navigateTo = (navigation, route) => {
 };
 // Login/ New User stack if not already logged in
 
-const AuthStack = createStackNavigator({
-  AuthMainPage: AuthMainPage,
-  Login: Login,
-  ForgotPassword: ForgotPassword,
-  Onboarding: { screen: OnboardingFlowStack }
-});
+const AuthStack = createStackNavigator(
+  {
+    AuthMainPage: AuthMainPage,
+    Login: Login,
+    ForgotPassword: ForgotPassword,
+    Onboarding: { screen: OnboardingFlowStack }
+  },
+  {
+    headerStyle: styles.headerStyle,
+    headerTitleStyle: styles.headerTitleStyle
+  }
+);
 
 // SwitchNavigator to initially load app and redirect to app or auth stack if no login found
 
@@ -232,7 +285,6 @@ Login.navigationOptions = ({ navigation }) => ({
       }}
     />
   ),
-  headerTitle: "",
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
@@ -251,19 +303,63 @@ ForgotPassword.navigationOptions = ({ navigation }) => ({
   headerTitleStyle: styles.headerTitleStyle
 });
 
-GamingSessionCreate.navigationOptions = {
-  headerTitle: "New Gaming Session"
-};
+GamingSessionVisibility.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerTitle: "",
+  headerStyle: styles.headerStyle,
+  headerTitleStyle: styles.headerTitleStyle
+});
 
-GamingSessionEdit.navigationOptions = {
-  headerTitle: "Edit Gaming Session"
-};
+GamingSessionCreate.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerTitle: "",
+  headerStyle: styles.headerStyle,
+  headerTitleStyle: styles.headerTitleStyle
+});
+
+// GamingSessionCreate.navigationOptions = {
+//   headerTitle: "New Gaming Session"
+// };
+
+GamingSessionEdit.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerTitle: "",
+  headerStyle: styles.headerStyle,
+  headerTitleStyle: styles.headerTitleStyle
+});
+
+// GamingSessionEdit.navigationOptions = {
+//   headerTitle: "Edit Gaming Session"
+// };
 
 GamingSession.navigationOptions = {
   header: null
 };
 
 GamingSessionsList.navigationOptions = {
+  headerStyle: { backgroundColor: colors.veryDarkGrey },
+
   header: null
 };
 
@@ -288,6 +384,7 @@ User.navigationOptions = {
 };
 
 AuthMainPage.navigationOptions = {
+  headerStyle: { backgroundColor: colors.veryDarkGrey },
   header: null
 };
 
@@ -343,52 +440,8 @@ FriendsStack.navigationOptions = {
 
 const BackButton = ({ onPress, title }) => (
   <TouchableOpacity onPress={onPress} style={styles.backButtonStyle}>
-    <Text style={styles.backTitle}>{title}</Text>
+    <Text style={styles.backTitle}>&lsaquo; {title}</Text>
   </TouchableOpacity>
 );
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 20,
-    backgroundColor: colors.veryDarkGrey
-  },
-  menuItem: {
-    // padding: 15,
-    marginLeft: 15,
-    marginVertical: 10,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    opacity: colors.primaryOpacity
-  },
-  icon: {
-    width: 24,
-    height: 24,
-    color: colors.white
-    // opacity: colors.primaryOpacity
-  },
-  menuText: {
-    fontWeight: "bold",
-    marginLeft: 30,
-    color: colors.white
-  },
-  headerStyle: {
-    backgroundColor: colors.veryDarkGrey,
-    height: 60
-    // paddingHorizontal: 20
-  },
-  headerTitleStyle: {
-    color: colors.white
-  },
-  backButtonStyle: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
-    marginHorizontal: 15,
-    backgroundColor: colors.darkGrey
-  },
-  backTitle: {
-    color: colors.white
-  }
-});
 
 export default rootNavigator;

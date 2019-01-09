@@ -13,11 +13,15 @@ type CardProps = {
 export default class Card extends React.PureComponent<CardProps> {
   render(): React.Node {
     const { style, onPress, children } = this.props;
-    return (
-      <TouchableOpacity {...{ onPress }}>
-        <View style={[styles.card, style]}>{children}</View>
-      </TouchableOpacity>
-    );
+    if (onPress) {
+      return (
+        <TouchableOpacity {...{ onPress }}>
+          <View style={[styles.card, style]}>{children}</View>
+        </TouchableOpacity>
+      );
+    } else {
+      return <View style={[styles.card, style]}>{children}</View>;
+    }
   }
 }
 

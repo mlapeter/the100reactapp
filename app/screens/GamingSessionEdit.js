@@ -116,7 +116,12 @@ class GamingSessionEdit extends React.Component {
                       deleteGamingSession(this.props.gamingSession.id)
                     )
                   }
-                  title="Delete"
+                  title={
+                    this.props.navigation.state.params &&
+                    this.props.navigation.state.params.confirmDelete
+                      ? "Confirm Delete"
+                      : "Delete"
+                  }
                 />
               </View>
               <GamingSessionForm
@@ -163,23 +168,23 @@ const styles = StyleSheet.create({
   },
 
   scrollContainer: {
-    backgroundColor: colors.white
+    // backgroundColor: colors.white
   },
 
   outerContainer: {
-    flex: 1,
-    backgroundColor: colors.white
+    flex: 1
+    // backgroundColor: colors.white
   },
 
   container: {
     flex: 1,
-    marginTop: 30,
+    // marginTop: 30,
     padding: 5,
     margin: 3,
     flex: 1,
     flexDirection: "column",
-    justifyContent: "center",
-    backgroundColor: colors.white
+    justifyContent: "center"
+    // backgroundColor: colors.white
   },
   loading: {
     alignItems: "center",
