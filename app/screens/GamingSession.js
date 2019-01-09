@@ -252,33 +252,33 @@ class GamingSession extends React.Component {
             text: "Edit",
             size: 24,
             onPress: () => {
-              this.props.navigation.navigate("GamingSessionEdit");
+              this.props.navigation.navigate("GamingSessionVisibility");
             }
           }
         : this.state.reserveButtonVisible === true
-          ? {
-              icon: "outline-person_add-24px",
-              text: "Join as Reserve",
-              size: 24,
-              onPress: () => {
-                this.joinGameAsReserve();
-              },
-              onLongPress: () => {
-                this.onLongPress();
-              }
+        ? {
+            icon: "outline-person_add-24px",
+            text: "Join as Reserve",
+            size: 24,
+            onPress: () => {
+              this.joinGameAsReserve();
+            },
+            onLongPress: () => {
+              this.onLongPress();
             }
-          : userIds.includes(this.props.user.id)
-            ? null
-            : {
-                icon: "more-horiz",
-                size: 24,
-                onPress: () => {
-                  this.onLongPress();
-                },
-                onLongPress: () => {
-                  this.onLongPress();
-                }
-              };
+          }
+        : userIds.includes(this.props.user.id)
+        ? null
+        : {
+            icon: "more-horiz",
+            size: 24,
+            onPress: () => {
+              this.onLongPress();
+            },
+            onLongPress: () => {
+              this.onLongPress();
+            }
+          };
 
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;

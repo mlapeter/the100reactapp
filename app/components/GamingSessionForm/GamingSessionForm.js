@@ -17,6 +17,7 @@ import { colors, fontSizes, fontStyles } from "../../styles";
 import styles from "./styles";
 import moment from "../../../node_modules/moment";
 import Toggle from "../Toggle";
+import Card from "../Card";
 
 var t = require("tcomb-form-native");
 var Form = t.form.Form;
@@ -54,7 +55,6 @@ export default class GamingSessionForm extends React.Component {
 
   fetchActivities = gameId => {
     console.log("FETCHING ACTIVITIES IN FORM, GAME ID: ", gameId);
-    console.log(this.props.games);
     this.setState({
       loading: true
     });
@@ -129,10 +129,10 @@ export default class GamingSessionForm extends React.Component {
       game_id: t.maybe(t.Number),
       activity: t.maybe(finalActivities),
       description: t.maybe(t.String),
-      start_time: t.maybe(t.Date),
+      start_time: t.Date,
       group: t.maybe(finalGroups),
-      friends_only: t.maybe(t.Boolean),
-      group_only: t.maybe(t.Boolean),
+      // friends_only: t.maybe(t.Boolean),
+      // group_only: t.maybe(t.Boolean),
       make_auto_public: t.maybe(t.Boolean),
       beginners_welcome: t.maybe(t.Boolean),
       sherpa_requested: t.maybe(t.Boolean),
@@ -151,8 +151,8 @@ export default class GamingSessionForm extends React.Component {
         description: this.state.formData.description,
         start_time: this.state.formData.start_time,
         group: this.state.formData.group,
-        friends_only: this.state.formData.friends_only,
-        group_only: this.state.formData.group_only,
+        // friends_only: this.state.formData.friends_only,
+        // group_only: this.state.formData.group_only,
         make_auto_public: this.state.formData.make_auto_public,
         beginners_welcome: this.state.formData.beginners_welcome,
         sherpa_requested: this.state.formData.sherpa_requested,
@@ -172,8 +172,8 @@ export default class GamingSessionForm extends React.Component {
         description: this.props.gamingSession.name,
         start_time: new Date(this.props.gamingSession.start_time),
         group: this.props.gamingSession.group_name,
-        friends_only: this.props.gamingSession.friends_only,
-        group_only: this.props.gamingSession.group_only,
+        // friends_only: this.props.gamingSession.friends_only,
+        // group_only: this.props.gamingSession.group_only,
         make_auto_public: this.props.gamingSession.make_auto_public,
         beginners_welcome: this.props.gamingSession.beginners_welcome,
         sherpa_requested: this.props.gamingSession.sherpa_requested,
@@ -256,58 +256,60 @@ export default class GamingSessionForm extends React.Component {
     return (
       <View style={styles.outerContainer}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-          {/* <TouchableWithoutFeedback
+          <Card>
+            {/* <TouchableWithoutFeedback
             onPress={() => {
               Keyboard.dismiss();
             }}
           > */}
-          <View style={styles.container}>
-            <Toggle
-              title={this.state.game.name}
-              toggle={() => this.toggleGames()}
-            />
+            <View style={styles.container}>
+              <Toggle
+                title={this.state.game.name}
+                toggle={() => this.toggleGames()}
+              />
 
-            {this.state.viewGames ? (
-              <View>
-                <Picker
-                  style={styles.pickerStyle}
-                  selectedValue={this.state.game.id}
-                  onValueChange={gameId => {
-                    this.switchActivities(gameId);
-                  }}
-                >
-                  {this.props.games.map(game => (
-                    <Picker.Item
-                      key={game.id}
-                      label={game.name.toString()}
-                      value={game.id}
-                    />
-                  ))}
-                </Picker>
-              </View>
-            ) : null}
+              {this.state.viewGames ? (
+                <View>
+                  <Picker
+                    style={styles.pickerStyle}
+                    selectedValue={this.state.game.id}
+                    onValueChange={gameId => {
+                      this.switchActivities(gameId);
+                    }}
+                  >
+                    {this.props.games.map(game => (
+                      <Picker.Item
+                        key={game.id}
+                        label={game.name.toString()}
+                        value={game.id}
+                      />
+                    ))}
+                  </Picker>
+                </View>
+              ) : null}
 
-            <Form
-              ref="form"
-              type={GamingSession}
-              options={options}
-              value={value}
-            />
-            <Toggle
-              title="Advanced Options"
-              toggle={() => this.toggleAdvancedOptions()}
-            />
-            <TouchableHighlight
-              style={styles.button}
-              onPress={() => {
-                this.props.handlePress(this.refs.form.getValue());
-              }}
-              underlayColor="#99d9f4"
-            >
-              <Text style={styles.buttonText}>Save</Text>
-            </TouchableHighlight>
-          </View>
-          {/* </TouchableWithoutFeedback> */}
+              <Form
+                ref="form"
+                type={GamingSession}
+                options={options}
+                value={value}
+              />
+              <Toggle
+                title="Advanced Options"
+                toggle={() => this.toggleAdvancedOptions()}
+              />
+              <TouchableHighlight
+                style={styles.button}
+                onPress={() => {
+                  this.props.handlePress(this.refs.form.getValue());
+                }}
+                underlayColor={colors.primaryBlue}
+              >
+                <Text style={styles.buttonText}>Create Gaming Session</Text>
+              </TouchableHighlight>
+            </View>
+            {/* </TouchableWithoutFeedback> */}
+          </Card>
         </ScrollView>
       </View>
     );

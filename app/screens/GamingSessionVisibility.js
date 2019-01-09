@@ -10,31 +10,15 @@ import {
   StyleSheet
 } from "react-native";
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
+import { connect } from "react-redux";
+import { connectAlert } from "../components/Alert";
+import { setGamingSessionVisibility } from "../actions/gamingSessions";
 import Card from "../components/Card";
+import { FieldWrapper } from "../components/Forms";
 
 import { Formik } from "formik";
 import * as yup from "yup";
 import { form } from "tcomb-form-native/lib";
-
-const FieldWrapper = ({ children, label, formikProps, formikKey }) => {
-  return (
-    <View style={{ marginHorizontal: 20, marginVertical: 5 }}>
-      <Text
-        style={[
-          styles.headline,
-          styleSheet.typography["headline"],
-          { marginBottom: 6 }
-        ]}
-      >
-        {label}
-      </Text>
-      {children}
-      <Text style={{ color: "red" }}>
-        {formikProps.touched[formikKey] && formikProps.errors[formikKey]}
-      </Text>
-    </View>
-  );
-};
 
 const StyledSwitch = ({ formikKey, formikProps, label, ...rest }) => {
   return (
@@ -117,87 +101,96 @@ const signUp = ({ email }) => {
   });
 };
 
-export default () => (
-  <SafeAreaView style={styles.container}>
-    <Card>
-      <Text
-        style={[
-          styles.headline,
-          styleSheet.typography["headline"],
-          { marginVertical: 20 }
-        ]}
-      >
-        Who Can View/ Join?
-      </Text>
-      <Formik
-        initialValues={{
-          publicVisible: true,
-          groupVisible: true,
-          friendsVisible: true,
-          privateVisible: false
-        }}
-        onSubmit={(values, actions) => {
-          signUp({ email: values.email })
-            .then(() => {
-              alert(JSON.stringify(values));
-            })
-            .catch(error => {
-              actions.setFieldError("general", error.message);
-            })
-            .finally(() => {
-              actions.setSubmitting(false);
-            });
-        }}
-        validationSchema={validationSchema}
-      >
-        {formikProps => (
-          <React.Fragment>
-            <StyledSwitch
-              label="Public"
-              formikKey="publicVisible"
-              formikProps={formikProps}
-            />
-            <StyledSwitch
-              label="Visible to Group"
-              formikKey="groupVisible"
-              formikProps={formikProps}
-            />
-            <StyledSwitch
-              label="Visible to Friends"
-              formikKey="friendsVisible"
-              formikProps={formikProps}
-            />
+class GamingSessionVisibility extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-            <StyledSwitch
-              label="Private"
-              formikKey="privateVisible"
-              formikProps={formikProps}
-            />
-
-            {formikProps.isSubmitting ? (
-              <ActivityIndicator />
-            ) : (
+  render() {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Card>
+          <Text
+            style={[
+              styles.headline,
+              styleSheet.typography["headline"],
+              { marginVertical: 20 }
+            ]}
+          >
+            Who Can View This Gaming Session?
+          </Text>
+          <Formik
+            initialValues={
+              this.props.gamingSession.id
+                ? {
+                    publicVisible: this.props.gamingSession.public_visible,
+                    groupVisible: this.props.gamingSession.group_visible,
+                    friendsVisible: this.props.gamingSession.friends_visible,
+                    privateVisible: this.props.gamingSession.private_visible
+                  }
+                : {
+                    publicVisible: true,
+                    groupVisible: true,
+                    friendsVisible: true,
+                    privateVisible: false
+                  }
+            }
+            onSubmit={(values, actions) => {
+              this.props.dispatch(setGamingSessionVisibility(values));
+              if (this.props.gamingSession.id) {
+                this.props.navigation.navigate("GamingSessionEdit");
+              } else {
+                this.props.navigation.navigate("GamingSessionCreate");
+              }
+            }}
+            validationSchema={validationSchema}
+          >
+            {formikProps => (
               <React.Fragment>
-                <Button
-                  title="Create Gaming Session!"
-                  onPress={formikProps.handleSubmit}
+                <StyledSwitch
+                  label="Public"
+                  formikKey="publicVisible"
+                  formikProps={formikProps}
                 />
-                <Text style={{ color: "red" }}>
-                  {formikProps.errors.general}
-                </Text>
+                <StyledSwitch
+                  label="My Group"
+                  formikKey="groupVisible"
+                  formikProps={formikProps}
+                />
+                <StyledSwitch
+                  label="My Friends"
+                  formikKey="friendsVisible"
+                  formikProps={formikProps}
+                />
+
+                <StyledSwitch
+                  label="Private/ Unlisted"
+                  formikKey="privateVisible"
+                  formikProps={formikProps}
+                />
+
+                <React.Fragment>
+                  <Button
+                    title="Next &raquo;"
+                    onPress={formikProps.handleSubmit}
+                  />
+                  <Text style={{ color: "red" }}>
+                    {formikProps.errors.general}
+                  </Text>
+                </React.Fragment>
               </React.Fragment>
             )}
-          </React.Fragment>
-        )}
-      </Formik>
-    </Card>
-  </SafeAreaView>
-);
+          </Formik>
+        </Card>
+      </SafeAreaView>
+    );
+  }
+}
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: colors.white
+    flex: 1
   },
   loading: {
     flex: 1,
@@ -206,3 +199,15 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 });
+
+const mapStateToProps = state => {
+  const user = state.users.currentUser;
+  const gamingSession = state.gamingSessions.gamingSession;
+
+  return {
+    user,
+    gamingSession
+  };
+};
+
+export default connect(mapStateToProps)(connectAlert(GamingSessionVisibility));

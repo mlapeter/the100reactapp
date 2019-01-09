@@ -437,9 +437,11 @@ function* createGamingSession() {
     let gamingSession = yield select(
       state => state.gamingSessions.gamingSession
     );
+    let gamingSessionVisibility = yield select(
+      state => state.gamingSessions.gamingSessionVisibility
+    );
     let platform = yield select(state => state.search.platform);
     // let gameId = yield select(state => state.search.gameId);
-
     const response = yield fetch(
       Environment["API_BASE_URL"] +
         Environment["API_VERSION"] +
@@ -458,15 +460,19 @@ function* createGamingSession() {
           activity: gamingSession.activity,
           start_time: gamingSession.start_time,
           group_name: gamingSession.group ? gamingSession.group : null,
-          friends_only: gamingSession.friends_only,
-          group_only: gamingSession.group_only,
+          // friends_only: gamingSession.friends_only,
+          // group_only: gamingSession.group_only,
           make_auto_public: gamingSession.make_auto_public,
           beginners_welcome: gamingSession.beginners_welcome,
           sherpa_requested: gamingSession.sherpa_requested,
           headset_required: gamingSession.mic_required,
           party_size: gamingSession.party_size,
           platform: gamingSession.platform,
-          created_from: "mobile-app"
+          created_from: "mobile-app",
+          public_visible: gamingSessionVisibility.publicVisible,
+          group_visible: gamingSessionVisibility.groupVisible,
+          friends_visible: gamingSessionVisibility.friendsVisible,
+          private_visible: gamingSessionVisibility.privateVisible
         })
       }
     );
@@ -492,6 +498,9 @@ function* editGamingSession() {
     );
     let gamingSessionId = yield select(
       state => state.gamingSessions.gamingSessionId
+    );
+    let gamingSessionVisibility = yield select(
+      state => state.gamingSessions.gamingSessionVisibility
     );
     let platform = yield select(state => state.search.platform);
     console.log(
@@ -520,14 +529,18 @@ function* editGamingSession() {
           start_time: gamingSession.start_time,
           start_date: gamingSession.start_time,
           group_name: gamingSession.group,
-          friends_only: gamingSession.friends_only,
-          group_only: gamingSession.group_only,
+          // friends_only: gamingSession.friends_only,
+          // group_only: gamingSession.group_only,
           make_auto_public: gamingSession.make_auto_public,
           beginners_welcome: gamingSession.beginners_welcome,
           sherpa_requested: gamingSession.sherpa_requested,
           mic_required: gamingSession.mic_required,
           party_size: gamingSession.party_size,
-          platform: gamingSession.platform
+          platform: gamingSession.platform,
+          public_visible: gamingSessionVisibility.publicVisible,
+          group_visible: gamingSessionVisibility.groupVisible,
+          friends_visible: gamingSessionVisibility.friendsVisible,
+          private_visible: gamingSessionVisibility.privateVisible
         })
       }
     );
