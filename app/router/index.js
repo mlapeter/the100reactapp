@@ -27,6 +27,7 @@ import GamingSessionsList from "../screens/GamingSessionsList";
 import GamingSession from "../screens/GamingSession";
 import GamingSessionCreate from "../screens/GamingSessionCreate";
 import GamingSessionEdit from "../screens/GamingSessionEdit";
+import GamingSessionVisibility from "../screens/GamingSessionVisibility";
 
 import Groups from "../screens/Groups/";
 import Group from "../screens/Group/";
@@ -58,7 +59,8 @@ const GamingSessionsStack = createStackNavigator({
   GroupChat: { screen: Chatroom },
   GamingSessionChat: { screen: Chatroom },
   GamingSessionCreate: { screen: GamingSessionCreate },
-  GamingSessionEdit: { screen: GamingSessionEdit }
+  GamingSessionEdit: { screen: GamingSessionEdit },
+  GamingSessionVisibility: { screen: GamingSessionVisibility }
 });
 
 const GroupsStack = createStackNavigator({

@@ -103,7 +103,7 @@ export default class TopNav extends Component {
             <TouchableOpacity
               style={{ padding: 4 }}
               onPress={() =>
-                this.props.navigation.navigate("GamingSessionCreate")
+                this.props.navigation.navigate("GamingSessionVisibility")
               }
             >
               <MaterialIcons
