@@ -16,6 +16,7 @@ import {
   createDrawerNavigator,
   createSwitchNavigator
 } from "react-navigation";
+import Icon from "../components/Icon";
 
 import AuthLoading from "../screens/AuthLoading";
 import OnboardingFlowStack from "./onboarding-flow";
@@ -29,6 +30,7 @@ import GamingSessionCreate from "../screens/GamingSessionCreate";
 import GamingSessionEdit from "../screens/GamingSessionEdit";
 import GamingSessionVisibility from "../screens/GamingSessionVisibility";
 
+import Feed from "../screens/Feed/";
 import Groups from "../screens/Groups/";
 import Group from "../screens/Group/";
 import NotificationsList from "../screens/NotificationsList";
@@ -131,6 +133,8 @@ const FriendsStack = createStackNavigator({
 
 const HomeTabs = createBottomTabNavigator(
   {
+    Feed: { screen: Feed },
+
     Games: { screen: GamingSessionsStack },
     Groups: { screen: GroupsStack },
     NotificationsList: { screen: NotificationsStack },
@@ -393,6 +397,13 @@ OnboardingFlowStack.navigationOptions = {
 };
 
 // Stack Navigation Options
+
+Feed.navigationOptions = {
+  tabBarLabel: "Feed",
+  tabBarIcon: ({ tintColor, focused }) => (
+    <Icon name="feed" color={tintColor} size={26} />
+  )
+};
 
 GamingSessionsStack.navigationOptions = {
   tabBarLabel: "Games",

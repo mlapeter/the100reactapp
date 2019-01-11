@@ -6,13 +6,7 @@ import moment from "moment";
 import "moment-timezone";
 
 const TimeAgo = ({ date, ...rest }) => {
-  return (
-    <Text {...rest}>
-      {moment(date).calendar({
-        sameElse: "L [at] LT"
-      })}
-    </Text>
-  );
+  return <Text {...rest}>{moment(date).fromNow()}</Text>;
 };
 
 TimeAgo.propTypes = {

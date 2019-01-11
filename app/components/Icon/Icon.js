@@ -24,7 +24,12 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 
-export type IconName = "arrow-left" | "share" | "battlenet" | "ubisoft";
+export type IconName =
+  | "arrow-left"
+  | "share"
+  | "battlenet"
+  | "ubisoft"
+  | "feed";
 
 const customIcons = ["outline-person_add-24px"];
 
@@ -40,7 +45,7 @@ const materialIcons = [
   "more-horiz"
 ];
 
-const icons = ["arrow-left", "share"];
+const icons = ["arrow-left", "share", "feed"];
 
 type IconProps = {
   name: IconName,
