@@ -14,11 +14,7 @@ import FeedItem from "../components/FeedItem";
 class Feed extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchNotifications());
-
-    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
-    analytics
-      .hit(new PageHit("App - Main Feed"))
-      .catch(e => console.log(e.message));
+    this.onboardings = { notification_type: "onboarding" };
   }
 
   render() {
@@ -30,7 +26,7 @@ class Feed extends React.Component {
           navigation={this.props.navigation}
         />
         <FlatList
-          data={this.props.notifications}
+          data={[this.onboardings, ...this.props.notifications]}
           renderItem={({ item }) => (
             <FeedItem item={item} navigation={this.props.navigation} />
           )}
