@@ -26,6 +26,13 @@ import {
 } from "../actions/notifications";
 
 import {
+  FETCH_FEED,
+  FETCH_FEED_RESULT,
+  FETCH_FEED_ERROR,
+  FETCH_FEED_NO_DATA
+} from "../actions/feed";
+
+import {
   UPDATE_USER,
   UPDATE_USER_RESULT,
   UPDATE_USER_ERROR,
@@ -577,6 +584,29 @@ function* fetchNotifications() {
     );
   } catch (e) {
     yield put({ type: FETCH_NOTIFICATIONS_ERROR, error: e.message });
+  }
+}
+
+function* fetchFeed() {
+  console.log("FETCHING FEED");
+  try {
+    let userId = yield select(state => state.users.currentUser.id);
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId +
+      "/feed?";
+    yield call(
+      fetchData,
+      endpoint,
+      1,
+      FETCH_FEED_RESULT,
+      FETCH_FEED_ERROR,
+      FETCH_FEED_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_FEED_ERROR, error: e.message });
   }
 }
 
@@ -1241,6 +1271,7 @@ export default function* rootSaga() {
   yield takeEvery(REFRESH_PENDING_FRIENDS, fetchPendingFriends);
 
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
+  yield takeEvery(FETCH_FEED, fetchFeed);
 
   yield takeEvery(CHANGE_GROUP, fetchGroup);
   yield takeEvery(FETCH_GROUP, fetchGroup);

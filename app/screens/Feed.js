@@ -6,6 +6,7 @@ import Environment from "../config/environment";
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 import { fetchNotifications } from "../actions/notifications";
+import { fetchFeed } from "../actions/feed";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import TopNav from "../components/TopNav/TopNav";
@@ -14,6 +15,8 @@ import FeedItem from "../components/FeedItem";
 class Feed extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchNotifications());
+    this.props.dispatch(fetchFeed());
+
     this.onboardings = { notification_type: "onboarding" };
   }
 
@@ -52,12 +55,14 @@ const mapStateToProps = state => {
   const notifications = state.notifications.notifications;
   const isLoading = state.notifications.isLoading;
   const user = state.users.currentUser;
+  const feedItems = state.feed.feedItems;
 
   return {
     notifications,
     isLoading,
     notificationsError: state.notifications.error,
-    user
+    user,
+    feedItems
   };
 };
 
