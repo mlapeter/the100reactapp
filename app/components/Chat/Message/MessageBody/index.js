@@ -322,10 +322,10 @@ class AutosizeImage extends PureComponent {
       return (
         <View
           onLayout={this.onLayout}
-          style={{
-            flex: 1,
-            flexDirection: "row"
-          }}
+          // style={{
+          //   flex: 1,
+          //   flexDirection: "row"
+          // }}
         >
           <TouchableItem
             useForeground={true}
@@ -335,16 +335,21 @@ class AutosizeImage extends PureComponent {
             <ImageBackground
               source={{ uri: this.props.source }}
               onError={this.onError}
+              resizeMode="cover"
               style={{
-                width: imageWidth,
-                height: imageHeight
+                // width: imageWidth,
+                // height: imageHeight
+                width: "100%",
+                height: 200
               }}
-              imageStyle={{
-                resizeMode: "contain",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
+              imageStyle={
+                {
+                  // resizeMode: "contain",
+                  // flexDirection: "row",
+                  // alignItems: "center",
+                  // justifyContent: "center"
+                }
+              }
             >
               {this.props.children}
             </ImageBackground>

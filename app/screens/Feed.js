@@ -29,7 +29,7 @@ class Feed extends React.Component {
           navigation={this.props.navigation}
         />
         <FlatList
-          data={[this.onboardings, ...this.props.notifications]}
+          data={this.props.feedItems}
           renderItem={({ item }) => (
             <FeedItem item={item} navigation={this.props.navigation} />
           )}

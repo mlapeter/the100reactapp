@@ -50,6 +50,7 @@ export default (styles = StyleSheet.create({
     flexDirection: "row"
   },
   iconButtonText: {
-    alignSelf: "center"
+    alignSelf: "center",
+    marginLeft: 2
   }
 }));
