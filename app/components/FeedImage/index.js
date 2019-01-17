@@ -26,7 +26,7 @@ export default class FeedImage extends PureComponent {
         />
       );
     } else if (this.props.item.embed_url) {
-      return <MessageBody text={this.props.item.embed_url} isFeedItem={true} />;
+      return <MessageBody text={this.props.item.embed_url} />;
     } else if (this.props.item.data && this.props.item.data["image_url"]) {
       return (
         <Image

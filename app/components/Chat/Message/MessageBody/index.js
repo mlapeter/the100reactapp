@@ -16,6 +16,7 @@ import TouchableItem from "../../../TouchableItem";
 
 import reactStringReplace from "react-string-replace-recursively";
 import emoji from "node-emoji";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../../../styles";
 
 function usernameMentionMatcherFn(rawText, processed, key) {
   return (
@@ -185,7 +186,11 @@ export default class MessageBody extends PureComponent {
         }
       });
       if (currentText) {
-        children.push(<Text key={"text-" + id}>{currentText}</Text>);
+        children.push(
+          <Text style={this.props.style} key={"text-" + id}>
+            {currentText}
+          </Text>
+        );
         id++;
       }
       return <View>{children}</View>;
@@ -412,7 +417,11 @@ class Youtube extends PureComponent {
           onPress={this.onPress}
           placeholderRender={this.placeholderRender}
         >
-          <Icon name="youtube-play" size={72} style={{ color: "red" }} />
+          <Icon
+            name="youtube-play"
+            size={72}
+            style={{ marginVertical: 60, alignSelf: "center", color: "red" }}
+          />
         </AutosizeImage>
       </View>
     );

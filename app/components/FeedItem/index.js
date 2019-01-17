@@ -8,6 +8,7 @@ import Avatar from "../Avatar";
 import Card from "../Card";
 import Icon from "../Icon";
 import FeedImage from "../FeedImage";
+import MessageBody from "../Chat/Message/MessageBody";
 
 export default class FeedItem extends PureComponent {
   render() {
@@ -113,9 +114,13 @@ const Header = props => (
 );
 
 const FeedBody = props => (
-  <Text style={[styles.text, styleSheet.typography["body"]]}>
-    {props.item.body}
-  </Text>
+  // <Text style={[styles.text, styleSheet.typography["body"]]}>
+  //   {props.item.body}
+  // </Text>
+  <MessageBody
+    text={props.item.body}
+    style={[styles.text, styleSheet.typography["body"]]}
+  />
 );
 
 const FeedButton = props => (
