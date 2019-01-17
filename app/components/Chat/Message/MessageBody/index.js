@@ -11,6 +11,7 @@ import {
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import Hyperlink from "../../../Hyperlink";
+import AppHyperlink from "../../../AppHyperlink";
 
 import TouchableItem from "../../../TouchableItem";
 
@@ -19,13 +20,7 @@ import emoji from "node-emoji";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../../../styles";
 
 function usernameMentionMatcherFn(rawText, processed, key) {
-  return (
-    <Hyperlink
-      key={key}
-      link={"https://the100.io/users/" + rawText}
-      text={"@" + rawText}
-    />
-  );
+  return <AppHyperlink key={key} link={rawText} text={"@" + rawText} />;
 }
 
 function urlMatcherFn(rawText, processed, key) {
@@ -173,7 +168,8 @@ export default class MessageBody extends PureComponent {
         } else if (
           child.type === Text ||
           child.type == Spoiler ||
-          child.type === Hyperlink
+          child.type === Hyperlink ||
+          child.type === AppHyperlink
         ) {
           currentText.push(child);
         } else {
