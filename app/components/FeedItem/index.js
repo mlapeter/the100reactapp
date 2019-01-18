@@ -36,7 +36,7 @@ const FeedCard = props => {
   } else {
     feedButton = {
       icon: "star-border",
-      text: "say hi!",
+      text: "",
       size: 24,
       onPress: () => {
         null;
@@ -170,7 +170,7 @@ class Footer extends PureComponent {
       </View>
     );
   }
-  computedStyle(index: number, length: number) {
+  computedStyle(index, length) {
     const left = 2 === 0 ? 0 : -5 * (2 - 1) + styleSheet.spacing.tiny;
     return { left: 5 * (length - index - 1) };
   }

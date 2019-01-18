@@ -1,15 +1,10 @@
 // @flow
 
-type Props = {
-  link: string,
-  text: string
-};
-
 import React, { PureComponent } from "react";
 import { Linking, StyleSheet, Text } from "react-native";
 import { withNavigation } from "react-navigation";
 
-class AppHyperlink extends PureComponent<Props> {
+class AppHyperlink extends PureComponent {
   onPress = () => {
     // Linking.openURL(this.props.link).catch(e => {
     //   console.log("Failed to open link: " + e);

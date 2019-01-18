@@ -221,12 +221,16 @@ function* removeToken() {
 }
 
 function* fetchData(endpoint, page, success, failure, noData) {
+  console.log("FETCHING ENDPOINT INITIAL: ", endpoint);
+
   try {
     let token = yield select(state => state.authentication.token);
     let newEndpoint = endpoint;
     if (page && page > 0) {
       newEndpoint = endpoint + "&page=" + page;
     }
+    console.log("FETCHING ENDPOINT: ", newEndpoint);
+
     const response = yield requestTimeout(
       12000,
       fetch(newEndpoint, {
@@ -235,7 +239,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
       })
     );
     const result = yield response.json();
-    console.log("FETCHING ENDPOINT: ", newEndpoint);
+    console.log(result);
     if (result.error && result.error === "Not Authorized") {
       console.log("ERROR - REMOVING TOKEN");
       AsyncStorage.removeItem("id_token");
@@ -604,7 +608,7 @@ function* fetchFeed() {
     yield call(
       fetchData,
       endpoint,
-      1,
+      0,
       FETCH_FEED_RESULT,
       FETCH_FEED_ERROR,
       FETCH_FEED_NO_DATA

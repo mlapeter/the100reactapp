@@ -18,6 +18,8 @@ class Feed extends React.Component {
     this.props.dispatch(fetchFeed());
 
     this.onboardings = { notification_type: "onboarding" };
+    console.log("FEED ITEMS:");
+    console.log(this.props.feedItems);
   }
 
   render() {
@@ -35,7 +37,7 @@ class Feed extends React.Component {
           )}
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.isLoading}
-          onRefresh={this.handleRefresh}
+          onRefresh={() => this.props.dispatch(fetchFeed())}
           ListFooterComponent={this.renderFooter}
         />
       </View>
