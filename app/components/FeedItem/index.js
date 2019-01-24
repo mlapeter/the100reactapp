@@ -140,7 +140,6 @@ const FeedButton = props => (
       >
         {props.button.text}
       </Text>
-      )}
     </View>
   </TouchableOpacity>
 );
