@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { View, Text, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity, WebView } from "react-native";
 import TimeAgo from "../TimeAgo";
 
 import styles from "./styles";
@@ -113,15 +113,37 @@ const Header = props => (
   </View>
 );
 
-const FeedBody = props => (
+const FeedBody = props => {
   // <Text style={[styles.text, styleSheet.typography["body"]]}>
   //   {props.item.body}
   // </Text>
-  <MessageBody
-    text={props.item.body}
-    style={[styles.text, styleSheet.typography["body"]]}
-  />
-);
+  // <iframe src="https://discordapp.com/widget?id=207235307865767936&theme=dark" width="100%"  height="400" allowtransparency="true" frameborder="0"></iframe>
+
+  if (props.item.body.includes("iframe")) {
+    return (
+      <View style={{ height: 410 }}>
+        <WebView
+          style={{ flex: 1 }}
+          originWhitelist={["*"]}
+          source={{
+            html:
+              '<head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /></head><body>' +
+              props.item.body +
+              "</iframe></body>"
+          }}
+          scalesPageToFit
+        />
+      </View>
+    );
+  } else {
+    return (
+      <MessageBody
+        text={props.item.body}
+        style={[styles.text, styleSheet.typography["body"]]}
+      />
+    );
+  }
+};
 
 const FeedButton = props => (
   <TouchableOpacity onPress={null} onLongPress={null}>

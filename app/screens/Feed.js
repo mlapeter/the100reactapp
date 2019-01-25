@@ -17,7 +17,6 @@ class Feed extends React.Component {
     this.props.dispatch(fetchNotifications());
     this.props.dispatch(fetchFeed());
 
-    this.onboardings = { notification_type: "onboarding" };
     console.log("FEED ITEMS:");
     console.log(this.props.feedItems);
   }

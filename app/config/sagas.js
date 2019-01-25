@@ -604,7 +604,7 @@ function* fetchFeed() {
       Environment["API_VERSION"] +
       "users/" +
       userId +
-      "/feed?";
+      "/feed";
     yield call(
       fetchData,
       endpoint,
