@@ -22,6 +22,7 @@ export const colors = {
   lightGrey: "#737f8d",
   lightestGrey: "#99aab5",
   veryLightestGrey: "#d6d7da",
+  yellow: "yellow",
   searchbar: "#ededed",
   // dlight: #36393f
   // primaryBlue: "#5a8cf0",

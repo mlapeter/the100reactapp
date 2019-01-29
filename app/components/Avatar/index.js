@@ -37,11 +37,11 @@ export default class Avatar extends React.Component<AvatarProps> {
   //   }
 
   async componentDidMount(): Promise<void> {
-    console.log("ORIGINAL URI");
-    console.log(this.state.uri);
+    // console.log("ORIGINAL URI");
+    // console.log(this.state.uri);
     const newURI = await CacheManager.get(this.state.uri).getPath();
-    console.log("NEW URI");
-    console.log(newURI);
+    // console.log("NEW URI");
+    // console.log(newURI);
 
     if (newURI) {
       this.setState({
@@ -55,8 +55,8 @@ export default class Avatar extends React.Component<AvatarProps> {
     if (this.state.loading) {
       return <ActivityIndicator />;
     }
-    console.log("FINAL URI");
-    console.log(this.state.uri);
+    // console.log("FINAL URI");
+    // console.log(this.state.uri);
 
     const uri = this.state.uri;
     const { stacked, size, style } = this.props;

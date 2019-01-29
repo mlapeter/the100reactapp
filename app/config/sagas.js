@@ -239,7 +239,6 @@ function* fetchData(endpoint, page, success, failure, noData) {
       })
     );
     const result = yield response.json();
-    console.log(result);
     if (result.error && result.error === "Not Authorized") {
       console.log("ERROR - REMOVING TOKEN");
       AsyncStorage.removeItem("id_token");
@@ -1201,7 +1200,6 @@ function* createUser() {
       yield put({ type: CREATE_USER_ERROR, error: result.error });
     } else {
       console.log("New User Created: ");
-      console.log(result);
       token = result.token;
       firebaseToken = result.firebase_token;
       AsyncStorage.setItem("id_token", token);

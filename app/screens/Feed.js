@@ -16,9 +16,6 @@ class Feed extends React.Component {
   componentWillMount() {
     this.props.dispatch(fetchNotifications());
     this.props.dispatch(fetchFeed());
-
-    console.log("FEED ITEMS:");
-    console.log(this.props.feedItems);
   }
 
   render() {
