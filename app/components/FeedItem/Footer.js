@@ -30,10 +30,14 @@ export default class Footer extends PureComponent {
       <View style={styles.footer}>
         {avatars ? (
           <View style={styles.comments}>
-            {avatars.map((user, index) => (
+            {avatars.map((url, index) => (
               <Avatar
                 key={index}
-                uri={user}
+                uri={
+                  url === "img/default-avatar.png"
+                    ? "https://www.the100.io/default-avatar.png"
+                    : url
+                }
                 stacked={!!index}
                 style={this.computedStyle(index, avatars.length)}
               />
@@ -65,6 +69,9 @@ class FeedButton extends PureComponent {
   render() {
     let feedButton = null;
     if (this.props.item.data && this.props.item.data["gaming_session_id"]) {
+      console.log(this.props.item.item_type);
+      console.log("ITEM DATA:");
+      console.log(this.props.item.data);
       feedButton = {
         icon: this.state.clicked ? "person-add" : "outline-person_add-24px",
         text: "",

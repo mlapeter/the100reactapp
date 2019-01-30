@@ -37,18 +37,24 @@ export default class Avatar extends React.Component<AvatarProps> {
   //   }
 
   async componentDidMount(): Promise<void> {
-    // console.log("ORIGINAL URI");
-    // console.log(this.state.uri);
-    const newURI = await CacheManager.get(this.state.uri).getPath();
-    // console.log("NEW URI");
-    // console.log(newURI);
+    this.mounted = true;
 
-    if (newURI) {
+    console.log("ORIGINAL URI");
+    console.log(this.state.uri);
+    const newURI = await CacheManager.get(this.state.uri).getPath();
+    console.log("NEW URI");
+    console.log(newURI);
+
+    if (newURI && this.mounted) {
       this.setState({
         loading: false,
         uri: newURI
       });
     }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
   }
 
   render(): React.Node {
