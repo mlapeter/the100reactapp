@@ -98,6 +98,15 @@ const styles = StyleSheet.create({
 
 // StackNavigators for BottomTabNavigator items
 
+const FeedStack = createStackNavigator({
+  Feed: { screen: Feed },
+  GamingSession: { screen: GamingSession },
+  Player: { screen: User },
+  Group: { screen: Group },
+  GroupChat: { screen: Chatroom },
+  Friend: { screen: User }
+});
+
 const GamingSessionsStack = createStackNavigator({
   GamingSessionsList: { screen: GamingSessionsList },
   GamingSession: { screen: GamingSession },
@@ -133,7 +142,7 @@ const FriendsStack = createStackNavigator({
 
 const HomeTabs = createBottomTabNavigator(
   {
-    Feed: { screen: Feed },
+    Feed: { screen: FeedStack },
 
     Games: { screen: GamingSessionsStack },
     Groups: { screen: GroupsStack },
@@ -396,9 +405,15 @@ OnboardingFlowStack.navigationOptions = {
   header: null
 };
 
+Feed.navigationOptions = {
+  header: null
+};
+
+FeedStack.navigationOptions = { header: null };
+
 // Stack Navigation Options
 
-Feed.navigationOptions = {
+FeedStack.navigationOptions = {
   tabBarLabel: "Feed",
   tabBarIcon: ({ tintColor, focused }) => (
     <Icon name="feed" color={tintColor} size={26} />

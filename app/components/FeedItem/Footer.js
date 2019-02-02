@@ -22,18 +22,13 @@ export default class Footer extends PureComponent {
       avatars = this.props.users.likes;
       label = "like";
     }
-    const plural = avatars && avatars.length > 1 ? "s" : "";
-
+    const plural = avatars && avatars.length && avatars.length > 1 ? "s" : "";
     const clicked =
       avatars && avatars.includes(this.props.currentUser.computed_avatar_api);
     const left =
-      avatars.length === 0
+      !avatars || avatars.length === 0
         ? 0
         : -5 * (avatars.length - 1) + styleSheet.spacing.tiny;
-
-    // const left = !avatars
-    //   ? 0
-    //   : -5 * (avatars.length - 1) + styleSheet.spacing.tiny;
 
     return (
       <View style={styles.footer}>
@@ -44,7 +39,7 @@ export default class Footer extends PureComponent {
                 key={index}
                 uri={
                   url === "img/default-avatar.png"
-                    ? "https://www.the100.io/assets/hunter-d8fd6e907f6f0982c5dc1dd759c7800aabcc5494182f90965be034f604df4128.png"
+                    ? "https://www.the100.io/assets/ghost-bdd6b51738dab38b1f760df958c62351d571d7cfa97690ea1f87744d35f62574.png"
                     : url
                 }
                 stacked={!!index}

@@ -58,7 +58,7 @@ class Feed extends React.Component {
       return (
         <View style={styles.container}>
           <View style={styles.footer}>
-            <ActivityIndicator />
+            <ActivityIndicator style={{ padding: 30 }} />
           </View>
         </View>
       );

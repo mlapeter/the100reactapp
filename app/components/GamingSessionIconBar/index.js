@@ -15,9 +15,7 @@ type GamingSessionIconBarProps = {
   sherpaLed?: string
 };
 
-export default class GamingSessionIconBar extends React.PureComponent<
-  GamingSessionIconBarProps
-> {
+export default class GamingSessionIconBar extends React.PureComponent<GamingSessionIconBarProps> {
   render(): React.Node {
     const {
       startTime,
@@ -25,16 +23,22 @@ export default class GamingSessionIconBar extends React.PureComponent<
       primaryUsersCount,
       teamSize,
       lightLevel,
-      sherpaLed
+      sherpaLed,
+      style
     } = this.props;
 
     return (
-      <View style={styles.iconBar}>
-        <TimeIcon startTime={startTime} />
-        <PlatformIcon platform={platform} />
-        <PlayerIcon primaryUsersCount={primaryUsersCount} teamSize={teamSize} />
-        <PowerIcon lightLevel={lightLevel} />
-        <SherpaIcon sherpaLed={sherpaLed} />
+      <View style={[styles.iconBar, style]}>
+        {startTime && <TimeIcon startTime={startTime} />}
+        {platform && <PlatformIcon platform={platform} />}
+        {primaryUsersCount && (
+          <PlayerIcon
+            primaryUsersCount={primaryUsersCount}
+            teamSize={teamSize}
+          />
+        )}
+        {lightLevel && <PowerIcon lightLevel={lightLevel} />}
+        {sherpaLed && <SherpaIcon sherpaLed={sherpaLed} />}
       </View>
     );
   }

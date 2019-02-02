@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Image, Text } from "react-native";
+import { Image, View } from "react-native";
 import styles from "./styles";
 import { fetchBungieImage } from "../../utils/destinyActivities";
 import defaultGroupHeaderBackground from "../../assets/images/d2-all.jpg";
@@ -9,6 +9,7 @@ import titanHeader from "../../assets/images/d2-titan.jpg";
 import warlockHeader from "../../assets/images/d2-warlock.jpg";
 import defaultGamingSessionHeaderBackground from "../../assets/images/bungie-placeholder.jpg";
 import MessageBody from "../Chat/Message/MessageBody";
+import GamingSessionIconBar from "../../components/GamingSessionIconBar";
 
 export default class FeedImage extends PureComponent {
   render() {
@@ -61,20 +62,31 @@ export default class FeedImage extends PureComponent {
       this.props.item.data["gaming_session_category"]
     ) {
       return (
-        <Image
-          resizeMode="cover"
-          style={[
-            styles.image,
-            {
-              width: "100%"
-            }
-          ]}
-          source={{
-            uri: fetchBungieImage(
-              this.props.item.data["gaming_session_category"]
-            )
-          }}
-        />
+        <View>
+          <Image
+            resizeMode="cover"
+            style={[
+              styles.image,
+              {
+                width: "100%"
+              }
+            ]}
+            source={{
+              uri: fetchBungieImage(
+                this.props.item.data["gaming_session_category"]
+              )
+            }}
+          />
+          <GamingSessionIconBar
+            style={{ borderTopWidth: 0, borderBottomWidth: 0 }}
+            startTime={this.props.item.data.gaming_session_start_time}
+            // platform={this.props.item.data.platform}
+            // primaryUsersCount={this.props.gamingSession.primary_users_count}
+            // teamSize={this.props.gamingSession.team_size}
+            // lightLevel={this.props.gamingSession.light_level}
+            // sherpaLed={this.props.gamingSession.sherpa_led}
+          />
+        </View>
       );
     } else {
       return null;

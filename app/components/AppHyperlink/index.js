@@ -33,7 +33,8 @@ class AppHyperlink extends PureComponent {
 
 const styles = StyleSheet.create({
   link: {
-    color: "#337ab7"
+    color: "#337ab7",
+    padding: 25
   }
 });
 

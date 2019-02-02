@@ -196,11 +196,7 @@ class GamingSession extends React.Component {
             middleGradientTransparency={"rgba(0,0,0,0.9)"}
             bottomGradientTransparency={"rgba(0,0,0,0.9)"}
           >
-            <NavigationBar
-              back="Games"
-              type="transparent"
-              {...{ navigation }}
-            />
+            <NavigationBar back="Back" type="transparent" {...{ navigation }} />
           </Header>
           <Content>
             <ActivityIndicator style={styles.loading} />
@@ -300,7 +296,7 @@ class GamingSession extends React.Component {
           bottomGradientTransparency={"rgba(0,0,0,0.6)"}
         >
           <NavigationBar
-            back="Games"
+            back="Back"
             type="transparent"
             {...{ navigation, rightAction, rightAction2, rightAction3 }}
           />

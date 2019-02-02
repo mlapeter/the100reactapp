@@ -1,4 +1,6 @@
 import React, { PureComponent } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+
 import { connectAlert } from "../Alert";
 import { connect } from "react-redux";
 import styles from "./styles";
@@ -10,14 +12,19 @@ import Footer from "./Footer";
 
 class FeedItem extends PureComponent {
   render() {
-    return (
-      <FeedCard
-        navigation={this.props.navigation}
-        item={this.props.item}
-        computedStyle={this.computedStyle}
-        currentUser={this.props.user}
-      />
-    );
+    if (this.props.item.item_type) {
+      console.log(this.props.item);
+      return (
+        <FeedCard
+          navigation={this.props.navigation}
+          item={this.props.item}
+          computedStyle={this.computedStyle}
+          currentUser={this.props.user}
+        />
+      );
+    } else {
+      return <Text>{this.props.item.item_type}</Text>;
+    }
   }
 }
 
