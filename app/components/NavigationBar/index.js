@@ -90,29 +90,28 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
               />
             )}
           </View>
-          {title !== "" &&
-            !expanded && (
-              <View style={block}>
-                <AnimatedText
+          {title !== "" && !expanded && (
+            <View style={block}>
+              <AnimatedText
+                color="white"
+                align="center"
+                style={[titleStyle, styleSheet.typography["headline"]]}
+                numberOfLines={1}
+              >
+                {title}
+              </AnimatedText>
+              {subtitle && (
+                <Text
+                  style={[styleSheet.typography["footnote"]]}
                   color="white"
                   align="center"
-                  style={[titleStyle, styleSheet.typography["headline"]]}
                   numberOfLines={1}
                 >
-                  {title}
-                </AnimatedText>
-                {subtitle && (
-                  <Text
-                    style={[styleSheet.typography["footnote"]]}
-                    color="white"
-                    align="center"
-                    numberOfLines={1}
-                  >
-                    {subtitle}
-                  </Text>
-                )}
-              </View>
-            )}
+                  {subtitle}
+                </Text>
+              )}
+            </View>
+          )}
           <View style={styles.rightBlock}>
             {rightAction && (
               <TouchableOpacity

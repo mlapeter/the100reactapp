@@ -1,12 +1,19 @@
 import * as React from "react";
-import { Alert, FlatList, Image, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View
+} from "react-native";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
-import { fetchNotifications } from "../actions/notifications";
-import { fetchFeed } from "../actions/feed";
+import { fetchFeed, loadMoreFeedItems } from "../actions/feed";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import TopNav from "../components/TopNav/TopNav";
@@ -14,9 +21,49 @@ import FeedItem from "../components/FeedItem";
 
 class Feed extends React.Component {
   componentWillMount() {
-    this.props.dispatch(fetchNotifications());
     this.props.dispatch(fetchFeed());
   }
+
+  loadMore = () => {
+    console.log("loadMore triggered");
+    console.log(
+      "this.props.moreFeedItemsAvailable: ",
+      this.props.moreFeedItemsAvailable
+    );
+    console.log("this.props.isLoading ", this.props.isLoading);
+    if (
+      this.props.moreFeedItemsAvailable === true &&
+      this.props.isLoading === false
+    ) {
+      console.log("loadMore fully triggered");
+
+      this.props.dispatch(loadMoreFeedItems());
+    }
+  };
+
+  renderFooter = () => {
+    if (!this.props.isLoading && !this.props.moreFeedItemsAvailable) {
+      return (
+        <View style={styles.container}>
+          <View style={styles.footer}>
+            <MaterialCommunityIcons
+              name="dots-horizontal"
+              size={24}
+              color={colors.mediumGrey}
+            />
+          </View>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          <View style={styles.footer}>
+            <ActivityIndicator />
+          </View>
+        </View>
+      );
+    }
+  };
 
   render() {
     return (
@@ -35,6 +82,8 @@ class Feed extends React.Component {
           refreshing={this.props.isLoading}
           onRefresh={() => this.props.dispatch(fetchFeed())}
           ListFooterComponent={this.renderFooter}
+          onEndReached={this.loadMore}
+          onEndReachedThreshold={0}
         />
       </View>
     );
@@ -46,21 +95,23 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: styleSheet.spacing.small,
     backgroundColor: colors.lightGray
+  },
+  footer: {
+    alignItems: "center"
   }
 });
 
 const mapStateToProps = state => {
-  const notifications = state.notifications.notifications;
-  const isLoading = state.notifications.isLoading;
   const user = state.users.currentUser;
   const feedItems = state.feed.feedItems;
+  const isLoading = state.feed.isLoading;
+  const moreFeedItemsAvailable = state.feed.moreFeedItemsAvailable;
 
   return {
-    notifications,
-    isLoading,
-    notificationsError: state.notifications.error,
     user,
-    feedItems
+    feedItems,
+    isLoading,
+    moreFeedItemsAvailable
   };
 };
 

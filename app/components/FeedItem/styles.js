@@ -43,7 +43,7 @@ export default (styles = StyleSheet.create({
   },
   comments: {
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "flex-start"
   },
   iconButton: {
     marginRight: styleSheet.spacing.tiny,

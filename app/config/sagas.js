@@ -29,7 +29,10 @@ import {
   FETCH_FEED,
   FETCH_FEED_RESULT,
   FETCH_FEED_ERROR,
-  FETCH_FEED_NO_DATA
+  FETCH_FEED_NO_DATA,
+  LOAD_MORE_FEED_ITEMS,
+  LOAD_MORE_FEED_ITEMS_RESULT,
+  CHANGE_FEED_PAGE
 } from "../actions/feed";
 
 import {
@@ -238,7 +241,9 @@ function* fetchData(endpoint, page, success, failure, noData) {
         headers: { Authorization: "Bearer " + token }
       })
     );
+    console.log("RESPONSE STATUS: ", response.status);
     const result = yield response.json();
+
     if (result.error && result.error === "Not Authorized") {
       console.log("ERROR - REMOVING TOKEN");
       AsyncStorage.removeItem("id_token");
@@ -249,8 +254,10 @@ function* fetchData(endpoint, page, success, failure, noData) {
       yield { type: failure, error: result.error };
     } else if (result.length === 0) {
       console.log("no data returned");
+      console.log("no data");
       yield put({ type: noData, result });
     } else {
+      console.log("success");
       yield put({ type: success, result });
     }
   } catch (e) {
@@ -603,12 +610,40 @@ function* fetchFeed() {
       Environment["API_VERSION"] +
       "users/" +
       userId +
-      "/feed";
+      "/feed?";
     yield call(
       fetchData,
       endpoint,
       0,
       FETCH_FEED_RESULT,
+      FETCH_FEED_ERROR,
+      FETCH_FEED_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_FEED_ERROR, error: e.message });
+  }
+}
+
+function* loadMoreFeedItems() {
+  console.log("LOADING MORE FEED ITEMS");
+  try {
+    let userId = yield select(state => state.users.currentUser.id);
+    let current_page = yield select(state => state.feed.feedPage);
+    console.log("CURRENT FEED PAGE: ", current_page);
+    yield put({ type: CHANGE_FEED_PAGE, page: current_page + 1 });
+    let new_page = yield select(state => state.feed.feedPage);
+
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId +
+      "/feed?";
+    yield call(
+      fetchData,
+      endpoint,
+      new_page,
+      LOAD_MORE_FEED_ITEMS_RESULT,
       FETCH_FEED_ERROR,
       FETCH_FEED_NO_DATA
     );
@@ -1277,7 +1312,9 @@ export default function* rootSaga() {
   yield takeEvery(REFRESH_PENDING_FRIENDS, fetchPendingFriends);
 
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
+
   yield takeEvery(FETCH_FEED, fetchFeed);
+  yield takeEvery(LOAD_MORE_FEED_ITEMS, loadMoreFeedItems);
 
   yield takeEvery(CHANGE_GROUP, fetchGroup);
   yield takeEvery(FETCH_GROUP, fetchGroup);

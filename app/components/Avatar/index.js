@@ -1,4 +1,3 @@
-// @flow
 import * as React from "react";
 import {
   ActivityIndicator,
@@ -11,16 +10,9 @@ import CacheManager from "../CacheManager";
 
 const { Defs, Image, ClipPath, Path } = Svg;
 
-type AvatarProps = StyleProps & {
-  size: number,
-  uri: string,
-  stacked: boolean
-};
-
-export default class Avatar extends React.Component<AvatarProps> {
+export default class Avatar extends React.Component {
   constructor(props) {
     super(props);
-    // this.uri = props.uri;
     this.state = {
       loading: true,
       uri: props.uri
@@ -32,18 +24,10 @@ export default class Avatar extends React.Component<AvatarProps> {
     stacked: false
   };
 
-  //   set uri(uri: string) {
-  //     this.uri = uri;
-  //   }
-
-  async componentDidMount(): Promise<void> {
+  async componentDidMount() {
     this.mounted = true;
 
-    console.log("ORIGINAL URI");
-    console.log(this.state.uri);
     const newURI = await CacheManager.get(this.state.uri).getPath();
-    console.log("NEW URI");
-    console.log(newURI);
 
     if (newURI && this.mounted) {
       this.setState({
@@ -57,7 +41,7 @@ export default class Avatar extends React.Component<AvatarProps> {
     this.mounted = false;
   }
 
-  render(): React.Node {
+  render() {
     if (this.state.loading) {
       return <ActivityIndicator />;
     }

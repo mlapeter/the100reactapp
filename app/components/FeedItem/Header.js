@@ -13,7 +13,7 @@ export const Header = props => (
         uri={
           !props.item.author_avatar_url ||
           props.item.author_avatar_url === "img/default-avatar.png"
-            ? "https://www.the100.io/default-avatar.png"
+            ? "https://www.the100.io/assets/hunter-d8fd6e907f6f0982c5dc1dd759c7800aabcc5494182f90965be034f604df4128.png"
             : props.item.author_avatar_url
         }
       />
