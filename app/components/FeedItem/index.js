@@ -51,7 +51,7 @@ const FeedCard = props => {
   } else if (props.item.data && props.item.data["group_id"]) {
     navigateTo = () =>
       props.navigation.navigate("Group", {
-        gamingSessionId: props.item.data["group_id"]
+        groupId: props.item.data["group_id"]
       });
   } else if (props.item.data && props.item.data["gaming_session_id"]) {
     navigateTo = () =>

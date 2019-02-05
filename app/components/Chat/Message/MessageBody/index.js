@@ -323,10 +323,7 @@ class AutosizeImage extends PureComponent {
       return (
         <View
           onLayout={this.onLayout}
-          // style={{
-          //   flex: 1,
-          //   flexDirection: "row"
-          // }}
+
         >
           <TouchableItem
             useForeground={true}
@@ -338,17 +335,13 @@ class AutosizeImage extends PureComponent {
               onError={this.onError}
               resizeMode="cover"
               style={{
-                // width: imageWidth,
-                // height: imageHeight
+
                 width: "100%",
                 height: 200
               }}
               imageStyle={
                 {
-                  // resizeMode: "contain",
-                  // flexDirection: "row",
-                  // alignItems: "center",
-                  // justifyContent: "center"
+
                 }
               }
             >
@@ -409,7 +402,7 @@ class Youtube extends PureComponent {
         <AutosizeImage
           source={`https://img.youtube.com/vi/${
             this.props.videoId
-          }/mqdefault.jpg`}
+            }/mqdefault.jpg`}
           onPress={this.onPress}
           placeholderRender={this.placeholderRender}
         >

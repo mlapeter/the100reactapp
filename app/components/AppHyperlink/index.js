@@ -6,11 +6,10 @@ import { withNavigation } from "react-navigation";
 
 class AppHyperlink extends PureComponent {
   onPress = () => {
-    // Linking.openURL(this.props.link).catch(e => {
-    //   console.log("Failed to open link: " + e);
-    // });
-    alert("clicked!");
-    this.props.navigation.goBack();
+    Linking.openURL(this.props.link).catch(e => {
+      console.log("Failed to open link: " + e);
+    });
+
   };
 
   render() {
@@ -33,8 +32,7 @@ class AppHyperlink extends PureComponent {
 
 const styles = StyleSheet.create({
   link: {
-    color: "#337ab7",
-    padding: 25
+    color: "#337ab7"
   }
 });
 
