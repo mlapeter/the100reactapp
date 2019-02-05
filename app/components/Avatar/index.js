@@ -4,6 +4,7 @@ import {
   Image as NativeImage,
   StyleSheet
 } from "react-native";
+import PropTypes from 'prop-types'
 import { Svg } from "expo";
 
 import CacheManager from "../CacheManager";
@@ -11,6 +12,15 @@ import CacheManager from "../CacheManager";
 const { Defs, Image, ClipPath, Path } = Svg;
 
 export default class Avatar extends React.Component {
+  static propTypes = {
+    uri: PropTypes.string.isRequired,
+  }
+
+  static defaultProps = {
+    size: 36,
+    stacked: false
+  };
+
   constructor(props) {
     super(props);
     this.state = {
@@ -19,16 +29,9 @@ export default class Avatar extends React.Component {
     };
   }
 
-  static defaultProps = {
-    size: 36,
-    stacked: false
-  };
-
   async componentDidMount() {
     this.mounted = true;
-
     const newURI = await CacheManager.get(this.state.uri).getPath();
-
     if (newURI && this.mounted) {
       this.setState({
         loading: false,
@@ -45,8 +48,6 @@ export default class Avatar extends React.Component {
     if (this.state.loading) {
       return <ActivityIndicator />;
     }
-    // console.log("FINAL URI");
-    // console.log(this.state.uri);
 
     const uri = this.state.uri;
     const { stacked, size, style } = this.props;

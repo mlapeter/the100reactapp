@@ -113,10 +113,10 @@ class GamingSession extends React.Component {
       .then(token => {
         fetch(
           Environment["API_BASE_URL"] +
-            Environment["API_VERSION"] +
-            "gaming_sessions/" +
-            gamingSessionId +
-            action,
+          Environment["API_VERSION"] +
+          "gaming_sessions/" +
+          gamingSessionId +
+          action,
           {
             method: "POST",
             headers: {
@@ -158,13 +158,13 @@ class GamingSession extends React.Component {
         message:
           Platform.OS === "android"
             ? "Join my game: " +
-              this.props.gamingSession.category.toString() +
-              " " +
-              "https://the100.io/game/" +
-              this.props.gamingSession.id
+            this.props.gamingSession.category.toString() +
+            " " +
+            "https://the100.io/game/" +
+            this.props.gamingSession.id
             : "Join my game: " +
-              this.props.gamingSession.category.toString() +
-              " ",
+            this.props.gamingSession.category.toString() +
+            " ",
         url: "https://the100.io/game/" + this.props.gamingSession.id,
         title: ""
       },
@@ -214,51 +214,51 @@ class GamingSession extends React.Component {
       this.state.reserveButtonVisible === true
         ? null
         : {
-            icon: "share",
-            size: 24,
-            onPress: () => {
-              this.onShare();
-            }
-          };
-    const rightAction2 = userIds.includes(this.props.user.id)
-      ? {
-          icon: "cancel",
-          text: "Leave",
+          icon: "share",
           size: 24,
           onPress: () => {
-            this.leaveGame();
-          }
-        }
-      : {
-          icon: "outline-person_add-24px",
-          text: "Join",
-          size: 24,
-          onPress: () => {
-            this.joinGame();
-          },
-          onLongPress: () => {
-            this.onLongPress();
+            this.onShare();
           }
         };
+    const rightAction2 = userIds.includes(this.props.user.id)
+      ? {
+        icon: "cancel",
+        text: "Leave",
+        size: 24,
+        onPress: () => {
+          this.leaveGame();
+        }
+      }
+      : {
+        icon: "outline-person_add-24px",
+        text: "Join",
+        size: 24,
+        onPress: () => {
+          this.joinGame();
+        },
+        onLongPress: () => {
+          this.onLongPress();
+        }
+      };
     const rightAction3 =
       userIds.includes(this.props.user.id) &&
-      this.props.user.id === this.props.gamingSession.creator_id
+        this.props.user.id === this.props.gamingSession.creator_id
         ? {
-            icon: "edit",
-            text: "Edit",
-            size: 24,
-            onPress: () => {
-              this.props.navigation.navigate({
-                routeName: "GamingSessionVisibility",
-                params: {
-                  gamingSessionId: this.props.gamingSession.id
-                },
-                key: "gamingSessionVisibility-" + this.props.gamingSession.id
-              });
-            }
+          icon: "edit",
+          text: "Edit",
+          size: 24,
+          onPress: () => {
+            this.props.navigation.navigate({
+              routeName: "GamingSessionVisibility",
+              params: {
+                gamingSessionId: this.props.gamingSession.id
+              },
+              key: "gamingSessionVisibility-" + this.props.gamingSession.id
+            });
           }
+        }
         : this.state.reserveButtonVisible === true
-        ? {
+          ? {
             icon: "outline-person_add-24px",
             text: "Join as Reserve",
             size: 24,
@@ -269,18 +269,18 @@ class GamingSession extends React.Component {
               this.onLongPress();
             }
           }
-        : userIds.includes(this.props.user.id)
-        ? null
-        : {
-            icon: "more-horiz",
-            size: 24,
-            onPress: () => {
-              this.onLongPress();
-            },
-            onLongPress: () => {
-              this.onLongPress();
-            }
-          };
+          : userIds.includes(this.props.user.id)
+            ? null
+            : {
+              icon: "more-horiz",
+              size: 24,
+              onPress: () => {
+                this.onLongPress();
+              },
+              onLongPress: () => {
+                this.onLongPress();
+              }
+            };
 
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;
@@ -289,7 +289,7 @@ class GamingSession extends React.Component {
       <View style={styles.container}>
         <Header
           title={this.props.gamingSession.category}
-          picture={fetchBungieImage(this.props.gamingSession.category)}
+          picture={this.props.gamingSession.computed_image ? this.props.gamingSession.computed_image : "img/default-gaming-session-header.jpg"}
           heightRatio={0.5}
           topGradientTransparency={"rgba(0,0,0,0.4)"}
           middleGradientTransparency={"rgba(0,0,0,0.1)"}
@@ -350,12 +350,12 @@ class GamingSession extends React.Component {
             />
           </Card>
           {!this.props.gamingSession.group_id ||
-          !this.props.gamingSession.group ? null : (
-            <GroupsList
-              groups={[this.props.gamingSession.group]}
-              navigation={this.props.navigation}
-            />
-          )}
+            !this.props.gamingSession.group ? null : (
+              <GroupsList
+                groups={[this.props.gamingSession.group]}
+                navigation={this.props.navigation}
+              />
+            )}
         </Content>
       </View>
     );

@@ -62,7 +62,7 @@ class Chat extends Component {
       pwnmaster: false,
       role: "user",
       permission: "",
-      avatarUrl: "/default-avatar.png",
+      avatarUrl: "/default-avatar.jpg",
       users: new Set(),
       avatars: new Set(),
       selectedKey: null,
@@ -227,8 +227,8 @@ class Chat extends Component {
             AsyncStorage.getItem("id_token").then(token => {
               fetch(
                 Environment["API_BASE_URL"] +
-                  Environment["API_VERSION"] +
-                  "chatrooms",
+                Environment["API_VERSION"] +
+                "chatrooms",
                 {
                   method: "POST",
                   headers: {
@@ -408,12 +408,12 @@ class Chat extends Component {
               avatars={this.state.avatars}
             />
           ) : (
-            <MessageEditInput
-              onSubmit={this.onEditMessage}
-              onCancel={this.onCancelEditing}
-              message={this.state.messages[this.state.editingKey]}
-            />
-          ))}
+              <MessageEditInput
+                onSubmit={this.onEditMessage}
+                onCancel={this.onCancelEditing}
+                message={this.state.messages[this.state.editingKey]}
+              />
+            ))}
         {!this.props.preview && (
           <Modal
             isVisible={!!this.state.selectedKey}
@@ -530,7 +530,7 @@ class MessageCreateInput extends PureComponent {
               onEndReachedThreshold={0}
               keyboardShouldPersistTaps={
                 this.state.usernameResults &&
-                this.state.usernameResults.length > 0
+                  this.state.usernameResults.length > 0
                   ? "always"
                   : "never"
               }

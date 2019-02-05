@@ -1,6 +1,6 @@
 import React from "react";
-import { Platform, View, WebView } from "react-native";
-
+import { Platform, Text, View, WebView } from "react-native";
+import PropTypes from 'prop-types'
 import styles from "./styles";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 import MessageBody from "../Chat/Message/MessageBody";
@@ -9,16 +9,16 @@ export const FeedBody = props => {
   let iframeSource = null;
   let iframeHeight = 300;
 
-  if (props.item.body.includes("iframe")) {
+  if (props.item.body && props.item.body.includes("iframe")) {
     if (props.item.body.match('src="(.*?)" ')) {
       iframeSource = String(props.item.body.match('src="(.*?)" ').pop());
     }
-    if (props.item.body.match('height="(.*?)" ')) {
+    if (props.item.body && props.item.body.match('height="(.*?)" ')) {
       iframeHeight = Number(props.item.body.match('height="(.*?)" ').pop());
     }
   }
 
-  if (!iframeSource && props.item.body.includes("xboxdvr.com")) {
+  if (!iframeSource && props.item.body && props.item.body.includes("xboxdvr.com")) {
     iframeSource = props.item.body;
     iframeHeight = 260;
   }
@@ -40,12 +40,20 @@ export const FeedBody = props => {
         />
       </View>
     );
-  } else {
+  } else if (props.item.body) {
     return (
       <MessageBody
         text={props.item.body}
         style={[styles.text, styleSheet.typography["body"]]}
       />
     );
+  } else {
+    return (
+      <Text>Error - Feed Item Id: {props.item.id}</Text>
+    )
   }
 };
+
+FeedBody.propTypes = {
+  item: PropTypes.object.isRequired,
+}

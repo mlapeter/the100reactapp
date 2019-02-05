@@ -42,7 +42,7 @@ export default class GroupsList extends React.Component<GroupsListProps> {
         data={this.props.groups}
         renderItem={this.renderItem}
         keyExtractor={(item, index) => index.toString()}
-        // refreshing={this.props.isLoading}
+      // refreshing={this.props.isLoading}
       />
     );
   }

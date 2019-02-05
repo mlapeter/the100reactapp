@@ -1,22 +1,27 @@
 import React, { PureComponent } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import PropTypes from 'prop-types'
 import styles from "./styles";
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 import Avatar from "../Avatar";
 import Icon from "../Icon";
 import { postLike } from "../../utils/api";
-import hunterHeader from "../../assets/images/nightstalker-hunter.jpg";
-import titanHeader from "../../assets/images/sunbreaker-titan.jpg";
-import warlockHeader from "../../assets/images/stormcaller-warlock.jpg";
-import defaultUserHeaderBackground from "../../assets/images/d2-all.jpg";
-import defaultGamingSessionHeaderBackground from "../../assets/images/bungie-placeholder.jpg";
 
 export default class Footer extends PureComponent {
+  static propTypes = {
+    item: PropTypes.object.isRequired,
+    currentUser: PropTypes.object.isRequired,
+    users: PropTypes.object,
+    navigation: PropTypes.object.isRequired,
+
+  }
+
+
   render() {
     let avatars = null;
     let label = null;
-    if (this.props.users && this.props.users.avatar_urls) {
-      avatars = this.props.users.avatar_urls;
+    if (this.props.item.related_users && this.props.item.related_users.avatar_urls) {
+      avatars = this.props.item.related_users.avatar_urls;
       label = "player";
     }
     // else if (this.props.users && this.props.users.likes) {
@@ -40,7 +45,7 @@ export default class Footer extends PureComponent {
                 key={index}
                 uri={
                   url === "img/default-avatar.png"
-                    ? "https://www.the100.io/the100-default-avatar.jpg"
+                    ? "https://www.the100.io/default-avatar.jpg"
                     : url
                 }
                 stacked={!!index}
@@ -49,11 +54,11 @@ export default class Footer extends PureComponent {
             ))}
             <Text type="footnote" style={{ left, alignSelf: "center" }}>{`${
               avatars.length
-            } ${label + plural}`}</Text>
+              } ${label + plural}`}</Text>
           </View>
         ) : (
-          <View style={styles.comments} />
-        )}
+            <View style={styles.comments} />
+          )}
         <FeedButton
           clicked={false}
           item={this.props.item}
@@ -76,9 +81,16 @@ export default class Footer extends PureComponent {
 }
 
 class FeedButton extends PureComponent {
+  static propTypes = {
+    clicked: PropTypes.bool.isRequired,
+    item: PropTypes.object.isRequired,
+    navigation: PropTypes.object.isRequired
+  }
+
   state = {
     clicked: this.props.clicked
   };
+
   render() {
     let feedButton = {};
     if (this.props.item.data && this.props.item.data["gaming_session_id"]) {

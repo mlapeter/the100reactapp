@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import PropTypes from 'prop-types'
 
 import { connectAlert } from "../Alert";
 import { connect } from "react-redux";
@@ -10,32 +11,44 @@ import { Header } from "./Header";
 import { FeedBody } from "./FeedBody";
 import Footer from "./Footer";
 
+
+
 class FeedItem extends PureComponent {
+
+  static propTypes = {
+    item: PropTypes.object.isRequired,
+    user: PropTypes.object.isRequired,
+    navigation: PropTypes.object.isRequired
+  }
+
+
+
   render() {
     if (this.props.item.item_type) {
-      console.log("----- ITEM -------");
-      console.log(this.props.item.item_type);
-      console.log(this.props.item.author_gamertag);
-      console.log(this.props.item.avatar_urls);
-      console.log(this.props.item.related_users);
+      // console.log("----- ITEM -------");
+      // console.log(this.props.item.item_type);
+      // console.log(this.props.item.author_gamertag);
+      // console.log(this.props.item.avatar_urls);
+      // console.log(this.props.item.related_users);
 
       return (
         <FeedCard
           navigation={this.props.navigation}
           item={this.props.item}
-          computedStyle={this.computedStyle}
           currentUser={this.props.user}
         />
       );
-    } else {
-      return <Text>{this.props.item.item_type}</Text>;
+
     }
   }
 }
 
 const FeedCard = props => {
+
   let navigateTo = null;
-  if (props.item.data && props.item.data["group_id"]) {
+  if (props.item.item_type && props.item.item_type == "gaming-session-deleted") {
+    // Nothing to link to 
+  } else if (props.item.data && props.item.data["group_id"]) {
     navigateTo = () =>
       props.navigation.navigate("Group", {
         gamingSessionId: props.item.data["group_id"]
@@ -62,8 +75,6 @@ const FeedCard = props => {
       <FeedImage item={props.item} />
       <FeedBody item={props.item} />
       <Footer
-        users={props.item.related_users}
-        computedStyle={props.computedStyle}
         item={props.item}
         currentUser={props.currentUser}
         navigation={props.navigation}
@@ -71,6 +82,12 @@ const FeedCard = props => {
     </Card>
   );
 };
+
+FeedCard.propTypes = {
+  item: PropTypes.object.isRequired,
+  currentUser: PropTypes.object.isRequired,
+  navigation: PropTypes.object.isRequired
+}
 
 const mapStateToProps = state => {
   const user = state.users.currentUser;

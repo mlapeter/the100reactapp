@@ -1,5 +1,6 @@
 import React, { PureComponent } from "react";
 import { Image, View } from "react-native";
+import PropTypes from 'prop-types'
 import styles from "./styles";
 import { fetchBungieImage } from "../../utils/destinyActivities";
 import defaultGroupHeaderBackground from "../../assets/images/d2-all.jpg";
@@ -12,6 +13,10 @@ import MessageBody from "../Chat/Message/MessageBody";
 import GamingSessionIconBar from "../../components/GamingSessionIconBar";
 
 export default class FeedImage extends PureComponent {
+  static propTypes = {
+    item: PropTypes.object.isRequired,
+  }
+
   render() {
     if (this.props.item.image_url) {
       return (
@@ -26,7 +31,7 @@ export default class FeedImage extends PureComponent {
             ]}
             source={{ uri: this.props.item.image_url }}
           />
-          {this.props.item.data.gaming_session_start_time && (
+          {this.props.item.data && this.props.item.data.gaming_session_start_time && (
             <GamingSessionIconBar
               style={{ borderTopWidth: 0, borderBottomWidth: 0 }}
               startTime={this.props.item.data.gaming_session_start_time}
@@ -88,11 +93,6 @@ export default class FeedImage extends PureComponent {
           <GamingSessionIconBar
             style={{ borderTopWidth: 0, borderBottomWidth: 0 }}
             startTime={this.props.item.data.gaming_session_start_time}
-            // platform={this.props.item.data.platform}
-            // primaryUsersCount={this.props.gamingSession.primary_users_count}
-            // teamSize={this.props.gamingSession.team_size}
-            // lightLevel={this.props.gamingSession.light_level}
-            // sherpaLed={this.props.gamingSession.sherpa_led}
           />
         </View>
       );
