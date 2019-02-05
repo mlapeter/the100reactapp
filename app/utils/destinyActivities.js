@@ -3,7 +3,10 @@ import destinyActivities from "./destinyActivities.json";
 export function fetchBungieImage(name) {
   let formattedName = name;
   let imageUrl = null;
-  if (name.includes("Spire of Stars")) {
+  if (!name) {
+    imageUrl =
+      "https://www.bungie.net/img/theme/destiny/bgs/pgcrs/placeholder.jpg";
+  } else if (name.includes("Spire of Stars")) {
     formattedName = "Leviathan, Spire of Stars: Normal";
   } else if (name.includes("Last Wish")) {
     formattedName = "Last Wish: Normal";

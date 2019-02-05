@@ -13,7 +13,12 @@ import Footer from "./Footer";
 class FeedItem extends PureComponent {
   render() {
     if (this.props.item.item_type) {
-      console.log(this.props.item);
+      console.log("----- ITEM -------");
+      console.log(this.props.item.item_type);
+      console.log(this.props.item.author_gamertag);
+      console.log(this.props.item.avatar_urls);
+      console.log(this.props.item.related_users);
+
       return (
         <FeedCard
           navigation={this.props.navigation}

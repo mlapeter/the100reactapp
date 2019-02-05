@@ -53,7 +53,7 @@ export default function PlayersItem(props) {
             style={styles.profileAvatar}
             source={
               props.user.computed_avatar_api === "img/default-avatar.png"
-                ? require("../../assets/images/default-avatar.png")
+                ? require("../../assets/images/default-avatar.jpg")
                 : { uri: props.user.computed_avatar_api }
             }
           />

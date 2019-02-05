@@ -38,7 +38,7 @@ export default class TopNav extends Component {
                 source={
                   this.props.user.computed_avatar_api ===
                   "img/default-avatar.png"
-                    ? require("../../assets/images/default-avatar.png")
+                    ? require("../../assets/images/default-avatar.jpg")
                     : { uri: this.props.user.computed_avatar_api }
                 }
               />

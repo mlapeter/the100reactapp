@@ -15,16 +15,24 @@ export default class FeedImage extends PureComponent {
   render() {
     if (this.props.item.image_url) {
       return (
-        <Image
-          resizeMode="cover"
-          style={[
-            styles.image,
-            {
-              width: "100%"
-            }
-          ]}
-          source={{ uri: this.props.item.image_url }}
-        />
+        <View>
+          <Image
+            resizeMode="cover"
+            style={[
+              styles.image,
+              {
+                width: "100%"
+              }
+            ]}
+            source={{ uri: this.props.item.image_url }}
+          />
+          {this.props.item.data.gaming_session_start_time && (
+            <GamingSessionIconBar
+              style={{ borderTopWidth: 0, borderBottomWidth: 0 }}
+              startTime={this.props.item.data.gaming_session_start_time}
+            />
+          )}
+        </View>
       );
     } else if (this.props.item.embed_url) {
       return <MessageBody text={this.props.item.embed_url} />;

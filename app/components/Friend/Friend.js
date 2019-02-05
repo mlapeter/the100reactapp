@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Alert,
   Image,
@@ -22,7 +22,8 @@ export default function Friend(props) {
       onPress={() =>
         props.navigation.navigate("Friend", {
           userId: props.user.id
-        })}
+        })
+      }
       underlayColor="white"
     >
       <View style={styles.profileBox}>
@@ -30,7 +31,7 @@ export default function Friend(props) {
           style={styles.profileAvatar}
           source={
             props.user.computed_avatar_api === "img/default-avatar.png"
-              ? require("../../assets/images/default-avatar.png")
+              ? require("../../assets/images/default-avatar.jpg")
               : { uri: props.user.computed_avatar_api }
           }
         />

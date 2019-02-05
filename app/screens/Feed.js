@@ -19,9 +19,15 @@ import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import TopNav from "../components/TopNav/TopNav";
 import FeedItem from "../components/FeedItem";
 
-class Feed extends React.Component {
-  componentWillMount() {
+class Feed extends React.PureComponent {
+  componentDidMount() {
     this.props.dispatch(fetchFeed());
+    const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
+    analytics.hit(new PageHit("App - Feed")).catch(e => console.log(e.message));
+  }
+
+  componentWillUnmount() {
+    console.log("Unmounting Feed");
   }
 
   loadMore = () => {

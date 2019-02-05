@@ -18,10 +18,11 @@ export default class Footer extends PureComponent {
     if (this.props.users && this.props.users.avatar_urls) {
       avatars = this.props.users.avatar_urls;
       label = "player";
-    } else if (this.props.users && this.props.users.likes) {
-      avatars = this.props.users.likes;
-      label = "like";
     }
+    // else if (this.props.users && this.props.users.likes) {
+    //   avatars = this.props.users.likes;
+    //   label = "like";
+    // }
     const plural = avatars && avatars.length && avatars.length > 1 ? "s" : "";
     const clicked =
       avatars && avatars.includes(this.props.currentUser.computed_avatar_api);
@@ -39,7 +40,7 @@ export default class Footer extends PureComponent {
                 key={index}
                 uri={
                   url === "img/default-avatar.png"
-                    ? "https://www.the100.io/assets/ghost-bdd6b51738dab38b1f760df958c62351d571d7cfa97690ea1f87744d35f62574.png"
+                    ? "https://www.the100.io/the100-default-avatar.jpg"
                     : url
                 }
                 stacked={!!index}
@@ -54,7 +55,7 @@ export default class Footer extends PureComponent {
           <View style={styles.comments} />
         )}
         <FeedButton
-          clicked={clicked}
+          clicked={false}
           item={this.props.item}
           navigation={this.props.navigation}
         />
@@ -64,7 +65,7 @@ export default class Footer extends PureComponent {
   computedPicture(url) {
     if (url === "img/default-avatar.png") {
       // return defaultUserHeaderBackground
-      return { uri: "https://www.the100.io/default-avatar.png" };
+      return { uri: "https://www.the100.io/default-avatar.jpg" };
     } else {
       return { uri: url };
     }
@@ -79,7 +80,7 @@ class FeedButton extends PureComponent {
     clicked: this.props.clicked
   };
   render() {
-    let feedButton = null;
+    let feedButton = {};
     if (this.props.item.data && this.props.item.data["gaming_session_id"]) {
       feedButton = {
         icon: this.state.clicked ? "person-add" : "outline-person_add-24px",
@@ -91,19 +92,23 @@ class FeedButton extends PureComponent {
           });
         }
       };
-    } else {
-      feedButton = {
-        icon: this.state.clicked ? "star" : "star-border",
-        text: "",
-        size: 24,
-        onPress: () => {
-          this.setState({
-            clicked: true
-          });
-          postLike(this.props.item.id);
-        }
-      };
     }
+    // else if (
+    //   (this.props.item && this.props.item.group_id) ||
+    //   (this.props.item && this.props.item.game_id)
+    // ) {
+    //   feedButton = {
+    //     icon: this.state.clicked ? "star" : "star-border",
+    //     text: "",
+    //     size: 24,
+    //     onPress: () => {
+    //       this.setState({
+    //         clicked: true
+    //       });
+    //       postLike(this.props.item.id);
+    //     }
+    //   };
+    // }
 
     return (
       <TouchableOpacity onPress={feedButton.onPress} onLongPress={null}>

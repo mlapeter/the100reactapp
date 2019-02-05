@@ -63,7 +63,7 @@ class GamingSessionItem extends PureComponent {
               style={styles.avatarMini}
               source={
                 this.props.data.game_avatar_url === "img/default-avatar.png"
-                  ? require("../../assets/images/default-avatar.png")
+                  ? require("../../assets/images/default-avatar.jpg")
                   : { uri: this.props.data.game_avatar_url }
               }
             />

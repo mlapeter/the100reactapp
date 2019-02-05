@@ -251,18 +251,18 @@ export class User extends React.Component {
             icon: "person-add"
           }
         : this.props.user.friendship_status === "Confirm Friend"
-          ? {
-              icon: "outline-person_add-24px",
-              onPress: () => {
-                this.acceptFriend();
-              }
+        ? {
+            icon: "outline-person_add-24px",
+            onPress: () => {
+              this.acceptFriend();
             }
-          : {
-              icon: "outline-person_add-24px",
-              onPress: () => {
-                this.addFriend();
-              }
-            };
+          }
+        : {
+            icon: "outline-person_add-24px",
+            onPress: () => {
+              this.addFriend();
+            }
+          };
 
     return (
       <View style={styles.outerContainer}>
@@ -283,7 +283,7 @@ export class User extends React.Component {
               style={styles.avatar}
               source={
                 this.props.user.computed_avatar_api === "img/default-avatar.png"
-                  ? require("../assets/images/default-avatar.png")
+                  ? require("../assets/images/default-avatar.jpg")
                   : { uri: this.props.user.computed_avatar_api }
               }
             />
