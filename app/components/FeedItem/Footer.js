@@ -24,13 +24,12 @@ export default class Footer extends PureComponent {
       avatars = this.props.item.related_users.avatar_urls;
       label = "player";
     }
-    // else if (this.props.users && this.props.users.likes) {
-    //   avatars = this.props.users.likes;
-    //   label = "like";
-    // }
+    else if (this.props.item.related_users && this.props.item.related_users["likes"]) {
+      avatars = this.props.item.related_users["likes"];
+      label = "like";
+    }
     const plural = avatars && avatars.length && avatars.length > 1 ? "s" : "";
-    const clicked =
-      avatars && avatars.includes(this.props.currentUser.computed_avatar_api);
+    const clicked = avatars && avatars.includes(this.props.currentUser.computed_avatar_api) ? true : false
     const left =
       !avatars || avatars.length === 0
         ? 0
@@ -60,7 +59,7 @@ export default class Footer extends PureComponent {
             <View style={styles.comments} />
           )}
         <FeedButton
-          clicked={false}
+          clicked={clicked}
           item={this.props.item}
           navigation={this.props.navigation}
         />
@@ -105,29 +104,26 @@ class FeedButton extends PureComponent {
         }
       };
     }
-    // else if (
-    //   (this.props.item && this.props.item.group_id) ||
-    //   (this.props.item && this.props.item.game_id)
-    // ) {
-    //   feedButton = {
-    //     icon: this.state.clicked ? "star" : "star-border",
-    //     text: "",
-    //     size: 24,
-    //     onPress: () => {
-    //       this.setState({
-    //         clicked: true
-    //       });
-    //       postLike(this.props.item.id);
-    //     }
-    //   };
-    // }
+    else if (this.props.item && (this.props.item.group_id || this.props.item.game_id || this.props.item.game_id)) {
+      feedButton = {
+        icon: this.state.clicked ? "star" : "star-border",
+        text: "",
+        size: 24,
+        onPress: () => {
+          this.setState({
+            clicked: true
+          });
+          postLike(this.props.item.id);
+        }
+      };
+    }
 
     return (
       <TouchableOpacity onPress={feedButton.onPress} onLongPress={null}>
         <View style={styles.iconButton}>
           <Icon
             name={feedButton.icon}
-            color={this.state.clicked ? colors.blue : colors.lightGrey}
+            color={colors.blue}
             size={feedButton.size}
           />
           <Text
