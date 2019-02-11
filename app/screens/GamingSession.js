@@ -71,6 +71,16 @@ class GamingSession extends React.Component {
       .catch(e => console.log(e.message));
   }
 
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.gamingSessionsError &&
+      nextProps.gamingSessionsErrorAt !== this.props.gamingSessionsErrorAt
+    ) {
+      this.props.navigation.navigate("GamingSessionsList");
+      this.props.alertWithType("error", "Error", nextProps.gamingSessionsError);
+    }
+  }
+
   fetchGamingSessionData() {
     this.props.dispatch(fetchGamingSession(gamingSessionId));
   }

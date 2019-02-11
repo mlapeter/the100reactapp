@@ -244,6 +244,11 @@ function* fetchData(endpoint, page, success, failure, noData) {
     console.log("RESPONSE STATUS: ", response.status);
     const result = yield response.json();
 
+    if (response.status == 500) {
+      console.log("Error");
+      yield put({ type: failure, error: "Resource not found or was deleted" });
+    }
+
     if (result.error && result.error === "Not Authorized") {
       console.log("ERROR - REMOVING TOKEN");
       AsyncStorage.removeItem("id_token");
@@ -304,7 +309,7 @@ function* postData(method, endpoint, body, success, failure) {
   }
 }
 
-const resetPassword = function*() {
+const resetPassword = function* () {
   console.log("RESETTING PASSWORD -----------");
   try {
     let resetPasswordEmail = yield select(
@@ -374,9 +379,9 @@ function* updateUserPushToken() {
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "users/" +
-        userId,
+      Environment["API_VERSION"] +
+      "users/" +
+      userId,
       {
         method: "PUT",
         headers: {
@@ -405,9 +410,9 @@ function* updateUser() {
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "users/" +
-        userId,
+      Environment["API_VERSION"] +
+      "users/" +
+      userId,
       {
         method: "PUT",
         headers: {
@@ -465,8 +470,8 @@ function* createGamingSession() {
     // let gameId = yield select(state => state.search.gameId);
     const response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "gaming_sessions/",
+      Environment["API_VERSION"] +
+      "gaming_sessions/",
       {
         method: "POST",
         headers: {
@@ -526,15 +531,15 @@ function* editGamingSession() {
     let platform = yield select(state => state.search.platform);
     console.log(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "gaming_sessions/" +
-        gamingSessionId
+      Environment["API_VERSION"] +
+      "gaming_sessions/" +
+      gamingSessionId
     );
     const response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "gaming_sessions/" +
-        gamingSessionId,
+      Environment["API_VERSION"] +
+      "gaming_sessions/" +
+      gamingSessionId,
       {
         method: "PATCH",
         headers: {
@@ -669,7 +674,7 @@ function* fetchActivities() {
     let gameId = yield select(state => state.search.gameId);
     let games = yield select(state => state.search.games);
 
-    let game = games.find(function(game) {
+    let game = games.find(function (game) {
       return game.id === gameId;
     });
 
@@ -964,7 +969,7 @@ function* fetchGamingSession() {
       1,
       FETCH_GAMING_SESSION_RESULT,
       FETCH_GAMING_SESSION_ERROR,
-      FETCH_GAMING_SESSION_RESULT
+      FETCH_GAMING_SESSION_ERROR
     );
   } catch (e) {
     yield put({ type: FETCH_GAMING_SESSION_ERROR, error: e.message });
@@ -1253,8 +1258,8 @@ function* fetchConversations() {
 
     let response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "conversations/",
+      Environment["API_VERSION"] +
+      "conversations/",
       {
         method: "GET",
         headers: { Authorization: "Bearer " + token }

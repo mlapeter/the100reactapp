@@ -5,11 +5,14 @@ import {
   Image,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View
 } from "react-native";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+
 
 import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
@@ -30,6 +33,11 @@ class Feed extends React.PureComponent {
     console.log("Unmounting Feed");
   }
 
+  refresh = () => {
+    this.flatList.scrollToOffset({ x: 0, y: 0, animated: true })
+    this.props.dispatch(fetchFeed());
+  }
+
   loadMore = () => {
     console.log("loadMore triggered");
     console.log(
@@ -46,6 +54,25 @@ class Feed extends React.PureComponent {
       this.props.dispatch(loadMoreFeedItems());
     }
   };
+
+  refreshButton = () => {
+    return (
+      <TouchableOpacity
+        style={{ padding: 4 }}
+        onPress={() =>
+          this.refresh()
+        }
+      >
+        <MaterialIcons
+          name="refresh"
+          size={24}
+          style={{
+            color: colors.lightGray
+          }}
+        />
+      </TouchableOpacity>
+    )
+  }
 
   renderFooter = () => {
     if (!this.props.isLoading && !this.props.moreFeedItemsAvailable) {
@@ -78,8 +105,10 @@ class Feed extends React.PureComponent {
           title="Feed"
           user={this.props.user}
           navigation={this.props.navigation}
+          refreshButton={this.refreshButton}
         />
         <FlatList
+          ref={(f) => { this.flatList = f }}
           data={this.props.feedItems}
           renderItem={({ item }) => (
             <FeedItem item={item} navigation={this.props.navigation} />
