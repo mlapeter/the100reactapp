@@ -1,59 +1,54 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import { Platform, Text, View, WebView } from "react-native";
 import PropTypes from 'prop-types'
 import styles from "./styles";
-import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
+import { styleSheet } from "../../styles";
 import MessageBody from "../Chat/Message/MessageBody";
+import moment from "../../../node_modules/moment";
 
-export const FeedBody = props => {
-  let iframeSource = null;
-  let iframeHeight = 300;
+export default class FeedBody extends PureComponent {
 
-  if (props.item.body && props.item.body.includes("iframe")) {
-    if (props.item.body.match('src="(.*?)" ')) {
-      iframeSource = String(props.item.body.match('src="(.*?)" ').pop());
-    }
-    if (props.item.body && props.item.body.match('height="(.*?)" ')) {
-      iframeHeight = Number(props.item.body.match('height="(.*?)" ').pop());
-    }
+  static propTypes = {
+    item: PropTypes.object.isRequired,
+    iframeSrc: PropTypes.string,
+    iframeHeight: PropTypes.number,
   }
 
-  if (!iframeSource && props.item.body && props.item.body.includes("xboxdvr.com")) {
-    iframeSource = props.item.body;
-    iframeHeight = 260;
-  }
+  render() {
 
-  if (iframeSource) {
-    const scalesPageToFit = Platform.OS === "android";
+    let startTime = ""
+    if (this.props.item.data && this.props.item.data.gaming_session_start_time) {
+      startTime = ` at ${moment(this.props.item.data.gaming_session_start_time).format("hh:mm A  MM/DD/YY")}`
+    }
 
-    return (
-      <View style={{ height: iframeHeight + 10 }}>
-        <WebView
-          style={{ flex: 1 }}
-          originWhitelist={["*"]}
-          source={{
-            html: `<head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /></head><body><iframe src="${iframeSource}" width="100%" height="${iframeHeight}" frameborder="0"></iframe></body>`
-          }}
-          scalesPageToFit={scalesPageToFit}
-          bounces={false}
-          scrollEnabled={false}
+    if (this.props.iframeSrc) {
+      const scalesPageToFit = Platform.OS === "android";
+      return (
+        <View style={{ height: this.props.iframeHeight + 10 }}>
+          <WebView
+            style={{ flex: 1 }}
+            originWhitelist={["*"]}
+            source={{
+              html: `<head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /></head><body><iframe src="${this.props.iframeSrc}" width="100%" height="${this.props.iframeHeight}" frameborder="0"></iframe></body>`
+            }}
+            scalesPageToFit={scalesPageToFit}
+            bounces={false}
+            scrollEnabled={false}
+          />
+        </View>
+      );
+    } else if (this.props.item.body) {
+      return (
+        <MessageBody
+          text={this.props.item.body + startTime}
+          style={[styles.text, styleSheet.typography["body"]]}
         />
-      </View>
-    );
-  } else if (props.item.body) {
-    return (
-      <MessageBody
-        text={props.item.body}
-        style={[styles.text, styleSheet.typography["body"]]}
-      />
-    );
-  } else {
-    return (
-      <Text>Error - Feed Item Id: {props.item.id}</Text>
-    )
+      );
+    } else {
+      return (
+        <Text>Error - Feed Item Id: {this.props.item.id}</Text>
+      )
+    }
   }
 };
 
-FeedBody.propTypes = {
-  item: PropTypes.object.isRequired,
-}

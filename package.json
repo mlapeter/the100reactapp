@@ -72,7 +72,6 @@
     "react-navigation-backhandler": "1.2.0",
     "react-redux": "^5.0.6",
     "react-string-replace-recursively": "^0.1.27",
-    "reactotron-react-native": "^2.0.0",
     "redux": "^3.7.2",
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
