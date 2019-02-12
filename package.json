@@ -4,6 +4,7 @@
   "private": true,
   "devDependencies": {
     "babel-cli": "^6.26.0",
+    "babel-plugin-transform-remove-console": "6.9.4",
     "babel-preset-flow": "^6.23.0",
     "enzyme": "3.7.0",
     "enzyme-adapter-react-16": "1.7.0",
