@@ -17,7 +17,7 @@ export default class FeedBody extends PureComponent {
   render() {
 
     let startTime = ""
-    if (this.props.item.data && this.props.item.data.gaming_session_start_time) {
+    if (this.props.item && (this.props.item.item_type == "player-joined-game" || this.props.item.item_type == "player-left-game") && this.props.item.data && this.props.item.data.gaming_session_start_time) {
       startTime = ` at ${moment(this.props.item.data.gaming_session_start_time).format("hh:mm A  MM/DD/YY")}`
     }
 
