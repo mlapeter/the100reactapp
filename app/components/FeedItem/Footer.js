@@ -11,6 +11,7 @@ export default class Footer extends PureComponent {
   static propTypes = {
     item: PropTypes.object.isRequired,
     currentUser: PropTypes.object.isRequired,
+    likeable: PropTypes.bool,
     users: PropTypes.object,
     navigation: PropTypes.object.isRequired,
 
@@ -20,13 +21,13 @@ export default class Footer extends PureComponent {
   render() {
     let avatars = null;
     let label = null;
-    if (this.props.item.related_users && this.props.item.related_users.avatar_urls) {
-      avatars = this.props.item.related_users.avatar_urls;
-      label = "player";
-    }
-    else if (this.props.item.related_users && this.props.item.related_users["likes"]) {
+
+    if (this.props.likeable) {
       avatars = this.props.item.related_users["likes"];
       label = "like";
+    } else if (this.props.item.related_users && this.props.item.related_users.avatar_urls) {
+      avatars = this.props.item.related_users.avatar_urls;
+      label = "player";
     }
     const plural = avatars && avatars.length && avatars.length > 1 ? "s" : "";
     const clicked = avatars && avatars.includes(this.props.currentUser.computed_avatar_api) ? true : false
@@ -61,6 +62,7 @@ export default class Footer extends PureComponent {
         <FeedButton
           clicked={clicked}
           item={this.props.item}
+          likeable={this.props.likeable}
           navigation={this.props.navigation}
         />
       </View>
@@ -83,6 +85,7 @@ class FeedButton extends PureComponent {
   static propTypes = {
     clicked: PropTypes.bool.isRequired,
     item: PropTypes.object.isRequired,
+    likeable: PropTypes.bool,
     navigation: PropTypes.object.isRequired
   }
 
@@ -90,11 +93,26 @@ class FeedButton extends PureComponent {
     clicked: this.props.clicked
   };
 
+
   render() {
     let feedButton = {};
-    if (this.props.item.data && this.props.item.data["gaming_session_id"]) {
+    if (this.props.likeable) {
+      feedButton = {
+        icon: this.state.clicked ? "heart" : "heart",
+        color: this.state.clicked ? colors.blue : colors.lightGrey,
+        text: "",
+        size: 24,
+        onPress: () => {
+          this.setState({
+            clicked: true
+          });
+          postLike(this.props.item.id);
+        }
+      }
+    } else if (this.props.item.data && this.props.item.data["gaming_session_id"]) {
       feedButton = {
         icon: this.state.clicked ? "person-add" : "outline-person_add-24px",
+        color: this.state.clicked ? colors.blue : colors.darkGray,
         text: "",
         size: 22,
         onPress: () => {
@@ -104,26 +122,13 @@ class FeedButton extends PureComponent {
         }
       };
     }
-    else if (this.props.item && (this.props.item.group_id || this.props.item.game_id || this.props.item.game_id)) {
-      feedButton = {
-        icon: this.state.clicked ? "star" : "star-border",
-        text: "",
-        size: 24,
-        onPress: () => {
-          this.setState({
-            clicked: true
-          });
-          postLike(this.props.item.id);
-        }
-      };
-    }
 
     return (
       <TouchableOpacity onPress={feedButton.onPress} onLongPress={null}>
         <View style={styles.iconButton}>
           <Icon
             name={feedButton.icon}
-            color={colors.blue}
+            color={feedButton.color}
             size={feedButton.size}
           />
           <Text

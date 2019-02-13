@@ -4,9 +4,12 @@ import {
   Image,
   ImageBackground,
   Linking,
+  Platform,
   Text,
+  TouchableOpacity,
   TouchableHighlight,
-  View
+  View,
+  WebView
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
@@ -120,25 +123,38 @@ const config = {
       return <Text key={key}>{emoji.get(rawText)}</Text>;
     }
   },
-  userMention: {
-    pattern: /\B@([a-z0-9_\-#]+?)\b/gim,
-    matcherFn: usernameMentionMatcherFn
-  },
+
   userMentionBracketed: {
     pattern: /\B@\[([a-z0-9_\-# ]+?)\]\B/gim,
     matcherFn: usernameMentionMatcherFn
   },
-  tweet: {
-    pattern: /\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/gim,
+  // tweet: {
+  //   pattern: /\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/gim,
+  //   matcherFn: (rawText, processed, key) => {
+  //     let tweetId = rawText;
+  //     return (
+  //       <Hyperlink
+  //         key={key}
+  //         link={"https://twitter.com/i/web/status/" + tweetId}
+  //       />
+  //     );
+  //   }
+  // },
+  tweetEmbed: {
+    pattern: /\B<blockquote class="twitter-tweet" data-lang="en">([\s\S]*?)<\/script>/gim,
     matcherFn: (rawText, processed, key) => {
-      let tweetId = rawText;
+      let embedCode = `<blockquote class="twitter-tweet" data-lang="en">${rawText}</script>`
       return (
-        <Hyperlink
+        <Tweet
           key={key}
-          link={"https://twitter.com/i/web/status/" + tweetId}
+          embedCode={embedCode}
         />
       );
     }
+  },
+  userMention: {
+    pattern: /\B@([a-z0-9_\-#]+?)\b/gim,
+    matcherFn: usernameMentionMatcherFn
   },
   url: {
     pattern: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/,
@@ -372,6 +388,44 @@ class MessageImage extends PureComponent {
         onLongPress={this.onLongPress}
       />
     );
+  }
+}
+
+
+class Tweet extends PureComponent {
+  static propTypes = {
+    embedCode: PropTypes.string.isRequired
+  };
+
+  render() {
+    const link = this.props.embedCode.match(/\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/)[0]
+    console.log(link)
+    const scalesPageToFit = Platform.OS === "android";
+    return (
+      <TouchableOpacity onPress={() => {
+        Linking.openURL(link).catch(e => {
+          console.log("Failed to open link: " + e);
+        });
+      }}>
+
+        <View style={{ height: 415 }} pointerEvents="none" >
+          <WebView
+            style={{ flex: 1 }}
+            originWhitelist={["twitter.com", "t.co"]}
+            source={{
+              html: this.props.embedCode,
+              injectedJavaScript: "https://platform.twitter.com/widgets.js",
+              javaScriptEnabledAndroid: true
+
+            }}
+            scalesPageToFit={scalesPageToFit}
+            bounces={false}
+            scrollEnabled={false}
+          />
+        </View>
+      </TouchableOpacity>
+
+    )
   }
 }
 

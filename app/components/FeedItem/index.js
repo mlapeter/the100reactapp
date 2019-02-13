@@ -14,6 +14,7 @@ class FeedItem extends PureComponent {
   static propTypes = {
     item: PropTypes.object.isRequired,
     user: PropTypes.object.isRequired,
+    likeable: PropTypes.bool,
     imageUrl: PropTypes.oneOfType([
       PropTypes.object,
       PropTypes.number
@@ -36,6 +37,7 @@ class FeedItem extends PureComponent {
           iframeSrc={this.props.iframeSrc}
           iframeHeight={this.props.iframeHeight}
           currentUser={this.props.user}
+          likeable={this.props.likeable}
           navigateTo={this.props.navigateTo}
         />
       );
@@ -55,6 +57,7 @@ class FeedCard extends PureComponent {
     iframeSrc: PropTypes.string,
     iframeHeight: PropTypes.number,
     currentUser: PropTypes.object.isRequired,
+    likeable: PropTypes.bool,
     navigation: PropTypes.object.isRequired,
     navigateTo: PropTypes.func.isRequired
   }
@@ -63,6 +66,8 @@ class FeedCard extends PureComponent {
   navigateTo = () => {
     this.props.navigateTo(this.props.item)
   }
+
+
 
   render() {
 
@@ -80,10 +85,11 @@ class FeedCard extends PureComponent {
           created_at={this.props.item.created_at} />
         <FeedImage item={this.props.item} imageUrl={this.props.imageUrl} />
         <FeedBody item={this.props.item} iframeSrc={this.props.iframeSrc} iframeHeight={this.props.iframeHeight} />
-        {this.props.item.item_type != "player-joined-game" && this.props.item.item_type != "player-left-game" &&
+        {this.props.item.item_type != "player-left-game" && !this.props.item.body.includes("twitter.com") &&
           <Footer
             item={this.props.item}
             currentUser={this.props.currentUser}
+            likeable={this.props.likeable}
             navigation={this.props.navigation}
           />
         }

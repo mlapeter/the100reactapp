@@ -20,6 +20,9 @@ const PlatformIcon = createIconSetFromIcoMoon(
   "PlatformIcons"
 );
 
+
+
+
 import Ionicons from "react-native-vector-icons/Ionicons";
 
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -42,10 +45,10 @@ const materialIcons = [
   "chat-bubble-outline",
   "cancel",
   "edit",
-  "more-horiz"
+  "more-horiz",
 ];
 
-const icons = ["arrow-left", "share", "feed"];
+const icons = ["arrow-left", "share", "feed", "heart"];
 
 type IconProps = {
   name: IconName,

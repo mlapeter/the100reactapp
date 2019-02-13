@@ -68,6 +68,15 @@ class Feed extends React.PureComponent {
     }
   }
 
+  likeable(item) {
+    const likeableItems = ["user-generated", "moment", "first-member-game", "player-joined-game", "new-group-member", "first-member-game", "group-announcement", "game-announcement", "gaming-session-announcement", "global-announcement"]
+    if (likeableItems.includes(item.item_type) && item.related_users) {
+      return true
+    } else {
+      return false
+    }
+  }
+
   iframeSrc(item) {
     if (item.body && item.body.includes("iframe")) {
       if (item.body.match('src="(.*?)" ')) {
@@ -200,6 +209,7 @@ class Feed extends React.PureComponent {
               <FeedItem
                 item={item}
                 user={this.props.user}
+                likeable={this.likeable(item)}
                 imageUrl={this.computedImageUrl(item)}
                 iframeSrc={this.iframeSrc(item)}
                 iframeHeight={this.iframeHeight(item)}
