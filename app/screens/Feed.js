@@ -52,7 +52,7 @@ class Feed extends React.PureComponent {
 
   navigateTo = (item) => {
     if (item.item_type && item.item_type == "gaming-session-deleted") {
-      // Nothing to link to 
+      null
     } else if (item.data && item.data["group_id"]) {
       this.props.navigation.navigate("Group", {
         groupId: item.data["group_id"]
@@ -65,6 +65,15 @@ class Feed extends React.PureComponent {
       this.props.navigation.navigate("Friend", {
         userId: item.author_user_id
       });
+    }
+  }
+
+  clickable(item) {
+    const notClicableItems = ["gaming-session-deleted"]
+    if (notClicableItems.includes(item.item_type) || item.body.includes("iframe")) {
+      return false
+    } else {
+      return true
     }
   }
 
@@ -214,7 +223,7 @@ class Feed extends React.PureComponent {
                 iframeSrc={this.iframeSrc(item)}
                 iframeHeight={this.iframeHeight(item)}
                 navigation={this.props.navigation}
-                navigateTo={this.navigateTo}
+                navigateTo={this.clickable(item) ? this.navigateTo : null}
               />
             )}
             keyExtractor={(item, index) => index.toString()}

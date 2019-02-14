@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react";
-import { Platform, Text, View, WebView } from "react-native";
+import { Linking, Platform, Text, View, WebView } from "react-native";
 import PropTypes from 'prop-types'
 import styles from "./styles";
 import { styleSheet } from "../../styles";
@@ -26,10 +26,18 @@ export default class FeedBody extends PureComponent {
       return (
         <View style={{ height: this.props.iframeHeight + 10 }}>
           <WebView
+            ref={(ref) => { this.webview = ref; }}
             style={{ flex: 1 }}
             originWhitelist={["*"]}
             source={{
               html: `<head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /></head><body><iframe src="${this.props.iframeSrc}" width="100%" height="${this.props.iframeHeight}" frameborder="0"></iframe></body>`
+            }}
+            onNavigationStateChange={(event) => {
+              console.log(event)
+              if (event.url && event.url != "about:blank") {
+                this.webview.stopLoading();
+                Linking.openURL(event.url).catch(err => console.log('Linking Error: ', err));
+              }
             }}
             scalesPageToFit={scalesPageToFit}
             bounces={false}

@@ -22,7 +22,7 @@ class FeedItem extends PureComponent {
     iframeSrc: PropTypes.string,
     iframeHeight: PropTypes.number,
     navigation: PropTypes.object.isRequired,
-    navigateTo: PropTypes.func.isRequired
+    navigateTo: PropTypes.func
   }
 
 
@@ -59,14 +59,8 @@ class FeedCard extends PureComponent {
     currentUser: PropTypes.object.isRequired,
     likeable: PropTypes.bool,
     navigation: PropTypes.object.isRequired,
-    navigateTo: PropTypes.func.isRequired
+    navigateTo: PropTypes.func
   }
-
-
-  navigateTo = () => {
-    this.props.navigateTo(this.props.item)
-  }
-
 
 
   render() {
@@ -76,13 +70,13 @@ class FeedCard extends PureComponent {
         style={styles.card}
         item={this.props.item}
         navigation={this.props.navigation}
-        onPress={this.navigateTo}
+        onPress={this.props.navigateTo ? () => { this.props.navigateTo(this.props.item) } : null}
       >
         <Header
           author_avatar_url={this.props.item.author_avatar_url}
           title={this.props.item.title}
           author_gamertag={this.props.item.author_gamertag}
-          created_at={this.props.item.created_at} />
+          display_after={this.props.item.display_after} />
         <FeedImage item={this.props.item} imageUrl={this.props.imageUrl} />
         <FeedBody item={this.props.item} iframeSrc={this.props.iframeSrc} iframeHeight={this.props.iframeHeight} />
         {this.props.item.item_type != "player-left-game" && !this.props.item.body.includes("twitter.com") &&

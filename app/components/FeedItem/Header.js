@@ -11,7 +11,7 @@ export default class Header extends PureComponent {
     author_avatar_url: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     author_gamertag: PropTypes.string.isRequired,
-    created_at: PropTypes.string.isRequired,
+    display_after: PropTypes.string.isRequired,
   }
 
 
@@ -35,7 +35,7 @@ export default class Header extends PureComponent {
               <Text style={[styleSheet.typography["footnote"]]}>
                 @{this.props.author_gamertag}{" "}
                 {this.props.title && this.props.title.length >= 20 && (
-                  <TimeAgo date={this.props.created_at} />
+                  <TimeAgo date={this.props.display_after} />
                 )}
               </Text>
             )}
@@ -43,7 +43,7 @@ export default class Header extends PureComponent {
         </View>
         {this.props.title && this.props.title.length < 20 && (
           <Text style={[styleSheet.typography["footnote"]]}>
-            <TimeAgo date={this.props.created_at} />
+            <TimeAgo date={this.props.display_after} />
           </Text>
         )}
       </View >

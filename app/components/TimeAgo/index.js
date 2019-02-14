@@ -7,9 +7,10 @@ import "moment-timezone";
 
 
 class TimeAgo extends PureComponent {
-
   render() {
-    return <Text {...this.props.rest}> {moment(this.props.date).fromNow()}</Text >;
+    const fromNow = moment(this.props.date).fromNow() == "a few seconds ago" ? "seconds ago" : moment(this.props.date).fromNow()
+
+    return <Text {...this.props.rest}> {fromNow}</Text >;
   }
 };
 
