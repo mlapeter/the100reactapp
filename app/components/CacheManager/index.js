@@ -1,4 +1,3 @@
-// @flow
 import * as _ from "lodash";
 import { FileSystem } from "expo";
 import SHA1 from "crypto-js/sha1";
@@ -6,44 +5,47 @@ import SHA1 from "crypto-js/sha1";
 const BASE_DIR = `${FileSystem.cacheDirectory}expo-image-cache/`;
 
 export class CacheEntry {
-  uri: string;
-  path: string;
+  // uri: string;
+  // path: string;
 
-  constructor(uri: string) {
+  constructor(uri) {
     this.uri = uri;
   }
 
-  async getPath(): Promise<?string> {
-    const { uri } = this;
-    const { path, exists, tmpPath } = await getCacheEntry(uri);
-    if (exists) {
+  async getPath() {
+    try {
+      const { uri } = this;
+      const { path, exists, tmpPath } = await getCacheEntry(uri);
+      if (exists) {
+        return path;
+      }
+      await FileSystem.downloadAsync(uri, tmpPath);
+      await FileSystem.moveAsync({ from: tmpPath, to: path });
       return path;
     }
-    await FileSystem.downloadAsync(uri, tmpPath);
-    await FileSystem.moveAsync({ from: tmpPath, to: path });
-    return path;
+    catch (e) {
+      console.log("Error: ", e)
+    }
   }
 }
 
 export default class CacheManager {
-  static entries: { [uri: string]: CacheEntry } = {};
+  static entries = {};
 
-  static get(uri: string): CacheEntry {
+  static get(uri) {
     if (!CacheManager.entries[uri]) {
       CacheManager.entries[uri] = new CacheEntry(uri);
     }
     return CacheManager.entries[uri];
   }
 
-  static async clearCache(): Promise<void> {
+  static async clearCache() {
     await FileSystem.deleteAsync(BASE_DIR, { idempotent: true });
     await FileSystem.makeDirectoryAsync(BASE_DIR);
   }
 }
 
-const getCacheEntry = async (
-  uri: string
-): Promise<{ exists: boolean, path: string, tmpPath: string }> => {
+const getCacheEntry = async (uri) => {
   const filename = uri.substring(
     uri.lastIndexOf("/"),
     uri.indexOf("?") === -1 ? uri.length : uri.indexOf("?")
