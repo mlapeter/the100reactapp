@@ -37,8 +37,8 @@ export default class TopNav extends Component {
                 style={styles.avatarMini}
                 source={
                   this.props.user.computed_avatar_api ===
-                  "img/default-avatar.png"
-                    ? require("../../assets/images/default-avatar.png")
+                    "img/default-avatar.png"
+                    ? require("../../assets/images/default-avatar.jpg")
                     : { uri: this.props.user.computed_avatar_api }
                 }
               />
@@ -87,19 +87,20 @@ export default class TopNav extends Component {
               </Text>
             </View>
           ) : (
-            <View style={styles.titleContainer}>
-              <Image
-                style={styles.image}
-                source={require("../../assets/images/the-100-logo.png")}
-              />
-            </View>
-          )}
+                <View style={styles.titleContainer}>
+                  <Image
+                    style={styles.image}
+                    source={require("../../assets/images/the-100-logo.png")}
+                  />
+                </View>
+              )}
         </View>
         <View style={styles.add}>
-          {this.props.searchButton ? this.props.searchButton : null}
+          {this.props.searchButton && this.props.searchButton}
+
         </View>
         <View style={styles.add}>
-          {this.props.newGameButton ? (
+          {this.props.newGameButton && (
             <TouchableOpacity
               style={{ padding: 4 }}
               onPress={() =>
@@ -114,8 +115,8 @@ export default class TopNav extends Component {
                 }}
               />
             </TouchableOpacity>
-          ) : null}
-          {this.props.rightAction ? (
+          )}
+          {this.props.rightAction && (
             <TouchableOpacity onPress={() => Alert.alert("Coming Soon")}>
               <MaterialCommunityIcons
                 name="account-plus"
@@ -123,7 +124,10 @@ export default class TopNav extends Component {
                 style={{ color: colors.lightGray }}
               />
             </TouchableOpacity>
-          ) : null}
+          )}
+          {this.props.refreshButton && (
+            this.props.refreshButton()
+          )}
         </View>
       </View>
     );

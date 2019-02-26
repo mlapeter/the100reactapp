@@ -1,18 +1,17 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { Text } from "react-native";
 
 import moment from "moment";
 import "moment-timezone";
 
-const TimeAgo = ({ date, ...rest }) => {
-  return (
-    <Text {...rest}>
-      {moment(date).calendar({
-        sameElse: "L [at] LT"
-      })}
-    </Text>
-  );
+
+class TimeAgo extends PureComponent {
+  render() {
+    const fromNow = moment(this.props.date).fromNow() == "a few seconds ago" ? "seconds ago" : moment(this.props.date).fromNow()
+
+    return <Text {...this.props.rest}> {fromNow}</Text >;
+  }
 };
 
 TimeAgo.propTypes = {

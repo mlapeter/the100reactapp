@@ -20,7 +20,7 @@ export default function UsersItemSmall(props) {
           source={
             props.usernameAvatars[props.user] === undefined ||
             props.usernameAvatars[props.user] === "img/default-avatar.png"
-              ? require("../../assets/images/default-avatar.png")
+              ? require("../../assets/images/default-avatar.jpg")
               : { uri: props.usernameAvatars[props.user] }
           }
         />

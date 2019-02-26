@@ -12,17 +12,17 @@ export default class NotificationsItem extends PureComponent {
       <Card
         onPress={() =>
           this.props.item.notification_type === "karma-received" ||
-          this.props.item.notification_type === "username-mentioned" ||
-          this.props.item.notification_type === "new-private-message"
+            this.props.item.notification_type === "username-mentioned" ||
+            this.props.item.notification_type === "new-private-message"
             ? this.props.navigation.navigate("Friend", {
-                userId: this.props.item.avatar_user_id
-              })
+              userId: this.props.item.avatar_user_id
+            })
             : this.props.navigation.navigate("GamingSession", {
-                gamingSessionId: this.props.item.target_url_app.replace(
-                  /\D/g,
-                  ""
-                )
-              })
+              gamingSessionId: this.props.item.target_url_app.replace(
+                /\D/g,
+                ""
+              )
+            })
         }
       >
         <View style={styles.header}>
@@ -31,16 +31,17 @@ export default class NotificationsItem extends PureComponent {
               style={styles.avatarMini}
               source={
                 !this.props.item.avatar_url ||
-                this.props.item.avatar_url === "img/default-avatar.png"
-                  ? require("../../assets/images/default-avatar.png")
+                  this.props.item.avatar_url === "img/default-avatar.png"
+                  ? require("../../assets/images/default-avatar.jpg")
                   : { uri: this.props.item.avatar_url }
               }
             />
             <View style={styles.username}>
               <Text style={[styleSheet.typography["headline"]]}>
-                {this.props.item.notification_type
+                {/* {this.props.item.notification_type
                   .replace("-", " ")
-                  .replace("-", " ")}
+                  .replace("-", " ")} */}
+                {this.props.title}
               </Text>
               <Text style={[styleSheet.typography["footnote"]]}>
                 <TimeAgo date={this.props.item.created_at} />

@@ -8,6 +8,7 @@ import group from "./group";
 import gamingSessions from "./gamingSessions";
 import onboarding from "./onboarding";
 import conversations from "./conversations";
+import feed from "./feed";
 
 export default combineReducers({
   authentication,
@@ -17,5 +18,6 @@ export default combineReducers({
   group,
   gamingSessions,
   onboarding,
-  conversations
+  conversations,
+  feed
 });

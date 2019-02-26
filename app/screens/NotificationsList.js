@@ -63,6 +63,14 @@ class Notifications extends PureComponent {
     Expo.Notifications.setBadgeNumberAsync(0);
   };
 
+  capitalize(text) {
+    const capitalizedText = text.toLowerCase()
+      .split('-')
+      .map((s) => s.charAt(0).toUpperCase() + s.substring(1))
+      .join(' ');
+    return capitalizedText
+  }
+
   handleRefresh = () => {
     this.fetchNotificationsData();
   };
@@ -103,7 +111,7 @@ class Notifications extends PureComponent {
         <FlatList
           data={this.props.notifications}
           renderItem={({ item }) => (
-            <NotificationsItem item={item} navigation={this.props.navigation} />
+            <NotificationsItem item={item} title={this.capitalize(item.notification_type)} navigation={this.props.navigation} />
           )}
           keyExtractor={(item, index) => index.toString()}
           refreshing={this.props.isLoading}

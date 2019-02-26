@@ -26,6 +26,16 @@ import {
 } from "../actions/notifications";
 
 import {
+  FETCH_FEED,
+  FETCH_FEED_RESULT,
+  FETCH_FEED_ERROR,
+  FETCH_FEED_NO_DATA,
+  LOAD_MORE_FEED_ITEMS,
+  LOAD_MORE_FEED_ITEMS_RESULT,
+  CHANGE_FEED_PAGE
+} from "../actions/feed";
+
+import {
   UPDATE_USER,
   UPDATE_USER_RESULT,
   UPDATE_USER_ERROR,
@@ -214,17 +224,31 @@ function* removeToken() {
 }
 
 function* fetchData(endpoint, page, success, failure, noData) {
+  console.log("FETCHING ENDPOINT INITIAL: ", endpoint);
+
   try {
     let token = yield select(state => state.authentication.token);
+    let newEndpoint = endpoint;
+    if (page && page > 0) {
+      newEndpoint = endpoint + "&page=" + page;
+    }
+    console.log("FETCHING ENDPOINT: ", newEndpoint);
+
     const response = yield requestTimeout(
       12000,
-      fetch(endpoint + "&page=" + page, {
+      fetch(newEndpoint, {
         method: "GET",
         headers: { Authorization: "Bearer " + token }
       })
     );
+    console.log("RESPONSE STATUS: ", response.status);
     const result = yield response.json();
-    console.log("FETCHING ENDPOINT: ", endpoint);
+
+    if (response.status == 500) {
+      console.log("Error");
+      yield put({ type: failure, error: "Resource not found or was deleted" });
+    }
+
     if (result.error && result.error === "Not Authorized") {
       console.log("ERROR - REMOVING TOKEN");
       AsyncStorage.removeItem("id_token");
@@ -235,12 +259,14 @@ function* fetchData(endpoint, page, success, failure, noData) {
       yield { type: failure, error: result.error };
     } else if (result.length === 0) {
       console.log("no data returned");
+      console.log("no data");
       yield put({ type: noData, result });
     } else {
+      console.log("success");
       yield put({ type: success, result });
     }
   } catch (e) {
-    console.log("Error: " + e.message + " ", endpoint);
+    console.log("Error: " + e.message + " ", newEndpoint);
     yield put({ type: failure, error: e.message });
   }
 }
@@ -283,7 +309,7 @@ function* postData(method, endpoint, body, success, failure) {
   }
 }
 
-const resetPassword = function*() {
+const resetPassword = function* () {
   console.log("RESETTING PASSWORD -----------");
   try {
     let resetPasswordEmail = yield select(
@@ -353,9 +379,9 @@ function* updateUserPushToken() {
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "users/" +
-        userId,
+      Environment["API_VERSION"] +
+      "users/" +
+      userId,
       {
         method: "PUT",
         headers: {
@@ -384,9 +410,9 @@ function* updateUser() {
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "users/" +
-        userId,
+      Environment["API_VERSION"] +
+      "users/" +
+      userId,
       {
         method: "PUT",
         headers: {
@@ -444,8 +470,8 @@ function* createGamingSession() {
     // let gameId = yield select(state => state.search.gameId);
     const response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "gaming_sessions/",
+      Environment["API_VERSION"] +
+      "gaming_sessions/",
       {
         method: "POST",
         headers: {
@@ -505,15 +531,15 @@ function* editGamingSession() {
     let platform = yield select(state => state.search.platform);
     console.log(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "gaming_sessions/" +
-        gamingSessionId
+      Environment["API_VERSION"] +
+      "gaming_sessions/" +
+      gamingSessionId
     );
     const response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "gaming_sessions/" +
-        gamingSessionId,
+      Environment["API_VERSION"] +
+      "gaming_sessions/" +
+      gamingSessionId,
       {
         method: "PATCH",
         headers: {
@@ -580,6 +606,57 @@ function* fetchNotifications() {
   }
 }
 
+function* fetchFeed() {
+  console.log("FETCHING FEED");
+  try {
+    let userId = yield select(state => state.users.currentUser.id);
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId +
+      "/feed?";
+    yield call(
+      fetchData,
+      endpoint,
+      0,
+      FETCH_FEED_RESULT,
+      FETCH_FEED_ERROR,
+      FETCH_FEED_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_FEED_ERROR, error: e.message });
+  }
+}
+
+function* loadMoreFeedItems() {
+  console.log("LOADING MORE FEED ITEMS");
+  try {
+    let userId = yield select(state => state.users.currentUser.id);
+    let current_page = yield select(state => state.feed.feedPage);
+    console.log("CURRENT FEED PAGE: ", current_page);
+    yield put({ type: CHANGE_FEED_PAGE, page: current_page + 1 });
+    let new_page = yield select(state => state.feed.feedPage);
+
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "users/" +
+      userId +
+      "/feed?";
+    yield call(
+      fetchData,
+      endpoint,
+      new_page,
+      LOAD_MORE_FEED_ITEMS_RESULT,
+      FETCH_FEED_ERROR,
+      FETCH_FEED_NO_DATA
+    );
+  } catch (e) {
+    yield put({ type: FETCH_FEED_ERROR, error: e.message });
+  }
+}
+
 function* fetchGames() {
   console.log("FETCHING GAMES");
   try {
@@ -597,7 +674,7 @@ function* fetchActivities() {
     let gameId = yield select(state => state.search.gameId);
     let games = yield select(state => state.search.games);
 
-    let game = games.find(function(game) {
+    let game = games.find(function (game) {
       return game.id === gameId;
     });
 
@@ -645,7 +722,7 @@ function* fetchUser() {
     yield call(
       fetchData,
       endpoint,
-      1,
+      0,
       FETCH_USER_RESULT,
       FETCH_USER_ERROR,
       FETCH_USER_ERROR
@@ -892,7 +969,7 @@ function* fetchGamingSession() {
       1,
       FETCH_GAMING_SESSION_RESULT,
       FETCH_GAMING_SESSION_ERROR,
-      FETCH_GAMING_SESSION_RESULT
+      FETCH_GAMING_SESSION_ERROR
     );
   } catch (e) {
     yield put({ type: FETCH_GAMING_SESSION_ERROR, error: e.message });
@@ -1163,7 +1240,6 @@ function* createUser() {
       yield put({ type: CREATE_USER_ERROR, error: result.error });
     } else {
       console.log("New User Created: ");
-      console.log(result);
       token = result.token;
       firebaseToken = result.firebase_token;
       AsyncStorage.setItem("id_token", token);
@@ -1182,8 +1258,8 @@ function* fetchConversations() {
 
     let response = yield fetch(
       Environment["API_BASE_URL"] +
-        Environment["API_VERSION"] +
-        "conversations/",
+      Environment["API_VERSION"] +
+      "conversations/",
       {
         method: "GET",
         headers: { Authorization: "Bearer " + token }
@@ -1241,6 +1317,9 @@ export default function* rootSaga() {
   yield takeEvery(REFRESH_PENDING_FRIENDS, fetchPendingFriends);
 
   yield takeEvery(FETCH_NOTIFICATIONS, fetchNotifications);
+
+  yield takeEvery(FETCH_FEED, fetchFeed);
+  yield takeEvery(LOAD_MORE_FEED_ITEMS, loadMoreFeedItems);
 
   yield takeEvery(CHANGE_GROUP, fetchGroup);
   yield takeEvery(FETCH_GROUP, fetchGroup);

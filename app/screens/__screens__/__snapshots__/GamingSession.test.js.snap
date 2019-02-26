@@ -39,7 +39,7 @@ ShallowWrapper {
           topGradientTransparency="rgba(0,0,0,0.9)"
         >
           <NavigationBar
-            back="Games"
+            back="Back"
             color="white"
             expanded={false}
             navigation={
@@ -84,7 +84,7 @@ ShallowWrapper {
         "props": Object {
           "bottomGradientTransparency": "rgba(0,0,0,0.9)",
           "children": <NavigationBar
-            back="Games"
+            back="Back"
             color="white"
             expanded={false}
             navigation={
@@ -110,7 +110,7 @@ ShallowWrapper {
           "key": undefined,
           "nodeType": "class",
           "props": Object {
-            "back": "Games",
+            "back": "Back",
             "color": "white",
             "expanded": false,
             "navigation": Object {
@@ -190,7 +190,7 @@ ShallowWrapper {
             topGradientTransparency="rgba(0,0,0,0.9)"
           >
             <NavigationBar
-              back="Games"
+              back="Back"
               color="white"
               expanded={false}
               navigation={
@@ -235,7 +235,7 @@ ShallowWrapper {
           "props": Object {
             "bottomGradientTransparency": "rgba(0,0,0,0.9)",
             "children": <NavigationBar
-              back="Games"
+              back="Back"
               color="white"
               expanded={false}
               navigation={
@@ -261,7 +261,7 @@ ShallowWrapper {
             "key": undefined,
             "nodeType": "class",
             "props": Object {
-              "back": "Games",
+              "back": "Back",
               "color": "white",
               "expanded": false,
               "navigation": Object {

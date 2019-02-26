@@ -4,27 +4,26 @@ import {
   Image,
   ImageBackground,
   Linking,
+  Platform,
   Text,
+  TouchableOpacity,
   TouchableHighlight,
-  View
+  View,
+  WebView
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 import Hyperlink from "../../../Hyperlink";
+import AppHyperlink from "../../../AppHyperlink";
 
 import TouchableItem from "../../../TouchableItem";
 
 import reactStringReplace from "react-string-replace-recursively";
 import emoji from "node-emoji";
+import { colors, fontSizes, fontStyles, styleSheet } from "../../../../styles";
 
 function usernameMentionMatcherFn(rawText, processed, key) {
-  return (
-    <Hyperlink
-      key={key}
-      link={"https://the100.io/users/" + rawText}
-      text={"@" + rawText}
-    />
-  );
+  return <AppHyperlink key={key} link={rawText} text={"@" + rawText} />;
 }
 
 function urlMatcherFn(rawText, processed, key) {
@@ -124,25 +123,38 @@ const config = {
       return <Text key={key}>{emoji.get(rawText)}</Text>;
     }
   },
-  userMention: {
-    pattern: /\B@([a-z0-9_\-#]+?)\b/gim,
-    matcherFn: usernameMentionMatcherFn
-  },
+
   userMentionBracketed: {
     pattern: /\B@\[([a-z0-9_\-# ]+?)\]\B/gim,
     matcherFn: usernameMentionMatcherFn
   },
-  tweet: {
-    pattern: /\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/gim,
+  // tweet: {
+  //   pattern: /\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/gim,
+  //   matcherFn: (rawText, processed, key) => {
+  //     let tweetId = rawText;
+  //     return (
+  //       <Hyperlink
+  //         key={key}
+  //         link={"https://twitter.com/i/web/status/" + tweetId}
+  //       />
+  //     );
+  //   }
+  // },
+  tweetEmbed: {
+    pattern: /\B<blockquote class="twitter-tweet" data-lang="en">([\s\S]*?)<\/script>/gim,
     matcherFn: (rawText, processed, key) => {
-      let tweetId = rawText;
+      let embedCode = `<blockquote class="twitter-tweet" data-lang="en">${rawText}</script>`
       return (
-        <Hyperlink
+        <Tweet
           key={key}
-          link={"https://twitter.com/i/web/status/" + tweetId}
+          embedCode={embedCode}
         />
       );
     }
+  },
+  userMention: {
+    pattern: /\B@([a-z0-9_\-#]+?)\b/gim,
+    matcherFn: usernameMentionMatcherFn
   },
   url: {
     pattern: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9]\.[^\s]{2,})/,
@@ -172,7 +184,8 @@ export default class MessageBody extends PureComponent {
         } else if (
           child.type === Text ||
           child.type == Spoiler ||
-          child.type === Hyperlink
+          child.type === Hyperlink ||
+          child.type === AppHyperlink
         ) {
           currentText.push(child);
         } else {
@@ -185,7 +198,11 @@ export default class MessageBody extends PureComponent {
         }
       });
       if (currentText) {
-        children.push(<Text key={"text-" + id}>{currentText}</Text>);
+        children.push(
+          <Text style={this.props.style} key={"text-" + id}>
+            {currentText}
+          </Text>
+        );
         id++;
       }
       return <View>{children}</View>;
@@ -322,10 +339,7 @@ class AutosizeImage extends PureComponent {
       return (
         <View
           onLayout={this.onLayout}
-          style={{
-            flex: 1,
-            flexDirection: "row"
-          }}
+
         >
           <TouchableItem
             useForeground={true}
@@ -335,16 +349,17 @@ class AutosizeImage extends PureComponent {
             <ImageBackground
               source={{ uri: this.props.source }}
               onError={this.onError}
+              resizeMode="cover"
               style={{
-                width: imageWidth,
-                height: imageHeight
+
+                width: "100%",
+                height: 200
               }}
-              imageStyle={{
-                resizeMode: "contain",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "center"
-              }}
+              imageStyle={
+                {
+
+                }
+              }
             >
               {this.props.children}
             </ImageBackground>
@@ -376,6 +391,43 @@ class MessageImage extends PureComponent {
   }
 }
 
+
+class Tweet extends PureComponent {
+  static propTypes = {
+    embedCode: PropTypes.string.isRequired
+  };
+
+  render() {
+    const link = this.props.embedCode.match(/\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/)[0]
+    const scalesPageToFit = Platform.OS === "android";
+    return (
+      <TouchableOpacity onPress={() => {
+        Linking.openURL(link).catch(e => {
+          console.log("Failed to open link: " + e);
+        });
+      }}>
+
+        <View style={{ height: 380 }} pointerEvents="none" >
+          <WebView
+            style={{ flex: 1 }}
+            originWhitelist={["twitter.com", "t.co"]}
+            source={{
+              html: this.props.embedCode,
+              injectedJavaScript: "https://platform.twitter.com/widgets.js",
+              javaScriptEnabledAndroid: true
+
+            }}
+            scalesPageToFit={scalesPageToFit}
+            bounces={false}
+            scrollEnabled={false}
+          />
+        </View>
+      </TouchableOpacity>
+
+    )
+  }
+}
+
 class Youtube extends PureComponent {
   static propTypes = {
     videoId: PropTypes.string.isRequired
@@ -403,11 +455,15 @@ class Youtube extends PureComponent {
         <AutosizeImage
           source={`https://img.youtube.com/vi/${
             this.props.videoId
-          }/mqdefault.jpg`}
+            }/mqdefault.jpg`}
           onPress={this.onPress}
           placeholderRender={this.placeholderRender}
         >
-          <Icon name="youtube-play" size={72} style={{ color: "red" }} />
+          <Icon
+            name="youtube-play"
+            size={72}
+            style={{ marginVertical: 60, alignSelf: "center", color: "red" }}
+          />
         </AutosizeImage>
       </View>
     );

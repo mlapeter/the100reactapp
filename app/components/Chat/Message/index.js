@@ -10,7 +10,7 @@ import { colors, fontSizes, fontStyles } from "../../../styles";
 
 import { ChatMessagePropType } from "../types";
 
-const DEFAULT_AVATAR_IMG = "https://www.the100.io/default-avatar.png";
+const DEFAULT_AVATAR_IMG = "https://www.the100.io/default-avatar.jpg";
 
 export default class Message extends PureComponent {
   static propTypes = {
@@ -52,7 +52,7 @@ export default class Message extends PureComponent {
               style={styles.avatarMini}
               source={
                 this.props.message.avatarUrl === "img/default-avatar.png"
-                  ? require("../../../assets/images/default-avatar.png")
+                  ? require("../../../assets/images/default-avatar.jpg")
                   : { uri: this.props.message.avatarUrl }
               }
             />
