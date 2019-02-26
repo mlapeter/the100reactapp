@@ -399,7 +399,6 @@ class Tweet extends PureComponent {
 
   render() {
     const link = this.props.embedCode.match(/\bhttps?:\/\/twitter\.com\/(?:#!\/)?\w+\/status(?:es)?\/(\d+)\b/)[0]
-    console.log(link)
     const scalesPageToFit = Platform.OS === "android";
     return (
       <TouchableOpacity onPress={() => {
@@ -408,7 +407,7 @@ class Tweet extends PureComponent {
         });
       }}>
 
-        <View style={{ height: 415 }} pointerEvents="none" >
+        <View style={{ height: 380 }} pointerEvents="none" >
           <WebView
             style={{ flex: 1 }}
             originWhitelist={["twitter.com", "t.co"]}

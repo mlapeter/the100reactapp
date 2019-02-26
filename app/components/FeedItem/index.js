@@ -79,7 +79,7 @@ class FeedCard extends PureComponent {
           display_after={this.props.item.display_after} />
         <FeedImage item={this.props.item} imageUrl={this.props.imageUrl} />
         <FeedBody item={this.props.item} iframeSrc={this.props.iframeSrc} iframeHeight={this.props.iframeHeight} />
-        {this.props.item.item_type != "player-left-game" && !this.props.item.body.includes("twitter.com") &&
+        {this.props.item.item_type != "player-left-game" &&
           <Footer
             item={this.props.item}
             currentUser={this.props.currentUser}
