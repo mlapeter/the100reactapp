@@ -17,8 +17,8 @@ import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view
 import CheckBox from "react-native-check-box";
 
 import { colors, fontSizes, fontStyles } from "../../styles";
+import PreSplash from "../../components/PreSplash/PreSplash";
 
-const { width, height } = Dimensions.get("window");
 
 class CreateCredential extends Component {
   constructor(props) {
@@ -28,7 +28,8 @@ class CreateCredential extends Component {
       email: "",
       password: "",
       tos_privacy_agreement: true,
-      loading: false
+      loading: false,
+      loadingText: "Searching Groups..."
     };
   }
 
@@ -41,8 +42,8 @@ class CreateCredential extends Component {
 
   componentWillUnmount() {
     console.log("UNMOUNTING CREATE CREDENTIAL");
-    if (this.loadingTimer) {
-      clearTimeout(this.loadingTimer);
+    if (this.loadingTextTimer) {
+      clearTimeout(this.loadingTextTimer);
     }
   }
 
@@ -52,6 +53,7 @@ class CreateCredential extends Component {
       nextProps.onboarding.errorAt !== this.props.onboarding.errorAt
     ) {
       this.props.alertWithType("error", "Error", nextProps.onboarding.error);
+      this.setState({ loading: false })
     }
     if (nextProps.users.userCreated) {
       this.props.alertWithType("success", "Success", "Account Created!");
@@ -69,13 +71,28 @@ class CreateCredential extends Component {
         this.state.tos_privacy_agreement
       )
     );
-    this.loadingTimer = setTimeout(() => {
+    this.setState({ loading: true })
+
+    this.loadingTextTimer = setTimeout(() => {
       this.setState({
-        loading: false
+        loadingText: "Group Found! Joining..."
       });
     }, 1500);
+
   };
   render() {
+
+    if (this.state.loading) {
+      return (
+
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size={"large"} />
+          <Text style={styles.title}>{this.state.loadingText}</Text>
+        </View>
+
+      )
+    }
+
     return (
       <KeyboardAwareScrollView
         contentContainerStyle={styles.container}
@@ -125,12 +142,7 @@ class CreateCredential extends Component {
             }
           />
         </View>
-        {this.state.loading ? (
-          <TouchableOpacity style={styles.continueBtn}>
-            <ActivityIndicator size={"small"} style={{ marginRight: 8 }} />
-            <Text style={styles.btnText}>CREATING...</Text>
-          </TouchableOpacity>
-        ) : this.state.email && this.state.password ? (
+        {this.state.email && this.state.password ? (
           <TouchableOpacity
             style={styles.continueBtn}
             onPress={this.sendUserInfo}
@@ -197,6 +209,15 @@ const styles = {
     marginLeft: 20,
     paddingHorizontal: 20,
     backgroundColor: colors.darkGrey
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    alignContent: "center",
+    padding: 20,
+    backgroundColor: colors.veryDarkGrey,
+    paddingTop: 40
   }
 };
 const mapStateToProps = state => ({
