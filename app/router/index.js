@@ -194,7 +194,7 @@ const MenuDrawer = createDrawerNavigator(
       navigationOptions: ({ navigation }) => ({
         drawerIcon: () => (
           <MaterialCommunityIcons
-            name="account-settings-variant"
+            name="settings"
             size={24}
             style={styles.icon}
           />
@@ -424,7 +424,7 @@ GamingSessionsStack.navigationOptions = {
   tabBarLabel: "Games",
   tabBarIcon: ({ tintColor, focused }) => (
     <Ionicons
-      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
+      name={focused ? "logo-game-controller-a" : "logo-game-controller-b"}
       size={26}
       style={{ color: tintColor }}
     />
