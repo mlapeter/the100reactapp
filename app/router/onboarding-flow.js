@@ -4,6 +4,7 @@ import { createStackNavigator } from "react-navigation";
 
 import ChoosePlatform from "../screens/onboarding/ChoosePlatform";
 import CreateGamer from "../screens/onboarding/CreateGamer";
+import ChooseGame from "../screens/onboarding/ChooseGame";
 import GamerProfile from "../screens/onboarding/GamerProfile";
 import CreateCredential from "../screens/onboarding/CreateCredential";
 
@@ -12,16 +13,17 @@ import { colors } from "../styles";
 const styles = {
   headerStyle: {
     backgroundColor: colors.veryDarkGrey,
-    height: 80
+    height: 30,
   },
   headerTitleStyle: {
     color: colors.white,
     opacity: colors.headlineOpacity
   },
   backButtonStyle: {
-    paddingVertical: 15,
-    paddingHorizontal: 20,
+    paddingVertical: 5,
+    paddingHorizontal: 15,
     marginHorizontal: 15,
+    marginBottom: 5,
     backgroundColor: colors.darkGrey
   },
   backTitle: {
@@ -37,6 +39,7 @@ const BackButton = ({ onPress, title }) => (
 const OnboardingFlowStack = createStackNavigator({
   ChoosePlatform: { screen: ChoosePlatform },
   CreateGamer: { screen: CreateGamer },
+  ChooseGame: { screen: ChooseGame },
   GamerProfile: { screen: GamerProfile },
   CreateCredential: { screen: CreateCredential }
 });
@@ -53,6 +56,7 @@ ChoosePlatform.navigationOptions = ({ navigation }) => ({
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
+
 CreateGamer.navigationOptions = ({ navigation }) => ({
   headerLeft: (
     <BackButton
@@ -65,6 +69,20 @@ CreateGamer.navigationOptions = ({ navigation }) => ({
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
+
+ChooseGame.navigationOptions = ({ navigation }) => ({
+  headerLeft: (
+    <BackButton
+      title="BACK"
+      onPress={() => {
+        navigation.goBack();
+      }}
+    />
+  ),
+  headerStyle: styles.headerStyle,
+  headerTitleStyle: styles.headerTitleStyle
+});
+
 GamerProfile.navigationOptions = ({ navigation }) => ({
   headerLeft: (
     <BackButton
@@ -77,6 +95,7 @@ GamerProfile.navigationOptions = ({ navigation }) => ({
   headerStyle: styles.headerStyle,
   headerTitleStyle: styles.headerTitleStyle
 });
+
 CreateCredential.navigationOptions = ({ navigation }) => ({
   headerLeft: (
     <BackButton

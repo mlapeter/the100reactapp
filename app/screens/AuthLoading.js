@@ -9,11 +9,12 @@ import {
 } from "react-native";
 import Sentry from "sentry-expo";
 
-import { Font } from "expo";
+import { Asset, Font } from "expo";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { decodeToken, setFirebaseToken } from "../actions/authentication";
-import { changeSelectedGroupId, fetchGroup } from "../actions/group";
+import { fetchGames } from "../actions/search";
+
 
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
@@ -50,14 +51,44 @@ class AuthLoading extends React.Component {
     }
   }
 
+  cacheImages(images) {
+    return images.map(image => {
+      if (typeof image === 'string') {
+        console.log("caching: ", image)
+        return Image.prefetch(image);
+      } else {
+        console.log("caching: ", image)
+        return Asset.fromModule(image).downloadAsync();
+      }
+    });
+  }
+
+  async _loadAssetsAsync() {
+    const imageAssets = this.cacheImages([
+      require("../assets/images/logo.png"),
+      require("../assets/images/ic-playstation.png"),
+      require("../assets/images/ic-sbox.png"),
+      require("../assets/images/ic-windows.png")
+    ]);
+
+
+    await Promise.all(imageAssets);
+  }
+
+
+
+
+
   bootstrap = () => {
     console.log("Starting App");
+    this.props.dispatch(fetchGames());
+    this._loadAssetsAsync()
     loadIcons();
     loadCustomIcons();
     loadPlatformIcons();
 
     console.log("Expo.Asset.loadAsync");
-    Expo.Asset.loadAsync([
+    Asset.loadAsync([
       defaultGroupHeaderBackground,
       defaultUserHeaderBackground,
       hunterHeader,
@@ -134,10 +165,12 @@ const styles = StyleSheet.create({
 const mapStateToProps = state => {
   const authentication = state.authentication;
   const users = state.users;
+  const games = state.search.games
 
   return {
     authentication,
-    users
+    users,
+    games
   };
 };
 

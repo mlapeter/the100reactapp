@@ -32,8 +32,12 @@ type ImageCardProps = StyleProps & {
 export default class ImageCard extends React.PureComponent<ImageCardProps> {
   static defaultProps = {
     heightRatio: 0.68,
-    height: 300
+    height: 300,
+    topGradientTransparency: ["rgba(0,0,0,0.7)", "transparent"],
+    bottomGradientTransparency: ["transparent", "rgba(0,0,0,0.8)"],
   };
+
+
 
   render(): React.Node {
     const {
@@ -45,7 +49,9 @@ export default class ImageCard extends React.PureComponent<ImageCardProps> {
       description,
       onPress,
       children,
-      style
+      style,
+      topGradientTransparency,
+      bottomGradientTransparency
     } = this.props;
     return (
       <TouchableWithoutFeedback {...{ onPress }}>
@@ -65,7 +71,7 @@ export default class ImageCard extends React.PureComponent<ImageCardProps> {
           )}
           {children}
           <View style={styles.content}>
-            <LinearGradient colors={topGradient} style={styles.gradient}>
+            <LinearGradient colors={topGradientTransparency} style={styles.gradient}>
               {subtitle && (
                 <Text
                   style={[styles.subtitle, styleSheet.typography["headline"]]}
@@ -83,7 +89,7 @@ export default class ImageCard extends React.PureComponent<ImageCardProps> {
               </Text>
             </LinearGradient>
             {description && (
-              <LinearGradient colors={bottomGradient} style={styles.gradient}>
+              <LinearGradient colors={bottomGradientTransparency} style={styles.gradient}>
                 {typeof description === "string" && (
                   <Text style={{ color: colors.white }}>{description}</Text>
                 )}
@@ -97,8 +103,8 @@ export default class ImageCard extends React.PureComponent<ImageCardProps> {
   }
 }
 
-const topGradient = ["rgba(0,0,0,0.7)", "transparent"];
-const bottomGradient = ["transparent", "rgba(0,0,0,0.8)"];
+// const topGradient = ["rgba(0,0,0,0.7)", "transparent"];
+// const bottomGradient = ["transparent", "rgba(0,0,0,0.8)"];
 const subtitle = "rgba(255, 255, 255, 0.7)";
 const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({

@@ -11,7 +11,7 @@ import { connectAlert } from "../../components/Alert";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../../config/environment";
 
-import { setGammerTag, setGamertag } from "../../actions/onboarding";
+import { setGamertag } from "../../actions/onboarding";
 import { colors, fontSizes, fontStyles } from "../../styles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
@@ -31,10 +31,11 @@ class CreateGamer extends Component {
       .hit(new PageHit("App - Onboarding Screen 2"))
       .catch(e => console.log(e.message));
   }
-  setGammerTag = () => {
+  setGamerTag = () => {
     this.props.dispatch(setGamertag(this.state.gamertag));
-    this.props.navigation.navigate("GamerProfile");
+    this.props.navigation.navigate("ChooseGame");
   };
+
   render() {
     const { platform } = this.props.onboarding;
     return (
@@ -64,7 +65,7 @@ class CreateGamer extends Component {
         {this.state.gamertag ? (
           <TouchableOpacity
             style={styles.continueBtn}
-            onPress={this.setGammerTag}
+            onPress={this.setGamerTag}
           >
             <Text style={styles.btnText}>CONTINUE</Text>
           </TouchableOpacity>

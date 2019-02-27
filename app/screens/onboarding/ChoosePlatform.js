@@ -9,23 +9,54 @@ import { setPlatform } from "../../actions/onboarding";
 
 import { colors, fontSizes, fontStyles } from "../../styles";
 
+
 import ICPlaystation from "../../assets/images/ic-playstation.png";
 import ICSbox from "../../assets/images/ic-sbox.png";
 import ICWindows from "../../assets/images/ic-windows.png";
 
 const { width, height } = Dimensions.get("window");
 class ChoosePlatform extends Component {
+
   componentDidMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
       .hit(new PageHit("App - Onboarding Screen 1"))
       .catch(e => console.log(e.message));
+
+    this._loadAssetsAsync()
+
   }
+
+  cacheImages(images) {
+    return images.map(image => {
+      if (typeof image === 'string') {
+        console.log("caching: ", image)
+        return Image.prefetch(image);
+      } else {
+        console.log("caching: ", image)
+        return Asset.fromModule(image).downloadAsync();
+      }
+    });
+  }
+
+  async _loadAssetsAsync() {
+    if (this.props.games) {
+      let urls = this.props.games.map(game => game.computed_main_image)
+      console.log("URLS")
+      console.log(urls)
+      const imageAssets = this.cacheImages(urls);
+      await Promise.all([...imageAssets]);
+      console.log("images cached!")
+    }
+  }
+
+
 
   selectPlatform(platform) {
     this.props.dispatch(setPlatform(platform));
     this.props.navigation.navigate("CreateGamer", { platform: platform });
   }
+
   render() {
     return (
       <View style={styles.container}>
@@ -119,7 +150,8 @@ const styles = {
   }
 };
 const mapStateToProps = state => ({
-  onboarding: state.onboarding
+  onboarding: state.onboarding,
+  games: state.search.games
 });
 
 export default connect(mapStateToProps)(connectAlert(ChoosePlatform));

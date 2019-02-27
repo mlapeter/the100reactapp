@@ -1,6 +1,7 @@
 import {
   SET_PLATFORM,
   SET_GAMERTAG,
+  SET_GAME,
   SET_PROFILE_INFO,
   CREATE_USER,
   CREATE_USER_ERROR
@@ -16,6 +17,7 @@ const initialState = {
   play_schedule: "",
   play_style: "",
   group: "",
+  primary_game_id: "",
   tos_privacy_agreement: false
 };
 
@@ -31,6 +33,12 @@ export default (state = initialState, action) => {
       return {
         ...state,
         gamertag: action.gamertag
+      };
+      break;
+    case SET_GAME:
+      return {
+        ...state,
+        primary_game_id: action.gameId
       };
       break;
     case SET_PROFILE_INFO:
