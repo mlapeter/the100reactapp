@@ -4,9 +4,6 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
-  TouchableHighlight,
-  Image,
-  TextInput
 } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
 import _ from "lodash";

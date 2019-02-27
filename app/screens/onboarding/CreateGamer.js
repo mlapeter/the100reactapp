@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import {
   View,
   Text,
-  Dimensions,
   TouchableOpacity,
   TextInput
 } from "react-native";
@@ -10,12 +9,10 @@ import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../../config/environment";
-
 import { setGamertag } from "../../actions/onboarding";
 import { colors, fontSizes, fontStyles } from "../../styles";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
-const { width, height } = Dimensions.get("window");
 class CreateGamer extends Component {
   constructor(props) {
     super(props);

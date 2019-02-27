@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, Dimensions, TouchableOpacity, Image } from "react-native";
+import { View, Text } from "react-native";
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
 import { Analytics, PageHit } from "expo-analytics";
@@ -50,7 +50,6 @@ const styles = {
     fontSize: fontSizes.h1,
     color: colors.white,
     opacity: colors.headlineOpacity,
-    // textAlign: "left",
     paddingHorizontal: 20,
 
   },

@@ -3,7 +3,6 @@ import {
   ActivityIndicator,
   View,
   Text,
-  Dimensions,
   TouchableOpacity,
   TextInput
 } from "react-native";
@@ -12,12 +11,9 @@ import { connectAlert } from "../../components/Alert";
 import { createUser } from "../../actions/onboarding";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../../config/environment";
-
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import CheckBox from "react-native-check-box";
-
 import { colors, fontSizes, fontStyles } from "../../styles";
-import PreSplash from "../../components/PreSplash/PreSplash";
 
 
 class CreateCredential extends Component {
@@ -61,8 +57,6 @@ class CreateCredential extends Component {
     }
   }
   sendUserInfo = () => {
-    console.log("submitting user info");
-    console.log(this.state);
     this.setState({ loading: true });
     this.props.dispatch(
       createUser(
@@ -84,12 +78,10 @@ class CreateCredential extends Component {
 
     if (this.state.loading) {
       return (
-
         <View style={styles.loadingContainer}>
           <ActivityIndicator size={"large"} />
           <Text style={styles.title}>{this.state.loadingText}</Text>
         </View>
-
       )
     }
 

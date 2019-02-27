@@ -81,14 +81,7 @@ class UserEdit extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // if (nextProps.users.error && nextProps.users.error === "Not Authorized") {
-    //   this.props.alertWithType(
-    //     "error",
-    //     "Error",
-    //     "Error connecting to server, please login again."
-    //   );
-    //   this.userLogout();
-    // }
+
     if (
       nextProps.users.error &&
       nextProps.users.errorAt !== this.props.users.errorAt

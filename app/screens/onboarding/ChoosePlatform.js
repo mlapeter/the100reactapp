@@ -1,20 +1,15 @@
 import React, { Component } from "react";
-import { View, Text, Dimensions, TouchableOpacity, Image } from "react-native";
+import { View, Text, TouchableOpacity, Image } from "react-native";
 import { connect } from "react-redux";
 import { connectAlert } from "../../components/Alert";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../../config/environment";
-
 import { setPlatform } from "../../actions/onboarding";
-
 import { colors, fontSizes, fontStyles } from "../../styles";
-
-
 import ICPlaystation from "../../assets/images/ic-playstation.png";
 import ICSbox from "../../assets/images/ic-sbox.png";
 import ICWindows from "../../assets/images/ic-windows.png";
 
-const { width, height } = Dimensions.get("window");
 class ChoosePlatform extends Component {
 
   componentDidMount() {
@@ -22,9 +17,7 @@ class ChoosePlatform extends Component {
     analytics
       .hit(new PageHit("App - Onboarding Screen 1"))
       .catch(e => console.log(e.message));
-
     this._loadAssetsAsync()
-
   }
 
   cacheImages(images) {
@@ -42,16 +35,10 @@ class ChoosePlatform extends Component {
   async _loadAssetsAsync() {
     if (this.props.games) {
       let urls = this.props.games.map(game => game.computed_main_image)
-      console.log("URLS")
-      console.log(urls)
       const imageAssets = this.cacheImages(urls);
       await Promise.all([...imageAssets]);
-      console.log("images cached!")
     }
   }
-
-
-
   selectPlatform(platform) {
     this.props.dispatch(setPlatform(platform));
     this.props.navigation.navigate("CreateGamer", { platform: platform });
