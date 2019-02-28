@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import {
+  Alert,
   ActivityIndicator,
   AsyncStorage,
   LayoutAnimation,
+  Linking,
   Platform,
   Share,
   StyleSheet,
@@ -58,8 +60,8 @@ class GamingSession extends React.Component {
     if (this.loadingTimer) {
       clearTimeout(this.loadingTimer);
     }
-    if (this.updateTimer) {
-      clearTimeout(this.updateTimer);
+    if (this.reviewTimer) {
+      clearTimeout(this.reviewTimer);
     }
   }
 
@@ -85,12 +87,34 @@ class GamingSession extends React.Component {
     this.props.dispatch(fetchGamingSession(gamingSessionId));
   }
 
-  checkAndDisplayReviewRequest = () => {
+  checkAndDisplayReviewRequest = async () => {
+
     if (StoreReview.isSupported()) {
       console.log("Displaying store review popup on ios");
       StoreReview.requestReview();
     } else {
-      console.log("Not Displaying store review popup");
+      let askedForReview = await AsyncStorage.getItem("asked_for_review")
+      if (!askedForReview) {
+        Alert.alert(
+          'Game Joined!',
+          'Would you mind leaving us a quick rating?',
+          [
+            { text: "Never", onPress: () => { AsyncStorage.setItem("asked_for_review", true) } },
+            {
+              text: 'Not Now',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {
+              text: 'Sure!', onPress: () => {
+                Linking.openURL("market://details?id=io.the100.mobile")
+                AsyncStorage.setItem("asked_for_review", true)
+              }
+            },
+          ],
+          { cancelable: true },
+        );
+      }
     }
   };
 
@@ -115,52 +139,98 @@ class GamingSession extends React.Component {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   };
 
-  postData(action) {
+  async postData(action) {
     this.setState({
       isLoading: true
     });
-    AsyncStorage.getItem("id_token")
-      .then(token => {
-        fetch(
-          Environment["API_BASE_URL"] +
-          Environment["API_VERSION"] +
-          "gaming_sessions/" +
-          gamingSessionId +
-          action,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: "Bearer " + token
-            }
+
+    try {
+      let token = await AsyncStorage.getItem("id_token")
+
+      let response = await fetch(
+        Environment["API_BASE_URL"] +
+        Environment["API_VERSION"] +
+        "gaming_sessions/" +
+        gamingSessionId +
+        action,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token
           }
-        )
-          .then(response => response.json())
-          .then(responseJson => {
-            if (action === "/join" || action === "/join?join_as_reserve=true") {
-              this.fetchGamingSessionData();
-              this.checkAndDisplayReviewRequest();
-            } else {
-              this.props.navigation.navigate("GamingSessionsList");
-            }
-            this.updateTimer = setTimeout(() => {
-              this.props.dispatch(fetchMyGamingSessions());
-              this.props.dispatch(fetchGroupGamingSessions());
-              this.setState({
-                isLoading: false
-              });
-            }, 300);
-          })
-          .catch(error => {
-            console.log("Gaming Session Post Error: ", error);
-            Sentry.captureMessage("Gaming Session Post Error: ", error);
-          });
-      })
-      .catch(error => {
-        console.log("Gaming Session Post Error: ", error);
-        Sentry.captureMessage("Gaming Session Post Error: ", error);
+        }
+      )
+
+      let responseJson = await response.json();
+      console.log(responseJson)
+      this.props.dispatch(fetchMyGamingSessions());
+      this.props.dispatch(fetchGroupGamingSessions());
+      this.setState({
+        isLoading: false
       });
+      if (action === "/join" || action === "/join?join_as_reserve=true") {
+        this.fetchGamingSessionData();
+        this.reviewTimer = setTimeout(() => {
+          this.checkAndDisplayReviewRequest();
+        }, 2500);
+      } else {
+        this.props.navigation.navigate("GamingSessionsList");
+      }
+
+    } catch (error) {
+      console.log("Gaming Session Post Error: ", error);
+      Sentry.captureMessage("Gaming Session Post Error: ", error);
+    };
   }
+
+  // postData(action) {
+  //   this.setState({
+  //     isLoading: true
+  //   });
+  //   AsyncStorage.getItem("id_token")
+  //     .then(token => {
+  //       fetch(
+  //         Environment["API_BASE_URL"] +
+  //         Environment["API_VERSION"] +
+  //         "gaming_sessions/" +
+  //         gamingSessionId +
+  //         action,
+  //         {
+  //           method: "POST",
+  //           headers: {
+  //             "Content-Type": "application/json",
+  //             Authorization: "Bearer " + token
+  //           }
+  //         }
+  //       )
+  //         .then(response => response.json())
+  //         .then(responseJson => {
+  //           if (action === "/join" || action === "/join?join_as_reserve=true") {
+  //             this.fetchGamingSessionData();
+  //             this.checkAndDisplayReviewRequest();
+  //           } else {
+  //             this.props.navigation.navigate("GamingSessionsList");
+  //           }
+  //           this.updateTimer = setTimeout(() => {
+  //             this.props.dispatch(fetchMyGamingSessions());
+  //             this.props.dispatch(fetchGroupGamingSessions());
+  //             this.setState({
+  //               isLoading: false
+  //             });
+  //           }, 300);
+  //         })
+  //         .catch(error => {
+  //           console.log("Gaming Session Post Error: ", error);
+  //           Sentry.captureMessage("Gaming Session Post Error: ", error);
+  //         });
+  //     })
+  //     .catch(error => {
+  //       console.log("Gaming Session Post Error: ", error);
+  //       Sentry.captureMessage("Gaming Session Post Error: ", error);
+  //     });
+  // }
+
 
   onShare() {
     Share.share(

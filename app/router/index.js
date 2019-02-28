@@ -424,7 +424,7 @@ GamingSessionsStack.navigationOptions = {
   tabBarLabel: "Games",
   tabBarIcon: ({ tintColor, focused }) => (
     <Ionicons
-      name={focused ? "logo-game-controller-a" : "logo-game-controller-b"}
+      name={focused ? "logo-game-controller-b" : "logo-game-controller-b"}
       size={26}
       style={{ color: tintColor }}
     />

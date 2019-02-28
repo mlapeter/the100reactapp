@@ -1285,6 +1285,8 @@ export default function* rootSaga() {
 
   yield takeEvery(FETCH_TOKEN, fetchToken);
   yield takeEvery(FETCH_TOKEN_RESULT, decodeToken);
+  // yield takeEvery(FETCH_TOKEN_RESULT, fetchCurrentUser);
+
   yield takeEvery(DECODE_TOKEN, decodeToken);
 
   yield takeEvery(DECODE_TOKEN_RESULT, fetchCurrentUser);

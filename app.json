@@ -24,12 +24,14 @@
     "ios": {
       "buildNumber": "1.0.0",
       "bundleIdentifier": "io.the100.mobile",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "appStoreUrl": "https://itunes.apple.com/us/app/the100-io-group-matchmaking/id972830288?mt=8"
     },
     "android": {
       "package": "io.the100.mobile",
       "versionCode": 20016,
       "googleServicesFile": "./google-services.json",
+      "playStoreUrl": "https://play.google.com/store/apps/details?id=io.the100.mobile",
       "permissions": [
         "CAMERA",
         "READ_CALENDAR",

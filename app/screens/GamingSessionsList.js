@@ -31,6 +31,8 @@ import TopNav from "../components/TopNav/TopNav";
 import Tabs from "../components/Tabs/Tabs";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
+import { changeGame } from "../actions/search";
+
 import { fetchGames } from "../actions/search";
 import { changeGamingSessionsPage, changePlatform } from "../actions/search";
 import { updateUserPushToken } from "../actions/users";
@@ -156,30 +158,6 @@ class GamingSessionsList extends PureComponent {
     }
   };
 
-  // listenforUpdate = () => {
-  //   console.log("App Version: ", Expo.Constants.manifest.version);
-  //   AppState.addEventListener("change", this.checkForUpdate);
-  // };
-  //
-  // checkForUpdate = async () => {
-  //   try {
-  //     const update = await Expo.Updates.checkForUpdateAsync();
-  //     if (
-  //       update.isAvailable &&
-  //       update.manifest.version !== Expo.Constants.manifest.version
-  //     ) {
-  //       console.log("Updating App");
-  //       this.props.alertWithType("info", "", "Updating App, please standby...");
-  //       await Expo.Updates.fetchUpdateAsync();
-  //       Expo.Updates.reloadFromCache();
-  //     } else {
-  //       console.log("No Update Found");
-  //     }
-  //   } catch (e) {
-  //     console.log("ERROR LISTENING FOR UPDATE: ", e);
-  //   }
-  // };
-
   updateFilter() {
     console.log(this.searchUrl());
     this.props.dispatch(fetchGamingSessions(this.searchUrl()));
@@ -187,18 +165,23 @@ class GamingSessionsList extends PureComponent {
 
   searchUrl() {
     let platform = this.props.platform;
+    let gameId = this.props.gameId
 
     if (!this.props.platform) {
       platform = this.props.user.platform;
     }
-    console.log("PLATFORM: ", platform);
 
+    if (!this.props.gameId) {
+      gameId = this.props.user.primary_game_id;
+    }
+    console.log("PLATFORM: ", platform);
+    console.log("GAME ID: ", gameId)
     return encodeURI(
       Environment["API_BASE_URL"] +
       Environment["API_VERSION"] +
       "gaming_sessions" +
       "?q[game_id_eq]=" +
-      this.props.gameId +
+      gameId +
       "&q[platform_cont]=" +
       platform +
       "&q[category_cont]=" +
@@ -209,6 +192,9 @@ class GamingSessionsList extends PureComponent {
   }
 
   fetchGamingSessionsData() {
+    this.props.dispatch(changeGame(this.props.user.primary_game_id));
+
+
     console.log("fetching all gaming sessions");
     this.props.dispatch(fetchGamingSessions(this.searchUrl()));
     this.props.dispatch(fetchMyGamingSessions());

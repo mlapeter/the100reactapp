@@ -108,6 +108,10 @@ class CreateCredential extends Component {
               underlineColorAndroid={"transparent"}
               keyboardType={"email-address"}
               autoCapitalize="none"
+              returnKeyType="next"
+              onSubmitEditing={() => {
+                this.secondTextInput.focus();
+              }}
             />
           </View>
           <View style={styles.inputRow}>
@@ -119,6 +123,9 @@ class CreateCredential extends Component {
               placeholderStyle={{ color: "#606060" }}
               underlineColorAndroid={"transparent"}
               secureTextEntry
+              ref={input => {
+                this.secondTextInput = input;
+              }}
             />
           </View>
 

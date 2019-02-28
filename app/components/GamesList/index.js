@@ -12,7 +12,7 @@ export default class GamesList extends React.Component {
       picture={{ uri: item.computed_main_image }}
       heightRatio={0.4}
       onPress={() =>
-        this.props.selectGame(item.name)
+        this.props.selectGame(item.id)
       }
       topGradientTransparency={["transparent", "transparent"]}
     />

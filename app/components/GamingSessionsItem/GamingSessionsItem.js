@@ -70,6 +70,11 @@ class GamingSessionItem extends PureComponent {
             <Text style={styles.groupNameText}>{this.props.data.clan_tag}</Text>
           </View>
           <View style={styles.middleBox}>
+            {this.props.data.game_name !== "Destiny 2" && (
+              <Text style={[styleSheet.typography["headline2"]]}>
+                {this.props.data.game_name}
+              </Text>
+            )}
             <Text style={[styleSheet.typography["headline2"]]}>
               {this.props.data.category}
             </Text>
