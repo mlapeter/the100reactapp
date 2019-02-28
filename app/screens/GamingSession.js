@@ -90,16 +90,16 @@ class GamingSession extends React.Component {
   checkAndDisplayReviewRequest = async () => {
 
     if (StoreReview.isSupported()) {
-      console.log("Displaying store review popup on ios");
       StoreReview.requestReview();
     } else {
       let askedForReview = await AsyncStorage.getItem("asked_for_review")
-      if (!askedForReview) {
+
+      if (!askedForReview || askedForReview !== "true") {
         Alert.alert(
           'Game Joined!',
           'Would you mind leaving us a quick rating?',
           [
-            { text: "Never", onPress: () => { AsyncStorage.setItem("asked_for_review", true) } },
+            { text: "Never", onPress: () => { AsyncStorage.setItem("asked_for_review", "true") } },
             {
               text: 'Not Now',
               onPress: () => console.log('Cancel Pressed'),
@@ -108,7 +108,7 @@ class GamingSession extends React.Component {
             {
               text: 'Sure!', onPress: () => {
                 Linking.openURL("market://details?id=io.the100.mobile")
-                AsyncStorage.setItem("asked_for_review", true)
+                AsyncStorage.setItem("asked_for_review", "true")
               }
             },
           ],
@@ -163,7 +163,8 @@ class GamingSession extends React.Component {
       )
 
       let responseJson = await response.json();
-      console.log(responseJson)
+      this.props.alertWithType("success", "", responseJson.notice);
+
       this.props.dispatch(fetchMyGamingSessions());
       this.props.dispatch(fetchGroupGamingSessions());
       this.setState({
