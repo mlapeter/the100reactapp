@@ -22,14 +22,14 @@
       "image": "./app/assets/images/logo-splash.png"
     },
     "ios": {
-      "buildNumber": "1.0.0",
+      "buildNumber": "1.0.1",
       "bundleIdentifier": "io.the100.mobile",
       "supportsTablet": true,
       "appStoreUrl": "https://itunes.apple.com/us/app/the100-io-group-matchmaking/id972830288?mt=8"
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20017,
+      "versionCode": 20018,
       "googleServicesFile": "./google-services.json",
       "playStoreUrl": "https://play.google.com/store/apps/details?id=io.the100.mobile",
       "permissions": [
