@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Dimensions
 } from "react-native";
-import { Font } from "expo";
+import * as Font from 'expo-font'
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { Analytics, PageHit } from "expo-analytics";

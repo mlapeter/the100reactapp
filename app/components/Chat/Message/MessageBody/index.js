@@ -311,7 +311,7 @@ class AutosizeImage extends PureComponent {
           }
         },
         error => {
-          console.log("Failed to get size of image: " + error);
+          console.log("Failed to get size of image: " + error.message);
           this.loading = false;
           if (this.mounted) {
             this.setState({ error: true });

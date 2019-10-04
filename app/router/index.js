@@ -14,7 +14,8 @@ import {
   createStackNavigator,
   createBottomTabNavigator,
   createDrawerNavigator,
-  createSwitchNavigator
+  createSwitchNavigator,
+  createAppContainer
 } from "react-navigation";
 import Icon from "../components/Icon";
 
@@ -424,7 +425,7 @@ GamingSessionsStack.navigationOptions = {
   tabBarLabel: "Games",
   tabBarIcon: ({ tintColor, focused }) => (
     <Ionicons
-      name={focused ? "ios-game-controller-b" : "ios-game-controller-b"}
+      name={focused ? "logo-game-controller-b" : "logo-game-controller-b"}
       size={26}
       style={{ color: tintColor }}
     />
@@ -470,4 +471,7 @@ const BackButton = ({ onPress, title }) => (
   </TouchableOpacity>
 );
 
-export default rootNavigator;
+const App = createAppContainer(rootNavigator);
+
+
+export default App;

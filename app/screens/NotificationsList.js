@@ -13,6 +13,8 @@ import {
 } from "react-native";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
+import { Notifications } from 'expo';
+
 
 import { NavigationActions } from "react-navigation";
 import { connectAlert } from "../components/Alert";
@@ -24,7 +26,7 @@ import Card from "../components/Card";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../../app/styles";
 
-class Notifications extends PureComponent {
+class NotificationsList extends PureComponent {
   static propTypes = {
     navigation: PropTypes.object,
     alertWithType: PropTypes.func,
@@ -60,7 +62,7 @@ class Notifications extends PureComponent {
 
   fetchNotificationsData = () => {
     this.props.dispatch(fetchNotifications());
-    Expo.Notifications.setBadgeNumberAsync(0);
+    Notifications.setBadgeNumberAsync(0);
   };
 
   capitalize(text) {
@@ -156,4 +158,4 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(connectAlert(Notifications));
+export default connect(mapStateToProps)(connectAlert(NotificationsList));

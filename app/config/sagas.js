@@ -1,6 +1,6 @@
 import jwtDecode from "../../node_modules/jwt-decode";
 import { AsyncStorage } from "react-native";
-import { Font } from "expo";
+import * as Font from 'expo-font'
 import { takeEvery, takeLatest, select, call, put } from "redux-saga/effects";
 import Environment from "../config/environment";
 

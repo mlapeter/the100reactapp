@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { View } from "react-native";
 import DropdownAlert from "react-native-dropdownalert";
-import { Font } from "expo";
+import * as Font from 'expo-font'
 
 class AlertProvider extends Component {
   static childContextTypes = {

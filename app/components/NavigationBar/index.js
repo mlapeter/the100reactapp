@@ -9,7 +9,7 @@ import {
   Text,
   TouchableOpacity
 } from "react-native";
-import { LinearGradient } from "expo";
+import { LinearGradient } from 'expo-linear-gradient'
 
 import BackButton from "./BackButton";
 import Icon from "../Icon";

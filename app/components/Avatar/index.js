@@ -5,11 +5,10 @@ import {
   StyleSheet
 } from "react-native";
 import PropTypes from 'prop-types'
-import { Svg } from "expo";
-
+import Svg, { Defs, Image, ClipPath, Path } from 'react-native-svg'
 import CacheManager from "../CacheManager";
+import { Defs, Image, ClipPath, Path } from 'react-native-svg'
 
-const { Defs, Image, ClipPath, Path } = Svg;
 
 export default class Avatar extends React.Component {
   static propTypes = {
@@ -66,6 +65,7 @@ export default class Avatar extends React.Component {
         />
       );
     }
+
     return (
       <Svg
         style={[styles.avatar, style]}

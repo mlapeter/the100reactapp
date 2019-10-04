@@ -9,7 +9,8 @@ import {
 } from "react-native";
 import Sentry from "sentry-expo";
 
-import { Asset, Font } from "expo";
+import { Asset } from 'expo-asset'
+import * as Font from 'expo-font'
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { decodeToken, setFirebaseToken } from "../actions/authentication";

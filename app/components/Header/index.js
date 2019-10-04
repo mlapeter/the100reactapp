@@ -1,7 +1,7 @@
 // @flow
 import * as React from "react";
 import { Image, StyleSheet, Text, View, Dimensions } from "react-native";
-import { LinearGradient } from "expo";
+import { LinearGradient } from 'expo-linear-gradient'
 import { colors, fontSizes, fontStyles, styleSheet } from "../../styles";
 
 import defaultUserHeaderBackground from "../../assets/images/d2-all.jpg";
