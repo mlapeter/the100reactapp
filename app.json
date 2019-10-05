@@ -4,9 +4,9 @@
     "privacy": "public",
     "scheme": "the100",
     "name": "The100.io",
-    "description": "The official mobile app for The100.io. Please leave any feedback or bugs you find in our discord: https://discord.gg/cWDAt4Z thanks!",
+    "description": "The official mobile app for The100.io.",
     "icon": "./app/assets/images/icon.png",
-    "version": "2.1.2",
+    "version": "2.1.3",
     "slug": "the100",
     "androidStatusBarColor": "#334393",
     "androidStatusBar": {
@@ -29,7 +29,7 @@
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20018,
+      "versionCode": 20019,
       "googleServicesFile": "./google-services.json",
       "playStoreUrl": "https://play.google.com/store/apps/details?id=io.the100.mobile",
       "permissions": [

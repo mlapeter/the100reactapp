@@ -78,7 +78,7 @@
     "redux-persist": "^5.10.0",
     "redux-saga": "^0.15.3",
     "redux-thunk": "^2.2.0",
-    "sentry-expo": "~1.13.0",
+    "sentry-expo": "1.13.0",
     "tcomb-form-native": "^0.6.10",
     "yup": "0.26.6"
   },

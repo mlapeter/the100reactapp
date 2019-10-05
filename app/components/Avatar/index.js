@@ -7,7 +7,6 @@ import {
 import PropTypes from 'prop-types'
 import Svg, { Defs, Image, ClipPath, Path } from 'react-native-svg'
 import CacheManager from "../CacheManager";
-import { Defs, Image, ClipPath, Path } from 'react-native-svg'
 
 
 export default class Avatar extends React.Component {
