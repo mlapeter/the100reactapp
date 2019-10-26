@@ -1,5 +1,7 @@
 import React, { PureComponent } from "react";
-import { Linking, Platform, Text, View, WebView } from "react-native";
+import { Linking, Platform, Text, View } from "react-native";
+import { WebView } from 'react-native-webview';
+
 import PropTypes from 'prop-types'
 import styles from "./styles";
 import { styleSheet } from "../../styles";

@@ -39,6 +39,8 @@ import FriendsList from "../screens/FriendsList";
 import User from "../screens/User";
 import UserEdit from "../screens/UserEdit";
 import HelpChat from "../screens/HelpChat";
+import Supporters from "../screens/Supporters";
+
 
 import Menu from "../screens/Menu";
 
@@ -177,6 +179,16 @@ const HelpChatStack = createStackNavigator({
   }
 });
 
+const SupportersStack = createStackNavigator({
+  Supporters: {
+    screen: Supporters,
+    navigationOptions: ({ navigation }) => ({
+      title: "Become a Supporter!",
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />
+    })
+  }
+});
+
 // DrawerNavigator for side menu
 
 const MenuDrawer = createDrawerNavigator(
@@ -208,6 +220,18 @@ const MenuDrawer = createDrawerNavigator(
         drawerIcon: () => (
           <MaterialCommunityIcons
             name="help-circle"
+            size={24}
+            style={styles.icon}
+          />
+        )
+      })
+    },
+    "Supporters": {
+      screen: SupportersStack,
+      navigationOptions: ({ navigation }) => ({
+        drawerIcon: () => (
+          <MaterialCommunityIcons
+            name="fire"
             size={24}
             style={styles.icon}
           />
