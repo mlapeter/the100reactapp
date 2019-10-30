@@ -346,11 +346,6 @@ class GamingSession extends React.Component {
               }
             };
 
-
-
-
-
-
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;
 

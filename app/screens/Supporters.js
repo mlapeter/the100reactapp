@@ -27,9 +27,6 @@ class Supporters extends Component {
       .hit(new PageHit("App - Supporters"))
       .catch(e => console.log(e.message));
   }
-  // static navigationOptions = {
-  //   headerLeft: <HeaderBackButton onPress={() => navigation.goBack()} />
-  // };
 
   componentDidMount() {
     this.openSupportersUrl()
@@ -47,7 +44,6 @@ class Supporters extends Component {
 
     return (
       <View>
-
         <Card
           style={styles.card}
         >
@@ -65,10 +61,6 @@ class Supporters extends Component {
             <Button onPress={this.openSupportersUrl} title="Become A Supporter" style={{ padding: 20, marginBottom: 20 }} />
           }
         </Card>
-
-
-
-
       </View>
     );
   }
