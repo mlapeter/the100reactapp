@@ -226,6 +226,18 @@ class GamingSession extends React.Component {
     );
   }
 
+  openCalendarUrl = () => {
+    Linking.openURL('com.google.calendar://' + this.props.gamingSession.google_calendar_export).catch(e => {
+      console.log("Failed to open link: " + e);
+    });
+  }
+
+  openIosCalendarUrl = () => {
+    Linking.openURL('https://www.the100.io/users/' + this.props.user.id + '.ics').catch(e => {
+      console.log("Failed to open link: " + e);
+    });
+  }
+
   render() {
     const { params } = this.props.navigation.state;
     const navigation = this.props.navigation;
@@ -336,6 +348,9 @@ class GamingSession extends React.Component {
 
 
 
+
+
+
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;
 
@@ -418,8 +433,12 @@ class GamingSession extends React.Component {
                 Supporter Options &raquo;
             </Text>}
             >
-              {this.props.user.has_supporter_perks ? (
+              {!this.props.user.has_supporter_perks ? (
                 <View>
+                  <Button onPress={this.openCalendarUrl} title="Add This Game To Google Calendar" color={colors.blue} style={{ padding: 20, marginTop: 20 }} />
+
+                  <Button onPress={this.openIosCalendarUrl} title="Subscribe To My Games Calendar" color={colors.blue} style={{ padding: 20, marginTop: 20 }} />
+
                   <Picker
                     selectedValue={this.state.selectedFriend}
                     style={{ marginVertical: 0, paddingVertical: 0, }}
@@ -435,19 +454,35 @@ class GamingSession extends React.Component {
                       />
                     ))}
                   </Picker>
-                  <Button title="Add Friend To Game" onPress={addFriend} style={{ padding: 20, marginBottom: 20 }} />
+                  <Button title="Add Friend To Game" onPress={addFriend} color={colors.blue} style={{ padding: 20, marginBottom: 20 }} />
                 </View>
               ) : (
                   <View>
                     <Text style={[styleSheet.typography["body"], {
                       alignSelf: "center",
-                      paddingVertical: 10
+                      padding: 10
                     }]}>
-                      This feature is available to our incredible supporters:
-              </Text>
-                    <Button title="Learn More" onPress={() => {
+                      <MaterialCommunityIcons name="calendar" size={18} color={colors.grey} style={styles.icon} />
+                      Add To Google Calendar
+                  </Text>
+                    <Text style={[styleSheet.typography["body"], {
+                      alignSelf: "center",
+                      padding: 10
+                    }]}>
+                      <MaterialCommunityIcons name="calendar" size={18} color={colors.grey} style={styles.icon} />
+                      Subscribe to My Calendar
+                  </Text>
+                    <Text style={[styleSheet.typography["body"], {
+                      alignSelf: "center",
+                      padding: 5,
+                      margin: 5
+                    }]}>
+                      <MaterialCommunityIcons name="account" size={18} color={colors.grey} style={styles.icon} />
+                      Add Friends To Game
+                  </Text>
+                    <Button title="Become a Supporter To Activate!" onPress={() => {
                       this.props.navigation.navigate("Supporters");
-                    }} style={{ padding: 20, marginBottom: 20 }} />
+                    }} color={colors.blue} style={{ padding: 20, marginVertical: 20 }} />
                   </View>
                 )}
             </CardToggle>
@@ -472,7 +507,7 @@ const styles = StyleSheet.create({
   },
   icon: {
     padding: 2,
-    marginRight: 2,
+    marginRight: 3,
     backgroundColor: colors.white
   },
   headline: {
