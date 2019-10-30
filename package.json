@@ -48,7 +48,7 @@
     "install": "^0.10.1",
     "jstz": "^2.0.0",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.13",
     "moment": "^2.19.4",
     "moment-timezone": "^0.5.14",
     "node-emoji": "^1.8.1",
