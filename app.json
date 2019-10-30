@@ -6,7 +6,7 @@
     "name": "The100.io",
     "description": "The official mobile app for The100.io.",
     "icon": "./app/assets/images/icon.png",
-    "version": "2.1.3",
+    "version": "2.1.4",
     "slug": "the100",
     "androidStatusBarColor": "#334393",
     "androidStatusBar": {

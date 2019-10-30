@@ -3,8 +3,10 @@ import {
   Alert,
   ActivityIndicator,
   AsyncStorage,
+  Button,
   LayoutAnimation,
   Linking,
+  Picker,
   Platform,
   Share,
   StyleSheet,
@@ -31,10 +33,16 @@ import PlayersList from "../components/PlayersList";
 import Header from "../components/Header";
 import Content from "../components/Content";
 import Card from "../components/Card";
+import CardToggle from "../components/CardToggle";
 import NavigationBar from "../components/NavigationBar";
 import GamingSessionIconBar from "../components/GamingSessionIconBar";
 import GroupsList from "../components/GroupsList";
 import { fetchBungieImage } from "../utils/destinyActivities";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+import {
+  fetchFriends
+} from "../actions/users";
 
 class GamingSession extends React.Component {
   constructor(props) {
@@ -53,6 +61,8 @@ class GamingSession extends React.Component {
         isLoading: false
       });
     }, 800);
+    this.props.dispatch(fetchFriends());
+
   }
 
   componentWillUnmount() {
@@ -131,6 +141,10 @@ class GamingSession extends React.Component {
     this.postData("/leave");
   };
 
+  addFriend = () => {
+    this.postData("/add_friend?friend_id=" + this.state.selectedFriend);
+  };
+
   onLongPress = () => {
     Vibration.vibrate(20);
     this.setState({
@@ -138,6 +152,9 @@ class GamingSession extends React.Component {
     });
     LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
   };
+
+
+
 
   async postData(action) {
     this.setState({
@@ -185,53 +202,6 @@ class GamingSession extends React.Component {
     };
   }
 
-  // postData(action) {
-  //   this.setState({
-  //     isLoading: true
-  //   });
-  //   AsyncStorage.getItem("id_token")
-  //     .then(token => {
-  //       fetch(
-  //         Environment["API_BASE_URL"] +
-  //         Environment["API_VERSION"] +
-  //         "gaming_sessions/" +
-  //         gamingSessionId +
-  //         action,
-  //         {
-  //           method: "POST",
-  //           headers: {
-  //             "Content-Type": "application/json",
-  //             Authorization: "Bearer " + token
-  //           }
-  //         }
-  //       )
-  //         .then(response => response.json())
-  //         .then(responseJson => {
-  //           if (action === "/join" || action === "/join?join_as_reserve=true") {
-  //             this.fetchGamingSessionData();
-  //             this.checkAndDisplayReviewRequest();
-  //           } else {
-  //             this.props.navigation.navigate("GamingSessionsList");
-  //           }
-  //           this.updateTimer = setTimeout(() => {
-  //             this.props.dispatch(fetchMyGamingSessions());
-  //             this.props.dispatch(fetchGroupGamingSessions());
-  //             this.setState({
-  //               isLoading: false
-  //             });
-  //           }, 300);
-  //         })
-  //         .catch(error => {
-  //           console.log("Gaming Session Post Error: ", error);
-  //           Sentry.captureMessage("Gaming Session Post Error: ", error);
-  //         });
-  //     })
-  //     .catch(error => {
-  //       console.log("Gaming Session Post Error: ", error);
-  //       Sentry.captureMessage("Gaming Session Post Error: ", error);
-  //     });
-  // }
-
 
   onShare() {
     Share.share(
@@ -259,6 +229,7 @@ class GamingSession extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
     const navigation = this.props.navigation;
+    const { addFriend } = this
 
     if (
       this.state.isLoading ||
@@ -363,6 +334,8 @@ class GamingSession extends React.Component {
               }
             };
 
+
+
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;
 
@@ -437,6 +410,50 @@ class GamingSession extends React.Component {
                 navigation={this.props.navigation}
               />
             )}
+          {userIds.includes(this.props.user.id) ? (
+            <CardToggle
+              style={{ marginBottom: 20 }}
+              header={<Text style={[styles.headline, styleSheet.typography["headline"], { color: colors.blue }]}>
+                <MaterialCommunityIcons name="fire" size={20} color={colors.blue} style={styles.icon} />
+                Supporter Options &raquo;
+            </Text>}
+            >
+              {this.props.user.has_supporter_perks ? (
+                <View>
+                  <Picker
+                    selectedValue={this.state.selectedFriend}
+                    style={{ marginVertical: 0, paddingVertical: 0, }}
+                    prompt={"Add Friend"}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.setState({ selectedFriend: itemValue })
+                    }>
+                    {this.props.friends.map(user => (
+                      <Picker.Item
+                        key={user.id}
+                        label={user.gamertag.toString()}
+                        value={user.id}
+                      />
+                    ))}
+                  </Picker>
+                  <Button title="Add Friend To Game" onPress={addFriend} style={{ padding: 20, marginBottom: 20 }} />
+                </View>
+              ) : (
+                  <View>
+                    <Text style={[styleSheet.typography["body"], {
+                      alignSelf: "center",
+                      paddingVertical: 10
+                    }]}>
+                      This feature is available to our incredible supporters:
+              </Text>
+                    <Button title="Learn More" onPress={() => {
+                      this.props.navigation.navigate("Supporters");
+                    }} style={{ padding: 20, marginBottom: 20 }} />
+                  </View>
+                )}
+            </CardToggle>
+          )
+            : null
+          }
         </Content>
       </View>
     );
@@ -452,6 +469,14 @@ const styles = StyleSheet.create({
     padding: 20,
     alignItems: "center",
     justifyContent: "center"
+  },
+  icon: {
+    padding: 2,
+    marginRight: 2,
+    backgroundColor: colors.white
+  },
+  headline: {
+    marginVertical: 3
   }
 });
 
@@ -461,13 +486,16 @@ const mapStateToProps = state => {
   const gamingSession = state.gamingSessions.gamingSession;
   const gamingSessionsError = state.gamingSessions.error;
   const gamingSessionsErrorAt = state.gamingSessions.errorAt;
+  const friends = state.users.friends;
+
 
   return {
     user,
     gamingSessionLoading,
     gamingSession,
     gamingSessionsError,
-    gamingSessionsErrorAt
+    gamingSessionsErrorAt,
+    friends
   };
 };
 
