@@ -24,7 +24,7 @@ var environments = {
     GOOGLE_ANALYTICS_ID: ""
   },
   development: {
-    API_BASE_URL: "http://192.168.0.3:3000/api/",
+    API_BASE_URL: "http://add-local-ip-here:3000/api/",
     API_VERSION: "v2/",
     DEFAULT_GAME_ID: 13,
     FIREBASE_API_KEY: "AIzaSyDTZp0K0KXe7Xt-vGNeYEBDBq-PeJyUTKw",
