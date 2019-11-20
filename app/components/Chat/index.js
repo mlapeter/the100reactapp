@@ -146,7 +146,11 @@ class Chat extends Component {
   }
 
   onKeyboardShown = event => {
-    this.setState({ keyboardOffset: event.endCoordinates.height });
+    if (Platform.OS === "ios") {
+      this.setState({ keyboardOffset: event.endCoordinates.height });
+    } else {
+      this.setState({ keyboardOffset: 10 });
+    }
   };
 
   onKeyboardHidden = event => {
@@ -154,18 +158,18 @@ class Chat extends Component {
   };
 
   componentWillMount() {
-    if (Platform.OS === "ios") {
-      Keyboard.addListener("keyboardDidShow", this.onKeyboardShown);
-      Keyboard.addListener("keyboardDidHide", this.onKeyboardHidden);
-    }
+    // if (Platform.OS === "ios") {
+    Keyboard.addListener("keyboardDidShow", this.onKeyboardShown);
+    Keyboard.addListener("keyboardDidHide", this.onKeyboardHidden);
+    // }
   }
 
   componentWillUnmount() {
     console.log("Unmounting Chat");
-    if (Platform.OS === "ios") {
-      Keyboard.removeListener("keyboardDidShow", this.onKeyboardShown);
-      Keyboard.removeListener("keyboardDidHide", this.onKeyboardHidden);
-    }
+    // if (Platform.OS === "ios") {
+    Keyboard.removeListener("keyboardDidShow", this.onKeyboardShown);
+    Keyboard.removeListener("keyboardDidHide", this.onKeyboardHidden);
+    // }
     if (this.messagesQuery) {
       this.messagesQuery.off();
     }

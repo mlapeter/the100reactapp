@@ -3,7 +3,7 @@ var environments = {
     API_BASE_URL: "https://pwntastic.herokuapp.com/api/",
     API_VERSION: "v2/",
     DEFAULT_GAME_ID: 23,
-    FIREBASE_API_KEY: "AIzaSyDVZr1PfafkchNs7uGV4KXDsVhtz-NBhWA",
+    FIREBASE_API_KEY: "",
     FIREBASE_AUTH_DOMAIN: "the100-chat.firebaseapp.com",
     FIREBASE_DATABASE_URL: "https://the100-chat.firebaseio.com/",
     FIREBASE_PROJECT_ID: "the100-chat",
@@ -24,7 +24,7 @@ var environments = {
     GOOGLE_ANALYTICS_ID: ""
   },
   development: {
-    API_BASE_URL: "http://add-local-ip-here:3000/api/",
+    API_BASE_URL: "http://192.168.0.3:3000/api/",
     API_VERSION: "v2/",
     DEFAULT_GAME_ID: 13,
     FIREBASE_API_KEY: "AIzaSyDTZp0K0KXe7Xt-vGNeYEBDBq-PeJyUTKw",

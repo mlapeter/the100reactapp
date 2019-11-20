@@ -33,11 +33,9 @@ class Supporters extends Component {
   }
 
   openSupportersUrl = () => {
-    if (this.props.user.gamertag != "testy") {
-      Linking.openURL('https://the100.io/supporters_mobile?id=' + this.props.user.email_token).catch(e => {
-        console.log("Failed to open link: " + e);
-      });
-    }
+    Linking.openURL('https://the100.io/supporters_mobile?id=' + this.props.user.email_token).catch(e => {
+      console.log("Failed to open link: " + e);
+    });
   }
 
   render() {
@@ -54,12 +52,10 @@ class Supporters extends Component {
           />
           <FeedImage item={{ data: null }} imageUrl={{ uri: "https://www.the100.io/d2-all.jpg" }} style={{ margin: 0 }} />
           <MessageBody
-            text={this.props.user.gamertag == "testy" ? "Want to help us add new features and reach more uers? Become a monthly supporter! Details coming soon." : "Want to help us add new features while also getting access to special perks? Become a monthly supporter!"}
+            text={"Want to help us add new features while also getting access to special perks? Become a monthly supporter!"}
             style={[styles.text, styleSheet.typography["body"]]}
           />
-          {this.props.user.gamertag != "testy" &&
-            <Button onPress={this.openSupportersUrl} title="Become A Supporter" style={{ padding: 20, marginBottom: 20 }} />
-          }
+          <Button onPress={this.openSupportersUrl} title="Become A Supporter" style={{ padding: 20, marginBottom: 20 }} />
         </Card>
       </View>
     );

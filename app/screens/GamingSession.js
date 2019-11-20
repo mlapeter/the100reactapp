@@ -180,14 +180,20 @@ class GamingSession extends React.Component {
       )
 
       let responseJson = await response.json();
-      this.props.alertWithType("success", "", responseJson.notice);
+      if (responseJson.notice) {
+        this.props.alertWithType("success", "", responseJson.notice);
+      } else if (responseJson.error) {
+        this.props.alertWithType("error", "", responseJson.error);
+      } else {
+        this.props.alertWithType("error", "", "An error occured.");
+      }
 
       this.props.dispatch(fetchMyGamingSessions());
       this.props.dispatch(fetchGroupGamingSessions());
       this.setState({
         isLoading: false
       });
-      if (action === "/join" || action === "/join?join_as_reserve=true") {
+      if (action != "/leave") {
         this.fetchGamingSessionData();
         this.reviewTimer = setTimeout(() => {
           this.checkAndDisplayReviewRequest();
@@ -227,9 +233,15 @@ class GamingSession extends React.Component {
   }
 
   openCalendarUrl = () => {
-    Linking.openURL('com.google.calendar://' + this.props.gamingSession.google_calendar_export).catch(e => {
-      console.log("Failed to open link: " + e);
-    });
+    if (Platform.OS === 'ios') {
+      Linking.openURL('com.google.calendar://' + this.props.gamingSession.google_calendar_export).catch(e => {
+        console.log("Failed to open link: " + e);
+      });
+    } else if (Platform.OS === 'android') {
+      Linking.openURL('content://com.android.calendar/time/' + this.props.gamingSession.google_calendar_export).catch(e => {
+        console.log("Failed to open link: " + e);
+      });
+    }
   }
 
   openIosCalendarUrl = () => {
@@ -428,12 +440,21 @@ class GamingSession extends React.Component {
                 Supporter Options &raquo;
             </Text>}
             >
-              {!this.props.user.has_supporter_perks ? (
-                <View>
-                  <Button onPress={this.openCalendarUrl} title="Add This Game To Google Calendar" color={colors.blue} style={{ padding: 20, marginTop: 20 }} />
 
-                  <Button onPress={this.openIosCalendarUrl} title="Subscribe To My Games Calendar" color={colors.blue} style={{ padding: 20, marginTop: 20 }} />
+              {this.props.user.has_supporter_perks && Platform.OS === 'ios' ? (
+                <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
+                  <View style={{ padding: 10, margin: 10 }}>
+                    <Button onPress={this.openCalendarUrl} title="Add This Game To Google Calendar" color={colors.blue} />
+                  </View>
 
+                  <View style={{ padding: 10, margin: 10 }}>
+                    <Button onPress={this.openIosCalendarUrl} title="Subscribe To My Games Calendar" color={colors.blue} style={{ padding: 20, margin: 20 }} />
+                  </View>
+                </View>
+              ) : null}
+
+              {this.props.user.has_supporter_perks ? (
+                <View style={{ paddingVertical: 10, paddingHorizontal: 5 }}>
                   <Picker
                     selectedValue={this.state.selectedFriend}
                     style={{ marginVertical: 0, paddingVertical: 0, }}
@@ -449,7 +470,10 @@ class GamingSession extends React.Component {
                       />
                     ))}
                   </Picker>
-                  <Button title="Add Friend To Game" onPress={addFriend} color={colors.blue} style={{ padding: 20, marginBottom: 20 }} />
+                  <View style={{ padding: 10, margin: 10 }}>
+                    <Button title="Add Friend To Game" onPress={addFriend} color={colors.blue} style={{ padding: 20, margin: 20 }} />
+                  </View>
+
                 </View>
               ) : (
                   <View>
@@ -485,7 +509,7 @@ class GamingSession extends React.Component {
             : null
           }
         </Content>
-      </View>
+      </View >
     );
   }
 }
