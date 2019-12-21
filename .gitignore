@@ -2,3 +2,5 @@ node_modules/
 .expo/
 npm-debug.*
 google-services.json
+app/config/environment.js
+app.json
