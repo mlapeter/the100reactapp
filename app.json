@@ -14,7 +14,9 @@
       "backgroundColor": "#334393"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "enabled": true,
+      "checkAutomatically": 'ON_LOAD',
+      "fallbackToCacheTimeout": 30
     },
     "splash": {
       "backgroundColor": "#ffffff",
@@ -29,7 +31,7 @@
     },
     "android": {
       "package": "io.the100.mobile",
-      "versionCode": 20021,
+      "versionCode": 20022,
       "googleServicesFile": "./google-services.json",
       "playStoreUrl": "https://play.google.com/store/apps/details?id=io.the100.mobile",
       "permissions": [

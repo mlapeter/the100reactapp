@@ -8,6 +8,7 @@ import {
   FlatList,
   Image,
   Keyboard,
+  KeyboardAvoidingView,
   LayoutAnimation,
   ListView,
   Platform,
@@ -149,7 +150,7 @@ class Chat extends Component {
     if (Platform.OS === "ios") {
       this.setState({ keyboardOffset: event.endCoordinates.height });
     } else {
-      this.setState({ keyboardOffset: 10 });
+      this.setState({ keyboardOffset: 100 });
     }
   };
 
@@ -371,6 +372,8 @@ class Chat extends Component {
   };
 
   render() {
+    const KeyboardAvoidingViewComponent = Platform.OS === "android" ? KeyboardAvoidingView : View
+
     let messages = Object.entries(this.state.messages).sort(
       ([keyA, messageA], [keyB, messageB]) => {
         return messageB.createdAt - messageA.createdAt;
@@ -389,71 +392,74 @@ class Chat extends Component {
           this.props.style
         ]}
       >
-        <FlatList
-          data={messages}
-          renderItem={({ item: [key, message] }) => (
-            <Message
-              message={message}
-              onLongPress={this.props.preview ? null : this.onMessageLongPress}
-              onPress={this.props.onPress}
-            />
-          )}
-          keyExtractor={([key, message], index) => key}
-          extraData={messages}
-          ListFooterComponent={this.renderLoadMoreMessages}
-          ListEmptyComponent={this.renderListEmpty}
-        />
-        {!this.props.preview &&
-          (!this.state.editingKey ? (
-            <MessageCreateInput
-              createAllowed={createAllowed}
-              onSubmit={this.onMessageCreate}
-              users={this.state.users}
-              avatars={this.state.avatars}
-            />
-          ) : (
-              <MessageEditInput
-                onSubmit={this.onEditMessage}
-                onCancel={this.onCancelEditing}
-                message={this.state.messages[this.state.editingKey]}
+        <KeyboardAvoidingViewComponent style={{ flex: 1 }} behavior={"padding"} >
+
+          <FlatList
+            data={messages}
+            renderItem={({ item: [key, message] }) => (
+              <Message
+                message={message}
+                onLongPress={this.props.preview ? null : this.onMessageLongPress}
+                onPress={this.props.onPress}
               />
-            ))}
-        {!this.props.preview && (
-          <Modal
-            isVisible={!!this.state.selectedKey}
-            style={styles.selectedModal}
-            onBackButtonPress={this.closeSelectedModal}
-            onBackdropPress={this.closeSelectedModal}
-            backdropOpacity={0.3}
-          >
-            <View style={styles.selectedModalBackground}>
-              <TouchableItem
-                style={[
-                  styles.selectedModalOption,
-                  styles.selectedModalOptionSeparator
-                ]}
-                useForeground={true}
-                onPress={this.onStartEditMessage}
-              >
-                <Text style={styles.selectedModalOptionText}>Edit</Text>
-              </TouchableItem>
-              <TouchableItem
-                style={[styles.selectedModalOption, styles.removeOption]}
-                useForeground={true}
-                onPress={this.onRemoveMessage}
-              >
-                <Text
+            )}
+            keyExtractor={([key, message], index) => key}
+            extraData={messages}
+            ListFooterComponent={this.renderLoadMoreMessages}
+            ListEmptyComponent={this.renderListEmpty}
+          />
+          {!this.props.preview &&
+            (!this.state.editingKey ? (
+              <MessageCreateInput
+                createAllowed={createAllowed}
+                onSubmit={this.onMessageCreate}
+                users={this.state.users}
+                avatars={this.state.avatars}
+              />
+            ) : (
+                <MessageEditInput
+                  onSubmit={this.onEditMessage}
+                  onCancel={this.onCancelEditing}
+                  message={this.state.messages[this.state.editingKey]}
+                />
+              ))}
+          {!this.props.preview && (
+            <Modal
+              isVisible={!!this.state.selectedKey}
+              style={styles.selectedModal}
+              onBackButtonPress={this.closeSelectedModal}
+              onBackdropPress={this.closeSelectedModal}
+              backdropOpacity={0.3}
+            >
+              <View style={styles.selectedModalBackground}>
+                <TouchableItem
                   style={[
-                    styles.selectedModalOptionText,
-                    styles.removeOptionText
+                    styles.selectedModalOption,
+                    styles.selectedModalOptionSeparator
                   ]}
+                  useForeground={true}
+                  onPress={this.onStartEditMessage}
                 >
-                  Remove
+                  <Text style={styles.selectedModalOptionText}>Edit</Text>
+                </TouchableItem>
+                <TouchableItem
+                  style={[styles.selectedModalOption, styles.removeOption]}
+                  useForeground={true}
+                  onPress={this.onRemoveMessage}
+                >
+                  <Text
+                    style={[
+                      styles.selectedModalOptionText,
+                      styles.removeOptionText
+                    ]}
+                  >
+                    Remove
                 </Text>
-              </TouchableItem>
-            </View>
-          </Modal>
-        )}
+                </TouchableItem>
+              </View>
+            </Modal>
+          )}
+        </KeyboardAvoidingViewComponent>
       </View>
     );
   }
