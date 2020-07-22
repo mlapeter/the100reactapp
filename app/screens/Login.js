@@ -5,7 +5,6 @@ import {
   Button,
   Image,
   Keyboard,
-  KeyboardAvoidingView,
   View,
   StyleSheet,
   Text,
@@ -18,7 +17,6 @@ import Environment from "../config/environment";
 import { Container } from "../components/Container";
 import PreSplash from "../components/PreSplash/PreSplash";
 import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
-// import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { fetchToken } from "../actions/authentication";
@@ -116,13 +114,13 @@ class Login extends React.Component {
             {this.props.authentication.isLoading ? (
               <ActivityIndicator />
             ) : (
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => this.userLogin(this)}
-              >
-                <Text style={styles.buttonText}>LOG IN</Text>
-              </TouchableOpacity>
-            )}
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => this.userLogin(this)}
+                >
+                  <Text style={styles.buttonText}>LOG IN</Text>
+                </TouchableOpacity>
+              )}
             <TouchableOpacity
               style={styles.forgotButton}
               onPress={() => this.props.navigation.navigate("ForgotPassword")}
