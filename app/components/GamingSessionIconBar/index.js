@@ -63,6 +63,13 @@ function PlatformIcon(props) {
         XBOX
       </Text>
     );
+  } else if (props.platform === "stadia") {
+    return (
+      <Text style={styles.icon}>
+        <MaterialCommunityIcons name="information-outline" size={14} color={colors.grey} />
+        Stadia
+      </Text>
+    );
   } else {
     return (
       <Text style={styles.icon}>
@@ -142,6 +149,6 @@ const styles = StyleSheet.create({
   icon: {
     padding: 2,
     margin: 2,
-    backgroundColor: colors.white
+    backgroundColor: colors.white,
   }
 });

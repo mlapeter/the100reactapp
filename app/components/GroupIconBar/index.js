@@ -13,7 +13,7 @@ type GroupIconBarProps = {
 
 export default class GroupIconBar extends React.PureComponent<
   GroupIconBarProps
-> {
+  > {
   render(): React.Node {
     const { platform, users_count, play_style, play_schedule } = this.props;
 
@@ -48,6 +48,13 @@ function PlatformIcon(props) {
       <Text style={styles.icon}>
         <MaterialCommunityIcons name="xbox" size={14} color={colors.grey} />
         XBOX
+      </Text>
+    );
+  } else if (props.platform === "stadia") {
+    return (
+      <Text style={styles.icon}>
+        <MaterialCommunityIcons name="information-outline" size={14} color={colors.grey} />
+        Stadia
       </Text>
     );
   } else {

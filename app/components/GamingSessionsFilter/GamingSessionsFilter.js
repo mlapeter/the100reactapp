@@ -42,7 +42,7 @@ class GamingSessionsFilter extends Component {
     this.state = {
       modalVisible: false,
       selectedIndex: 1,
-      platforms: ["xbox-one", "ps4", "pc"]
+      platforms: ["xbox-one", "ps4", "pc", "stadia"]
     };
     this.updateIndex = this.updateIndex.bind(this);
   }

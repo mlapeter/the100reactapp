@@ -99,7 +99,7 @@ class GamingSession extends React.Component {
 
   checkAndDisplayReviewRequest = async () => {
 
-    if (StoreReview.isSupported()) {
+    if (StoreReview.isAvailableAsync()) {
       StoreReview.requestReview();
     } else {
       let askedForReview = await AsyncStorage.getItem("asked_for_review")
@@ -180,6 +180,7 @@ class GamingSession extends React.Component {
       )
 
       let responseJson = await response.json();
+      console.log(responseJson)
       if (responseJson.notice) {
         this.props.alertWithType("success", "", responseJson.notice);
       } else if (responseJson.error) {
