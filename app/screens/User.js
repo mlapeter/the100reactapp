@@ -12,7 +12,6 @@ import {
   Keyboard,
   LayoutAnimation,
   Linking,
-  ListView,
   StyleSheet,
   Text,
   TextInput,
@@ -149,10 +148,10 @@ export class User extends React.Component {
     AsyncStorage.getItem("id_token").then(token => {
       fetch(
         Environment["API_BASE_URL"] +
-          Environment["API_VERSION"] +
-          "users/" +
-          userId +
-          action,
+        Environment["API_VERSION"] +
+        "users/" +
+        userId +
+        action,
         {
           method: "POST",
           headers: {
@@ -236,28 +235,28 @@ export class User extends React.Component {
     const rightAction2 =
       this.props.user.karma_status === "given"
         ? {
-            icon: "star"
-          }
+          icon: "star"
+        }
         : {
-            icon: "star-border",
-            onPress: () => {
-              this.giveKarma();
-            }
-          };
+          icon: "star-border",
+          onPress: () => {
+            this.giveKarma();
+          }
+        };
     const rightAction3 =
       this.props.user.friendship_status === "Friends" ||
-      this.props.user.friendship_status === "Pending"
+        this.props.user.friendship_status === "Pending"
         ? {
-            icon: "person-add"
-          }
+          icon: "person-add"
+        }
         : this.props.user.friendship_status === "Confirm Friend"
-        ? {
+          ? {
             icon: "outline-person_add-24px",
             onPress: () => {
               this.acceptFriend();
             }
           }
-        : {
+          : {
             icon: "outline-person_add-24px",
             onPress: () => {
               this.addFriend();
@@ -302,7 +301,7 @@ export class User extends React.Component {
             <Panel
               text={
                 this.props.user.tag_list != null &&
-                this.props.user.tag_list.length > 0
+                  this.props.user.tag_list.length > 0
                   ? this.props.user.tag_list.map(tag => tag + " ")
                   : null
               }
@@ -396,29 +395,29 @@ export class User extends React.Component {
         {this.state.selectedIndex === 2 ? (
           <Content style={styles.content}>
             {!this.props.profileGamingSessions ||
-            !this.props.profileGamingSessions.length ? (
-              <Card>
-                <Panel
-                  text={"This user doesn't have any upcoming public games."}
-                  numberOfLines={3}
-                />
-              </Card>
-            ) : (
-              <FlatList
-                data={this.props.profileGamingSessions}
-                renderItem={({ item }) => (
-                  <GamingSessionsItem
-                    data={{
-                      ...item,
-                      currentUserId: this.props.currentUser.id
-                    }}
-                    navigation={this.props.navigation}
+              !this.props.profileGamingSessions.length ? (
+                <Card>
+                  <Panel
+                    text={"This user doesn't have any upcoming public games."}
+                    numberOfLines={3}
                   />
-                )}
-                keyExtractor={(item, index) => index.toString()}
-                refreshing={this.props.profileGamingSessionsRefreshing}
-              />
-            )}
+                </Card>
+              ) : (
+                <FlatList
+                  data={this.props.profileGamingSessions}
+                  renderItem={({ item }) => (
+                    <GamingSessionsItem
+                      data={{
+                        ...item,
+                        currentUserId: this.props.currentUser.id
+                      }}
+                      navigation={this.props.navigation}
+                    />
+                  )}
+                  keyExtractor={(item, index) => index.toString()}
+                  refreshing={this.props.profileGamingSessionsRefreshing}
+                />
+              )}
           </Content>
         ) : null}
       </View>

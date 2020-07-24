@@ -6,7 +6,6 @@ import {
   Button,
   Image,
   Keyboard,
-  ListView,
   Picker,
   ScrollView,
   StyleSheet,
