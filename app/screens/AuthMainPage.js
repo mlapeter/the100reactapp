@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
   View,
+  ScrollView,
   Text,
   Image,
   AsyncStorage,
@@ -16,6 +17,8 @@ import Environment from "../config/environment";
 import PreSplash from "../components/PreSplash/PreSplash";
 import { colors } from "../styles";
 import ImgLogo from "../assets/images/logo.png";
+import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
+
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,21 +40,25 @@ class AuthMainPage extends Component {
     }
 
     return (
-      <View style={styles.container}>
-        <Image source={ImgLogo} style={styles.logoImage} />
-        <TouchableOpacity
-          style={styles.loginButton}
-          onPress={() => this.props.navigation.navigate("Login")}
-        >
-          <Text style={styles.buttonText}>LOG IN</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.signupButton}
-          onPress={() => this.props.navigation.navigate("ChoosePlatform")}
-        >
-          <Text style={styles.buttonText}>NEW USER? SIGN UP!</Text>
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingScrollView>
+
+        <ScrollView contentContainerStyle={styles.container}>
+          <Image source={ImgLogo} style={styles.logoImage} />
+          <TouchableOpacity
+            style={styles.loginButton}
+            onPress={() => this.props.navigation.navigate("Login")}
+          >
+            <Text style={styles.buttonText}>LOG IN</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.signupButton}
+            onPress={() => this.props.navigation.navigate("ChoosePlatform")}
+          >
+            <Text style={styles.buttonText}>SIGN UP</Text>
+          </TouchableOpacity>
+        </ScrollView>
+      </KeyboardAvoidingScrollView>
+
     );
   }
 }
@@ -65,8 +72,10 @@ const styles = {
   },
   logoImage: {
     marginVertical: height * 0.1,
-    width: width * 0.6,
-    height: width * 0.6
+    // width: width * 0.6,
+    // height: width * 0.6,
+    maxWidth: 300,
+    maxHeight: 300
   },
   loginButton: {
     paddingVertical: 20,

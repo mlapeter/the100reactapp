@@ -17,7 +17,7 @@ import {
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
 import Sentry from "sentry-expo";
-import { StoreReview } from "expo";
+import * as StoreReview from 'expo-store-review';
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import { connect } from "react-redux";

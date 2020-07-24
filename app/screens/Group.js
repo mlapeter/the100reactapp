@@ -8,7 +8,6 @@ import {
   Image,
   ImageBackground,
   LayoutAnimation,
-  ListView,
   Picker,
   Platform,
   Share,
@@ -138,10 +137,10 @@ class Group extends React.Component {
         message:
           Platform.OS === "android"
             ? "Join " +
-              this.props.group.name +
-              " " +
-              "https://the100.io/groups/" +
-              this.props.group.id
+            this.props.group.name +
+            " " +
+            "https://the100.io/groups/" +
+            this.props.group.id
             : "Join " + this.props.group.name,
         url: "https://the100.io/groups/" + this.props.group.id,
         title: ""
@@ -160,9 +159,9 @@ class Group extends React.Component {
     AsyncStorage.getItem("id_token").then(token => {
       fetch(
         Environment["API_BASE_URL"] +
-          Environment["API_VERSION"] +
-          "groups/" +
-          action,
+        Environment["API_VERSION"] +
+        "groups/" +
+        action,
         {
           method: "POST",
           headers: {
@@ -219,11 +218,11 @@ class Group extends React.Component {
     let openChat = () =>
       this.userHasJoined()
         ? this.props.navigation.navigate("GroupChat", {
-            title: `${this.props.group.name} Chat`,
-            room: `group-${this.props.group.id}`,
-            url: `chat/groups/group-${this.props.group.id}`,
-            allowAnon: false
-          })
+          title: `${this.props.group.name} Chat`,
+          room: `group-${this.props.group.id}`,
+          url: `chat/groups/group-${this.props.group.id}`,
+          allowAnon: false
+        })
         : Alert.alert("", "Join this group first to get full acess to chat!");
 
     const rightAction = {
@@ -232,21 +231,21 @@ class Group extends React.Component {
     };
     const rightAction2 = this.userHasJoined()
       ? {
-          icon: "cancel",
-          text: "Leave",
-          size: 24,
-          onPress: () => {
-            this.leaveGroup();
-          }
+        icon: "cancel",
+        text: "Leave",
+        size: 24,
+        onPress: () => {
+          this.leaveGroup();
         }
+      }
       : {
-          icon: "outline-person_add-24px",
-          text: "Join",
-          size: 26,
-          onPress: () => {
-            this.joinGroup();
-          }
-        };
+        icon: "outline-person_add-24px",
+        text: "Join",
+        size: 26,
+        onPress: () => {
+          this.joinGroup();
+        }
+      };
     return (
       <View style={styles.container}>
         <Header

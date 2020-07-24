@@ -10,7 +10,6 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   LayoutAnimation,
-  ListView,
   Platform,
   StyleSheet,
   Text,

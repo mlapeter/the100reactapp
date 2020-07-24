@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import {
-  ListView,
+  FlatList,
   StyleSheet,
   Text,
   Dimensions,
@@ -11,27 +11,30 @@ import PropTypes from "prop-types";
 import { colors, fontSizes, fontStyles } from "../../styles";
 
 var SCREEN_HEIGHT = Dimensions.get("window").height;
-var noop = () => {};
-var ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+var noop = () => { };
+// var ds = new FlatList.Data({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
 export default class ListPopover extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      dataSource: ds.cloneWithRows(this.props.list)
+      // dataSource: ds.cloneWithRows(this.props.list)
     };
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.list !== this.props.list) {
-      this.setState({ dataSource: ds.cloneWithRows(nextProps.list) });
+      // this.setState({ dataSource: ds.cloneWithRows(nextProps.list) });
     }
   }
   handleClick = data => {
     this.props.onClick(data);
     this.props.onClose();
   };
-  renderRow = rowData => {
+
+
+
+  renderItem = rowData => {
     var separatorStyle = this.props.separatorStyle || DefaultStyles.separator;
     var rowTextStyle = this.props.rowText || DefaultStyles.rowText;
 
@@ -54,6 +57,8 @@ export default class ListPopover extends Component {
       </View>
     );
   };
+
+
   renderList = () => {
     var styles = this.props.style || DefaultStyles;
     var maxHeight = {};
@@ -61,10 +66,12 @@ export default class ListPopover extends Component {
       maxHeight = { height: (SCREEN_HEIGHT * 3) / 4 };
     }
     return (
-      <ListView
+      <FlatList
         style={maxHeight}
-        dataSource={this.state.dataSource}
-        renderRow={rowData => this.renderRow(rowData)}
+        data={this.props.list}
+        renderItem={({ item }) => (
+          this.renderItem(item)
+        )}
         automaticallyAdjustContentInsets={false}
       />
     );
