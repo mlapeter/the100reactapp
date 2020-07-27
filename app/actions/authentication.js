@@ -12,10 +12,11 @@ export const RESET_PASSWORD = "RESET_PASSWORD";
 export const RESET_PASSWORD_RESULT = "RESET_PASSWORD_RESULT";
 export const RESET_PASSWORD_ERROR = "RESET_PASSWORD_ERROR";
 
-export const fetchToken = (username, password) => ({
+export const fetchToken = (username, password, temp_auth_token) => ({
   type: FETCH_TOKEN,
   username,
-  password
+  password,
+  temp_auth_token
 });
 
 export const decodeToken = token => ({

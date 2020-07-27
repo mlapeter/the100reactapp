@@ -15,6 +15,10 @@ import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { decodeToken, setFirebaseToken } from "../actions/authentication";
 import { fetchGames } from "../actions/search";
+import * as Linking from 'expo-linking';
+import { fetchToken } from "../actions/authentication";
+
+
 
 
 import { colors, fontSizes } from "../styles";
@@ -47,10 +51,41 @@ class AuthLoading extends React.Component {
   }
 
   componentDidUpdate() {
+    console.log("componentDidUpdate")
+    console.log(this.props.users.currentUser)
     if (this.props.users.currentUser && this.props.users.currentUser.gamertag) {
       this.props.navigation.navigate("App");
     }
   }
+
+  componentDidMount() {
+    // Checking for direct link when app first opened
+    Linking.getInitialURL().then(url => {
+      this.handleUrl(url);
+    });
+
+    // Listening for direct link when app is open/ backgrounded
+    Linking.addEventListener("url", this.parseUrl);
+    console.log("------ LISTENER SET ----------")
+  }
+
+  parseUrl = event => {
+    console.log(event.url);
+    this.handleUrl(event.url);
+  };
+
+  handleUrl = url => {
+    console.log("HANDLING URL")
+    console.log(url)
+    console.log(Linking.parse(url))
+    let { path, queryParams } = Linking.parse(url);
+    let { temp_auth_token } = queryParams
+    console.log(path)
+    console.log(queryParams)
+    if (temp_auth_token) {
+      this.props.dispatch(fetchToken(null, null, temp_auth_token))
+    }
+  };
 
   cacheImages(images) {
     return images.map(image => {
@@ -134,7 +169,7 @@ class AuthLoading extends React.Component {
               console.log("Redirecting to App");
               this.props.navigation.navigate("App");
             }
-          }, 4000);
+          }, 7000);
         });
       })
       .catch(err => {

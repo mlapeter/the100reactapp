@@ -23,6 +23,9 @@ import { fetchToken } from "../actions/authentication";
 
 import { colors, fontSizes, fontStyles } from "../styles";
 
+import * as Linking from 'expo-linking';
+
+
 class Login extends React.Component {
   constructor(props) {
     super(props);
@@ -67,7 +70,7 @@ class Login extends React.Component {
 
   userLogin() {
     if (!this.state.username || !this.state.password) return;
-    this.props.dispatch(fetchToken(this.state.username, this.state.password));
+    this.props.dispatch(fetchToken(this.state.username, this.state.password, null));
     this.setState({
       username: "",
       password: ""
@@ -125,8 +128,9 @@ class Login extends React.Component {
               style={styles.forgotButton}
               onPress={() => this.props.navigation.navigate("ForgotPassword")}
             >
-              <Text style={styles.buttonText}>forgot password?</Text>
+              <Text style={styles.buttonText}>email me instant login link</Text>
             </TouchableOpacity>
+
           </View>
         </KeyboardAvoidingScrollView>
       </View>

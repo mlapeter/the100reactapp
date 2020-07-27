@@ -167,6 +167,8 @@ function* fetchToken() {
   try {
     let username = yield select(state => state.authentication.username);
     let password = yield select(state => state.authentication.password);
+    let temp_auth_token = yield select(state => state.authentication.temp_auth_token);
+
     const response = yield fetch(
       Environment["API_BASE_URL"] + Environment["API_VERSION"] + "sessions/",
       {
@@ -177,7 +179,8 @@ function* fetchToken() {
         },
         body: JSON.stringify({
           gamertag: username,
-          password: password
+          password: password,
+          temp_auth_token: temp_auth_token
         })
       }
     );
@@ -222,6 +225,35 @@ function* removeToken() {
     yield put({ type: REMOVE_TOKEN_ERROR, error: e.message });
   }
 }
+
+const validateThenDirectLogin = function* () {
+  console.log("VALIDATING THEN LOGGING IN -----------");
+  try {
+    let validationCode = yield select(
+      state => state.authentication.validationCode
+    );
+    let endpoint =
+      Environment["API_BASE_URL"] +
+      Environment["API_VERSION"] +
+      "auth/validate";
+    let body = JSON.stringify({
+      code: validationCode
+    });
+    yield call(
+      postData,
+      "POST",
+      endpoint,
+      body,
+      FETCH_API_KEY_RESULT,
+      FETCH_API_KEY_ERROR
+    );
+  } catch (e) {
+    yield put({
+      type: FETCH_API_KEY_ERROR,
+      error: "Direct Login Error: " + e.message
+    });
+  }
+};
 
 function* fetchData(endpoint, page, success, failure, noData) {
   console.log("FETCHING ENDPOINT INITIAL: ", endpoint);
