@@ -54,7 +54,7 @@ class GamingSessionsFilter extends Component {
     AsyncStorage.setItem("search_platform", platform);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (!this.props.games) {
       console.log("re-fetching games");
       this.props.dispatch(fetchGames());

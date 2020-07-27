@@ -38,7 +38,7 @@ export default class GamingSessionForm extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchActivities(this.props.gameId);
   }
 

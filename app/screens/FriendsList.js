@@ -63,7 +63,7 @@ class FriendsList extends Component {
     super(props);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchAllData();
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics

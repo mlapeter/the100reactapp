@@ -6,7 +6,7 @@ import Environment from "../config/environment";
 import Chat from "../components/Chat";
 
 export default class HelpChat extends Component {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
       .hit(new PageHit("App - Help Chat"))

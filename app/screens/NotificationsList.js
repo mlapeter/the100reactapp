@@ -42,7 +42,7 @@ class NotificationsList extends PureComponent {
   //   header: null
   // };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchNotificationsData();
 
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);

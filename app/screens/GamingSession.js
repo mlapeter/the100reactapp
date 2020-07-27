@@ -55,7 +55,7 @@ class GamingSession extends React.Component {
     gamingSessionId = this.props.navigation.state.params.gamingSessionId;
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.loadingTimer = setTimeout(() => {
       this.setState({
         isLoading: false

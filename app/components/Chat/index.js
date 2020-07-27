@@ -157,7 +157,7 @@ class Chat extends Component {
     this.setState({ keyboardOffset: 0 });
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     // if (Platform.OS === "ios") {
     Keyboard.addListener("keyboardDidShow", this.onKeyboardShown);
     Keyboard.addListener("keyboardDidHide", this.onKeyboardHidden);

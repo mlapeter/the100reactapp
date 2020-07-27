@@ -24,7 +24,7 @@ class GamingSessionCreate extends React.Component {
     this.state = {};
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.props.dispatch(fetchGroup());
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics

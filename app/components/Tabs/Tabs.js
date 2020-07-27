@@ -18,7 +18,7 @@ export default class Tabs extends PureComponent {
     activeTab: 0
   };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     AsyncStorage.getItem("active_tab").then(tab => {
       if (tab) {
         this.setState({ activeTab: parseInt(tab) });

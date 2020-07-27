@@ -113,7 +113,7 @@ class GamingSessionsList extends PureComponent {
     AppState.removeEventListener("change", this.checkForUpdate);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.gamingSessionsError &&
       nextProps.gamingSessionsError !== this.props.gamingSessionsError

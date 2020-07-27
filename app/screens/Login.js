@@ -33,7 +33,7 @@ class Login extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
       .hit(new PageHit("App - Login"))

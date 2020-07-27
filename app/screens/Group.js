@@ -62,7 +62,7 @@ class Group extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     console.log("Mounting Group Screen");
     this.fetchGroupData();
     this.loadingTimer = setTimeout(() => {

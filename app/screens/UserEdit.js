@@ -51,7 +51,7 @@ class UserEdit extends React.Component {
     this.state = {};
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     console.log("MOUNTING USER EDIT");
 
     console.log(this.props.user);

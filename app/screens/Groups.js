@@ -31,7 +31,7 @@ type GroupsProps = {
 };
 
 class Groups extends React.Component<GroupsProps> {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
       .hit(new PageHit("App - Groups"))
@@ -52,11 +52,11 @@ class Groups extends React.Component<GroupsProps> {
             navigation={this.props.navigation}
           />
         ) : (
-          <Text>
-            You haven't joined any groups yet! You can join any group you like
-            by tapping the join icon at the top right of the group page.
-          </Text>
-        )}
+            <Text>
+              You haven't joined any groups yet! You can join any group you like
+              by tapping the join icon at the top right of the group page.
+            </Text>
+          )}
       </View>
     );
   }
