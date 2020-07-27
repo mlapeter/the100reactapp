@@ -36,7 +36,7 @@ class GamingSessionCreate extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.gamingSessions.error &&
       nextProps.gamingSessions.errorAt !== this.props.gamingSessions.errorAt

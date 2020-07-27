@@ -44,7 +44,7 @@ class ForgotPassword extends React.Component {
       .catch(e => console.log(e.message));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.authentication.error &&
       nextProps.authentication.errorAt !== this.props.authentication.errorAt

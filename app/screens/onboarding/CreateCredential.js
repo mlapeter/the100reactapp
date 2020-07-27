@@ -43,7 +43,7 @@ class CreateCredential extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.onboarding.error &&
       nextProps.onboarding.errorAt !== this.props.onboarding.errorAt

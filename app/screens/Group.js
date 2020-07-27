@@ -83,7 +83,7 @@ class Group extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.group.error &&
       nextProps.group.error !== this.props.group.error
@@ -194,6 +194,7 @@ class Group extends React.Component {
       this.props.group.isLoading
     ) {
       console.log("group loading");
+      console.log(this.props.group.id)
       return (
         <View style={styles.container}>
           <Header

@@ -51,7 +51,7 @@ class NotificationsList extends PureComponent {
       .catch(e => console.log(e.message));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.notificationsError &&
       nextProps.notificationsError !== this.props.notificationsError

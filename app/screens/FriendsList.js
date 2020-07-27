@@ -71,7 +71,7 @@ class FriendsList extends Component {
       .catch(e => console.log(e.message));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.friendsError &&
       nextProps.friendsError !== this.props.friendsError

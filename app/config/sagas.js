@@ -660,8 +660,9 @@ function* loadMoreFeedItems() {
 function* fetchGames() {
   console.log("FETCHING GAMES");
   try {
-    let endpoint =
-      Environment["API_BASE_URL"] + Environment["API_VERSION"] + "games?";
+    let endpoint = "https://pwntastic.herokuapp.com/api/v2/games?"
+    // let endpoint =
+    //   Environment["API_BASE_URL"] + Environment["API_VERSION"] + "games?";
     yield call(fetchData, endpoint, 1, FETCH_GAMES_RESULT, FETCH_GAMES_ERROR);
   } catch (e) {
     yield put({ type: FETCH_GAMES_ERROR, error: "fetchGames: " + e.message });

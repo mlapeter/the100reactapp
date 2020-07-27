@@ -46,7 +46,7 @@ class Login extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.authentication.error &&
       nextProps.authentication.errorAt !== this.props.authentication.errorAt

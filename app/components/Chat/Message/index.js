@@ -26,7 +26,7 @@ export default class Message extends PureComponent {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.avatarUrl !== this.props.avatarUrl) {
       this.setState({ avatarUrl: nextProps.avatarUrl });
     }

@@ -279,7 +279,7 @@ class AutosizeImage extends PureComponent {
     this.setState({ error: true });
   };
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.source !== nextProps.source) {
       this.loading = false;
       this.setState({

@@ -79,7 +79,7 @@ class UserEdit extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
 
     if (
       nextProps.users.error &&
