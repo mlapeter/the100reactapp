@@ -51,8 +51,6 @@ class GamingSessionCreate extends React.Component {
       nextProps.gamingSessions.gameCreated &&
       nextProps.gamingSessions.successAt !== this.props.gamingSessions.successAt
     ) {
-      console.log("nextProps.gamingSessions.gameCreated:")
-      console.log(nextProps.gamingSessions)
       this.props.dispatch(refreshMyGamingSessions());
       this.props.navigation.navigate("GamingSessionsList");
       this.props.alertWithType("success", "Success", "Gaming Session Created!");
