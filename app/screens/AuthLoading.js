@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  ActivityIndicator,
   AsyncStorage,
   Platform,
   StatusBar,
@@ -8,7 +7,6 @@ import {
   View
 } from "react-native";
 import Sentry from "sentry-expo";
-
 import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'
 import { connect } from "react-redux";
@@ -17,19 +15,13 @@ import { decodeToken, setFirebaseToken } from "../actions/authentication";
 import { fetchGames } from "../actions/search";
 import * as Linking from 'expo-linking';
 import { fetchToken } from "../actions/authentication";
-
-
-
-
 import { colors, fontSizes } from "../styles";
 import PreSplash from "../components/PreSplash/PreSplash";
-
 import {
   loadIcons,
   loadCustomIcons,
   loadPlatformIcons
 } from "../components/Icon";
-
 import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
 import defaultUserHeaderBackground from "../assets/images/d2-all.jpg";
 import hunterHeader from "../assets/images/d2-hunter.jpg";
@@ -59,12 +51,12 @@ class AuthLoading extends React.Component {
   }
 
   componentDidMount() {
-    // Checking for direct link when app first opened
+    // Checking for instant login link when app first opened
     Linking.getInitialURL().then(url => {
       this.handleUrl(url);
     });
 
-    // Listening for direct link when app is open/ backgrounded
+    // Listening for instant login link when app is open/ backgrounded
     Linking.addEventListener("url", this.parseUrl);
   }
 
@@ -73,10 +65,7 @@ class AuthLoading extends React.Component {
   };
 
   handleUrl = url => {
-    console.log("HANDLING URL")
-    console.log(url)
-    console.log(Linking.parse(url))
-    let { path, queryParams } = Linking.parse(url);
+    let { queryParams } = Linking.parse(url);
     let { temp_auth_token } = queryParams
     if (temp_auth_token) {
       this.setState({ temp_auth_token })
@@ -103,14 +92,8 @@ class AuthLoading extends React.Component {
       require("../assets/images/ic-sbox.png"),
       require("../assets/images/ic-windows.png")
     ]);
-
-
     await Promise.all(imageAssets);
   }
-
-
-
-
 
   bootstrap = () => {
     console.log("Starting App");
@@ -120,7 +103,6 @@ class AuthLoading extends React.Component {
     loadCustomIcons();
     loadPlatformIcons();
 
-    console.log("Expo.Asset.loadAsync");
     Asset.loadAsync([
       defaultGroupHeaderBackground,
       defaultUserHeaderBackground,
