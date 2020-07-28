@@ -35,7 +35,6 @@ class AuthMainPage extends Component {
   }
 
   componentDidUpdate() {
-    console.log("componentDidUpdate authmainpage")
     if (this.props.users.currentUser && this.props.users.currentUser.gamertag) {
       this.props.navigation.navigate("App");
     }

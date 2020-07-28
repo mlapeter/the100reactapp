@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
-  Alert,
-  Button,
-  Image,
-  Keyboard,
   View,
   StyleSheet,
   Text,
@@ -13,18 +9,11 @@ import {
 } from "react-native";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
-
-import { Container } from "../components/Container";
-import PreSplash from "../components/PreSplash/PreSplash";
 import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { fetchToken } from "../actions/authentication";
-
 import { colors, fontSizes, fontStyles } from "../styles";
-
-import * as Linking from 'expo-linking';
-
 
 class Login extends React.Component {
   constructor(props) {

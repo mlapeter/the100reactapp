@@ -19,8 +19,6 @@ class ChooseGame extends Component {
   }
 
   selectGame = (gameId) => {
-    console.log("------- GAME SELECTED: ")
-    console.log(gameId)
     this.props.dispatch(setGame(gameId));
     this.props.navigation.navigate("GamerProfile");
   }

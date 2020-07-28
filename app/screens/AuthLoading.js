@@ -43,6 +43,8 @@ class AuthLoading extends React.Component {
     this.bootstrap();
   }
 
+  state = { temp_auth_token: null }
+
   componentWillUnmount() {
     console.log("UNMOUNTING AUTHLOADING SCREEN!!");
     if (this.authTimer) {
@@ -51,8 +53,6 @@ class AuthLoading extends React.Component {
   }
 
   componentDidUpdate() {
-    console.log("componentDidUpdate")
-    console.log(this.props.users.currentUser)
     if (this.props.users.currentUser && this.props.users.currentUser.gamertag) {
       this.props.navigation.navigate("App");
     }
@@ -66,11 +66,9 @@ class AuthLoading extends React.Component {
 
     // Listening for direct link when app is open/ backgrounded
     Linking.addEventListener("url", this.parseUrl);
-    console.log("------ LISTENER SET ----------")
   }
 
   parseUrl = event => {
-    console.log(event.url);
     this.handleUrl(event.url);
   };
 
@@ -80,9 +78,8 @@ class AuthLoading extends React.Component {
     console.log(Linking.parse(url))
     let { path, queryParams } = Linking.parse(url);
     let { temp_auth_token } = queryParams
-    console.log(path)
-    console.log(queryParams)
     if (temp_auth_token) {
+      this.setState({ temp_auth_token })
       this.props.dispatch(fetchToken(null, null, temp_auth_token))
     }
   };
@@ -158,10 +155,11 @@ class AuthLoading extends React.Component {
           }
 
           this.authTimer = setTimeout(() => {
-            if (
+            if (!this.state.temp_auth_token && (
               !this.props.users.currentUser ||
               this.props.users.currentUser.gamertag == null ||
               this.props.authentication.isAuthed !== true
+            )
             ) {
               console.log("Redirecting to Auth");
               this.props.navigation.navigate("Auth");
