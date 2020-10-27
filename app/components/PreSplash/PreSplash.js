@@ -21,7 +21,7 @@ export default class PreSplash extends React.Component {
     }, 1000);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     window.clearInterval(this.interval);
   }
 

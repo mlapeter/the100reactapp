@@ -22,7 +22,6 @@ import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScroll
 
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
-import { fetchToken } from "../actions/authentication";
 import { resetPassword } from "../actions/authentication";
 
 import { colors, fontSizes, fontStyles } from "../styles";
@@ -37,14 +36,14 @@ class ForgotPassword extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
       .hit(new PageHit("App - Forgot Password"))
       .catch(e => console.log(e.message));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.authentication.error &&
       nextProps.authentication.errorAt !== this.props.authentication.errorAt
@@ -91,7 +90,7 @@ class ForgotPassword extends React.Component {
                 style={styles.button}
                 onPress={() => this.submitEmail()}
               >
-                <Text style={styles.buttonText}>Reset Password</Text>
+                <Text style={styles.buttonText}>Email Login Link</Text>
               </TouchableOpacity>
             </View>
           </KeyboardAvoidingScrollView>

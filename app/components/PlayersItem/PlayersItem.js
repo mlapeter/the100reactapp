@@ -28,6 +28,8 @@ function PlatformId(props) {
     return props.user.battle_net_id;
   } else if (props.platform == "uplay" && props.user.uplay_id) {
     return props.user.uplay_id;
+  } else if (props.platform == "stadia" && props.user.stadia_id) {
+    return props.user.stadia_id;
   } else {
     return props.user.gamertag;
   }

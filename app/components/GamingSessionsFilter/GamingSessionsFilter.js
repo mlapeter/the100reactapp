@@ -42,7 +42,7 @@ class GamingSessionsFilter extends Component {
     this.state = {
       modalVisible: false,
       selectedIndex: 1,
-      platforms: ["xbox-one", "ps4", "pc"]
+      platforms: ["xbox-one", "ps4", "pc", "stadia"]
     };
     this.updateIndex = this.updateIndex.bind(this);
   }
@@ -54,7 +54,7 @@ class GamingSessionsFilter extends Component {
     AsyncStorage.setItem("search_platform", platform);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     if (!this.props.games) {
       console.log("re-fetching games");
       this.props.dispatch(fetchGames());

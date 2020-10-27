@@ -42,7 +42,7 @@ class NotificationsList extends PureComponent {
   //   header: null
   // };
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchNotificationsData();
 
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
@@ -51,7 +51,7 @@ class NotificationsList extends PureComponent {
       .catch(e => console.log(e.message));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.notificationsError &&
       nextProps.notificationsError !== this.props.notificationsError

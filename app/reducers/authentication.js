@@ -29,6 +29,7 @@ export default (state = initialState, action) => {
         ...state,
         username: action.username,
         password: action.password,
+        temp_auth_token: action.temp_auth_token,
         isLoading: true
       };
     case FETCH_TOKEN_RESULT:

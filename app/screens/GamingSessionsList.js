@@ -2,20 +2,17 @@ import React, { Component, PureComponent } from "react";
 import PropTypes from "prop-types";
 import {
   ActivityIndicator,
-  Alert,
   AppState,
-  AsyncStorage,
-  FlatList,
   Keyboard,
-  NetInfo,
   SectionList,
   StyleSheet,
   Text,
-  TextInput,
   TouchableWithoutFeedback,
   View
 } from "react-native";
 import { Notifications } from "expo";
+import NetInfo from '@react-native-community/netinfo';
+
 import Sentry from "sentry-expo";
 
 import moment from "moment";
@@ -33,10 +30,7 @@ import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { changeGame } from "../actions/search";
 
-import { fetchGames } from "../actions/search";
-import { changeGamingSessionsPage, changePlatform } from "../actions/search";
 import { updateUserPushToken } from "../actions/users";
-import { removeToken } from "../actions/authentication";
 import {
   fetchGamingSessions,
   refreshGamingSessions,
@@ -119,7 +113,7 @@ class GamingSessionsList extends PureComponent {
     AppState.removeEventListener("change", this.checkForUpdate);
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.gamingSessionsError &&
       nextProps.gamingSessionsError !== this.props.gamingSessionsError

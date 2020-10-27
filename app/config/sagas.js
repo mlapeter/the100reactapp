@@ -167,6 +167,8 @@ function* fetchToken() {
   try {
     let username = yield select(state => state.authentication.username);
     let password = yield select(state => state.authentication.password);
+    let temp_auth_token = yield select(state => state.authentication.temp_auth_token);
+
     const response = yield fetch(
       Environment["API_BASE_URL"] + Environment["API_VERSION"] + "sessions/",
       {
@@ -177,7 +179,8 @@ function* fetchToken() {
         },
         body: JSON.stringify({
           gamertag: username,
-          password: password
+          password: password,
+          temp_auth_token: temp_auth_token
         })
       }
     );

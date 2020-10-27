@@ -38,7 +38,7 @@ export default class GamingSessionForm extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchActivities(this.props.gameId);
   }
 
@@ -58,7 +58,7 @@ export default class GamingSessionForm extends React.Component {
     this.setState({
       loading: true
     });
-    let game = this.props.games.find(function(game) {
+    let game = this.props.games.find(function (game) {
       return game.id === gameId;
     });
     console.log("game: ", game.name);
@@ -105,7 +105,8 @@ export default class GamingSessionForm extends React.Component {
     var Platform = t.enums({
       ps4: "PS4",
       "xbox-one": "XBOX ONE",
-      pc: "PC"
+      pc: "PC",
+      stadia: "Stadia"
     });
 
     let newActivities = toObject(this.state.activities);

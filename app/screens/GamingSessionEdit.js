@@ -28,7 +28,7 @@ class GamingSessionEdit extends React.Component {
     this.state = {};
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
       .hit(new PageHit("App - Gaming Session Edit"))
@@ -40,7 +40,7 @@ class GamingSessionEdit extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.gamingSessions.error &&
       nextProps.gamingSessions.errorAt !== this.props.gamingSessions.errorAt
@@ -118,7 +118,7 @@ class GamingSessionEdit extends React.Component {
                   }
                   title={
                     this.props.navigation.state.params &&
-                    this.props.navigation.state.params.confirmDelete
+                      this.props.navigation.state.params.confirmDelete
                       ? "Confirm Delete"
                       : "Delete"
                   }

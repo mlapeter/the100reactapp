@@ -63,7 +63,7 @@ class FriendsList extends Component {
     super(props);
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.fetchAllData();
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
@@ -71,7 +71,7 @@ class FriendsList extends Component {
       .catch(e => console.log(e.message));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.friendsError &&
       nextProps.friendsError !== this.props.friendsError

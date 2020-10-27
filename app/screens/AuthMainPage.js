@@ -34,6 +34,12 @@ class AuthMainPage extends Component {
       .catch(e => console.log(e.message));
   }
 
+  componentDidUpdate() {
+    if (this.props.users.currentUser && this.props.users.currentUser.gamertag) {
+      this.props.navigation.navigate("App");
+    }
+  }
+
   render() {
     if (this.props.authentication.isLoading) {
       return <PreSplash />;
@@ -100,9 +106,11 @@ const styles = {
 
 const mapStateToProps = state => {
   const authentication = state.authentication;
+  const users = state.users;
 
   return {
-    authentication
+    authentication,
+    users
   };
 };
 export default connect(mapStateToProps)(connectAlert(AuthMainPage));

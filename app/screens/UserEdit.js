@@ -51,7 +51,7 @@ class UserEdit extends React.Component {
     this.state = {};
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     console.log("MOUNTING USER EDIT");
 
     console.log(this.props.user);
@@ -79,7 +79,7 @@ class UserEdit extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
 
     if (
       nextProps.users.error &&
@@ -131,7 +131,8 @@ class UserEdit extends React.Component {
     var Platform = t.enums({
       ps4: "PS4",
       "xbox-one": "XBOX ONE",
-      pc: "PC"
+      pc: "PC",
+      stadia: "Stadia"
     });
 
     var PlayStyle = t.enums({

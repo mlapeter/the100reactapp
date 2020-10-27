@@ -1,10 +1,6 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
-  Alert,
-  Button,
-  Image,
-  Keyboard,
   View,
   StyleSheet,
   Text,
@@ -13,14 +9,10 @@ import {
 } from "react-native";
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
-
-import { Container } from "../components/Container";
-import PreSplash from "../components/PreSplash/PreSplash";
 import { KeyboardAvoidingScrollView } from "../components/KeyboardAvoidingScrollView";
 import { connect } from "react-redux";
 import { connectAlert } from "../components/Alert";
 import { fetchToken } from "../actions/authentication";
-
 import { colors, fontSizes, fontStyles } from "../styles";
 
 class Login extends React.Component {
@@ -33,7 +25,7 @@ class Login extends React.Component {
     };
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
       .hit(new PageHit("App - Login"))
@@ -46,7 +38,7 @@ class Login extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.authentication.error &&
       nextProps.authentication.errorAt !== this.props.authentication.errorAt
@@ -67,7 +59,7 @@ class Login extends React.Component {
 
   userLogin() {
     if (!this.state.username || !this.state.password) return;
-    this.props.dispatch(fetchToken(this.state.username, this.state.password));
+    this.props.dispatch(fetchToken(this.state.username, this.state.password, null));
     this.setState({
       username: "",
       password: ""
@@ -125,8 +117,9 @@ class Login extends React.Component {
               style={styles.forgotButton}
               onPress={() => this.props.navigation.navigate("ForgotPassword")}
             >
-              <Text style={styles.buttonText}>forgot password?</Text>
+              <Text style={styles.buttonText}>email me instant login link</Text>
             </TouchableOpacity>
+
           </View>
         </KeyboardAvoidingScrollView>
       </View>

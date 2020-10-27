@@ -22,7 +22,7 @@ export default class ListPopover extends Component {
       // dataSource: ds.cloneWithRows(this.props.list)
     };
   }
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.list !== this.props.list) {
       // this.setState({ dataSource: ds.cloneWithRows(nextProps.list) });
     }

@@ -9,6 +9,8 @@ import { colors, fontSizes, fontStyles } from "../../styles";
 import ICPlaystation from "../../assets/images/ic-playstation.png";
 import ICSbox from "../../assets/images/ic-sbox.png";
 import ICWindows from "../../assets/images/ic-windows.png";
+import ICStadia from "../../assets/images/ic-stadia.png";
+
 
 class ChoosePlatform extends Component {
 
@@ -74,6 +76,12 @@ class ChoosePlatform extends Component {
           >
             <Image source={ICWindows} style={styles.btnImage} />
           </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.stadiaBtn}
+            onPress={() => this.selectPlatform("stadia")}
+          >
+            <Image source={ICStadia} style={styles.btnImage} />
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -127,6 +135,12 @@ const styles = {
   },
   windowsBtn: {
     backgroundColor: "#00adef",
+    width: 90,
+    alignItems: "center",
+    borderRadius: 5
+  },
+  stadiaBtn: {
+    backgroundColor: "white",
     width: 90,
     alignItems: "center",
     borderRadius: 5

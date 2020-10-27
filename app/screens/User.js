@@ -98,7 +98,7 @@ export class User extends React.Component {
       .catch(e => console.log(e.message));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.userError && nextProps.userError !== this.props.userError) {
       this.props.alertWithType(
         "error",

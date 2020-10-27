@@ -55,7 +55,7 @@ class GamingSession extends React.Component {
     gamingSessionId = this.props.navigation.state.params.gamingSessionId;
   }
 
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.loadingTimer = setTimeout(() => {
       this.setState({
         isLoading: false
@@ -83,7 +83,7 @@ class GamingSession extends React.Component {
       .catch(e => console.log(e.message));
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (
       nextProps.gamingSessionsError &&
       nextProps.gamingSessionsErrorAt !== this.props.gamingSessionsErrorAt
@@ -98,33 +98,32 @@ class GamingSession extends React.Component {
   }
 
   checkAndDisplayReviewRequest = async () => {
+    let askedForReview = await AsyncStorage.getItem("asked_for_review")
 
-    if (StoreReview.isSupported()) {
+    if (askedForReview !== "true" && Platform.OS === "ios" && await StoreReview.isAvailableAsync()) {
+      AsyncStorage.setItem("asked_for_review", "true")
       StoreReview.requestReview();
-    } else {
-      let askedForReview = await AsyncStorage.getItem("asked_for_review")
+    } else if (askedForReview !== "true" && Platform.OS === "android") {
+      Alert.alert(
+        'Game Joined!',
+        'Would you mind leaving us a quick rating?',
+        [
+          { text: "Never", onPress: () => { AsyncStorage.setItem("asked_for_review", "true") } },
+          {
+            text: 'Not Now',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {
+            text: 'Sure!', onPress: () => {
+              Linking.openURL("market://details?id=io.the100.mobile")
+              AsyncStorage.setItem("asked_for_review", "true")
+            }
+          },
+        ],
+        { cancelable: true },
+      );
 
-      if (!askedForReview || askedForReview !== "true") {
-        Alert.alert(
-          'Game Joined!',
-          'Would you mind leaving us a quick rating?',
-          [
-            { text: "Never", onPress: () => { AsyncStorage.setItem("asked_for_review", "true") } },
-            {
-              text: 'Not Now',
-              onPress: () => console.log('Cancel Pressed'),
-              style: 'cancel',
-            },
-            {
-              text: 'Sure!', onPress: () => {
-                Linking.openURL("market://details?id=io.the100.mobile")
-                AsyncStorage.setItem("asked_for_review", "true")
-              }
-            },
-          ],
-          { cancelable: true },
-        );
-      }
     }
   };
 
