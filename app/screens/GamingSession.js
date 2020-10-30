@@ -265,7 +265,7 @@ class GamingSession extends React.Component {
         <View style={styles.container}>
           <Header
             title={"..."}
-            picture={"images/activity-placeholder.jpg"}
+            picture={"img/default-gaming-session-header.jpg"}
             heightRatio={0.5}
             topGradientTransparency={"rgba(0,0,0,0.9)"}
             middleGradientTransparency={"rgba(0,0,0,0.9)"}
@@ -364,7 +364,7 @@ class GamingSession extends React.Component {
       <View style={styles.container}>
         <Header
           title={this.props.gamingSession.category}
-          picture={this.props.gamingSession.computed_image ? this.props.gamingSession.computed_image : "img/default-gaming-session-header2.jpg"}
+          picture={this.props.gamingSession.computed_image ? this.props.gamingSession.computed_image : "img/default-gaming-session-header.jpg"}
           heightRatio={0.5}
           topGradientTransparency={"rgba(0,0,0,0.4)"}
           middleGradientTransparency={"rgba(0,0,0,0.1)"}
