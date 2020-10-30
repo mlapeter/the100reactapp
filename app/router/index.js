@@ -40,6 +40,7 @@ import User from "../screens/User";
 import UserEdit from "../screens/UserEdit";
 import HelpChat from "../screens/HelpChat";
 import Supporters from "../screens/Supporters";
+import Discord from "../screens/Discord";
 
 
 import Menu from "../screens/Menu";
@@ -189,6 +190,16 @@ const SupportersStack = createStackNavigator({
   }
 });
 
+const DiscordStack = createStackNavigator({
+  Supporters: {
+    screen: Discord,
+    navigationOptions: ({ navigation }) => ({
+      title: "Join Our Discord",
+      headerLeft: <HeaderBackButton onPress={() => navigation.goBack(null)} />
+    })
+  }
+});
+
 // DrawerNavigator for side menu
 
 const MenuDrawer = createDrawerNavigator(
@@ -216,6 +227,18 @@ const MenuDrawer = createDrawerNavigator(
     },
     "Help Chat": {
       screen: HelpChatStack,
+      navigationOptions: ({ navigation }) => ({
+        drawerIcon: () => (
+          <MaterialCommunityIcons
+            name="help-circle"
+            size={24}
+            style={styles.icon}
+          />
+        )
+      })
+    },
+    "Our Discord": {
+      screen: DiscordStack,
       navigationOptions: ({ navigation }) => ({
         drawerIcon: () => (
           <MaterialCommunityIcons

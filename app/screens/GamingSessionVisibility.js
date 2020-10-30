@@ -43,6 +43,7 @@ const setOtherValues = (formikProps, formikKey, value) => {
   if (formikKey === "privateVisible") {
     if (value === true) {
       formikProps.setFieldValue("publicVisible", false);
+      formikProps.setFieldValue("allianceVisible", false);
       formikProps.setFieldValue("groupVisible", false);
       formikProps.setFieldValue("friendsVisible", false);
     } else if (
@@ -51,11 +52,13 @@ const setOtherValues = (formikProps, formikKey, value) => {
       !formikProps.values.friendsVisible
     ) {
       formikProps.setFieldValue("publicVisible", true);
+      formikProps.setFieldValue("allianceVisible", true);
       formikProps.setFieldValue("groupVisible", true);
       formikProps.setFieldValue("friendsVisible", true);
     }
   }
   if (formikKey === "publicVisible" && value === true) {
+    formikProps.setFieldValue("allianceVisible", true);
     formikProps.setFieldValue("groupVisible", true);
     formikProps.setFieldValue("friendsVisible", true);
     formikProps.setFieldValue("privateVisible", false);
@@ -70,7 +73,12 @@ const setOtherValues = (formikProps, formikKey, value) => {
       formikProps.setFieldValue("privateVisible", true);
     } else {
       formikProps.setFieldValue("publicVisible", false);
+      formikProps.setFieldValue("allianceVisible", false);
+
     }
+  }
+  if (formikKey === "allianceVisible" && value === true) {
+    formikProps.setFieldValue("groupVisible", true);
   }
   if (formikKey === "friendsVisible") {
     if (value === true) {
@@ -87,10 +95,6 @@ const setOtherValues = (formikProps, formikKey, value) => {
 };
 
 const validationSchema = yup.object().shape({
-  // agreeToTerms: yup
-  //   .boolean()
-  //   .label("Terms")
-  //   .test("is-true", "Must agree to continue.", value => value === true)
 });
 
 class GamingSessionVisibility extends React.Component {
@@ -103,26 +107,26 @@ class GamingSessionVisibility extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         {this.props.navigation.state.params &&
-        this.props.navigation.state.params.gamingSessionId ? (
-          <View style={styles.logoutContainer}>
-            <Button
-              style={{
-                height: 25,
-                width: 180,
-                marginBottom: 25
-              }}
-              onPress={() =>
-                this.props.navigation.navigate({
-                  routeName: "GamingSessionEdit",
-                  params: {
-                    confirmDelete: true
-                  }
-                })
-              }
-              title="Delete"
-            />
-          </View>
-        ) : null}
+          this.props.navigation.state.params.gamingSessionId ? (
+            <View style={styles.logoutContainer}>
+              <Button
+                style={{
+                  height: 25,
+                  width: 180,
+                  marginBottom: 25
+                }}
+                onPress={() =>
+                  this.props.navigation.navigate({
+                    routeName: "GamingSessionEdit",
+                    params: {
+                      confirmDelete: true
+                    }
+                  })
+                }
+                title="Delete"
+              />
+            </View>
+          ) : null}
         <Card>
           <Text
             style={[
@@ -136,19 +140,21 @@ class GamingSessionVisibility extends React.Component {
           <Formik
             initialValues={
               this.props.navigation.state.params &&
-              this.props.navigation.state.params.gamingSessionId
+                this.props.navigation.state.params.gamingSessionId
                 ? {
-                    publicVisible: this.props.gamingSession.public_visible,
-                    groupVisible: this.props.gamingSession.group_visible,
-                    friendsVisible: this.props.gamingSession.friends_visible,
-                    privateVisible: this.props.gamingSession.private_visible
-                  }
+                  publicVisible: this.props.gamingSession.public_visible,
+                  allianceVisible: this.props.gamingSession.alliance_visible,
+                  groupVisible: this.props.gamingSession.group_visible,
+                  friendsVisible: this.props.gamingSession.friends_visible,
+                  privateVisible: this.props.gamingSession.private_visible
+                }
                 : {
-                    publicVisible: true,
-                    groupVisible: true,
-                    friendsVisible: true,
-                    privateVisible: false
-                  }
+                  publicVisible: true,
+                  allianceVisible: true,
+                  groupVisible: true,
+                  friendsVisible: true,
+                  privateVisible: false
+                }
             }
             onSubmit={(values, actions) => {
               this.props.dispatch(setGamingSessionVisibility(values));
@@ -168,6 +174,11 @@ class GamingSessionVisibility extends React.Component {
                 <StyledSwitch
                   label="Public"
                   formikKey="publicVisible"
+                  formikProps={formikProps}
+                />
+                <StyledSwitch
+                  label="Allied Groups"
+                  formikKey="allianceVisible"
                   formikProps={formikProps}
                 />
                 <StyledSwitch
