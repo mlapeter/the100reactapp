@@ -245,12 +245,15 @@ function* fetchData(endpoint, page, success, failure, noData) {
       })
     );
     console.log("RESPONSE STATUS: ", response.status);
+
+    if (response.status == 500 || response.status == "500") {
+      console.log("Error, 500 Status");
+      yield put({ type: failure, error: "Resource not found or was deleted" });
+      return
+    }
+
     const result = yield response.json();
 
-    if (response.status == 500) {
-      console.log("Error");
-      yield put({ type: failure, error: "Resource not found or was deleted" });
-    }
 
     if (result.error && result.error === "Not Authorized") {
       console.log("ERROR - REMOVING TOKEN");
@@ -259,7 +262,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
       yield { type: failure, error: result.error };
     } else if (result.error) {
       console.log(result);
-      yield { type: failure, error: result.error };
+      yield put({ type: failure, error: result.error });
     } else if (result.length === 0) {
       console.log("no data returned");
       console.log("no data");
@@ -269,7 +272,7 @@ function* fetchData(endpoint, page, success, failure, noData) {
       yield put({ type: success, result });
     }
   } catch (e) {
-    console.log("Error: " + e.message + " ", newEndpoint);
+    console.log("Error: " + e.message);
     yield put({ type: failure, error: e.message });
   }
 }
@@ -470,7 +473,7 @@ function* createGamingSession() {
       state => state.gamingSessions.gamingSessionVisibility
     );
     let platform = yield select(state => state.search.platform);
-    // let gameId = yield select(state => state.search.gameId);
+
     const response = yield fetch(
       Environment["API_BASE_URL"] +
       Environment["API_VERSION"] +
@@ -489,8 +492,6 @@ function* createGamingSession() {
           activity: gamingSession.activity,
           start_time: gamingSession.start_time,
           group_name: gamingSession.group ? gamingSession.group : null,
-          // friends_only: gamingSession.friends_only,
-          // group_only: gamingSession.group_only,
           make_auto_public: gamingSession.make_auto_public,
           beginners_welcome: gamingSession.beginners_welcome,
           sherpa_requested: gamingSession.sherpa_requested,
@@ -499,6 +500,7 @@ function* createGamingSession() {
           platform: gamingSession.platform,
           created_from: "mobile-app",
           public_visible: gamingSessionVisibility.publicVisible,
+          alliance_visible: gamingSessionVisibility.allianceVisible,
           group_visible: gamingSessionVisibility.groupVisible,
           friends_visible: gamingSessionVisibility.friendsVisible,
           private_visible: gamingSessionVisibility.privateVisible

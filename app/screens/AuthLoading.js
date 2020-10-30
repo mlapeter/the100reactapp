@@ -65,11 +65,28 @@ class AuthLoading extends React.Component {
   };
 
   handleUrl = url => {
-    let { queryParams } = Linking.parse(url);
-    let { temp_auth_token } = queryParams
+    let { path, queryParams } = Linking.parse(url);
+    let { g, gaming_session, temp_auth_token, } = queryParams
+
+    console.log(path)
+    console.log(queryParams)
+
+
     if (temp_auth_token) {
       this.setState({ temp_auth_token })
       this.props.dispatch(fetchToken(null, null, temp_auth_token))
+    }
+
+    if (g) {
+      this.props.navigation.navigate("GamingSession", {
+        gamingSessionId: g
+      })
+    }
+
+    if (gaming_session) {
+      this.props.navigation.navigate("GamingSession", {
+        gamingSessionId: gaming_session
+      })
     }
   };
 

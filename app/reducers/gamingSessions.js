@@ -170,12 +170,15 @@ export default (state = initialState, action) => {
         gamingSessionId: action.gamingSessionId
       };
     case FETCH_GAMING_SESSION_RESULT:
+      console.log("FETCH_GAMING_SESSION_RESULT")
+
       return {
         ...state,
         gamingSession: action.result,
         gamingSessionLoading: false
       };
     case FETCH_GAMING_SESSION_ERROR:
+      console.log("FETCH_GAMING_SESSION_ERROR")
       return {
         ...state,
         error: action.error,

@@ -14,20 +14,20 @@ import { connectAlert } from "../components/Alert";
 import { connect } from "react-redux";
 
 
-class Supporters extends Component {
+class Discord extends Component {
   UNSAFE_componentWillMount() {
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
     analytics
-      .hit(new PageHit("App - Supporters"))
+      .hit(new PageHit("App - Discord"))
       .catch(e => console.log(e.message));
   }
 
   componentDidMount() {
-    this.openSupportersUrl()
+    this.openDiscordUrl()
   }
 
-  openSupportersUrl = () => {
-    Linking.openURL('https://the100.io/supporters_mobile?id=' + this.props.user.email_token).catch(e => {
+  openDiscordUrl = () => {
+    Linking.openURL('https://discord.gg/zqCya6u').catch(e => {
       console.log("Failed to open link: " + e);
     });
   }
@@ -41,15 +41,15 @@ class Supporters extends Component {
         >
           <Header
             author_avatar_url={"https://pwntastic-avatar-production.s3.amazonaws.com/uploads/user/avatar/5/main_mike-hand.png"}
-            title={"Become a supporter!"}
+            title={"Join Our Discord"}
             author_gamertag={"muhuhuhaha"}
           />
           <FeedImage item={{ data: null }} imageUrl={{ uri: "https://www.the100.io/d2-all.jpg" }} style={{ margin: 0 }} />
           <MessageBody
-            text={"Want to help us add new features while also getting access to special perks? Become a monthly supporter!"}
+            text={"Join Our Discord: https://discord.gg/zqCya6u"}
             style={[styles.text, styleSheet.typography["body"]]}
           />
-          <Button onPress={this.openSupportersUrl} title="Become A Supporter" style={{ padding: 20, marginBottom: 20 }} />
+          <Button onPress={this.openDiscordUrl} title="Open The100.io Discord" style={{ padding: 20, marginBottom: 20 }} />
         </Card>
       </View>
     );
@@ -61,22 +61,13 @@ const mapStateToProps = state => {
 
   return {
     user,
-
   };
 };
 
-export default connect(mapStateToProps)(connectAlert(Supporters));
+export default connect(mapStateToProps)(connectAlert(Discord));
+
 
 styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-between',
-
-  },
-  video: {
-    flex: 1
-  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -91,41 +82,10 @@ styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "stretch"
   },
-  username: {
-    justifyContent: "space-between",
-    marginLeft: styleSheet.spacing.tiny
-  },
-  avatarMini: {
-    height: 36,
-    width: 36,
-    borderRadius: 18,
-    alignSelf: "center"
-  },
   card: {
     paddingHorizontal: 0
-  },
-  caption: {
-    padding: styleSheet.spacing.tiny
   },
   image: {
     height: 200
   },
-  footer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: styleSheet.spacing.tiny
-  },
-  comments: {
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  iconButton: {
-    marginRight: styleSheet.spacing.tiny,
-    flexDirection: "row"
-  },
-  iconButtonText: {
-    alignSelf: "center",
-    marginLeft: 2
-  }
 })
