@@ -3,24 +3,20 @@ import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
-  Animated,
   AsyncStorage,
-  Button,
   Clipboard,
   FlatList,
   Image,
-  Keyboard,
   LayoutAnimation,
   Linking,
+  Platform,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableHighlight,
   TouchableOpacity,
-  TouchableWithoutFeedback,
   View
 } from "react-native";
 import { Analytics, PageHit } from "expo-analytics";
+import { WebView } from 'react-native-webview';
 import Environment from "../config/environment";
 
 import PreSplash from "../components/PreSplash/PreSplash";
@@ -90,6 +86,9 @@ export class User extends React.Component {
     this.props.dispatch(fetchUser(userId));
     console.log("fetchProfileGamingSessions");
     this.props.dispatch(fetchProfileGamingSessions(userId));
+
+    console.log("FETCH CURREENT USER --------------")
+    console.log(this.props.currentUser)
 
     // this.props.dispatch(fetchConversations());
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
@@ -182,7 +181,7 @@ export class User extends React.Component {
   }
 
   destinyStatusLink() {
-    Linking.openURL(this.props.user.destiny_status_link);
+    Linking.openURL(this.props.user.guardian_report_link);
   }
 
   platformIds = () => {
@@ -217,6 +216,8 @@ export class User extends React.Component {
   render() {
     const { params } = this.props.navigation.state;
     const navigation = this.props.navigation;
+    const scalesPageToFit = Platform.OS === "android";
+
     if (this.props.userLoading || this.state.isLoading || !this.props.user) {
       return (
         <View style={styles.container}>
@@ -368,7 +369,7 @@ export class User extends React.Component {
               <Text
                 style={[{ textAlign: "center" }, styleSheet.typography["body"]]}
               >
-                View Destiny Status &raquo;
+                Destiny Guardian Report &raquo;
               </Text>
             </Card>
             <Card
@@ -379,9 +380,31 @@ export class User extends React.Component {
               <Text
                 style={[{ textAlign: "center" }, styleSheet.typography["body"]]}
               >
-                View Destiny Tracker &raquo;
+                Destiny Tracker &raquo;
               </Text>
             </Card>
+
+
+            {(this.props.user.has_supporter_perks || this.props.currentUser.has_supporter_perks) && (
+              <Card style={{ padding: 2, }}>
+                <View style={{ height: 3450, margin: 0 }}>
+                  <WebView
+                    ref={(ref) => { this.webview = ref; }}
+                    style={{ flex: 1 }}
+                    originWhitelist={["*"]}
+                    source={{
+                      html: `<head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /></head><body><iframe src=${this.props.user.destinyapp_iframe_src_mobile} width="100%" height="3500" frameborder="0"></iframe></body>`
+                    }}
+                    scalesPageToFit={scalesPageToFit}
+                    bounces={false}
+                    scrollEnabled={false}
+                  />
+                </View>
+              </Card>
+            )}
+
+
+
           </Content>
         ) : null}
         {this.state.selectedIndex === 1 ? (
