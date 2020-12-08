@@ -82,13 +82,8 @@ export class User extends React.Component {
   }
 
   componentDidMount() {
-    console.log("fetchuser: ", userId);
     this.props.dispatch(fetchUser(userId));
-    console.log("fetchProfileGamingSessions");
     this.props.dispatch(fetchProfileGamingSessions(userId));
-
-    console.log("FETCH CURREENT USER --------------")
-    console.log(this.props.currentUser)
 
     // this.props.dispatch(fetchConversations());
     const analytics = new Analytics(Environment["GOOGLE_ANALYTICS_ID"]);
