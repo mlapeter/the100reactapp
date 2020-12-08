@@ -154,7 +154,14 @@ const HomeTabs = createBottomTabNavigator(
     FriendsList: { screen: FriendsStack }
   },
   {
-    tabBarPosition: "bottom"
+    tabBarPosition: "bottom",
+    tabBarOptions: {
+      style: {
+        backgroundColor: colors.veryDarkGrey,
+        height: 14
+      },
+      tabStyle: { height: 50 }
+    }
   }
 );
 

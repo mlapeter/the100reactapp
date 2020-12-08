@@ -78,8 +78,10 @@ export default function PlayersItem(props) {
               {props.user.karmas_count}
             </Text>
             <Text style={styles.iconText}>
-              {props.reserve === true ? " RESERVE " : null}
+              {props.waitlist === true ? " WAITLIST #" + props.index : null}
+              {props.reserve === true ? " RESERVE #" + props.index : null}
             </Text>
+
           </View>
         </View>
       </View>
