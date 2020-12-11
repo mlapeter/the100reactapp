@@ -14,9 +14,9 @@ export default class PreSplash extends React.Component {
   componentDidMount() {
     this.interval = setInterval(() => {
       Animated.sequence([
-        Animated.timing(this.state.rotation, { toValue: -1, duration: 150 }),
-        Animated.timing(this.state.rotation, { toValue: 1, duration: 150 }),
-        Animated.timing(this.state.rotation, { toValue: 0, duration: 250 })
+        Animated.timing(this.state.rotation, { toValue: -1, duration: 150, useNativeDriver: true }),
+        Animated.timing(this.state.rotation, { toValue: 1, duration: 150, useNativeDriver: true }),
+        Animated.timing(this.state.rotation, { toValue: 0, duration: 250, useNativeDriver: true })
       ]).start();
     }, 1000);
   }

@@ -146,7 +146,7 @@ export default class NavigationBar extends React.Component<NavigationBarProps> {
                 <View style={styles.rightAction}>
                   <Icon
                     name={rightAction2.icon}
-                    color={colors.white}
+                    color={rightAction2.color ? rightAction2.color : colors.white}
                     size={rightAction2.size}
                   />
                   {rightAction2.text && (
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
   },
   rightActionText: {
     alignSelf: "center",
-    marginLeft: styleSheet.spacing.tiny
+    marginLeft: styleSheet.spacing.tiny,
   },
   backBtn: {
     flexDirection: "row",
