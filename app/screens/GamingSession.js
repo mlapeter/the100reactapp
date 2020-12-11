@@ -136,6 +136,11 @@ class GamingSession extends React.Component {
     this.onLongPress();
   };
 
+  switchFromReserve = () => {
+    this.postData("/join?switch_from_reserve=true");
+    this.onLongPress();
+  };
+
   leaveGame = () => {
     this.postData("/leave");
   };
@@ -285,6 +290,16 @@ class GamingSession extends React.Component {
       userIds.push(confirmedSession.user_id)
     );
 
+    let waitlistUserIds = [];
+    this.props.gamingSession.confirmed_sessions.filter(session => session.reserve_spot == true && session.auto_promote == true).map(confirmedSession =>
+      waitlistUserIds.push(confirmedSession.user_id)
+    );
+
+    let reserveUserIds = [];
+    this.props.gamingSession.confirmed_sessions.filter(session => session.reserve_spot == true && session.auto_promote == false).map(confirmedSession =>
+      reserveUserIds.push(confirmedSession.user_id)
+    );
+
     const rightAction =
       this.state.reserveButtonVisible === true
         ? null
@@ -295,67 +310,118 @@ class GamingSession extends React.Component {
             this.onShare();
           }
         };
-    const rightAction2 = userIds.includes(this.props.user.id)
-      ? {
+
+    let rightAction2 = {}
+
+    if (this.state.reserveButtonVisible === true) {
+      rightAction2 = userIds.includes(this.props.user.id) ? {
         icon: "cancel",
         text: "Leave",
-        size: 24,
+        color: "red",
+        size: 28,
         onPress: () => {
           this.leaveGame();
+          this.onLongPress();
         }
       }
-      : {
-        icon: "outline-person_add-24px",
-        text: "Join",
+        : {
+          icon: "outline-person_add-24px",
+          text: "Join",
+          color: "green",
+          size: 28,
+          onPress: () => {
+            this.joinGame();
+            this.onLongPress();
+          }
+        };
+    } else {
+      rightAction2 = userIds.includes(this.props.user.id)
+        ? {
+          icon: "cancel",
+          text: "Leave",
+          size: 24,
+          onPress: () => {
+            this.onLongPress();
+          }
+        }
+        : {
+          icon: "outline-person_add-24px",
+          text: "Join",
+          size: 24,
+          onPress: () => {
+            this.onLongPress();
+          }
+        }
+    }
+
+    let rightAction3 = {}
+
+    if (userIds.includes(this.props.user.id) &&
+      this.props.user.id === this.props.gamingSession.creator_id) {
+      rightAction3 = {
+        icon: "edit",
+        text: "Edit",
         size: 24,
         onPress: () => {
-          this.joinGame();
+          this.props.navigation.navigate({
+            routeName: "GamingSessionVisibility",
+            params: {
+              gamingSessionId: this.props.gamingSession.id
+            },
+            key: "gamingSessionVisibility-" + this.props.gamingSession.id
+          });
+        }
+      }
+    } else if (this.state.reserveButtonVisible === true) {
+      if (reserveUserIds.includes(this.props.user.id)) {
+        rightAction3 = {
+          icon: "outline-person_add-24px",
+          text: "Switch to Active",
+          size: 24,
+          onPress: () => {
+            this.switchFromReserve();
+          },
+          onLongPress: () => {
+            this.onLongPress();
+          }
+        }
+      } else if (userIds.includes(this.props.user.id)) {
+        rightAction3 = {
+          icon: "outline-person_add-24px",
+          text: "Switch to Reserve",
+          size: 24,
+          onPress: () => {
+            this.joinGameAsReserve();
+          },
+          onLongPress: () => {
+            this.onLongPress();
+          }
+        }
+      } else {
+        rightAction3 = {
+          icon: "outline-person_add-24px",
+          text: "Join as Reserve",
+          size: 24,
+          onPress: () => {
+            this.joinGameAsReserve();
+          },
+          onLongPress: () => {
+            this.onLongPress();
+          }
+        }
+      }
+    } else {
+      rightAction3 = {
+        icon: "more-horiz",
+        size: 24,
+        onPress: () => {
+          this.onLongPress();
         },
         onLongPress: () => {
           this.onLongPress();
         }
-      };
-    const rightAction3 =
-      userIds.includes(this.props.user.id) &&
-        this.props.user.id === this.props.gamingSession.creator_id
-        ? {
-          icon: "edit",
-          text: "Edit",
-          size: 24,
-          onPress: () => {
-            this.props.navigation.navigate({
-              routeName: "GamingSessionVisibility",
-              params: {
-                gamingSessionId: this.props.gamingSession.id
-              },
-              key: "gamingSessionVisibility-" + this.props.gamingSession.id
-            });
-          }
-        }
-        : this.state.reserveButtonVisible === true
-          ? {
-            icon: "outline-person_add-24px",
-            text: "Join as Reserve",
-            size: 24,
-            onPress: () => {
-              this.joinGameAsReserve();
-            },
-            onLongPress: () => {
-              this.onLongPress();
-            }
-          }
-          : userIds.includes(this.props.user.id)
-            ? null
-            : {
-              icon: "more-horiz",
-              size: 24,
-              onPress: () => {
-                this.onLongPress();
-              },
-              onLongPress: () => {
-                this.onLongPress();
-              }
-            };
+      }
+    }
 
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;

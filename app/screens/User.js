@@ -388,11 +388,11 @@ export class User extends React.Component {
                     style={{ flex: 1 }}
                     originWhitelist={["*"]}
                     source={{
-                      html: `<head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /></head><body><iframe src=${this.props.user.destinyapp_iframe_src_mobile} width="100%" height="3500" frameborder="0"></iframe></body>`
+                      html: `<head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" /></head><body><iframe src=${this.props.user.destinyapp_iframe_src_mobile} + "&currentUserIsSupporter=" + ${this.props.currentUser.has_supporter_perks}  width="100%" height="3500" frameborder="0"></iframe></body>`
                     }}
                     scalesPageToFit={scalesPageToFit}
                     bounces={false}
-                    scrollEnabled={false}
+                    scrollEnabled={true}
                   />
                 </View>
               </Card>

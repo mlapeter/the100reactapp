@@ -143,6 +143,18 @@ const FriendsStack = createStackNavigator({
 });
 
 // BottomTabNavigator for bottom tab bar
+let tabStyles = {}
+
+if (Platform.OS != "android") {
+  tabStyles = {
+    style: {
+      backgroundColor: colors.veryDarkGrey,
+      height: 14
+    },
+    tabStyle: { height: 50 }
+  }
+}
+
 
 const HomeTabs = createBottomTabNavigator(
   {
@@ -155,13 +167,7 @@ const HomeTabs = createBottomTabNavigator(
   },
   {
     tabBarPosition: "bottom",
-    tabBarOptions: {
-      style: {
-        backgroundColor: colors.veryDarkGrey,
-        height: 14
-      },
-      tabStyle: { height: 50 }
-    }
+    tabBarOptions: tabStyles
   }
 );
 
