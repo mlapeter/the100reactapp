@@ -352,33 +352,7 @@ class GamingSession extends React.Component {
             this.onLongPress();
           }
         }
-
-
-
     }
-
-
-
-    // const rightAction2 = userIds.includes(this.props.user.id)
-    //   ? {
-    //     icon: "cancel",
-    //     text: "Leave",
-    //     size: 24,
-    //     onPress: () => {
-    //       this.leaveGame();
-    //     }
-    //   }
-    //   : {
-    //     icon: "outline-person_add-24px",
-    //     text: "Join",
-    //     size: 24,
-    //     onPress: () => {
-    //       this.joinGame();
-    //     },
-    //     onLongPress: () => {
-    //       this.onLongPress();
-    //     }
-    //   };
 
     let rightAction3 = {}
 
@@ -411,7 +385,6 @@ class GamingSession extends React.Component {
             this.onLongPress();
           }
         }
-
       } else if (userIds.includes(this.props.user.id)) {
         rightAction3 = {
           icon: "outline-person_add-24px",
@@ -437,8 +410,6 @@ class GamingSession extends React.Component {
           }
         }
       }
-
-
     } else {
       rightAction3 = {
         icon: "more-horiz",
@@ -451,53 +422,6 @@ class GamingSession extends React.Component {
         }
       }
     }
-
-
-
-    // rightAction3 =
-    //   userIds.includes(this.props.user.id) &&
-    //     this.props.user.id === this.props.gamingSession.creator_id
-    //     ? {
-    //       icon: "edit",
-    //       text: "Edit",
-    //       size: 24,
-    //       onPress: () => {
-    //         this.props.navigation.navigate({
-    //           routeName: "GamingSessionVisibility",
-    //           params: {
-    //             gamingSessionId: this.props.gamingSession.id
-    //           },
-    //           key: "gamingSessionVisibility-" + this.props.gamingSession.id
-    //         });
-    //       }
-    //     }
-    //     : this.state.reserveButtonVisible === true
-    //       ? {
-    //         icon: "outline-person_add-24px",
-    //         text: "Join as Reserve!",
-    //         size: 24,
-    //         onPress: () => {
-    //           this.joinGameAsReserve();
-    //         },
-    //         onLongPress: () => {
-    //           this.onLongPress();
-    //         }
-    //       }
-    //       : userIds.includes(this.props.user.id)
-    //         ? null
-    //         : {
-    //           icon: "more-horiz",
-    //           size: 24,
-    //           onPress: () => {
-    //             this.onLongPress();
-    //           },
-    //           onLongPress: () => {
-    //             this.onLongPress();
-    //           }
-    //         };
-
-
-
 
     let room = `game-${this.props.gamingSession.id}`;
     let url = `chat/gaming_sessions/${room}`;
