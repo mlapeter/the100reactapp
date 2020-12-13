@@ -149,9 +149,9 @@ if (Platform.OS != "android") {
   tabStyles = {
     style: {
       backgroundColor: colors.veryDarkGrey,
-      height: 14
+      // height: 14
     },
-    tabStyle: { height: 50 }
+    // tabStyle: { height: 50 }
   }
 }
 
