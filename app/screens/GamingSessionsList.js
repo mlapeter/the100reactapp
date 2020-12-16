@@ -85,7 +85,7 @@ class GamingSessionsList extends PureComponent {
     // });
     this.fetchGamingSessionsData();
     // this.listenforUpdate();
-    NetInfo.addEventListener("connectionChange", this.handleConnectivityChange);
+    // NetInfo.addEventListener("connectionChange", this.handleConnectivityChange);
 
     registerForPushNotificationsAsync()
       .then(token => {

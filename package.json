@@ -91,7 +91,7 @@
     "redux-saga": "^0.15.3",
     "redux-thunk": "^2.2.0",
     "sentry-expo": "~2.0.0",
-    "tcomb-form-native": "^0.6.10",
+    "tcomb-form-native": "github:mlapeter/tcomb-form-native",
     "yup": "0.26.6"
   },
   "rnpm": {
