@@ -1,11 +1,11 @@
 import React from "react";
 import {
-  AsyncStorage,
   Platform,
   StatusBar,
   StyleSheet,
   View
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Sentry from "sentry-expo";
 import { Asset } from 'expo-asset'
 import * as Font from 'expo-font'

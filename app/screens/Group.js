@@ -3,30 +3,19 @@ import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
-  AsyncStorage,
-  Button,
-  Image,
-  ImageBackground,
-  LayoutAnimation,
-  Picker,
   Platform,
   Share,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableHighlight,
   View
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Analytics, PageHit } from "expo-analytics";
-import PreSplash from "../components/PreSplash/PreSplash";
 import ChatPreview from "../components/ChatPreview";
 import Environment from "../config/environment";
 
 import { colors, fontSizes, fontStyles, styleSheet } from "../styles";
 import Moment from "../../node_modules/react-moment";
-import { FontAwesome } from "@expo/vector-icons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { StackNavigator } from "react-navigation";
 import Panel from "../components/Panel/Panel";
 
@@ -35,16 +24,11 @@ import { connect } from "react-redux";
 import { fetchGroup } from "../actions/group";
 import { fetchCurrentUser } from "../actions/users";
 
-import defaultGroupHeaderBackground from "../assets/images/destiny-wallpaper-1.jpg";
-import IconBar from "../components/IconBar";
-
 import Header from "../components/Header";
 import Content from "../components/Content";
 import Card from "../components/Card";
 import NavigationBar from "../components/NavigationBar";
 import GroupIconBar from "../components/GroupIconBar";
-
-// import { SmallIconBar } from "./GroupOld";
 
 Moment.globalFormat = "h:mm";
 Moment.globalLocale = "en";

@@ -8,8 +8,25 @@ export default (styles = StyleSheet.create({
     marginBottom: 30
   },
   buttonText: {
-    fontSize: 18,
+    fontSize: 12,
+    fontFamily: "SFProText-Bold",
+    textTransform: "uppercase",
     color: "white",
+    alignSelf: "center",
+  },
+  buttonTextToggle: {
+    fontSize: 12,
+    fontFamily: "SFProText-Bold",
+    textTransform: "uppercase",
+    color: colors.blue,
+    alignSelf: "center"
+  },
+
+  buttonTextToggleSupporter: {
+    fontSize: 12,
+    fontFamily: "SFProText-Bold",
+    textTransform: "uppercase",
+    color: colors.gold,
     alignSelf: "center"
   },
   button: {
@@ -17,18 +34,53 @@ export default (styles = StyleSheet.create({
     backgroundColor: colors.blue,
     borderColor: "#48BBEC",
     borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
+    borderRadius: 4,
+    marginVertical: 5,
+    marginHorizontal: 3,
     alignSelf: "stretch",
     justifyContent: "center",
     paddingVertical: 5,
-    marginBottom: 15
+  },
+  buttonToggle: {
+    borderColor: colors.blue,
+    borderWidth: 1,
+    borderRadius: 4,
+    marginVertical: 5,
+    marginHorizontal: 3,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
   },
 
+  buttonToggleSupporter: {
+    borderColor: colors.gold,
+    borderWidth: 1,
+    borderRadius: 4,
+    marginVertical: 5,
+    marginHorizontal: 3,
+    paddingVertical: 10,
+    paddingHorizontal: 12,
+  },
+
+
+  buttonToggleBar: {
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    marginTop: 10,
+    marginBottom: 15,
+    flex: 1
+  },
+  helpMessage: {
+    marginVertical: 10,
+  },
+  errorMessage: {
+    marginVertical: 10,
+    color: colors.red
+  },
   scrollContainer: {
     // backgroundColor: colors.white
   },
-
   outerContainer: {
     flex: 1
     // backgroundColor: colors.white
@@ -62,5 +114,44 @@ export default (styles = StyleSheet.create({
     marginRight: 3,
     fontSize: fontSizes.h5,
     fontWeight: "bold"
-  }
+  },
+  formGroup: {
+    marginVertical: 15,
+  },
+
+  inputSelect: {
+    flexDirection: "row",
+    marginHorizontal: 5,
+    marginTop: 10,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 15,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    // backgroundColor: "#eee",
+    alignItems: "center"
+  },
+  input: {
+    flexDirection: "row",
+    marginHorizontal: 5,
+    marginTop: 10,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    paddingVertical: Platform.OS === "ios" ? 15 : 10,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    // backgroundColor: "#eee",
+    alignItems: "center"
+  },
+  inputText: {
+    flex: 5,
+    height: 40
+  },
+
+
+
+
+
 }));

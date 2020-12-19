@@ -8,9 +8,9 @@ import {
   Text,
   TouchableOpacity,
   View,
-  Picker,
   Modal
 } from "react-native";
+import { Picker } from '@react-native-picker/picker';
 import { colors, fontSizes } from "../../styles";
 import { FontAwesome } from "@expo/vector-icons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -26,7 +26,7 @@ import {
 
 import { connect } from "react-redux";
 import { ButtonGroup, CheckBox } from "react-native-elements";
-import { AsyncStorage } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class GamingSessionsFilter extends Component {
   static propTypes = {

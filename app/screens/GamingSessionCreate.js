@@ -4,7 +4,6 @@ import Environment from "../config/environment";
 
 import {
   ActivityIndicator,
-  AsyncStorage,
   StyleSheet,
   View
 } from "react-native";
@@ -51,13 +50,15 @@ class GamingSessionCreate extends React.Component {
       nextProps.gamingSessions.gameCreated &&
       nextProps.gamingSessions.successAt !== this.props.gamingSessions.successAt
     ) {
-      this.props.dispatch(refreshMyGamingSessions());
       this.props.navigation.navigate("GamingSessionsList");
+      this.props.dispatch(refreshMyGamingSessions());
       this.props.alertWithType("success", "Success", "Gaming Session Created!");
     }
   }
 
   handlePress = formValue => {
+    console.log("FORM SUBMITTED ---------------------------")
+    console.log(formValue)
     if (formValue) {
       this.props.dispatch(createGamingSession(formValue));
     }
@@ -78,8 +79,11 @@ class GamingSessionCreate extends React.Component {
           gameId={this.props.gameId}
           games={this.props.games}
           groups={this.props.groups}
+          groupsNew={this.props.groupsNew}
           isCreating={this.props.isCreating}
           user={this.props.user}
+          platform={this.props.user.platform}
+          gamingSessionVisibility={this.props.gamingSessionVisibility}
         />
       </View>
     );
@@ -102,17 +106,21 @@ const mapStateToProps = state => {
   const gameId = state.search.gameId;
   const games = state.search.games;
   const groups = state.users.currentUser.groups_for_api;
+  const groupsNew = state.users.currentUser.groups_for_api_new;
   const user = state.users.currentUser;
   const isCreating = state.gamingSessions.isCreating;
   const gamingSessions = state.gamingSessions;
+  const gamingSessionVisibility = state.gamingSessions.gamingSessionVisibility
 
   return {
     gameId,
     games,
     groups,
+    groupsNew,
     user,
     isCreating,
-    gamingSessions
+    gamingSessions,
+    gamingSessionVisibility
   };
 };
 

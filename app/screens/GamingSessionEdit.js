@@ -56,24 +56,24 @@ class GamingSessionEdit extends React.Component {
       nextProps.gamingSessions.gameEdited &&
       nextProps.gamingSessions.successAt !== this.props.gamingSessions.successAt
     ) {
-      this.props.dispatch(refreshMyGamingSessions());
       this.props.navigation.navigate("GamingSessionsList");
+      this.props.dispatch(refreshMyGamingSessions());
       this.props.alertWithType("success", "Success", "Gaming Session Edited!");
     }
     if (
       nextProps.gamingSessions.gameDeleted &&
       nextProps.gamingSessions.successAt !== this.props.gamingSessions.successAt
     ) {
-      this.props.dispatch(refreshMyGamingSessions());
       this.props.navigation.navigate("GamingSessionsList");
+      this.props.dispatch(refreshMyGamingSessions());
       this.props.alertWithType("success", "Success", "Gaming Session Deleted.");
     }
   }
 
   handlePress = formValue => {
+    console.log("EDIT FORM SUBMITTED ---------------------------")
+    console.log(formValue)
     if (formValue) {
-      console.log("Gaming Session Form Submitted");
-      console.log(formValue);
       this.props.dispatch(editGamingSession(formValue));
     }
   };
@@ -126,16 +126,16 @@ class GamingSessionEdit extends React.Component {
               </View>
               <GamingSessionForm
                 handlePress={this.handlePress}
-                // changeGame={gameId => this.props.dispatch(changeGame(gameId))}
                 gameId={this.props.gamingSession.game_id}
-                // game={this.props.game}
                 games={this.props.games}
-                // activities={this.props.activities}
                 groups={this.props.groups}
+                groupsNew={this.props.groupsNew}
                 isEditing={this.props.isEditing}
                 gamingSession={this.props.gamingSession}
                 editGameForm={true}
                 user={this.props.user}
+                gamingSessionVisibility={this.props.gamingSessionVisibility}
+
               />
             </View>
           </TouchableWithoutFeedback>
@@ -214,21 +214,26 @@ const mapStateToProps = state => {
   const gameId = state.gamingSessions.gamingSession.game_id;
   const games = state.search.games;
   const groups = state.users.currentUser.groups_for_api;
+  const groupsNew = state.users.currentUser.groups_for_api_new;
   const isEditing = state.gamingSessions.isEditing;
 
   const gamingSession = state.gamingSessions.gamingSession;
   const gamingSessions = state.gamingSessions;
 
   const user = state.users.currentUser;
+  const gamingSessionVisibility = state.gamingSessions.gamingSessionVisibility
+
 
   return {
     gameId,
     games,
     groups,
+    groupsNew,
     isEditing,
     gamingSession,
     gamingSessions,
-    user
+    user,
+    gamingSessionVisibility
   };
 };
 

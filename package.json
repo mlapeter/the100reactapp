@@ -36,9 +36,11 @@
     ]
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "1.13.2",
     "@react-native-community/datetimepicker": "3.0.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/netinfo": "5.9.6",
+    "@react-native-picker/picker": "1.9.4",
     "android-versions": "^1.2.1",
     "autobind-decorator": "^2.1.0",
     "babel-preset-es2015": "^6.24.1",
@@ -46,6 +48,7 @@
     "dotenv": "8.2.0",
     "expo": "^39.0.0",
     "expo-analytics": "^1.0.7",
+    "expo-clipboard": "1.0.1",
     "expo-linking": "~1.0.1",
     "expo-permissions": "~9.3.0",
     "expo-store-review": "~2.2.0",
@@ -70,7 +73,7 @@
     "react-native-elements": "^0.19.1",
     "react-native-extended-stylesheet": "^0.6.0",
     "react-native-gesture-handler": "~1.7.0",
-    "react-native-keyboard-aware-scroll-view": "^0.3.0",
+    "react-native-keyboard-aware-scroll-view": "https://github.com/APSL/react-native-keyboard-aware-scroll-view#fb40649a9c84aa23d6a55355e9e0e432795967a6",
     "react-native-modal": "^4.1.1",
     "react-native-modalbox": "^1.4.2",
     "react-native-platform-touchable": "^1.1.1",

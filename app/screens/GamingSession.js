@@ -2,11 +2,9 @@ import React, { Component } from "react";
 import {
   Alert,
   ActivityIndicator,
-  AsyncStorage,
   Button,
   LayoutAnimation,
   Linking,
-  Picker,
   Platform,
   Share,
   StyleSheet,
@@ -14,6 +12,9 @@ import {
   View,
   Vibration
 } from "react-native";
+import { Picker } from '@react-native-picker/picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { Analytics, PageHit } from "expo-analytics";
 import Environment from "../config/environment";
 import Sentry from "sentry-expo";
@@ -98,7 +99,7 @@ class GamingSession extends React.Component {
   }
 
   checkAndDisplayReviewRequest = async () => {
-    let askedForReview = await AsyncStorage.getItem("asked_for_review")
+    let askedForReview = "true" //await AsyncStorage.getItem("asked_for_review")
 
     if (askedForReview !== "true" && Platform.OS === "ios" && await StoreReview.isAvailableAsync()) {
       AsyncStorage.setItem("asked_for_review", "true")
@@ -154,7 +155,7 @@ class GamingSession extends React.Component {
     this.setState({
       reserveButtonVisible: !this.state.reserveButtonVisible
     });
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   };
 
 

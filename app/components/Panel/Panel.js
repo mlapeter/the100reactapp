@@ -14,7 +14,7 @@ export default class Panel extends Component {
       this.state.numberOfLines === this.props.numberOfLines
         ? 25
         : this.props.numberOfLines;
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     this.setState({
       numberOfLines: numberOfLines
     });

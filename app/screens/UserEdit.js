@@ -1,17 +1,11 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
-  Alert,
-  AsyncStorage,
   Button,
-  Image,
   Keyboard,
-  Picker,
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
   TouchableHighlight,
   TouchableWithoutFeedback

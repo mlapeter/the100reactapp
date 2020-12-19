@@ -58,9 +58,6 @@ const setOtherValues = (formikProps, formikKey, value) => {
     }
   }
   if (formikKey === "publicVisible" && value === true) {
-    formikProps.setFieldValue("allianceVisible", true);
-    formikProps.setFieldValue("groupVisible", true);
-    formikProps.setFieldValue("friendsVisible", true);
     formikProps.setFieldValue("privateVisible", false);
   }
   if (formikKey === "groupVisible") {
@@ -72,7 +69,6 @@ const setOtherValues = (formikProps, formikKey, value) => {
     ) {
       formikProps.setFieldValue("privateVisible", true);
     } else {
-      formikProps.setFieldValue("publicVisible", false);
       formikProps.setFieldValue("allianceVisible", false);
 
     }
@@ -88,8 +84,6 @@ const setOtherValues = (formikProps, formikKey, value) => {
       !formikProps.values.groupVisible
     ) {
       formikProps.setFieldValue("privateVisible", true);
-    } else {
-      formikProps.setFieldValue("publicVisible", false);
     }
   }
 };

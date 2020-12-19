@@ -1,8 +1,8 @@
-import type { StyleObj } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
+// import type { StyleObj } from "react-native/Libraries/StyleSheet/StyleSheetTypes";
 
-export type StyleProps = {
-  style?: StyleObj
-};
+// export type StyleProps = {
+//   style?: StyleObj
+// };
 
 export const colors = {
   // blue: "#4A90E2",
@@ -23,6 +23,7 @@ export const colors = {
   lightestGrey: "#99aab5",
   veryLightestGrey: "#d6d7da",
   yellow: "yellow",
+  gold: "#ffba00",
   searchbar: "#ededed",
   // dlight: #36393f
   // primaryBlue: "#5a8cf0",

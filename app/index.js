@@ -9,11 +9,11 @@ import { Provider } from "react-redux";
 import { connect } from "react-redux";
 import store from "./config/store";
 
-import { YellowBox } from "react-native";
+import { LogBox } from "react-native";
 import _ from "lodash";
 
 // Hide long timeout warning from firebase: https://github.com/firebase/firebase-js-sdk/issues/97
-YellowBox.ignoreWarnings(["Setting a timer"]);
+LogBox.ignoreLogs(["Setting a timer"]);
 const _console = _.clone(console);
 console.warn = message => {
   if (message.indexOf("Setting a timer") <= -1) {
