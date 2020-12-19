@@ -73,7 +73,7 @@
     "react-native-elements": "^0.19.1",
     "react-native-extended-stylesheet": "^0.6.0",
     "react-native-gesture-handler": "~1.7.0",
-    "react-native-keyboard-aware-scroll-view": "https://github.com/APSL/react-native-keyboard-aware-scroll-view#fb40649a9c84aa23d6a55355e9e0e432795967a6",
+    "react-native-keyboard-aware-scroll-view": "^0.9.2",
     "react-native-modal": "^4.1.1",
     "react-native-modalbox": "^1.4.2",
     "react-native-platform-touchable": "^1.1.1",
@@ -94,7 +94,7 @@
     "redux-saga": "^0.15.3",
     "redux-thunk": "^2.2.0",
     "sentry-expo": "~2.0.0",
-    "tcomb-form-native": "github:mlapeter/tcomb-form-native",
+    "tcomb-form-native": "0.6.20",
     "yup": "0.26.6"
   },
   "rnpm": {

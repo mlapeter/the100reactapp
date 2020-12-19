@@ -37,7 +37,7 @@ export default class GamingSessionIconBar extends React.PureComponent<GamingSess
             teamSize={teamSize}
           />
         )}
-        {lightLevel && <PowerIcon lightLevel={lightLevel} />}
+        {lightLevel ? <PowerIcon lightLevel={lightLevel} /> : null}
         {sherpaLed && <SherpaIcon sherpaLed={sherpaLed} />}
       </View>
     );
@@ -114,12 +114,6 @@ function PowerIcon(props) {
       </Text>
     );
   }
-  return (
-    <Text style={styles.icon}>
-      <MaterialCommunityIcons name="gauge" size={14} color={colors.grey} />
-      Any
-    </Text>
-  );
 }
 
 function SherpaIcon(props) {

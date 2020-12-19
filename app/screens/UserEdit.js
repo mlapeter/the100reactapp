@@ -17,12 +17,7 @@ var t = require("tcomb-form-native");
 
 import { colors, fontSizes, fontStyles } from "../styles";
 import Moment from "../../node_modules/react-moment";
-import moment from "../../node_modules/moment";
 
-import PreSplash from "../components/PreSplash/PreSplash";
-
-import { FontAwesome } from "@expo/vector-icons";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { connect } from "react-redux";
 import { removeToken } from "../actions/authentication";
 
