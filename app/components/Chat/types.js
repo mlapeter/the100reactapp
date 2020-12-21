@@ -6,6 +6,6 @@ export const ChatMessagePropType = {
   createdAt: PropTypes.number.isRequired,
   role: PropTypes.string.isRequired,
   text: PropTypes.string.isRequired,
-  uid: PropTypes.string.isRequired,
+  uid: PropTypes.number.isRequired,
   username: PropTypes.string.isRequired
 };

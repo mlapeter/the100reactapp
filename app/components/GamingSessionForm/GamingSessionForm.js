@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import {
   ActivityIndicator,
-  Button,
-  Keyboard,
   LayoutAnimation,
   ScrollView,
   Text,
@@ -16,14 +14,10 @@ import styles from "./styles";
 import moment from "../../../node_modules/moment";
 import Toggle from "../Toggle";
 import Card from "../Card";
-
 import Environment from "../../config/environment";
-
-
 import { Picker } from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Nil } from "tcomb-form-native/lib";
 
 
 export default class GamingSessionForm extends React.Component {
@@ -67,8 +61,6 @@ export default class GamingSessionForm extends React.Component {
       teamSizes: [...Array(100).keys()].map(i => { return { label: i, value: i } }),
       teamSize: this.props.gamingSession ? { label: this.props.gamingSession.team_size, value: this.props.gamingSession.team_size } : null,
       step: 1,
-      errorsPresent: false,
-      errors: '',
       loading: true,
       gamingSession: this.props.gamingSession,
       displayDatePicker: false
@@ -78,8 +70,6 @@ export default class GamingSessionForm extends React.Component {
   }
 
   componentDidMount() {
-
-    console.log(this.props.gamingSessionVisibility)
 
     // Get all games
     this.fetchGames().then((response) => {
@@ -169,6 +159,7 @@ export default class GamingSessionForm extends React.Component {
     let selectedGame = this.state.gamesData.find(x => x.id == selected.value)
 
     let activities = selectedGame.activities.sort().map((name) => ({ value: name, label: name }));
+
     return activities
   }
 
@@ -235,8 +226,7 @@ export default class GamingSessionForm extends React.Component {
     this.setState({ loading: true, displayDatePicker: false, displayDatePickerTime: false }, 
       () => this.setState({ loading: false })
       )
-    console.log("handleOnClick")
-    console.log("DATE: ", date)
+    
     if (date) {
       this.setStartDate(date)
       this.updateWhen("scheduled")
@@ -247,27 +237,24 @@ export default class GamingSessionForm extends React.Component {
 
   formReady = () => {
 
-    // const { selectedGame, selectedActivity, when, publicVisible, allianceVisible, groupVisible, friendsVisible, privateVisible, teamSize } = this.state;
+    const { selectedGame, selectedActivity, when, publicVisible, allianceVisible, groupVisible, friendsVisible, privateVisible, teamSize } = this.state;
 
-    // let who = publicVisible || allianceVisible || groupVisible || friendsVisible || privateVisible
+    let who = publicVisible || allianceVisible || groupVisible || friendsVisible || privateVisible
 
-    // let teamSizeSelected = selectedActivity && selectedActivity.value != "Other" || selectedActivity && selectedActivity.value == "Other" && teamSize
+    let teamSizeSelected = selectedActivity && selectedActivity.value != "Other" || selectedActivity && selectedActivity.value == "Other" && teamSize
 
-    // return selectedGame && selectedActivity && when && who && teamSizeSelected ? true : false
-
-    return true
-
+    return selectedGame && selectedActivity && selectedActivity.value && who && teamSizeSelected ? true : false
   }
 
   onSubmit = () => {
     const { selectedGame, platform, description, lightLevel, selectedActivity, startDate, when, selectedGroup, beginnersWelcome, sherpaRequested, headsetsRequired, partySize, teamSize, discordInviteLink, publicVisible, allianceVisible, groupVisible, friendsVisible, privateVisible, delayPosting, autoPublic, autoAlliance } = this.state
 
     if (!this.formReady()) {
-      return this.setState({ formReadyError: "Make sure you've picked an activity, start time, and who can view the game." })
+      return this.setState({ formReadyError: "Make sure you've picked an activity and start time." })
 
     }
 
-    this.setState({ errors: false, loading: true });
+    this.setState({ loading: true });
 
 
     //  Rails DB field names for description and activity need to be updated, currently 'name' and 'category'
@@ -313,7 +300,7 @@ export default class GamingSessionForm extends React.Component {
 
     const otherOptionsHelpMesssage = "BEGINNERS WELCOME: Makes game public and encourages new players to join. Also earns you Sherpa Points. SHERPA REQUESTED: Select this to request help from experienced players (sherpas) for this game."
 
-    const { selectedGame, selectedActivity, startDate, selectedGroup, gamesList, activitiesList, gameId, displayDatePicker, displayDatePickerTime, displayGroupPicker, displayAdvancedOptions, errorsPresent, errors } = this.state;
+    const { selectedGame, selectedActivity, startDate, selectedGroup, gamesList, activitiesList, gameId, displayDatePicker, displayDatePickerTime, displayGroupPicker, displayAdvancedOptions, formReadyError } = this.state;
 
 
     if (
@@ -331,10 +318,7 @@ export default class GamingSessionForm extends React.Component {
     return (
       <View style={styles.outerContainer}>
 
-        {errorsPresent && (
-          <Text>{errors}</Text>
-
-        )}
+       
 
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <Card>
@@ -391,12 +375,17 @@ export default class GamingSessionForm extends React.Component {
               </View>
 ) : (
   <View className="form-group">
-  <Text>Activity</Text>
+  <Text>Activity:</Text>
   
     <View className="form-group text-dark">
       <Picker key="activity" style={styles.pickerStyle}
         selectedValue={selectedActivity ? selectedActivity.value : null}
         onValueChange={this.handleChangeActivity} >
+           <Picker.Item
+            key={"Select Activity..."}
+            label={"Select Activity..."}
+            value={null}
+          />
         {activitiesList.map(activity => (
           <Picker.Item
             key={activity.value}
@@ -668,21 +657,31 @@ export default class GamingSessionForm extends React.Component {
 
 
 
+              {this.formReady() ? (
+                          <TouchableOpacity
+                            style={styles.button}
+                            onPress={() => this.onSubmit()}
+                            underlayColor={colors.primaryBlue}
+                          >
+                            <Text style={styles.buttonText}>Submit</Text>
+                          </TouchableOpacity>
+                          ) : (
+                          <View>
+                            {formReadyError && (<Text style={styles.helpMessage}>{formReadyError}</Text>)}
+
+                            <TouchableOpacity
+                              style={[styles.button, styles.buttonDisabled]}
+                              onPress={() => this.onSubmit()}
+                              underlayColor={colors.primaryBlue}
+                            >
+                              <Text style={styles.buttonText}>Submit</Text>
+                            </TouchableOpacity>
+
+                          </View>
+                      )}
 
 
-
-
-
-
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => this.onSubmit()}
-                underlayColor={colors.primaryBlue}
-              >
-                <Text style={styles.buttonText}>Submit</Text>
-              </TouchableOpacity>
-
-
+              
 
             </View>
           </Card>

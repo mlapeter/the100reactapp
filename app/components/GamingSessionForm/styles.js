@@ -41,6 +41,9 @@ export default (styles = StyleSheet.create({
     justifyContent: "center",
     paddingVertical: 5,
   },
+  buttonDisabled: {
+    backgroundColor: colors.grey,
+  },
   buttonToggle: {
     borderColor: colors.blue,
     borderWidth: 1,
@@ -73,6 +76,7 @@ export default (styles = StyleSheet.create({
   },
   helpMessage: {
     marginVertical: 10,
+    alignSelf: "center",
   },
   errorMessage: {
     marginVertical: 10,

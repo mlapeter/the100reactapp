@@ -941,7 +941,7 @@ function* fetchGroup() {
         Environment["API_BASE_URL"] +
         Environment["API_VERSION"] +
         "groups/" +
-        user.groups[0]["id"];
+        user.groups[0]["id"] + "/show_public";
       console.log("FETCHING GROUP (no default group): ", endpoint);
 
       yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
@@ -953,10 +953,10 @@ function* fetchGroup() {
         Environment["API_BASE_URL"] +
         Environment["API_VERSION"] +
         "groups/" +
-        selectedGroupId;
+        selectedGroupId + "/show_public";
       console.log("FETCHING GROUP: ", endpoint);
 
-      yield call(fetchData, endpoint, 1, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
+      yield call(fetchData, endpoint, null, FETCH_GROUP_RESULT, FETCH_GROUP_ERROR);
       AsyncStorage.setItem("default_group_id", selectedGroupId.toString());
     }
   } catch (e) {
