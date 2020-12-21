@@ -428,25 +428,6 @@ function* updateUser() {
           Authorization: "Bearer " + token
         },
         body: JSON.stringify(user)
-
-        // body: JSON.stringify({
-        //   gamertag: user.gamertag,
-        //   platform: user.platform,
-        //   play_style: user.play_style,
-        //   play_schedule: user.play_schedule,
-        //   light_level: user.light_level,
-        //   age: user.age,
-        //   no_emails: user.no_emails,
-        //   no_push_notifications: user.no_push_notifications,
-        //   push_new_group_game: user.push_new_group_game,
-        //   push_new_friend_game: user.push_new_friend_game,
-        //   push_player_joined_left: user.push_player_joined_left,
-        //   push_game_time_changed: user.push_game_time_changed,
-        //   push_username_mention: user.push_username_mention,
-        //   push_karma_received: user.push_karma_received,
-        //   push_private_message_received: user.push_private_message_received,
-        //   push_game_reminder: user.push_game_reminder
-        // })
       }
     );
     const result = yield response.json();
@@ -470,9 +451,6 @@ function* createGamingSession() {
     let gamingSession = yield select(
       state => state.gamingSessions.gamingSession
     );
-    // let gamingSessionVisibility = yield select(
-    //   state => state.gamingSessions.gamingSessionVisibility
-    // );
     let platform = yield select(state => state.search.platform);
 
     const response = yield fetch(
@@ -488,27 +466,6 @@ function* createGamingSession() {
         },
         body: JSON.stringify(gamingSession)
 
-
-        // body: JSON.stringify({
-        //   game_id: gamingSession.game_id,
-        //   platform: platform,
-        //   description: gamingSession.description,
-        //   activity: gamingSession.activity,
-        //   start_time: gamingSession.start_time,
-        //   group_name: gamingSession.group ? gamingSession.group : null,
-        //   make_auto_public: gamingSession.make_auto_public,
-        //   beginners_welcome: gamingSession.beginners_welcome,
-        //   sherpa_requested: gamingSession.sherpa_requested,
-        //   headset_required: gamingSession.mic_required,
-        //   party_size: gamingSession.party_size,
-        //   platform: gamingSession.platform,
-        //   created_from: "mobile-app",
-        //   public_visible: gamingSessionVisibility.publicVisible,
-        //   alliance_visible: gamingSessionVisibility.allianceVisible,
-        //   group_visible: gamingSessionVisibility.groupVisible,
-        //   friends_visible: gamingSessionVisibility.friendsVisible,
-        //   private_visible: gamingSessionVisibility.privateVisible
-        // })
       }
     );
     console.log(response);
@@ -526,7 +483,6 @@ function* createGamingSession() {
 }
 
 function* editGamingSession() {
-  console.log("editGamingSession ---------------")
   try {
     let token = yield select(state => state.authentication.token);
     let gamingSession = yield select(
@@ -535,9 +491,7 @@ function* editGamingSession() {
     let gamingSessionId = yield select(
       state => state.gamingSessions.gamingSessionId
     );
-    // let gamingSessionVisibility = yield select(
-    //   state => state.gamingSessions.gamingSessionVisibility
-    // );
+
     let platform = yield select(state => state.search.platform);
     console.log(
       Environment["API_BASE_URL"] +
@@ -545,8 +499,6 @@ function* editGamingSession() {
       "gaming_sessions/" +
       gamingSessionId
     );
-
-    console.log(gamingSession)
 
     const response = yield fetch(
       Environment["API_BASE_URL"] +
@@ -562,27 +514,6 @@ function* editGamingSession() {
         },
         body: JSON.stringify(gamingSession)
 
-        // body: JSON.stringify({
-        //   game_id: gamingSession.game_id,
-        //   name: gamingSession.description,
-        //   category: gamingSession.activity,
-        //   platform: platform,
-        //   start_time: gamingSession.start_time,
-        //   start_date: gamingSession.start_time,
-        //   group_name: gamingSession.group,
-        //   // friends_only: gamingSession.friends_only,
-        //   // group_only: gamingSession.group_only,
-        //   make_auto_public: gamingSession.make_auto_public,
-        //   beginners_welcome: gamingSession.beginners_welcome,
-        //   sherpa_requested: gamingSession.sherpa_requested,
-        //   mic_required: gamingSession.mic_required,
-        //   party_size: gamingSession.party_size,
-        //   platform: gamingSession.platform,
-        //   public_visible: gamingSessionVisibility.publicVisible,
-        //   group_visible: gamingSessionVisibility.groupVisible,
-        //   friends_visible: gamingSessionVisibility.friendsVisible,
-        //   private_visible: gamingSessionVisibility.privateVisible
-        // })
       }
     );
     const result = yield response.json();

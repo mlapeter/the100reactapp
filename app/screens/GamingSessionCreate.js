@@ -57,8 +57,6 @@ class GamingSessionCreate extends React.Component {
   }
 
   handlePress = formValue => {
-    console.log("FORM SUBMITTED ---------------------------")
-    console.log(formValue)
     if (formValue) {
       this.props.dispatch(createGamingSession(formValue));
     }
