@@ -1,4 +1,4 @@
-import { AsyncStorage } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Environment from "../config/environment";
 
 export function postLike(feedItemId) {

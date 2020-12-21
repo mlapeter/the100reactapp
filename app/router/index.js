@@ -1,9 +1,6 @@
 import React, { Component } from "react";
 import {
-  AsyncStorage,
-  Button,
   Platform,
-  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,

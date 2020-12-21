@@ -85,7 +85,6 @@ class GamingSessionsList extends PureComponent {
     // });
     this.fetchGamingSessionsData();
     // this.listenforUpdate();
-    NetInfo.addEventListener("connectionChange", this.handleConnectivityChange);
 
     registerForPushNotificationsAsync()
       .then(token => {
@@ -121,27 +120,6 @@ class GamingSessionsList extends PureComponent {
       this.props.alertWithType("error", "Error", nextProps.gamingSessionsError);
     }
   }
-
-  handleConnectivityChange = connectionInfo => {
-    console.log(
-      "Connection type: " +
-      connectionInfo.type +
-      ", effectiveType: " +
-      connectionInfo.effectiveType
-    );
-    if (connectionInfo.type == "wifi" || connectionInfo.type == "cellular") {
-      // Connection good
-    } else {
-      this.props.alertWithType(
-        "error",
-        "Warning: Internet Connection Lost",
-        ""
-      );
-      Sentry.captureMessage(
-        `User has no cellular or wifi connection while using app.`
-      );
-    }
-  };
 
   handleNotification = notification => {
     console.log(notification);

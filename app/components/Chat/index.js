@@ -1,12 +1,8 @@
 import React, { Component, PureComponent } from "react";
 import PropTypes from "prop-types";
 import {
-  ActivityIndicator,
-  Alert,
-  AsyncStorage,
   Button,
   FlatList,
-  Image,
   Keyboard,
   KeyboardAvoidingView,
   LayoutAnimation,
@@ -17,6 +13,7 @@ import {
   UIManager,
   View
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Environment from "../../config/environment";
 
 import Modal from "react-native-modal";
@@ -189,8 +186,9 @@ class Chat extends Component {
           role: getUserChatRole(user, this.props.room, "user"),
           permission: getUserChatPermission(user, this.props.room, "RW"),
           avatarUrl: user.avatar
-        });
-        this.retrieveMessages();
+        }, () => this.retrieveMessages()
+        );
+
       })
       .catch(error => {
         console.log("An error occurred during sign in: " + error);

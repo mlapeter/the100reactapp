@@ -1,12 +1,13 @@
 import React, { Component, PureComponent } from "react";
 import {
-  AsyncStorage,
   ScrollView,
   StyleSheet, // CSS-like styles
   Text, // Renders text
   TouchableOpacity, // Pressable container
   View // Container component
 } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { colors, fontSizes } from "../../styles";

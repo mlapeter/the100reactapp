@@ -8,12 +8,23 @@ export async function firebaseSignOut() {
   }
 }
 
+
+const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
+
+
 export async function firebaseSignIn(token, allowAnon = false, authedUser) {
   try {
     // Check for already signed in user
     console.log("Signing In To Firebase");
     let currentUser = await firebase.auth().currentUser;
-    if (currentUser) {
+    if (!currentUser) {
+      console.log("sleeping")
+      await sleep(1000)
+      currentUser = await firebase.auth().currentUser;
+    }
+    if (currentUser != null) {
       uid = currentUser.uid;
       anon = currentUser.isAnonymous;
       // Otherwise sign into firebase

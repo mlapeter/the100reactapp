@@ -2,13 +2,9 @@ import React, { PureComponent, Component } from "react";
 import PropTypes from "prop-types";
 import {
   ActivityIndicator,
-  Alert,
-  AsyncStorage,
   FlatList,
-  Image,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View
 } from "react-native";
 import { Analytics, PageHit } from "expo-analytics";

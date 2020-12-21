@@ -3,8 +3,6 @@ import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Alert,
-  AsyncStorage,
-  Clipboard,
   FlatList,
   Image,
   LayoutAnimation,
@@ -15,6 +13,8 @@ import {
   TouchableOpacity,
   View
 } from "react-native";
+import Clipboard from 'expo-clipboard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Analytics, PageHit } from "expo-analytics";
 import { WebView } from 'react-native-webview';
 import Environment from "../config/environment";
@@ -172,7 +172,7 @@ export class User extends React.Component {
     this.setState({
       viewStats: !this.state.viewStats
     });
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.spring);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
   }
 
   destinyStatusLink() {

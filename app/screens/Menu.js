@@ -1,20 +1,8 @@
 import React, { Component } from "react";
 import {
-  ActivityIndicator,
-  Alert,
-  AsyncStorage,
-  Button,
-  Dimensions,
-  Image,
-  Keyboard,
-  KeyboardAvoidingView,
   View,
   StyleSheet,
   Text,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  TouchableWithoutFeedback
 } from "react-native";
 import { colors, fontSizes } from "../styles";
 

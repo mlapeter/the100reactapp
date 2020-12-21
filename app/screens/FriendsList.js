@@ -2,14 +2,10 @@ import React, { PureComponent, Component } from "react";
 import PropTypes from "prop-types";
 import {
   ActivityIndicator,
-  Alert,
-  AsyncStorage,
   FlatList,
   Keyboard,
   LayoutAnimation,
   StyleSheet,
-  Text,
-  TouchableOpacity,
   TouchableWithoutFeedback,
   View
 } from "react-native";
